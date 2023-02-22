@@ -11,7 +11,7 @@ Add your own name (do not add the names for others!) to the section below.
 | Profile Picture                                                                                         | Name        | Email                      |
 |---------------------------------------------------------------------------------------------------------|-------------|----------------------------|
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
-| ![](https://secure.gravatar.com/avatar/9c9c804ce7bad17cfebc82b726a11558?s=800&d=identicon&width=60)     | Junwon Yoon | J.Yoon@student.tudelft.nl  |
+| ![](https://secure.gravatar.com/avatar/9c9c804ce7bad17cfebc82b726a11558?s=50&d=identicon)               | Junwon Yoon | J.Yoon@student.tudelft.nl  |
 | ![](https://secure.gravatar.com/avatar/30a36653a184a68ea685e2b38add7270?s=800&d=identicon&width=60)     | Liviu Moanta | I.L.Moanta-1@student.tudelft.nl  |
 
 <!-- Instructions (remove once assignment has been completed -->
