@@ -15,6 +15,8 @@ Add your own name (do not add the names for others!) to the section below.
 | ![](https://secure.gravatar.com/avatar/30a36653a184a68ea685e2b38add7270?s=50&d=identicon)               | Liviu Moanta | I.L.Moanta-1@student.tudelft.nl |
 | ![](https://en.gravatar.com/userimage/232097172/77a0298a72fbd15858329a2cb48763c9.png)              | Marina Mădăraș | m.madara@student.tudelft.nl     |
 | ![](https://secure.gravatar.com/avatar/9c9c804ce7bad17cfebc82b726a11558?s=50&d=identicon)               | Junwon Yoon | junwonyoon@student.tudelft.nl   |
+| ![](https://secure.gravatar.com/avatar/9c9c804ce7bad17cfebc82b726a11558?s=50&d=identicon)               | David Dobin | ddobin@student.tudelft.nl   |
+
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
 <!-- - Mention your *student* email address -->
