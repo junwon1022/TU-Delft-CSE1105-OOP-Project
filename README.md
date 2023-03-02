@@ -10,7 +10,7 @@ Add your own name (do not add the names for others!) to the section below.
 
 | Profile Picture                                                                                         | Name        | Email                           |
 |---------------------------------------------------------------------------------------------------------|-------------|---------------------------------|
-| ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl   |
+| ![](https://s.gravatar.com/avatar/5f0677b48e487028ad4cee6eaae56bb1?s=50)                 | Luis Cabo Villagomez | L.CaboVillagomez@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/72174c80be62867d6d1d53f862395668?s=50&d=identicon)               | Aleksandra Savova | A.Savova@student.tudelft.nl     |
 | ![](https://secure.gravatar.com/avatar/30a36653a184a68ea685e2b38add7270?s=50&d=identicon)               | Liviu Moanta | I.L.Moanta-1@student.tudelft.nl |
 | ![](https://en.gravatar.com/userimage/232097172/77a0298a72fbd15858329a2cb48763c9.png)              | Marina Mădăraș | m.madara@student.tudelft.nl     |
