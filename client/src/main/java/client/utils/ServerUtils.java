@@ -49,6 +49,8 @@ public class ServerUtils {
 
     /**
      * Get all quotes from the server.
+     *
+     * @return The quotes.
      */
     public List<Quote> getQuotes() {
         return ClientBuilder.newClient(new ClientConfig()) //
@@ -62,6 +64,8 @@ public class ServerUtils {
      * Add a quote to the server.
      *
      * @param quote The quote to add.
+     *
+     * @return The quote that was added.
      */
     public Quote addQuote(Quote quote) {
         return ClientBuilder.newClient(new ClientConfig()) //

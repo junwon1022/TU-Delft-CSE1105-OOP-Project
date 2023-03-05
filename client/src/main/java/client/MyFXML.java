@@ -46,6 +46,9 @@ public class MyFXML {
      * Load a FXML file.
      *
      * @param parts The path to the FXML file.
+     * @param <T> The type of the root node.
+     * @param c The class of the root node.
+     *
      * @return The root node of the FXML file.
      * @throws IOException If an I/O error occurs.
      */
