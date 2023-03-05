@@ -26,7 +26,7 @@ public class Config {
     /**
      * Create a random number generator.
      *
-     * @return
+     * @return A random number generator.
      */
     @Bean
     public Random getRandom() {
