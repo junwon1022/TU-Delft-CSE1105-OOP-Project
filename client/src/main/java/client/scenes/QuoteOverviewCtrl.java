@@ -60,13 +60,15 @@ public class QuoteOverviewCtrl implements Initializable {
     }
 
 
-    @Override
     /**
      * Initialize the controller.
      *
-     * @param location The location used to resolve relative paths for the root object, or null if the location is not known.
-     * @param resources The resources used to localize the root object, or null if the root object was not localized.
+     * @param location The location used to resolve relative paths for the root object,
+     *                 or null if the location is not known.
+     * @param resources The resources used to localize the root object,
+     *                 or null if the root object was not localized.
      */
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         colFirstName.setCellValueFactory(
                 q -> new SimpleStringProperty(q.getValue().person.firstName)
