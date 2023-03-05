@@ -46,22 +46,24 @@ public class QuoteOverviewCtrl implements Initializable {
     @FXML
     private TableColumn<Quote, String> colQuote;
 
+
+    @Inject
     /*
      * Create a new QuoteOverviewCtrl.
      *
      * @param server The server to use.
      * @param mainCtrl The main controller to use.
      */
-    @Inject
     public QuoteOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
 
+
+    @Override
     /*
      * Initialize the controller.
      */
-    @Override
     public void initialize(URL location, ResourceBundle resources) {
         colFirstName.setCellValueFactory(
                 q -> new SimpleStringProperty(q.getValue().person.firstName)

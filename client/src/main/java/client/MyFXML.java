@@ -44,6 +44,10 @@ public class MyFXML {
 
     /*
      * Load a FXML file.
+     *
+     * @param path The path to the FXML file.
+     * @return The root node of the FXML file.
+     * @throws IOException If an I/O error occurs.
      */
     public <T> Pair<T, Parent> load(Class<T> c, String... parts) {
         try {
@@ -59,6 +63,9 @@ public class MyFXML {
 
     /*
      * Get the location of a FXML file.
+     *
+     * @param path The path to the FXML file.
+     * @return The location of the FXML file.
      */
     private URL getLocation(String... parts) {
         var path = Path.of("", parts).toString();
@@ -74,6 +81,7 @@ public class MyFXML {
          * Create a new builder.
          *
          * @param type The type of the builder.
+         * @return The builder.
          */
         @Override
         @SuppressWarnings("rawtypes")
@@ -90,6 +98,7 @@ public class MyFXML {
          * Create a new instance.
          *
          * @param type The type of the instance.
+         * @return The instance.
          */
         @Override
         public Object call(Class<?> type) {
