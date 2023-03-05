@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/")
 public class SomeController {
 
+    /**
+     * Get the index page.
+     *
+     * @return The index page.
+     */
     @GetMapping("/")
     @ResponseBody
     public String index() {

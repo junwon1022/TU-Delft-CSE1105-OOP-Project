@@ -28,15 +28,27 @@ import client.scenes.QuoteOverviewCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
+    /**
+     * The main method for the application.
+     *
+     * @param args the command line arguments.
+     * @throws IOException If an I/O error occurs.
+     */
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
     }
-
+    /**
+     * Start the application.
+     *
+     * @param primaryStage The stage to use.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
 
