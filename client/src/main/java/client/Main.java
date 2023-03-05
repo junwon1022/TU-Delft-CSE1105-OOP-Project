@@ -33,10 +33,19 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
+    /*
+     * The main method for the application.
+     *
+     * @param args the command line arguments
+     */
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
     }
-
+    /*
+     * Start the application.
+     *
+     * @param stage The stage to use.
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
 
