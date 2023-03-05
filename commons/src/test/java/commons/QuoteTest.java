@@ -28,6 +28,8 @@ public class QuoteTest {
 	/**
 	 * Test method for Constructor method of Quote.
 	 */
+
+	@SuppressWarnings("checkstyle:Indentation")
 	@Test
 	public void checkConstructor() {
 		var q = new Quote(SOME_PERSON, "q");
@@ -39,6 +41,7 @@ public class QuoteTest {
 	 * Test method for Equals method of Quote.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void equalsHashCode() {
 		var a = new Quote(new Person("a", "b"), "c");
 		var b = new Quote(new Person("a", "b"), "c");
@@ -50,6 +53,7 @@ public class QuoteTest {
 	 * Test method for Equals method of Quote.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void notEqualsHashCode() {
 		var a = new Quote(new Person("a", "b"), "c");
 		var b = new Quote(new Person("a", "b"), "d");
@@ -61,6 +65,7 @@ public class QuoteTest {
 	 * Test method for toString method of Quote.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void hasToString() {
 		var actual = new Quote(new Person("a", "b"), "c").toString();
 		assertTrue(actual.contains(Quote.class.getSimpleName()));

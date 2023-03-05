@@ -27,6 +27,7 @@ public class PersonTest {
 	 * Test method for Constructor method of Person.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void checkConstructor() {
 		var p = new Person("f", "l");
 		assertEquals("f", p.firstName);
@@ -37,6 +38,7 @@ public class PersonTest {
 	 * Test method for Equals method of Person.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void equalsHashCode() {
 		var a = new Person("a", "b");
 		var b = new Person("a", "b");
@@ -48,6 +50,7 @@ public class PersonTest {
 	 * Test method for Equals method of Person.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void notEqualsHashCode() {
 		var a = new Person("a", "b");
 		var b = new Person("a", "c");
@@ -59,6 +62,7 @@ public class PersonTest {
 	 * Test method for toString method of Person.
 	 */
 	@Test
+	@SuppressWarnings("checkstyle:Indentation")
 	public void hasToString() {
 		var actual = new Person("a", "b").toString();
 		assertTrue(actual.contains(Person.class.getSimpleName()));
