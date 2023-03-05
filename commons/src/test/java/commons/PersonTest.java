@@ -23,6 +23,9 @@ import org.junit.jupiter.api.Test;
 
 public class PersonTest {
 
+	/**
+	 * Test method for Constructor method of Person.
+	 */
 	@Test
 	public void checkConstructor() {
 		var p = new Person("f", "l");
@@ -30,6 +33,9 @@ public class PersonTest {
 		assertEquals("l", p.lastName);
 	}
 
+	/**
+	 * Test method for Equals method of Person.
+	 */
 	@Test
 	public void equalsHashCode() {
 		var a = new Person("a", "b");
@@ -38,6 +44,9 @@ public class PersonTest {
 		assertEquals(a.hashCode(), b.hashCode());
 	}
 
+	/**
+	 * Test method for Equals method of Person.
+	 */
 	@Test
 	public void notEqualsHashCode() {
 		var a = new Person("a", "b");
@@ -46,6 +55,9 @@ public class PersonTest {
 		assertNotEquals(a.hashCode(), b.hashCode());
 	}
 
+	/**
+	 * Test method for toString method of Person.
+	 */
 	@Test
 	public void hasToString() {
 		var actual = new Person("a", "b").toString();
