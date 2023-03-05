@@ -25,7 +25,7 @@ import client.scenes.QuoteOverviewCtrl;
 
 public class MyModule implements Module {
 
-    /*
+    /**
      * Configure the module.
      *
      * @param binder The binder to use.

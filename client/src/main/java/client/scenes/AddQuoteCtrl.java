@@ -42,20 +42,20 @@ public class AddQuoteCtrl {
     private TextField quote;
 
 
-    @Inject
-    /*
+    /**
      * Create a new AddQuoteCtrl.
      *
      * @param server The server to use.
      * @param mainCtrl The main controller to use.
      */
+    @Inject
     public AddQuoteCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
 
     }
 
-    /*
+    /**
      * Initialize the controller.
      *
      */
@@ -64,7 +64,7 @@ public class AddQuoteCtrl {
         mainCtrl.showOverview();
     }
 
-    /*
+    /**
      * Clear the fields.
      *
      */
@@ -84,7 +84,7 @@ public class AddQuoteCtrl {
         mainCtrl.showOverview();
     }
 
-    /*
+    /**
      * Get the quote.
      *
      * @return The quote.
@@ -95,7 +95,7 @@ public class AddQuoteCtrl {
         return new Quote(p, q);
     }
 
-    /*
+    /**
      * Clear the fields.
      *
      */
@@ -105,10 +105,10 @@ public class AddQuoteCtrl {
         quote.clear();
     }
 
-    /*
+    /**
      * Handle key events.
      *
-     * @param event The event to handle.
+     * @param e The event to handle.
      *
      */
     public void keyPressed(KeyEvent e) {

@@ -47,13 +47,13 @@ public class QuoteOverviewCtrl implements Initializable {
     private TableColumn<Quote, String> colQuote;
 
 
-    @Inject
-    /*
+    /**
      * Create a new QuoteOverviewCtrl.
      *
      * @param server The server to use.
      * @param mainCtrl The main controller to use.
      */
+    @Inject
     public QuoteOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
@@ -61,7 +61,7 @@ public class QuoteOverviewCtrl implements Initializable {
 
 
     @Override
-    /*
+    /**
      * Initialize the controller.
      */
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,14 +76,14 @@ public class QuoteOverviewCtrl implements Initializable {
         );
     }
 
-    /*
+    /**
      * Refresh the table.
      */
     public void addQuote() {
         mainCtrl.showAdd();
     }
 
-    /*
+    /**
      * Refresh the table.
      */
     public void refresh() {

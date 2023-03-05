@@ -34,7 +34,7 @@ public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
 
-    /*
+    /**
      * Get all quotes from the server.
      */
     public void getQuotesTheHardWay() throws IOException {
@@ -47,7 +47,7 @@ public class ServerUtils {
         }
     }
 
-    /*
+    /**
      * Get all quotes from the server.
      */
     public List<Quote> getQuotes() {
@@ -58,7 +58,7 @@ public class ServerUtils {
                 .get(new GenericType<List<Quote>>() {});
     }
 
-    /*
+    /**
      * Add a quote to the server.
      *
      * @param quote The quote to add.

@@ -42,10 +42,10 @@ public class MyFXML {
         this.injector = injector;
     }
 
-    /*
+    /**
      * Load a FXML file.
      *
-     * @param path The path to the FXML file.
+     * @param parts The path to the FXML file.
      * @return The root node of the FXML file.
      * @throws IOException If an I/O error occurs.
      */
@@ -61,10 +61,10 @@ public class MyFXML {
         }
     }
 
-    /*
+    /**
      * Get the location of a FXML file.
      *
-     * @param path The path to the FXML file.
+     * @param parts The path to the FXML file.
      * @return The location of the FXML file.
      */
     private URL getLocation(String... parts) {
@@ -72,12 +72,12 @@ public class MyFXML {
         return MyFXML.class.getClassLoader().getResource(path);
     }
 
-    /*
+    /**
      * A custom builder factory.
      */
     private class MyFactory implements BuilderFactory, Callback<Class<?>, Object> {
 
-        /*
+        /**
          * Create a new builder.
          *
          * @param type The type of the builder.
@@ -94,7 +94,7 @@ public class MyFXML {
             };
         }
 
-        /*
+        /**
          * Create a new instance.
          *
          * @param type The type of the instance.
