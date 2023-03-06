@@ -36,6 +36,7 @@ public class Person {
     public String lastName;
 
     @SuppressWarnings("unused")
+    //person
     private Person() {
         // for object mapper
     }
@@ -45,16 +46,20 @@ public class Person {
         this.lastName = lastName;
     }
 
+
+    //Equals method
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    //Hash Code method
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    //ToString method
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);

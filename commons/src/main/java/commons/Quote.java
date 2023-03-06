@@ -39,26 +39,28 @@ public class Quote {
     public Person person;
     public String quote;
 
+    //Initializer
     @SuppressWarnings("unused")
     private Quote() {
         // for object mappers
     }
 
+    //Quote Method
     public Quote(Person person, String quote) {
         this.person = person;
         this.quote = quote;
     }
-
+    //Equals method
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
-
+    //Hash method
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-
+    //ToString method
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
