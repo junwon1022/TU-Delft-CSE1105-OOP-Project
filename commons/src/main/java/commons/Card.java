@@ -1,42 +1,148 @@
 package commons;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import javax.persistence.*;
 import java.util.*;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
+
+@Entity
+@Table(name = "cards")
 public class Card {
 
-    private String title;
-    private String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "card_id")
+    public long id;
 
-    private List<Tag> tags;
+    @Column(name = "card_title")
+    public String title;
 
-    public Card(String title, String description, List<Tag> tags) {
+    @Column(name = "description")
+    public String description;
+
+    @Column(name = "card_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String colour;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "list_id")
+    public ListOfCards list;
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<CheckListItem> checklist = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "cards_tags",
+            joinColumns = @JoinColumn(name = "card_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    public Set<Tag> tags = new HashSet<>();
+
+    /**
+     * Default constructor
+     */
+    public Card() {
+
+    }
+
+    /**
+     * Constructor with parameters
+     * @param title
+     * @param description
+     * @param colour
+     * @param list
+     * @param checklist
+     * @param tags
+     */
+    public Card(String title, String description,
+                String colour, ListOfCards list,
+                List<CheckListItem> checklist, Set<Tag> tags) {
         this.title = title;
         this.description = description;
+        this.colour = colour;
+        this.list = list;
+        this.checklist = checklist;
         this.tags = tags;
     }
 
-    //Getters
-    public String getTitle() {
-        return title;
+    /*
+        BASIC FUNCTIONALITY
+     */
+
+    /**
+     * Add a tag to a card
+     * @param tag
+     */
+    public void addTag(Tag tag) {
+        if (tag != null && !tags.contains(tag)) {
+            tags.add(tag);
+            tag.cards.add(this);
+        }
     }
 
-    public String getDescription() {
-        return description;
+    /**
+     * Remove a tag from a card
+     * @param tag
+     */
+    public void removeTag(Tag tag) {
+        if (tag != null && tags.contains(tag)) {
+            tags.remove(tag);
+            tag.cards.remove(this);
+        }
     }
 
-    public List<Tag> getTags() {
-        return tags;
+    /**
+     * Add a new checklist item to the checklist
+     * @param item - the item to add
+     */
+    public void addCheckListItem(CheckListItem item) {
+        if(item != null) {
+            checklist.add(item);
+            item.card = this;
+        }
     }
 
-    //Setters
-    public void setTitle(String title) {
-        this.title = title;
+    /**
+     * Remove a given checklist item from the checklist
+     * @param item - the item to remove
+     */
+    public void removeCheckListItem(CheckListItem item) {
+        if(item != null) {
+            checklist.remove(item);
+            item.card = null;
+        }
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    /**
+     * Check if two cards are equal
+     * @param obj
+     * @return true if equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+
+    /**
+     * Generate a hash code for a card
+     * @return an integer
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    /**
+     * Return a String representation of a card
+     * @return a string
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
 }
+
