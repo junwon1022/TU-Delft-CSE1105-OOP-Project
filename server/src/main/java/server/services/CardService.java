@@ -3,7 +3,6 @@ package server.services;
 import commons.Board;
 import commons.ListOfCards;
 import commons.Card;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
@@ -26,7 +25,7 @@ public class CardService {
      * Check if a card is in the given list
      * @param card
      * @param list
-     * @return
+     * @return true if card in list
      */
     public boolean cardInList(Card card, ListOfCards list) {
         return card.list == list;
@@ -44,7 +43,7 @@ public class CardService {
     /**
      * Retrieve a card given its id
      * @param id
-     * @return
+     * @return a card
      */
     public Card getCardById(Long id) throws Exception {
         return cardRepository.findById(id)

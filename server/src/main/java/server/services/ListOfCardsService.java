@@ -24,7 +24,7 @@ public class ListOfCardsService {
      * Check if a list of cards is in the given board
      * @param list
      * @param board
-     * @return
+     * @return true if list in board
      */
     public boolean listInBoard(ListOfCards list, Board board) {
         return list.board == board;
@@ -42,7 +42,7 @@ public class ListOfCardsService {
     /**
      * Retrieve a list given its id
      * @param id
-     * @return
+     * @return a list of cards
      */
     public ListOfCards getListById(Long id) throws Exception {
         return listOfCardsRepository.findById(id)
