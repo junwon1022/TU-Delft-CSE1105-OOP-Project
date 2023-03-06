@@ -20,7 +20,7 @@ public class BoardService {
     /**
      * Retrieve a board given its id
      * @param id
-     * @return a board
+     * @return
      */
     public Board getBoardById(Long id) throws Exception {
         return boardRepository.findById(id)

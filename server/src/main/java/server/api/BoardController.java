@@ -24,14 +24,14 @@ public class BoardController {
 
     /**
      * Get a board given its id
-     * @param boardId
+     * @param board_id
      * @return the board
      */
     @GetMapping("/{board_id}")
-    private ResponseEntity<Board> getBoardById(@PathVariable("board_id") long boardId){
+    private ResponseEntity<Board> getBoardById(@PathVariable("board_id") long board_id){
         try {
             // Get the board
-            Board board = boardService.getBoardById(boardId);
+            Board board = boardService.getBoardById(board_id);
             // Return the board with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(board);
         }
@@ -61,16 +61,16 @@ public class BoardController {
     /**
      * Edit a board's title
      * @param newTitle
-     * @param boardId
+     * @param board_id
      * @return the edited board
      */
     @PostMapping("/{board_id}")
     public ResponseEntity<Board> editBoardTitleById(@RequestBody String newTitle,
-                                                  @PathVariable("board_id") long boardId) {
+                                                  @PathVariable("board_id") long board_id) {
 
         try {
             // Edit the board and save it in the database
-            Board board = boardService.editBoardTitle(boardId, newTitle);
+            Board board = boardService.editBoardTitle(board_id, newTitle);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(board);
         }
@@ -81,16 +81,16 @@ public class BoardController {
 
     /**
      * Delete a board given its id
-     * @param boardId
+     * @param board_id
      * @return the deleted board
      */
     @DeleteMapping("/{board_id}")
-    public ResponseEntity<Board> removeBoardById(@PathVariable("board_id") long boardId){
+    public ResponseEntity<Board> removeBoardById(@PathVariable("board_id") long board_id){
         try {
             // Check if a board with the given id exists
-            boardService.getBoardById(boardId);
+            boardService.getBoardById(board_id);
             // Delete the board
-            boardService.deleteBoardById(boardId);
+            boardService.deleteBoardById(board_id);
             // Return the saved board with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }
