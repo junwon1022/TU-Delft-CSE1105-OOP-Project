@@ -42,7 +42,6 @@ public class CardCtrl extends ListCell<Card> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.getTitle());
-            description.setText(item.getDescription());
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

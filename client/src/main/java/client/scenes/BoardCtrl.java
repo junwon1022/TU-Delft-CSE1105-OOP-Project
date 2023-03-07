@@ -60,12 +60,12 @@ public class BoardCtrl {
     public void initialize() {
         list.setFixedCellSize(0);
         CardList list1 = new CardList("List 1", new ArrayList<>());
-        list1.getCards().add(new Card("Card 1", "Description 1"));
-        list1.getCards().add(new Card("Card 2", "Description 2"));
+        list1.getCards().add(new Card("Card 1"));
+        list1.getCards().add(new Card("Card 2"));
 
         CardList list2 = new CardList("List 2", new ArrayList<>());
-        list2.getCards().add(new Card("Card 3", "Description 3"));
-        list2.getCards().add(new Card("Card 4", "Description 4"));
+        list2.getCards().add(new Card("Card 3"));
+        list2.getCards().add(new Card("Card 4"));
 
         // Add the card lists to the data list
         data = FXCollections.observableList(List.of(list1, list2));

@@ -76,7 +76,7 @@ public class CardListCtrl extends ListCell<CardList> {
             if (controller.success) {
                 String title = controller.storedText;
 
-                Card newCard = new Card(title, "placeholder");
+                Card newCard = new Card(title);
 
                 List<Card> cards = cardData.getCards();
                 cards.add(newCard);
