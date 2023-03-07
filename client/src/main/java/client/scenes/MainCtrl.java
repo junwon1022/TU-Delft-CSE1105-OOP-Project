@@ -60,7 +60,7 @@ public class MainCtrl {
      * Show the board scene.
      */
     public void showBoard() {
-        primaryStage.setTitle("Un board");
+        primaryStage.setTitle("My board");
         primaryStage.setScene(board);
         boardCtrl.initialize();
     }
