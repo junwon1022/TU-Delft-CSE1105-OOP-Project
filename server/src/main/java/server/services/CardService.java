@@ -3,6 +3,8 @@ package server.services;
 import commons.Board;
 import commons.ListOfCards;
 import commons.Card;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
@@ -17,7 +19,8 @@ public class CardService {
      * Constructor with parameters
      * @param cardRepository
      */
-    public CardService(CardRepository cardRepository) {
+    @Autowired
+    public CardService(@Qualifier("card") CardRepository cardRepository) {
         this.cardRepository = cardRepository;
     }
 

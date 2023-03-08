@@ -33,6 +33,9 @@ public class CardTest {
     Tag tag2;
     Tag tag3;
 
+    /**
+     * Set up all objects needed for testing
+     */
     @BeforeEach
     public void setUp() {
         checkListItem1 = new CheckListItem("Do X", false, card);
@@ -69,12 +72,18 @@ public class CardTest {
         cards.add(card2);
     }
 
+    /**
+     * Test the default constructor
+     */
     @Test
     public void checkConstructor() {
         Card defaultCard = new Card();
         assertNotNull(defaultCard);
     }
 
+    /**
+     * Test the constructor with parameters
+     */
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("Homework", card.title);
@@ -85,18 +94,27 @@ public class CardTest {
         assertEquals(tags, card.tags);
     }
 
+    /**
+     * Test equals and hashcode methods for two equal objects
+     */
     @Test
     public void equalsHashCode() {
         assertEquals(card, card2);
         assertEquals(card.hashCode(), card2.hashCode());
     }
 
+    /**
+     * Test equals and hashcode methods for two different objects
+     */
     @Test
     public void notEqualsHashCode() {
         assertNotEquals(card, card3);
         assertNotEquals(card.hashCode(), card3.hashCode());
     }
 
+    /**
+     * Test toString method
+     */
     @Test
     public void hasToString() {
         var actual = card.toString();
@@ -110,6 +128,9 @@ public class CardTest {
         assertTrue(actual.contains("tags"));
     }
 
+    /**
+     * Test checklist item addition
+     */
     @Test
     public void testAddCheckListItem() {
         card.addCheckListItem(checkListItem3);
@@ -117,12 +138,18 @@ public class CardTest {
         assertEquals(checklist, card.checklist);
     }
 
+    /**
+     * Test null addition
+     */
     @Test
     public void testAddCheckListItemNull() {
         card.addCheckListItem(null);
         assertEquals(checklist, card.checklist);
     }
 
+    /**
+     * Test checklist item removal
+     */
     @Test
     public void testRemoveCheckListItem() {
         card.removeCheckListItem(checkListItem2);
@@ -130,11 +157,18 @@ public class CardTest {
         assertEquals(checklist, card.checklist);
     }
 
+    /**
+     * Test null removal
+     */
     @Test
     public void testRemoveCheckListItemNull() {
         card.removeCheckListItem(null);
         assertEquals(checklist, card.checklist);
     }
+
+    /**
+     * Test tag addition
+     */
     @Test
     public void testAddTag() {
         card.addTag(tag3);
@@ -142,12 +176,18 @@ public class CardTest {
         assertEquals(tags, card.tags);
     }
 
+    /**
+     * Test null addition
+     */
     @Test
     public void testAddTagNull() {
         card.addTag(null);
         assertEquals(tags, card.tags);
     }
 
+    /**
+     * Test tag removal
+     */
     @Test
     public void testRemoveTagItem() {
         card.removeTag(tag2);
@@ -155,6 +195,9 @@ public class CardTest {
         assertEquals(tags, card.tags);
     }
 
+    /**
+     * Test null removal
+     */
     @Test
     public void testRemoveTagNull() {
         card.removeTag(null);

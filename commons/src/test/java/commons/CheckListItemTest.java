@@ -18,7 +18,9 @@ public class CheckListItemTest {
     CheckListItem checkListItem2;
     CheckListItem checkListItem3;
 
-
+    /**
+     * Set up all objects needed for testing
+     */
     @BeforeEach
     public void setUp() {
         board = new Board("Algebra", "#ffffff",
@@ -34,12 +36,18 @@ public class CheckListItemTest {
         checkListItem3 = new CheckListItem("Do Z", true, card);
     }
 
+    /**
+     * Test the default constructor
+     */
     @Test
     public void checkConstructor() {
         CheckListItem defaultItem = new CheckListItem();
         assertNotNull(defaultItem);
     }
 
+    /**
+     * Test the constructor with parameters
+     */
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("Do X", checkListItem.text);
@@ -47,18 +55,27 @@ public class CheckListItemTest {
         assertEquals(card, checkListItem.card);
     }
 
+    /**
+     * Test equals and hashcode methods for two equal objects
+     */
     @Test
     public void equalsHashCode() {
         assertEquals(checkListItem, checkListItem2);
         assertEquals(checkListItem.hashCode(), checkListItem2.hashCode());
     }
 
+    /**
+     * Test equals and hashcode methods for two different objects
+     */
     @Test
     public void notEqualsHashCode() {
         assertNotEquals(checkListItem, checkListItem3);
         assertNotEquals(checkListItem.hashCode(), checkListItem3.hashCode());
     }
 
+    /**
+     * Test toString method
+     */
     @Test
     public void hasToString() {
         var actual = checkListItem.toString();
@@ -69,12 +86,18 @@ public class CheckListItemTest {
         assertTrue(actual.contains("card"));
     }
 
+    /**
+     * Test checking a checklist item
+     */
     @Test
     public void testChangeCompletionTrue() {
         checkListItem.changeCompletion();
         assertTrue(checkListItem.completed);
     }
 
+    /**
+     * Test unchecking a checklist item
+     */
     @Test
     public void testChangeCompletionFalse() {
         checkListItem3.changeCompletion();

@@ -19,6 +19,9 @@ public class BoardTest {
     ListOfCards list2;
     ListOfCards list3;
 
+    /**
+     * Set up all objects needed for testing
+     */
     @BeforeEach
     public void setUp() {
         listOfCards = new ArrayList<>();
@@ -36,12 +39,18 @@ public class BoardTest {
 
     }
 
+    /**
+     * Test the default constructor
+     */
     @Test
     public void checkConstructor() {
         Board defaultBoard = new Board();
         assertNotNull(defaultBoard);
     }
 
+    /**
+     * Test the constructor with parameters
+     */
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("Algebra", board.title);
@@ -51,18 +60,27 @@ public class BoardTest {
         assertEquals(listOfCards, board.lists);
     }
 
+    /**
+     * Test equals and hashcode methods for two equal objects
+     */
     @Test
     public void equalsHashCode() {
         assertEquals(board, board2);
         assertEquals(board.hashCode(), board2.hashCode());
     }
 
+    /**
+     * Test equals and hashcode methods for two different objects
+     */
     @Test
     public void notEqualsHashCode() {
         assertNotEquals(board, board3);
         assertNotEquals(board.hashCode(), board3.hashCode());
     }
 
+    /**
+     * Test toString method
+     */
     @Test
     public void hasToString() {
         var actual = board.toString();
@@ -75,6 +93,9 @@ public class BoardTest {
         assertTrue(actual.contains("lists"));
     }
 
+    /**
+     * Test list addition
+     */
     @Test
     public void testAddList() {
         board.addList(list3);
@@ -82,12 +103,18 @@ public class BoardTest {
         assertEquals(listOfCards, board.lists);
     }
 
+    /**
+     * Test null addition
+     */
     @Test
     public void testAddListNull() {
         board.addList(null);
         assertEquals(listOfCards, board.lists);
     }
 
+    /**
+     * Test list removal
+     */
     @Test
     public void testRemoveList() {
         board.removeList(list2);
@@ -95,12 +122,18 @@ public class BoardTest {
         assertEquals(listOfCards, board.lists);
     }
 
+    /**
+     * Test null removal
+     */
     @Test
     public void testRemoveListNull() {
         board.removeList(null);
         assertEquals(listOfCards, board.lists);
     }
 
+    /**
+     * Test list swapping
+     */
     @Test
     public void testSwapLists() {
         board.swapList(list1, list2);
@@ -110,6 +143,9 @@ public class BoardTest {
         assertEquals(listOfCards2, board.lists);
     }
 
+    /**
+     * Test moving lists
+     */
     @Test
     public void testMoveLists() {
         board.moveList(list1, 1);

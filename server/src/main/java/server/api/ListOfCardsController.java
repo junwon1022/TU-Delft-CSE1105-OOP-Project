@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Board;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class ListOfCardsController {
      * @param listOfCardsService
      * @param boardService
      */
+    @Autowired
     public ListOfCardsController(ListOfCardsService listOfCardsService,
                                  BoardService boardService) {
         this.listOfCardsService = listOfCardsService;
@@ -37,7 +39,7 @@ public class ListOfCardsController {
      * @param boardId
      * @return the list of lists
      */
-    @GetMapping("/")
+    @GetMapping(path = {"", "/"})
     private ResponseEntity<List<ListOfCards>> getListsOfCards
     (@PathVariable("board_id") long boardId) {
         try {
@@ -58,7 +60,7 @@ public class ListOfCardsController {
      * @param listId
      * @return the list
      */
-    @GetMapping("/{list_id}")
+    @GetMapping(path = {"/{list_id}/","/{list_id}"})
     private ResponseEntity<ListOfCards> getListOfCardsById(@PathVariable("board_id") long boardId,
                                                            @PathVariable("list_id") long listId) {
         try {
@@ -81,7 +83,7 @@ public class ListOfCardsController {
      * @param boardId
      * @return the new list
      */
-    @PostMapping("/")
+    @PostMapping(path = {"", "/"})
     public ResponseEntity<ListOfCards> createListOfCards(@RequestBody ListOfCards list,
                                                          @PathVariable("board_id") long boardId) {
         try {
@@ -104,7 +106,7 @@ public class ListOfCardsController {
      * @param listId
      * @return the edited list
      */
-    @PostMapping("{list_id}")
+    @PostMapping(path = {"/{list_id}/","/{list_id}"})
     public ResponseEntity<ListOfCards> editListOfCardsTitleById(@RequestBody String newTitle,
                                                     @PathVariable("board_id") long boardId,
                                                     @PathVariable("list_id") long listId) {
@@ -129,7 +131,7 @@ public class ListOfCardsController {
      * @param listId
      * @return the deleted list
      */
-    @DeleteMapping("/{list_id}")
+    @DeleteMapping(path = {"/{list_id}/","/{list_id}"})
     public ResponseEntity<ListOfCards> removeListOfCardsById(@PathVariable("board_id") long boardId,
                                                              @PathVariable("list_id") long listId) {
         try {

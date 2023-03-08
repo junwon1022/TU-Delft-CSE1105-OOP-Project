@@ -2,6 +2,8 @@ package server.services;
 
 import commons.Card;
 import commons.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.TagRepository;
 
@@ -16,7 +18,8 @@ public class TagService {
      * Constructor with parameters
      * @param tagRepository
      */
-    public TagService(TagRepository tagRepository) {
+    @Autowired
+    public TagService(@Qualifier("tag") TagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }
 
@@ -24,16 +27,16 @@ public class TagService {
      * Check if a card contains a tag
      * @param tag
      * @param card
-     * @return true if list in board
+     * @return true if tag in card
      */
     public boolean tagInCard(Tag tag,Card card) {
         return card.tags.contains(tag);
     }
 
     /**
-     * Get all tags within a given card
+     * Get all tags of a given card
      * @param card
-     * @return the list of tags
+     * @return the set of tags
      */
     public Set<Tag> getTags(Card card) {
         return card.tags;
@@ -53,9 +56,9 @@ public class TagService {
      * Create a new tag
      * @param tag
      * @param card
-     * @return tagRepository
+     * @return the new tag
      */
-    public Tag createTag(Tag tag,Card card) throws Exception {
+    public Tag createTag(Tag tag, Card card) throws Exception {
         if(tag.name == null || tag.name.isEmpty()) {
             throw new Exception("Tag cannot be created without a name.");
         }
@@ -65,7 +68,7 @@ public class TagService {
     }
 
     /**
-     * Delete a list given its id
+     * Delete a tag given its id
      * @param id
      */
     public void deleteTagById(Long id) {
