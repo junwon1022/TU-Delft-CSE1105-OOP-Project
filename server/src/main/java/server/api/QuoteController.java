@@ -36,16 +36,33 @@ public class QuoteController {
     private final Random random;
     private final QuoteRepository repo;
 
+    /**
+     * Create a new quote controller.
+     *
+     * @param random
+     * @param repo
+     */
     public QuoteController(Random random, QuoteRepository repo) {
         this.random = random;
         this.repo = repo;
     }
 
+    /**
+     * Get a all quotes.
+     *
+     * @return A list of quotes.
+     */
     @GetMapping(path = { "", "/" })
     public List<Quote> getAll() {
         return repo.findAll();
     }
 
+    /**
+     * Get the quote with the given id.
+     *
+     * @param id The id of the quote.
+     * @return The quote with the given id.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
         if (id < 0 || !repo.existsById(id)) {
@@ -54,10 +71,17 @@ public class QuoteController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
+    /**
+     * Add a new quote.
+     * @param quote The quote to add.
+     * @return The response.
+     */
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Quote> add(@RequestBody Quote quote) {
 
-        if (quote.person == null || isNullOrEmpty(quote.person.firstName) || isNullOrEmpty(quote.person.lastName)
+        if (quote.person == null
+                || isNullOrEmpty(quote.person.firstName)
+                || isNullOrEmpty(quote.person.lastName)
                 || isNullOrEmpty(quote.quote)) {
             return ResponseEntity.badRequest().build();
         }
@@ -66,10 +90,21 @@ public class QuoteController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Null or empty check.
+     *
+     * @param s The string to check.
+     * @return True if the string is null or empty.
+     */
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }
 
+    /**
+     * Get a random quote.
+     *
+     * @return The response entity.
+     */
     @GetMapping("rnd")
     public ResponseEntity<Quote> getRandom() {
         var quotes = repo.findAll();
