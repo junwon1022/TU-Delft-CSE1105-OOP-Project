@@ -22,17 +22,11 @@ public class MainCtrlTest {
 
     private MainCtrl sut;
 
-    /**
-     * Create a new MainCtrlTest.
-     */
     @BeforeEach
     public void setup() {
         sut = new MainCtrl();
     }
 
-    /**
-     * Test the initialize method.
-     */
     @Test
     public void writeSomeTests() {
         // TODO create replacement objects and write some tests
