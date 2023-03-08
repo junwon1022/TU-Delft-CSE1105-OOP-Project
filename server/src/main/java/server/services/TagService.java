@@ -1,14 +1,10 @@
 package server.services;
 
-import commons.Board;
 import commons.Card;
-import commons.ListOfCards;
 import commons.Tag;
 import org.springframework.stereotype.Service;
-import server.database.ListOfCardsRepository;
 import server.database.TagRepository;
 
-import java.util.List;
 import java.util.Set;
 
 @Service

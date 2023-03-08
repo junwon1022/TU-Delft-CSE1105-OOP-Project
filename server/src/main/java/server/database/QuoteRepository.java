@@ -19,8 +19,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import commons.Quote;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
 //    public List<Quote> getAllWhere(String name);
