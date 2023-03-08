@@ -1,6 +1,8 @@
 package server.services;
 
 import commons.Board;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.BoardRepository;
 
@@ -13,7 +15,8 @@ public class BoardService {
      * Constructor with parameters
      * @param boardRepository
      */
-    public BoardService(BoardRepository boardRepository) {
+    @Autowired
+    public BoardService(@Qualifier("board") BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
     }
 
@@ -38,6 +41,8 @@ public class BoardService {
         }
         return boardRepository.save(board);
     }
+
+
 
     /**
      * Delete a board given its id

@@ -27,7 +27,6 @@ public class CheckListItemController {
 
     /**
      * Constructor with parameters
-     *
      * @param checkListItemService
      * @param cardService
      * @param listOfCardsService
@@ -35,7 +34,8 @@ public class CheckListItemController {
      */
     public CheckListItemController(CardService cardService,
                                    ListOfCardsService listOfCardsService,
-                                   CheckListItemService checkListItemService, BoardService boardService) {
+                                   CheckListItemService checkListItemService,
+                                   BoardService boardService) {
         this.cardService = cardService;
         this.checkListItemService = checkListItemService;
         this.listOfCardsService = listOfCardsService;
@@ -43,13 +43,13 @@ public class CheckListItemController {
     }
 
     /**
-     * Get the checklists within a given card
+     * Get the checklist of a given card
      * @param boardId
      * @param listId
      * @param cardId
-     * @return the list of lists
+     * @return the checklist
      */
-    @GetMapping("/")
+    @GetMapping(path = {"", "/"})
     private ResponseEntity<List<CheckListItem>> getChecks
     (@PathVariable("board_id") long boardId,
         @PathVariable("list_id") long listId,
@@ -59,7 +59,6 @@ public class CheckListItemController {
             Board board = boardService.getBoardById(boardId);
             // Get the list
             ListOfCards list = listOfCardsService.getListById(listId);
-
             // Get the card
             Card card = cardService.getCardById(cardId);
 
@@ -67,7 +66,7 @@ public class CheckListItemController {
             if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card,list)) {
                 return ResponseEntity.badRequest().build();
             }
-            List<CheckListItem> checks = checkListItemService.getChecklists(card);
+            List<CheckListItem> checks = checkListItemService.getChecklist(card);
             // Return the cards with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(checks);
         }
@@ -78,20 +77,20 @@ public class CheckListItemController {
 
 
     /**
-     * Get a card given its id
+     * Get a checklist item given its id
      * @param boardId
      * @param listId
      * @param cardId
      * @param checkId
-     * @return the list
+     * @return the checklist item
      */
-    @GetMapping("/{check_id}")
+    @GetMapping(path = {"/{check_id}/","/{check_id}"})
     private ResponseEntity<CheckListItem> getCheckById(@PathVariable("board_id") long boardId,
                                                            @PathVariable("list_id") long listId,
                                                            @PathVariable("card_id") long cardId,
                                                            @PathVariable("check_id") long checkId) {
         try {
-            if(!validPath(boardId, listId, cardId,checkId)) {
+            if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
             // Get the card
@@ -112,7 +111,7 @@ public class CheckListItemController {
      * @param cardId
      * @return the new check
      */
-    @PostMapping("/")
+    @PostMapping(path = {"", "/"})
     public ResponseEntity<CheckListItem> createCheck(@RequestBody CheckListItem check,
                                            @PathVariable("board_id") long boardId,
                                            @PathVariable("list_id") long listId,
@@ -122,17 +121,16 @@ public class CheckListItemController {
             Board board = boardService.getBoardById(boardId);
             // Get the list
             ListOfCards list = listOfCardsService.getListById(listId);
-
             // Get the card
             Card card = cardService.getCardById(cardId);
 
             // Check if the list is in the board and the card is in the list
-            if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card,list)) {
+            if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card, list)) {
                 return ResponseEntity.badRequest().build();
             }
 
             // Save the new card to the database
-            checkListItemService.createChecklistItem(check,card);
+            checkListItemService.createCheckListItem(check, card);
             // Return the saved card with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(check);
         }
@@ -147,10 +145,11 @@ public class CheckListItemController {
      * @param boardId
      * @param listId
      * @param cardId
-     * @return the edited card
+     * @param checkId
+     * @return the edited checklist item
      */
-    @PostMapping("{check_id}/")
-    public ResponseEntity<CheckListItem> editChecktextById(@RequestBody String newText,
+    @PostMapping(path = {"/{check_id}/text/","/{check_id}/text"})
+    public ResponseEntity<CheckListItem> editCheckTextById(@RequestBody String newText,
                                                   @PathVariable("board_id") long boardId,
                                                   @PathVariable("list_id") long listId,
                                                   @PathVariable("card_id") long cardId,
@@ -181,8 +180,8 @@ public class CheckListItemController {
      * @param cardId
      * @return the edited card
      */
-    @PostMapping("{check_id}")
-    public ResponseEntity<CheckListItem> editCompletion(
+    @PostMapping(path = {"/{check_id}/completion/","/{check_id}/completion"})
+    public ResponseEntity<CheckListItem> editCheckCompletion(
                                                            @PathVariable("board_id") long boardId,
                                                            @PathVariable("list_id") long listId,
                                                            @PathVariable("card_id") long cardId,
@@ -211,7 +210,7 @@ public class CheckListItemController {
      * @param cardId
      * @return the deleted card
      */
-    @DeleteMapping("/{check_id}")
+    @DeleteMapping(path = {"/{check_id}/","/{check_id}"})
     public ResponseEntity<Card> removeCheckById(@PathVariable("board_id") long boardId,
                                                @PathVariable("list_id") long listId,
                                                @PathVariable("card_id") long cardId,
@@ -221,7 +220,7 @@ public class CheckListItemController {
                 return ResponseEntity.badRequest().build();
             }
             // Delete the card
-            checkListItemService.deleteChecklistItemById(checkId);
+            checkListItemService.deleteCheckListItemById(checkId);
             // Return the saved card with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }
@@ -230,6 +229,15 @@ public class CheckListItemController {
         }
     }
 
+    /**
+     * Checks whether the path to a checklist item is valid
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @param checkId
+     * @return true if the path is valid
+     * @throws Exception
+     */
     private boolean validPath(long boardId, long listId, long cardId, long checkId)
             throws Exception {
         // Get the board
@@ -238,7 +246,6 @@ public class CheckListItemController {
         ListOfCards list = listOfCardsService.getListById(listId);
         // Get the card
         Card card = cardService.getCardById(cardId);
-
         // Get the check
         CheckListItem check = checkListItemService.getCheckById(checkId);
 
@@ -250,7 +257,7 @@ public class CheckListItemController {
         if(!cardService.cardInList(card, list)) {
             return false;
         }
-
+        // Check if the checklist item is in the card
         if(!checkListItemService.checkInCard(check,card)){
             return false;
         }

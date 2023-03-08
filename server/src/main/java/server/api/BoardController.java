@@ -1,5 +1,6 @@
 package server.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class BoardController {
      * Constructor with parameters
      * @param boardService
      */
+    @Autowired
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
@@ -27,11 +29,12 @@ public class BoardController {
      * @param boardId
      * @return the board
      */
-    @GetMapping("/{board_id}")
-    private ResponseEntity<Board> getBoardById(@PathVariable("board_id") long boardId){
+    @GetMapping(path = {"/{board_id}/","/{board_id}"})
+    public ResponseEntity<Board> getBoardById(@PathVariable("board_id") long boardId){
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
+            if(board == null) return ResponseEntity.badRequest().build();
             // Return the board with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(board);
         }
@@ -45,7 +48,8 @@ public class BoardController {
      * @param board
      * @return the new board
      */
-    @PostMapping("/")
+
+    @PostMapping(path={"","/"})
     public ResponseEntity<Board> createBoard(@RequestBody Board board) {
         try {
             // Save the new board to the database
@@ -64,7 +68,7 @@ public class BoardController {
      * @param boardId
      * @return the edited board
      */
-    @PostMapping("/{board_id}")
+    @PostMapping(path = {"/{board_id}/","/{board_id}"})
     public ResponseEntity<Board> editBoardTitleById(@RequestBody String newTitle,
                                                   @PathVariable("board_id") long boardId) {
 
@@ -84,15 +88,15 @@ public class BoardController {
      * @param boardId
      * @return the deleted board
      */
-    @DeleteMapping("/{board_id}")
+    @DeleteMapping(path = {"/{board_id}/","/{board_id}"})
     public ResponseEntity<Board> removeBoardById(@PathVariable("board_id") long boardId){
         try {
             // Check if a board with the given id exists
-            boardService.getBoardById(boardId);
+            Board board = boardService.getBoardById(boardId);
             // Delete the board
             boardService.deleteBoardById(boardId);
             // Return the saved board with an HTTP 200 OK status
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(board);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

@@ -32,9 +32,9 @@
 <!--            <property name="allowMissingReturnTag" value="false"/>-->
 <!--        </module>-->
 
-<!--        <module name="Indentation">-->
-<!--            <property name="severity" value="warning"/>-->
-<!--        </module>-->
+        <module name="Indentation">
+            <property name="severity" value="warning"/>
+        </module>
 
         <module name="MethodName">
             <property name="severity" value="warning"/>

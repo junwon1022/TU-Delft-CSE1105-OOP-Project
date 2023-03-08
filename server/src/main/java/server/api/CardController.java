@@ -43,7 +43,7 @@ public class CardController {
      * @param listId
      * @return the list of lists
      */
-    @GetMapping("/")
+    @GetMapping(path = {"", "/"})
     private ResponseEntity<List<Card>> getCards
     (@PathVariable("board_id") long boardId,
         @PathVariable("list_id") long listId) {
@@ -72,7 +72,7 @@ public class CardController {
      * @param cardId
      * @return the list
      */
-    @GetMapping("/{card_id}")
+    @GetMapping(path = {"/{card_id}/","/{card_id}"})
     private ResponseEntity<Card> getCardById(@PathVariable("board_id") long boardId,
                                                            @PathVariable("list_id") long listId,
                                                            @PathVariable("card_id") long cardId) {
@@ -97,7 +97,7 @@ public class CardController {
      * @param listId
      * @return the new list
      */
-    @PostMapping("/")
+    @PostMapping(path = {"","/"})
     public ResponseEntity<Card> createCard(@RequestBody Card card,
                                            @PathVariable("board_id") long boardId,
                                            @PathVariable("list_id") long listId) {
@@ -128,7 +128,7 @@ public class CardController {
      * @param cardId
      * @return the edited card
      */
-    @PostMapping("{card_id}")
+    @PostMapping(path = {"/{card_id}/","/{card_id}"})
     public ResponseEntity<Card> editCardTitleById(@RequestBody String newTitle,
                                                   @PathVariable("board_id") long boardId,
                                                   @PathVariable("list_id") long listId,
@@ -155,7 +155,7 @@ public class CardController {
      * @param cardId
      * @return the deleted card
      */
-    @DeleteMapping("/{card_id}")
+    @DeleteMapping(path = {"/{card_id}/","/{card_id}"})
     public ResponseEntity<Card> removeCardById(@PathVariable("board_id") long boardId,
                                                @PathVariable("list_id") long listId,
                                                @PathVariable("card_id") long cardId) {
@@ -173,6 +173,14 @@ public class CardController {
         }
     }
 
+    /**
+     * Checks whether the path to a card is valid
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return true if the given path is valid
+     * @throws Exception
+     */
     private boolean validPath(long boardId, long listId, long cardId)
             throws Exception {
         // Get the board
