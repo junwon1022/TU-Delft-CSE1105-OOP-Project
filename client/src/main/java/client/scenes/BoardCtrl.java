@@ -19,18 +19,10 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
 import commons.CardList;
-import commons.Person;
-import commons.Quote;
-import jakarta.ws.rs.WebApplicationException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +39,6 @@ public class BoardCtrl {
 
     /**
      * Create a new BoardCtrl.
-     *
      * @param server The server to use.
      * @param mainCtrl The main controller to use.
      */
@@ -57,6 +48,9 @@ public class BoardCtrl {
         this.server = server;
     }
 
+    /**
+     * Initialize the scene.
+     */
     public void initialize() {
         list.setFixedCellSize(0);
         CardList list1 = new CardList("List 1", new ArrayList<>());

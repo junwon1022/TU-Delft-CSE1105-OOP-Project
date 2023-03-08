@@ -33,6 +33,9 @@ public class CardListCtrl extends ListCell<CardList> {
 
     private ObservableList<Card> data;
 
+    /**
+     * Create a new CardListCtrl
+     */
     public CardListCtrl() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CardList.fxml"));
         fxmlLoader.setController(this);
@@ -64,6 +67,10 @@ public class CardListCtrl extends ListCell<CardList> {
         }
     }
 
+    /**
+     * Adding a new card to the list
+     * @param event the ActionEvent
+     */
     public void addCard(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCard.fxml"));
         try {

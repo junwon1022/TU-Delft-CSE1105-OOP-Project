@@ -1,7 +1,6 @@
 package client.scenes;
 
 import commons.Card;
-import commons.CardList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -22,6 +21,9 @@ public class CardCtrl extends ListCell<Card> {
     @FXML
     private Label description;
 
+    /**
+     * Create a new CardCtrl
+     */
     public CardCtrl() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
         fxmlLoader.setController(this);

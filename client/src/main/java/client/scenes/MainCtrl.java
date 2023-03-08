@@ -39,6 +39,7 @@ public class MainCtrl {
      * @param primaryStage The primary stage to use.
      * @param overview The overview scene to use.
      * @param add The add scene to use.
+     * @param board The board screen to use.
      */
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
             Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board) {
