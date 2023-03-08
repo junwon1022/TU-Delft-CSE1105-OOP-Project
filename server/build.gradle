@@ -9,4 +9,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'
 	implementation project(":commons")
+//	compileOnly 'org.projectlombok:lombok:222.3739.54'
+//	annotationProcessor 'org.projectlombok:lombok:222.3739.54'
+//	testAnnotationProcessor("org.projectlombok:lombok:222.3739.54")
 }

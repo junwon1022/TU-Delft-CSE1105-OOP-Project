@@ -30,19 +30,8 @@ public class MainCtrl {
     private AddQuoteCtrl addCtrl;
     private Scene add;
 
-    private BoardCtrl boardCtrl;
-    private Scene board;
-
-    /**
-     * Create a new MainCtrl.
-     *
-     * @param primaryStage The primary stage to use.
-     * @param overview The overview scene to use.
-     * @param add The add scene to use.
-     * @param board The board screen to use.
-     */
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board) {
+            Pair<AddQuoteCtrl, Parent> add) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -50,34 +39,16 @@ public class MainCtrl {
         this.addCtrl = add.getKey();
         this.add = new Scene(add.getValue());
 
-        this.boardCtrl = board.getKey();
-        this.board = new Scene(board.getValue());
-
-        showBoard();
+        showOverview();
         primaryStage.show();
     }
 
-    /**
-     * Show the board scene.
-     */
-    public void showBoard() {
-        primaryStage.setTitle("My board");
-        primaryStage.setScene(board);
-        boardCtrl.initialize();
-    }
-
-    /**
-     * Show the overview scene.
-     */
     public void showOverview() {
         primaryStage.setTitle("Quotes: Overview");
         primaryStage.setScene(overview);
         overviewCtrl.refresh();
     }
 
-    /**
-     * Show the add scene.
-     */
     public void showAdd() {
         primaryStage.setTitle("Quotes: Adding Quote");
         primaryStage.setScene(add);
