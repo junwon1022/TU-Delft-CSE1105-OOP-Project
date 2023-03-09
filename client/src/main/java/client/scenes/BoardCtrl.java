@@ -49,7 +49,7 @@ public class BoardCtrl {
 
         list.setFixedCellSize(0);
         list.setItems(data);
-        list.setCellFactory(lv -> new CardListCtrl(server, this));
+        list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
 
         refresh();
     }

@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class CardListCtrl extends ListCell<ListOfCards> {
+public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
     private final BoardCtrl board;
 
@@ -41,11 +41,11 @@ public class CardListCtrl extends ListCell<ListOfCards> {
      * @param server The server to use
      * @param board The board this CardList belongs to
      */
-    public CardListCtrl(ServerUtils server, BoardCtrl board) {
+    public ListOfCardsCtrl(ServerUtils server, BoardCtrl board) {
         this.server = server;
         this.board = board;
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CardList.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ListOfCards.fxml"));
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();

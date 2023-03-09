@@ -53,8 +53,8 @@ public class MainCtrl {
         this.boardCtrl = board.getKey();
         this.board = new Scene(board.getValue());
 
-//        showBoard();
-//        primaryStage.show();
+        showBoard();
+        primaryStage.show();
     }
 
     /**
