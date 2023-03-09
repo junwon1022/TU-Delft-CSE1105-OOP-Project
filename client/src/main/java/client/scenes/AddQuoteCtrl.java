@@ -41,7 +41,6 @@ public class AddQuoteCtrl {
     @FXML
     private TextField quote;
 
-
     /**
      * Create a new AddQuoteCtrl.
      *

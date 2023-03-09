@@ -1,7 +1,7 @@
 package client.scenes;
 
 import commons.Card;
-import commons.CardList;
+import commons.ListOfCards;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,8 +16,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-public class CardListCtrl extends ListCell<CardList> {
-    CardList cardData;
+public class CardListCtrl extends ListCell<ListOfCards> {
+    ListOfCards cardData;
 
     @FXML
     private AnchorPane root;
@@ -52,15 +52,15 @@ public class CardListCtrl extends ListCell<CardList> {
     }
 
     @Override
-    protected void updateItem(CardList item, boolean empty) {
+    protected void updateItem(ListOfCards item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            title.setText(item.getTitle());
-            data.setAll(item.getCards());
+            title.setText(item.title);
+            data.setAll(item.cards);
             cardData = item;
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -82,12 +82,12 @@ public class CardListCtrl extends ListCell<CardList> {
             stage.showAndWait();
             if (controller.success) {
                 String title = controller.storedText;
+                // Wrong constructor for card
+                Card newCard = new Card(title, null, null, null, null, null);
 
-                Card newCard = new Card(title);
-
-                List<Card> cards = cardData.getCards();
+                List<Card> cards = cardData.cards;
                 cards.add(newCard);
-                cardData.setCards(cards);
+                cardData.cards = cards;
 
                 data.add(newCard);
             }
