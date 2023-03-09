@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
 import javafx.collections.FXCollections;
@@ -14,10 +15,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 public class CardListCtrl extends ListCell<CardList> {
-    CardList cardData;
+    private final ServerUtils server;
+    private final BoardCtrl board;
+
+    private CardList cardData;
 
     @FXML
     private AnchorPane root;
@@ -35,8 +38,13 @@ public class CardListCtrl extends ListCell<CardList> {
 
     /**
      * Create a new CardListCtrl
+     * @param server The server to use
+     * @param board The board this CardList belongs to
      */
-    public CardListCtrl() {
+    public CardListCtrl(ServerUtils server, BoardCtrl board) {
+        this.server = server;
+        this.board = board;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CardList.fxml"));
         fxmlLoader.setController(this);
         try {
@@ -44,13 +52,20 @@ public class CardListCtrl extends ListCell<CardList> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        setMinHeight(300);
+
         data = FXCollections.observableArrayList();
+
         list.setItems(data);
-        list.setCellFactory(param -> new CardCtrl());
-        list.setFixedCellSize(150);
+        list.setCellFactory(param -> new CardCtrl(server, board));
     }
 
+    /**
+     * Called whenever the parent ListView is changed. Sets the data in thsi controller.
+     * @param item The new item for the cell.
+     * @param empty whether or not this cell represents data from the list. If it
+     *        is empty, then it does not represent any domain data, but is a cell
+     *        being used to render an "empty" row.
+     */
     @Override
     protected void updateItem(CardList item, boolean empty) {
         super.updateItem(item, empty);
@@ -62,13 +77,16 @@ public class CardListCtrl extends ListCell<CardList> {
             title.setText(item.getTitle());
             data.setAll(item.getCards());
             cardData = item;
+
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
 
     /**
-     * Adding a new card to the list
+     * Adds a new card to the CardList.
+     * Creates a new window (AddCard) that asks for the title.
+     * If successful, adds the card via the server and forces a board refresh.
      * @param event the ActionEvent
      */
     public void addCard(ActionEvent event) {
@@ -76,20 +94,17 @@ public class CardListCtrl extends ListCell<CardList> {
         try {
             Parent root = fxmlLoader.load();
             AddCardCtrl controller = fxmlLoader.getController();
+
             Stage stage = new Stage();
             stage.setTitle("Add new card");
-            stage.setScene(new Scene((Parent) root, 300, 200));
+            stage.setScene(new Scene(root, 300, 200));
+
             stage.showAndWait();
+
             if (controller.success) {
                 String title = controller.storedText;
-
-                Card newCard = new Card(title);
-
-                List<Card> cards = cardData.getCards();
-                cards.add(newCard);
-                cardData.setCards(cards);
-
-                data.add(newCard);
+                server.addCard(new Card(title, cardData));
+                board.refresh();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
