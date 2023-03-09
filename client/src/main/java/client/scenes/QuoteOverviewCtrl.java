@@ -46,7 +46,6 @@ public class QuoteOverviewCtrl implements Initializable {
     @FXML
     private TableColumn<Quote, String> colQuote;
 
-
     /**
      * Create a new QuoteOverviewCtrl.
      *
@@ -61,12 +60,14 @@ public class QuoteOverviewCtrl implements Initializable {
 
 
     /**
-     * Initialize the controller.
      *
-     * @param location The location used to resolve relative paths for the root object,
-     *                 or null if the location is not known.
-     * @param resources The resources used to localize the root object,
-     *                 or null if the root object was not localized.
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,6 +83,7 @@ public class QuoteOverviewCtrl implements Initializable {
     }
 
     /**
+     *
      * Refresh the table.
      */
     public void addQuote() {
@@ -89,6 +91,7 @@ public class QuoteOverviewCtrl implements Initializable {
     }
 
     /**
+     *
      * Refresh the table.
      */
     public void refresh() {
