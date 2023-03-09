@@ -180,6 +180,10 @@ public class ServerUtils {
                 .post(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
     }
 
+    /**
+     * Method that gets the cards from the server from a certain list
+     * @return a list of the cards
+     */
     public List<Card> getCards(){
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards") //
