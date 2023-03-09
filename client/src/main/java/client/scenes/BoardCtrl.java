@@ -17,7 +17,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.CardList;
+import commons.ListOfCards;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,9 +28,9 @@ public class BoardCtrl {
     private final ServerUtils server;
 
     @FXML
-    private ListView<CardList> list;
+    private ListView<ListOfCards> list;
 
-    ObservableList<CardList> data;
+    ObservableList<ListOfCards> data;
 
     /**
      * Create a new BoardCtrl.

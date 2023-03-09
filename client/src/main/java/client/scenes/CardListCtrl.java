@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
-import commons.CardList;
+import commons.ListOfCards;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,11 +16,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class CardListCtrl extends ListCell<CardList> {
+public class CardListCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
     private final BoardCtrl board;
 
-    private CardList cardData;
+    private ListOfCards cardData;
 
     @FXML
     private AnchorPane root;
@@ -67,15 +67,15 @@ public class CardListCtrl extends ListCell<CardList> {
      *        being used to render an "empty" row.
      */
     @Override
-    protected void updateItem(CardList item, boolean empty) {
+    protected void updateItem(ListOfCards item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            title.setText(item.getTitle());
-            data.setAll(item.getCards());
+            title.setText(item.title);
+            data.setAll(item.cards);
             cardData = item;
 
             setGraphic(root);
@@ -103,7 +103,7 @@ public class CardListCtrl extends ListCell<CardList> {
 
             if (controller.success) {
                 String title = controller.storedText;
-                server.addCard(new Card(title, cardData));
+                server.addCard(new Card(title, "description", "red", cardData, null, null));
                 board.refresh();
             }
         } catch (IOException e) {

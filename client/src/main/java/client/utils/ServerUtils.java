@@ -24,8 +24,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import commons.Board;
 import commons.Card;
-import commons.CardList;
+import commons.ListOfCards;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -81,31 +82,33 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    ArrayList<CardList> serverData = null;
+    ArrayList<ListOfCards> serverData = null;
 
     /**
      * Placeholder add card function.
      * @param card the card to add
      */
     public void addCard(Card card) {
-        for (CardList list: serverData)
-            if (card.getParent().equals(list))
-                list.getCards().add(card);
+        for (ListOfCards list: serverData)
+            if (card.list.equals(list))
+                list.cards.add(card);
     }
 
     /**
      * Placeholder method to get data from server
      * @return a list of cardlists.
      */
-    public List<CardList> getServerData() {
+    public List<ListOfCards> getServerData() {
         if (serverData == null) {
-            CardList list1 = new CardList("List 1", new ArrayList<>());
-            list1.getCards().add(new Card("Card 1", list1));
-            list1.getCards().add(new Card("Card 2", list1));
+            Board board = new Board();
 
-            CardList list2 = new CardList("List 2", new ArrayList<>());
-            list2.getCards().add(new Card("Card 3", list2));
-            list2.getCards().add(new Card("Card 4", list2));
+            ListOfCards list1 = new ListOfCards("List 1", "red", board, new ArrayList<>());
+            list1.cards.add(new Card("Card 1", "desc", "red", list1, null, null));
+            list1.cards.add(new Card("Card 2", "desc", "red", list1, null, null));
+
+            ListOfCards list2 = new ListOfCards("List 2", "red", board, new ArrayList<>());
+            list2.cards.add(new Card("Card 3", "desc", "red", list2, null, null));
+            list2.cards.add(new Card("Card 4", "desc", "red", list2, null, null));
 
             serverData = new ArrayList<>(List.of(list1, list2));
         }
