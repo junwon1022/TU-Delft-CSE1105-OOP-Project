@@ -23,9 +23,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+import commons.Quote;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -35,7 +35,12 @@ public class ServerUtils {
     private static final String SERVER = "http://localhost:8080/";
 
     /**
+<<<<<<< HEAD
+     *
+     * @throws IOException
+=======
      * Get all quotes from the server.
+>>>>>>> 8b24707a867c922ec1a200a9d4e55f8d2a99f137
      */
     public void getQuotesTheHardWay() throws IOException {
         var url = new URL("http://localhost:8080/api/quotes");

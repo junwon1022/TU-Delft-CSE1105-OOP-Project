@@ -38,6 +38,7 @@
 //    /**
 //     * Create a new quote controller test.
 //     */
+
 //    @BeforeEach
 //    public void setup() {
 //        random = new MyRandom();
@@ -48,6 +49,7 @@
 //    /**
 //     * Test the null case.
 //     */
+
 //    @Test
 //    public void cannotAddNullPerson() {
 //        var actual = sut.add(getQuote(null));
