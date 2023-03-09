@@ -31,12 +31,12 @@ Feedback: The merge of the feature branches has been performed via Merge Request
 
 #### Clean-up
 
-Grade: Fail
+Grade: Pass
 
-Feedback: The repository should not contain any branches apart from main/master.
+Feedback: The repository does not contain any branches apart from main/master.
 
 
 #### Assignment Completion
 
-Grade: Fail. One or more of the above criteria were failed. Please fix it until Friday evening of W4.
+Grade: Pass
 
