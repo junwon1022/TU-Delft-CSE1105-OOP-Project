@@ -95,6 +95,19 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder for the delete card function.
+     * @param card - card to be deleted
+     */
+    public void deleteCard(Card card){
+        for(ListOfCards list: serverData){
+            for(Card c: list.cards){
+                if(c.equals(card))
+                    list.cards.remove(card);
+            }
+        }
+    }
+
+    /**
      * Placeholder method to get data from server
      * @return a list of cardlists.
      */
@@ -115,4 +128,147 @@ public class ServerUtils {
 
         return serverData;
     }
+
+    /**
+     * Get boards from server
+     *
+     * @return boards
+     */
+    public List<Board> getBoard(){
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/boards/{board_id}") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Board>>() {});
+    }
+
+    /**
+     * Add a new board to the server
+     * @param board - board to be added to server
+     * @return - the board that was added
+     */
+    public Board addBoard(Board board){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(board, APPLICATION_JSON), Board.class);
+    }
+
+    /**
+     * Get all lists from the server
+     * @return - the lists from the server
+     */
+    public List<ListOfCards> getLists(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<ListOfCards>>(){});
+    }
+
+    /**
+     * Add a new list to the server
+     * @param list - the list that needs to be added to the server
+     * @return the added list to the server
+     */
+    public ListOfCards addListOfCards(ListOfCards list){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
+    }
+
+    public List<Card> getCards(){
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Card>>() {});
+    }
+
+    /**
+     * Add a new card to the server
+     * @param card - the card that needs to be added to the server
+     * @return - the added card
+     */
+    public Card addCard2(Card card){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(card, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Removes a card from the server
+     * @return - the removed card
+     */
+    public Card removeCard(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Card.class);
+    }
+
+    /**
+     * Removal of List from server
+     * @return - return the removed List
+     */
+    public ListOfCards removeList(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(ListOfCards.class);
+    }
+
+    /**
+     * Get a card from the server
+     * @return the card we need
+     */
+    public Card getCard(){
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<Card>() {});
+    }
+
+    /**
+     * Renaming a card with a new title
+     * @param card - the card that needs renaming
+     * @param title - the new title of the card
+     * @return the Card that was renamed
+     */
+    public Card renameCard(Card card, String title){
+        card.title = title;
+
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(card, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Rename a list with a new title
+     * @param list - the list that needs to be renamed
+     * @param title - the title of the new list
+     * @return the list with the new name
+     */
+    public ListOfCards renameList(ListOfCards list, String title){
+        list.title = title;
+
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/{board_id}/lists/{list_id}")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
+    }
+
+
+
 }
