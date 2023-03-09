@@ -73,6 +73,7 @@ public class QuoteController {
 
     /**
      * Add a new quote.
+     *
      * @param quote The quote to add.
      * @return The response.
      */
@@ -91,10 +92,16 @@ public class QuoteController {
     }
 
     /**
+<<<<<<< HEAD
+     *
+     * @param s
+     * @return
+=======
      * Null or empty check.
      *
      * @param s The string to check.
      * @return True if the string is null or empty.
+>>>>>>> 8b24707a867c922ec1a200a9d4e55f8d2a99f137
      */
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
