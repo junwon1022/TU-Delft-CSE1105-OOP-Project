@@ -18,15 +18,14 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.ListOfCards;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 
-
 public class BoardCtrl {
 
     private final ServerUtils server;
-    private final MainCtrl mainCtrl;
 
     @FXML
     private ListView<ListOfCards> list;
@@ -36,11 +35,9 @@ public class BoardCtrl {
     /**
      * Create a new BoardCtrl.
      * @param server The server to use.
-     * @param mainCtrl The main controller to use.
      */
     @Inject
-    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.mainCtrl = mainCtrl;
+    public BoardCtrl(ServerUtils server) {
         this.server = server;
     }
 
@@ -48,19 +45,20 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
-        //Wrong constructors for ListOfCards
-//        list.setFixedCellSize(0);
-//        ListOfCards list1 = new ListOfCards("List 1", new ArrayList<>());
-//        list1.cards.add(new Card("Card 1"));
-//        list1.cards.add(new Card("Card 2"));
-//
-//        ListOfCards list2 = new ListOfCards("List 2", new ArrayList<>());
-//        list2.cards.add(new Card("Card 3"));
-//        list2.cards.add(new Card("Card 4"));
-//
-//        // Add the card lists to the data list
-//        data = FXCollections.observableList(List.of(list1, list2));
-//        list.setItems(data);
-//        list.setCellFactory(lv -> new CardListCtrl());
+        data = FXCollections.observableArrayList();
+
+        list.setFixedCellSize(0);
+        list.setItems(data);
+        list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
+
+        refresh();
+    }
+
+    /**
+     * Uses the server util class to fetch board data from the server.
+     */
+    public void refresh() {
+        var serverData = server.getServerData();
+        data.setAll(serverData);
     }
 }
