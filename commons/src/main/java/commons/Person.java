@@ -32,34 +32,52 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
+
     public String firstName;
     public String lastName;
 
     @SuppressWarnings("unused")
-    //person
     private Person() {
         // for object mapper
     }
 
+    /**
+     * Constructor for Person.
+     *
+     * @param firstName
+     * @param lastName
+     */
     public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-
-    //Equals method
+    /**
+     * Check if two objects are equal.
+     *
+     * @param obj the object to compare to
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
-    //Hash Code method
+    /**
+     * Get the hash code of this object.
+     *
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
-    //ToString method
+    /**
+     * Get a string representation of this object.
+     *
+     * @return the string representation
+     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
