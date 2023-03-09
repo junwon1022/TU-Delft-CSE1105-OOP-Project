@@ -88,9 +88,9 @@ public class TagController {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Get the card
+            // Get the tag
             Tag tag = tagService.getTagById(tagId);
-            // Return the card with an HTTP 200 OK status
+            // Return the tag with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(tag);
         }
         catch (Exception e) {
@@ -124,7 +124,7 @@ public class TagController {
                 return ResponseEntity.badRequest().build();
             }
 
-            // Save the new card to the database
+            // Save the new tag to the database
             tagService.createTag(tag, card);
             // Return the saved tag with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(tag);
@@ -213,10 +213,12 @@ public class TagController {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Delete the card
+            // Get the card
+            Tag tag = tagService.getTagById(tagId);
+            // Delete the tag
             tagService.deleteTagById(tagId);
-            // Return the saved card with an HTTP 200 OK status
-            return ResponseEntity.ok().build();
+            // Return the saved tag with an HTTP 200 OK status
+            return ResponseEntity.ok(tag);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -240,8 +242,7 @@ public class TagController {
         ListOfCards list = listOfCardsService.getListById(listId);
         // Get the card
         Card card = cardService.getCardById(cardId);
-
-        // Get the check
+        // Get the tag
         Tag tag = tagService.getTagById(tagId);
 
         // Check if the list is in the board
@@ -252,8 +253,8 @@ public class TagController {
         if(!cardService.cardInList(card, list)) {
             return false;
         }
-
-        if(!tagService.tagInCard(tag,card)){
+        // Check if the tag is applied to the card
+        if(!tagService.tagInCard(tag, card)){
             return false;
         }
         return true;

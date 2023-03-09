@@ -138,10 +138,12 @@ public class ListOfCardsController {
             if(!validPath(boardId, listId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the list
+            ListOfCards list = listOfCardsService.getListById(listId);
             // Delete the list
             listOfCardsService.deleteListOfCardsById(listId);
             // Return the saved list with an HTTP 200 OK status
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(list);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

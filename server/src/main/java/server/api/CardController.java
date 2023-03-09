@@ -165,10 +165,12 @@ public class CardController {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the card
+            Card card = cardService.getCardById(cardId);
             // Delete the card
             cardService.deleteCardById(cardId);
             // Return the saved card with an HTTP 200 OK status
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(card);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

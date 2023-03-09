@@ -95,9 +95,9 @@ public class CheckListItemController {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Get the card
+            // Get the checklist item
             CheckListItem checkListItem = checkListItemService.getCheckById(checkId);
-            // Return the card with an HTTP 200 OK status
+            // Return the checklist item with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(checkListItem);
         }
         catch (Exception e) {
@@ -131,9 +131,9 @@ public class CheckListItemController {
                 return ResponseEntity.badRequest().build();
             }
 
-            // Save the new card to the database
+            // Save the new check to the database
             checkListItemService.createCheckListItem(check, card);
-            // Return the saved card with an HTTP 201 Created status
+            // Return the saved checklist item with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(check);
         }
         catch (Exception e) {
@@ -162,9 +162,9 @@ public class CheckListItemController {
                 return ResponseEntity.badRequest().build();
             }
 
-            // Edit the list and save it in the database
+            // Edit the check and save it in the database
             CheckListItem check = checkListItemService.editCheckText(checkId,newText);
-            // Return the edited board with an HTTP 200 OK status
+            // Return the edited checklist item with an HTTP 200 OK status
             return ResponseEntity.ok().body(check);
         }
         catch (Exception e) {
@@ -181,7 +181,7 @@ public class CheckListItemController {
      * @param listId
      * @param cardId
      * @param checkId
-     * @return the edited card
+     * @return the edited checklist item
      */
     @PostMapping(path = {"/{check_id}/completion/","/{check_id}/completion"})
     public ResponseEntity<CheckListItem> editCheckCompletion(
@@ -194,10 +194,10 @@ public class CheckListItemController {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Edit the list and save it in the database
+            // Edit the checklist item and save it in the database
             CheckListItem check = checkListItemService.getCheckById(checkId);
             checkListItemService.editCompletion(check);
-            // Return the edited board with an HTTP 200 OK status
+            // Return the edited checklist item with an HTTP 200 OK status
             return ResponseEntity.ok().body(check);
         }
         catch (Exception e) {
@@ -207,15 +207,15 @@ public class CheckListItemController {
 
 
     /**
-     * Delete a card given its id
+     * Delete a checklist item given its id
      * @param boardId
      * @param listId
      * @param cardId
      * @param checkId
-     * @return the deleted card
+     * @return the deleted checklist item
      */
     @DeleteMapping(path = {"/{check_id}/","/{check_id}"})
-    public ResponseEntity<Card> removeCheckById(@PathVariable("board_id") long boardId,
+    public ResponseEntity<CheckListItem> removeCheckById(@PathVariable("board_id") long boardId,
                                                @PathVariable("list_id") long listId,
                                                @PathVariable("card_id") long cardId,
                                                @PathVariable("check_id") long checkId) {
@@ -223,10 +223,12 @@ public class CheckListItemController {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Delete the card
+            // Get the item
+            CheckListItem checkListItem = checkListItemService.getCheckById(checkId);
+            // Delete the checklist item
             checkListItemService.deleteCheckListItemById(checkId);
-            // Return the saved card with an HTTP 200 OK status
-            return ResponseEntity.ok().build();
+            // Return the saved checklist item with an HTTP 200 OK status
+            return ResponseEntity.ok(checkListItem);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

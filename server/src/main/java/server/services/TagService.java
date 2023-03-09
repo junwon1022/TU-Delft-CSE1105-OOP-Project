@@ -29,7 +29,7 @@ public class TagService {
      * @param card
      * @return true if tag in card
      */
-    public boolean tagInCard(Tag tag,Card card) {
+    public boolean tagInCard(Tag tag, Card card) {
         return card.tags.contains(tag);
     }
 
