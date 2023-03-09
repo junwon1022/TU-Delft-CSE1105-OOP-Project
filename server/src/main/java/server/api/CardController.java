@@ -26,6 +26,7 @@ public class CardController {
 
     /**
      * Constructor with parameters
+     *
      * @param cardService
      * @param listOfCardsService
      * @param boardService
@@ -41,6 +42,7 @@ public class CardController {
 
     /**
      * Get the cards within a given list
+     *
      * @param boardId
      * @param listId
      * @return the list of lists
@@ -69,6 +71,7 @@ public class CardController {
 
     /**
      * Get a card given its id
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -94,6 +97,7 @@ public class CardController {
 
     /**
      * Create a new list of cards
+     *
      * @param card
      * @param boardId
      * @param listId
@@ -124,6 +128,7 @@ public class CardController {
 
     /**
      * Edit a card's title
+     *
      * @param newTitle
      * @param boardId
      * @param listId
@@ -152,6 +157,7 @@ public class CardController {
 
     /**
      * Delete a card given its id
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -179,6 +185,7 @@ public class CardController {
 
     /**
      * Checks whether the path to a card is valid
+     *
      * @param boardId
      * @param listId
      * @param cardId

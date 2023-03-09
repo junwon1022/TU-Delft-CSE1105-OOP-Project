@@ -24,6 +24,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 public class Main {
 
     /**
+     * Main method to start the server.
      *
      * @param args
      */

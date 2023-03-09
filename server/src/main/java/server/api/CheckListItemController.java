@@ -28,6 +28,7 @@ public class CheckListItemController {
 
     /**
      * Constructor with parameters
+     *
      * @param checkListItemService
      * @param cardService
      * @param listOfCardsService
@@ -46,6 +47,7 @@ public class CheckListItemController {
 
     /**
      * Get the checklist of a given card
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -80,6 +82,7 @@ public class CheckListItemController {
 
     /**
      * Get a checklist item given its id
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -107,6 +110,7 @@ public class CheckListItemController {
 
     /**
      * Create a new check
+     *
      * @param check
      * @param boardId
      * @param listId
@@ -127,7 +131,8 @@ public class CheckListItemController {
             Card card = cardService.getCardById(cardId);
 
             // Check if the list is in the board and the card is in the list
-            if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card, list)) {
+            if(!listOfCardsService.listInBoard(list, board) ||
+                    !cardService.cardInList(card, list)) {
                 return ResponseEntity.badRequest().build();
             }
 
@@ -143,6 +148,7 @@ public class CheckListItemController {
 
     /**
      * Edit a check's text
+     *
      * @param newText
      * @param boardId
      * @param listId
@@ -177,6 +183,7 @@ public class CheckListItemController {
 
     /**
      * Edit a check's completion
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -208,6 +215,7 @@ public class CheckListItemController {
 
     /**
      * Delete a checklist item given its id
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -237,6 +245,7 @@ public class CheckListItemController {
 
     /**
      * Checks whether the path to a checklist item is valid
+     *
      * @param boardId
      * @param listId
      * @param cardId

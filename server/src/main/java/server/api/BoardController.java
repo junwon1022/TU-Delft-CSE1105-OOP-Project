@@ -17,6 +17,7 @@ public class BoardController {
 
     /**
      * Constructor with parameters
+     *
      * @param boardService
      */
     @Autowired
@@ -26,6 +27,7 @@ public class BoardController {
 
     /**
      * Get a board given its id
+     *
      * @param boardId
      * @return the board
      */
@@ -45,6 +47,7 @@ public class BoardController {
 
     /**
      * Create a new board
+     *
      * @param board
      * @return the new board
      */
@@ -64,6 +67,7 @@ public class BoardController {
 
     /**
      * Edit a board's title
+     *
      * @param newTitle
      * @param boardId
      * @return the edited board
@@ -85,6 +89,7 @@ public class BoardController {
 
     /**
      * Delete a board given its id
+     *
      * @param boardId
      * @return the deleted board
      */

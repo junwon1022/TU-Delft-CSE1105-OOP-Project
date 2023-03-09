@@ -36,6 +36,7 @@ public class ListOfCardsController {
 
     /**
      * Get the lists within a given board
+     *
      * @param boardId
      * @return the list of lists
      */
@@ -56,6 +57,7 @@ public class ListOfCardsController {
 
     /**
      * Get a list given its id
+     *
      * @param boardId
      * @param listId
      * @return the list
@@ -79,6 +81,7 @@ public class ListOfCardsController {
 
     /**
      * Create a new list of cards
+     *
      * @param list
      * @param boardId
      * @return the new list
@@ -101,6 +104,7 @@ public class ListOfCardsController {
 
     /**
      * Edit a list's title
+     *
      * @param newTitle
      * @param boardId
      * @param listId
@@ -127,6 +131,7 @@ public class ListOfCardsController {
 
     /**
      * Delete a list given its id
+     *
      * @param boardId
      * @param listId
      * @return the deleted list
@@ -150,6 +155,13 @@ public class ListOfCardsController {
         }
     }
 
+    /**
+     * Checks if there is a valid path between a board and a list
+     * @param boardId
+     * @param listId
+     * @return true if the path is valid
+     * @throws Exception
+     */
     private boolean validPath(long boardId, long listId)
             throws Exception {
         // Get the board

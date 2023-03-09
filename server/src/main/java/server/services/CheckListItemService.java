@@ -19,7 +19,8 @@ public class CheckListItemService {
      * @param checklistItemRepository
      */
     @Autowired
-    public CheckListItemService(@Qualifier("check") CheckListItemRepository checklistItemRepository) {
+    public CheckListItemService(@Qualifier("check")
+                                    CheckListItemRepository checklistItemRepository) {
         this.checklistItemRepository = checklistItemRepository;
     }
 

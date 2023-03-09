@@ -42,9 +42,10 @@ public class AddQuoteCtrl {
     private TextField quote;
 
     /**
+     * Create a new AddQuoteCtrl.
      *
-     * @param server
-     * @param mainCtrl
+     * @param server The server to use.
+     * @param mainCtrl The main controller to use.
      */
     @Inject
     public AddQuoteCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -54,6 +55,7 @@ public class AddQuoteCtrl {
     }
 
     /**
+     * Initialize the controller.
      *
      */
     public void cancel() {
@@ -62,6 +64,7 @@ public class AddQuoteCtrl {
     }
 
     /**
+     * Clear the fields.
      *
      */
     public void ok() {
@@ -81,8 +84,9 @@ public class AddQuoteCtrl {
     }
 
     /**
+     * Get the quote.
      *
-     * @return
+     * @return The quote.
      */
     private Quote getQuote() {
         var p = new Person(firstName.getText(), lastName.getText());
@@ -91,6 +95,7 @@ public class AddQuoteCtrl {
     }
 
     /**
+     * Clear the fields.
      *
      */
     private void clearFields() {
@@ -100,8 +105,10 @@ public class AddQuoteCtrl {
     }
 
     /**
+     * Handle key events.
      *
-     * @param e
+     * @param e The event to handle.
+     *
      */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {

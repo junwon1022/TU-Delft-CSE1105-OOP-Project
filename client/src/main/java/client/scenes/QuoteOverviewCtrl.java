@@ -47,15 +47,17 @@ public class QuoteOverviewCtrl implements Initializable {
     private TableColumn<Quote, String> colQuote;
 
     /**
+     * Create a new QuoteOverviewCtrl.
      *
-     * @param server
-     * @param mainCtrl
+     * @param server The server to use.
+     * @param mainCtrl The main controller to use.
      */
     @Inject
     public QuoteOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
+
 
     /**
      *
@@ -69,13 +71,20 @@ public class QuoteOverviewCtrl implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        colFirstName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().person.firstName));
-        colLastName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().person.lastName));
-        colQuote.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().quote));
+        colFirstName.setCellValueFactory(
+                q -> new SimpleStringProperty(q.getValue().person.firstName)
+        );
+        colLastName.setCellValueFactory(
+                q -> new SimpleStringProperty(q.getValue().person.lastName)
+        );
+        colQuote.setCellValueFactory(
+                q -> new SimpleStringProperty(q.getValue().quote)
+        );
     }
 
     /**
      *
+     * Refresh the table.
      */
     public void addQuote() {
         mainCtrl.showAdd();
@@ -83,6 +92,7 @@ public class QuoteOverviewCtrl implements Initializable {
 
     /**
      *
+     * Refresh the table.
      */
     public void refresh() {
         var quotes = server.getQuotes();

@@ -34,23 +34,28 @@ public class MyFXML {
     private Injector injector;
 
     /**
+     * Create a new MyFXML instance.
      *
-     * @param injector
+     * @param injector The injector to use.
      */
     public MyFXML(Injector injector) {
         this.injector = injector;
     }
 
     /**
+     * Load a FXML file.
      *
-     * @param c
-     * @param parts
-     * @return T
-     * @param <T>
+     * @param parts The path to the FXML file.
+     * @param <T> The type of the root node.
+     * @param c The class of the root node.
+     *
+     * @return The root node of the FXML file.
+     * @throws IOException If an I/O error occurs.
      */
     public <T> Pair<T, Parent> load(Class<T> c, String... parts) {
         try {
-            var loader = new FXMLLoader(getLocation(parts), null, null, new MyFactory(), StandardCharsets.UTF_8);
+            var loader = new FXMLLoader(getLocation(parts),
+                    null, null, new MyFactory(), StandardCharsets.UTF_8);
             Parent parent = loader.load();
             T ctrl = loader.getController();
             return new Pair<>(ctrl, parent);
@@ -59,13 +64,28 @@ public class MyFXML {
         }
     }
 
+    /**
+     * Get the location of a FXML file.
+     *
+     * @param parts The path to the FXML file.
+     * @return The location of the FXML file.
+     */
     private URL getLocation(String... parts) {
         var path = Path.of("", parts).toString();
         return MyFXML.class.getClassLoader().getResource(path);
     }
 
+    /**
+     * A custom builder factory.
+     */
     private class MyFactory implements BuilderFactory, Callback<Class<?>, Object> {
 
+        /**
+         * Create a new builder.
+         *
+         * @param type The type of the builder.
+         * @return The builder.
+         */
         @Override
         @SuppressWarnings("rawtypes")
         public Builder<?> getBuilder(Class<?> type) {
@@ -77,6 +97,12 @@ public class MyFXML {
             };
         }
 
+        /**
+         * Create a new instance.
+         *
+         * @param type The type of the instance.
+         * @return The instance.
+         */
         @Override
         public Object call(Class<?> type) {
             return injector.getInstance(type);

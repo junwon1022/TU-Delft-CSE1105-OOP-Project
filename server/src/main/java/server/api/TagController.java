@@ -22,6 +22,7 @@ public class TagController {
 
     /**
      * Constructor with parameters
+     *
      * @param cardService
      * @param listOfCardsService
      * @param tagService
@@ -39,6 +40,7 @@ public class TagController {
 
     /**
      * Get the tags within a given card
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -58,7 +60,8 @@ public class TagController {
             Card card = cardService.getCardById(cardId);
 
             // Check if the list is in the board and the card is in the list
-            if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card, list)) {
+            if(!listOfCardsService.listInBoard(list, board)
+                    || !cardService.cardInList(card, list)) {
                 return ResponseEntity.badRequest().build();
             }
             Set<Tag> tags = tagService.getTags(card);
@@ -73,6 +76,7 @@ public class TagController {
 
     /**
      * Get a tag given its id
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -100,6 +104,7 @@ public class TagController {
 
     /**
      * Create a new tag
+     *
      * @param tag
      * @param boardId
      * @param listId
@@ -136,6 +141,7 @@ public class TagController {
 
     /**
      * Edit a tag's name
+     *
      * @param newName
      * @param boardId
      * @param listId
@@ -167,6 +173,7 @@ public class TagController {
 
     /**
      * Edit a tag's colour
+     *
      * @param newColour
      * @param boardId
      * @param listId
@@ -174,7 +181,8 @@ public class TagController {
      * @param tagId
      * @return the edited tag
      */
-    @PostMapping(path = {"/{tag_id}/colour", "/{tag_id}/colour","/{tag_id}/color", "/{tag_id}/color"})
+    @PostMapping(path = {"/{tag_id}/colour", "/{tag_id}/colour",
+        "/{tag_id}/color", "/{tag_id}/color"})
     public ResponseEntity<Tag> editColour(@RequestBody String newColour,
                                         @PathVariable("board_id") long boardId,
                                         @PathVariable("list_id") long listId,
@@ -198,6 +206,7 @@ public class TagController {
 
     /**
      * Delete a tag given its id
+     *
      * @param boardId
      * @param listId
      * @param cardId
@@ -227,6 +236,7 @@ public class TagController {
 
     /**
      * Checks whether the path to the tag exists
+     *
      * @param boardId
      * @param listId
      * @param cardId

@@ -19,7 +19,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import commons.Quote;
 
-
-public interface QuoteRepository extends JpaRepository<Quote, Long> {
-//    public List<Quote> getAllWhere(String name);
-}
+public interface QuoteRepository extends JpaRepository<Quote, Long> {}

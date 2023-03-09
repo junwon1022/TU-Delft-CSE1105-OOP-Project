@@ -24,6 +24,7 @@ public class MainCtrlTest {
 
     /**
      * Set up sut
+     * Create a new MainCtrlTest.
      */
     @BeforeEach
     public void setup() {
@@ -31,7 +32,7 @@ public class MainCtrlTest {
     }
 
     /**
-     * A test
+     * Test the initialize method.
      */
     @Test
     public void writeSomeTests() {

@@ -24,10 +24,12 @@
 //import org.springframework.data.domain.Page;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.data.domain.Sort;
-//import org.springframework.data.jpa.repository.JpaRepository;
 //import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 //
-//public class TestQuoteRepository implements JpaRepository<Quote, Long> {
+//import commons.Quote;
+//import server.database.QuoteRepository;
+//
+//public class TestQuoteRepository implements QuoteRepository {
 //
 //    public final List<Quote> quotes = new ArrayList<>();
 //    public final List<String> calledMethods = new ArrayList<>();
@@ -210,7 +212,8 @@
 //    }
 //
 //    @Override
-//    public <S extends Quote, R> R findBy(Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
+//    public <S extends Quote, R> R findBy
+//    (Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
 //        // TODO Auto-generated method stub
 //        return null;
 //    }

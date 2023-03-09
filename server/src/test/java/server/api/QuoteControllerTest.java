@@ -24,6 +24,9 @@
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //
+//import commons.Person;
+//import commons.Quote;
+//
 //public class QuoteControllerTest {
 //
 //    public int nextInt;
@@ -32,6 +35,10 @@
 //
 //    private QuoteController sut;
 //
+//    /**
+//     * Create a new quote controller test.
+//     */
+
 //    @BeforeEach
 //    public void setup() {
 //        random = new MyRandom();
@@ -39,12 +46,19 @@
 //        sut = new QuoteController(random, repo);
 //    }
 //
+//    /**
+//     * Test the null case.
+//     */
+
 //    @Test
 //    public void cannotAddNullPerson() {
 //        var actual = sut.add(getQuote(null));
 //        assertEquals(BAD_REQUEST, actual.getStatusCode());
 //    }
 //
+//    /**
+//     * Test the random case.
+//     */
 //    @Test
 //    public void randomSelection() {
 //        sut.add(getQuote("q1"));
@@ -56,16 +70,28 @@
 //        assertEquals("q2", actual.getBody().quote);
 //    }
 //
+//    /**
+//     * Save a quote.
+//     */
 //    @Test
 //    public void databaseIsUsed() {
 //        sut.add(getQuote("q1"));
 //        repo.calledMethods.contains("save");
 //    }
 //
+//    /**
+//     * Get a quote.
+//     *
+//     * @param q The string to check.
+//     * @return The quote.
+//     */
 //    private static Quote getQuote(String q) {
 //        return new Quote(new Person(q, q), q);
 //    }
 //
+//    /**
+//     * A random class.
+//     */
 //    @SuppressWarnings("serial")
 //    public class MyRandom extends Random {
 //
