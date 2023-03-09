@@ -23,7 +23,6 @@ public class MainCtrlTest {
     private MainCtrl sut;
 
     /**
-     * Set up sut
      * Create a new MainCtrlTest.
      */
     @BeforeEach

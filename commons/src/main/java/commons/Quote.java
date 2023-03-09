@@ -39,15 +39,13 @@ public class Quote {
     public Person person;
     public String quote;
 
-    /**
-     *
-     */
     @SuppressWarnings("unused")
     private Quote() {
         // for object mappers
     }
 
     /**
+     * Constructor for Quote.
      *
      * @param person
      * @param quote
@@ -58,9 +56,10 @@ public class Quote {
     }
 
     /**
+     * Check if two objects are equal.
      *
-     * @param obj
-     * @return
+     * @param obj the object to compare to
+     * @return true if the objects are equal, false otherwise
      */
     @Override
     public boolean equals(Object obj) {
@@ -68,8 +67,9 @@ public class Quote {
     }
 
     /**
+     * Get the hash code of this object.
      *
-     * @return
+     * @return the hash code
      */
     @Override
     public int hashCode() {
@@ -77,8 +77,9 @@ public class Quote {
     }
 
     /**
+     * Get a string representation of this object.
      *
-     * @return
+     * @return the string representation
      */
     @Override
     public String toString() {

@@ -17,11 +17,15 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.ListOfCards;
+import commons.Card;
+import commons.CardList;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardCtrl {
 
@@ -29,9 +33,9 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
 
     @FXML
-    private ListView<ListOfCards> list;
+    private ListView<CardList> list;
 
-    ObservableList<ListOfCards> data;
+    ObservableList<CardList> data;
 
     /**
      * Create a new BoardCtrl.
@@ -48,19 +52,18 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
-        //Wrong constructors for ListOfCards
-//        list.setFixedCellSize(0);
-//        ListOfCards list1 = new ListOfCards("List 1", new ArrayList<>());
-//        list1.cards.add(new Card("Card 1"));
-//        list1.cards.add(new Card("Card 2"));
-//
-//        ListOfCards list2 = new ListOfCards("List 2", new ArrayList<>());
-//        list2.cards.add(new Card("Card 3"));
-//        list2.cards.add(new Card("Card 4"));
-//
-//        // Add the card lists to the data list
-//        data = FXCollections.observableList(List.of(list1, list2));
-//        list.setItems(data);
-//        list.setCellFactory(lv -> new CardListCtrl());
+        list.setFixedCellSize(0);
+        CardList list1 = new CardList("List 1", new ArrayList<>());
+        list1.getCards().add(new Card("Card 1"));
+        list1.getCards().add(new Card("Card 2"));
+
+        CardList list2 = new CardList("List 2", new ArrayList<>());
+        list2.getCards().add(new Card("Card 3"));
+        list2.getCards().add(new Card("Card 4"));
+
+        // Add the card lists to the data list
+        data = FXCollections.observableList(List.of(list1, list2));
+        list.setItems(data);
+        list.setCellFactory(lv -> new CardListCtrl());
     }
 }

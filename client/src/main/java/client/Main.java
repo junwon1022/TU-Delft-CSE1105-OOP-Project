@@ -34,20 +34,17 @@ public class Main extends Application {
 
     /**
      * The main method for the application.
+     *
      * @param args the command line arguments.
      * @throws IOException If an I/O error occurs.
      */
     public static void main(String[] args) throws URISyntaxException, IOException {
         launch();
     }
-
     /**
      * Start the application.
      *
-     * @param primaryStage the primary stage for this application, onto which
-     * the application scene can be set.
-     * Applications may create other stages, if needed, but they will not be
-     * primary stages.
+     * @param primaryStage The stage to use.
      * @throws IOException If an I/O error occurs.
      */
     @Override

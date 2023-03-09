@@ -43,7 +43,7 @@ public class CardCtrl extends ListCell<Card> {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            title.setText(item.title);
+            title.setText(item.getTitle());
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
