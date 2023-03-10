@@ -18,7 +18,10 @@ package server.api;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import commons.Quote;
+import org.springframework.web.server.ResponseStatusException;
 import server.database.QuoteRepository;
 
 @RestController
@@ -72,6 +76,25 @@ public class QuoteController {
     }
 
     /**
+     * Handles an incoming quote and sends it to the subscribers of
+     * /topic/quotes
+     * @param q the quote to handle
+     * @return the added quote
+     * @throws ResponseStatusException if it is not a valid quote
+     */
+    @MessageMapping("/quotes")
+    @SendTo("/topic/quotes")
+    public Quote addMessage(Quote q){
+        try {
+            add(q);
+            return q;
+        } catch (IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid Quote Arguments");
+        }
+    }
+
+    /**
      * Add a new quote.
      *
      * @param quote The quote to add.
@@ -92,16 +115,10 @@ public class QuoteController {
     }
 
     /**
-<<<<<<< HEAD
-     *
-     * @param s
-     * @return
-=======
      * Null or empty check.
      *
      * @param s The string to check.
      * @return True if the string is null or empty.
->>>>>>> 8b24707a867c922ec1a200a9d4e55f8d2a99f137
      */
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
