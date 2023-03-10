@@ -68,18 +68,19 @@ public class QuoteOverviewCtrl implements Initializable {
      * @param resources
      * The resources used to localize the root object, or {@code null} if
      * the root object was not localized.
+     *
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        colFirstName.setCellValueFactory(
-                q -> new SimpleStringProperty(q.getValue().person.firstName)
-        );
-        colLastName.setCellValueFactory(
-                q -> new SimpleStringProperty(q.getValue().person.lastName)
-        );
-        colQuote.setCellValueFactory(
-                q -> new SimpleStringProperty(q.getValue().quote)
-        );
+        colFirstName.setCellValueFactory(q ->
+                new SimpleStringProperty(q.getValue().person.firstName));
+        colLastName.setCellValueFactory(q ->
+                new SimpleStringProperty(q.getValue().person.lastName));
+        colQuote.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().quote));
+
+        server.registerForMessages("/topic/quotes", Quote.class, q-> {
+            data.add(q);
+        });
     }
 
     /**
