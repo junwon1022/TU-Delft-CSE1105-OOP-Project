@@ -63,6 +63,7 @@ public class MainCtrl {
     public void showBoard() {
         primaryStage.setTitle("My board");
         primaryStage.setScene(board);
+        primaryStage.setHeight(600);
         boardCtrl.initialize();
     }
 

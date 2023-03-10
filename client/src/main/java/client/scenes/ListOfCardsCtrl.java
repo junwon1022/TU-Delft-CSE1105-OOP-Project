@@ -36,6 +36,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     @FXML
     private ListView<Card> list;
 
+    @FXML
+    private Button rename;
+
     private ObservableList<Card> data;
 
 
@@ -60,6 +63,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
         list.setItems(data);
         list.setCellFactory(param -> new CardCtrl(server, board));
+
+
+        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
     /**
@@ -101,7 +107,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             Stage stage = new Stage();
             stage.setTitle("Add new card");
             stage.setScene(new Scene(root, 300, 200));
-
             stage.showAndWait();
 
             if (controller.success) {
@@ -132,5 +137,35 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             throw new RuntimeException(e);
         }
         board.refresh();
+    }
+
+    /**
+     * Method that renames the list;
+     *
+     * It shows a pop-up prompting the user to input
+     * a new title for the said list;
+     *
+     * @param event - the rename button being pressed
+     */
+    public void renameList(ActionEvent event){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameList.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            RenameListCtrl controller = fxmlLoader.getController();
+            controller.initialize(cardData);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add new card");
+            stage.setScene(new Scene(root, 320, 200));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String newTitle = controller.storedText;
+                server.renameList1(cardData, newTitle);
+                board.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
