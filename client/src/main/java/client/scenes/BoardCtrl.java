@@ -46,11 +46,11 @@ public class BoardCtrl {
      */
     public void initialize() {
         data = FXCollections.observableArrayList();
-
         list.setFixedCellSize(0);
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-
+        list.setMaxHeight(600);
+        list.setStyle("-fx-control-inner-background: " +  "#03045E" + ";");
         refresh();
     }
 

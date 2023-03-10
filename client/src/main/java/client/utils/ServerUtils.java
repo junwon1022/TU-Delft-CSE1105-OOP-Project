@@ -140,6 +140,26 @@ public class ServerUtils {
     }
 
     /**
+     * Method that renames the list locally,
+     * still needs to be implemented with database connectivity.
+     * The method shows the logic that should be implemented.
+     * @param l - the list which needs a new name
+     * @param newTitle - the new title of said list
+     */
+    public void renameList1(ListOfCards l, String newTitle){
+        int listNo = 0;
+        if(serverData != null){
+            for(ListOfCards list: serverData){
+                if(list.equals(l))
+                    break;
+                listNo++;
+            }
+            serverData.get(listNo).title = newTitle;
+        }
+
+    }
+
+    /**
      * Placeholder method to get data from server
      * @return a list of cardlists.
      */
@@ -160,10 +180,6 @@ public class ServerUtils {
 
         return serverData;
     }
-
-//    public ListOfCards getServerCards(){
-//
-//    }
 
     /**
      * Get boards from server
