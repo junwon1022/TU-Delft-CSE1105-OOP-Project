@@ -64,12 +64,12 @@ public class AddQuoteCtrl {
     }
 
     /**
-     * Clear the fields.
-     *
+     * sends the quote received from the server and shows the overview of the page
+     * Displays an error if when sending the quote an exception is thrown
      */
     public void ok() {
         try {
-            server.addQuote(getQuote());
+            server.send("/app/quotes", getQuote());
         } catch (WebApplicationException e) {
 
             var alert = new Alert(Alert.AlertType.ERROR);
@@ -78,7 +78,6 @@ public class AddQuoteCtrl {
             alert.showAndWait();
             return;
         }
-
         clearFields();
         mainCtrl.showOverview();
     }

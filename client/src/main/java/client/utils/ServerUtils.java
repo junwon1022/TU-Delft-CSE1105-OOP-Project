@@ -20,9 +20,12 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 import commons.Board;
 import commons.Card;
@@ -33,6 +36,15 @@ import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.springframework.http.HttpStatus;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
@@ -309,6 +321,69 @@ public class ServerUtils {
                 .put(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
     }
 
+    private StompSession session = connect("ws://localhost:8080/websocket");
 
+    /**
+     * Creates a StompSession to connect the client to the server from the specified url
+     * @param url The url the session will connect to
+     * @return the created StompSession
+     * @throws RuntimeException if there is an error when the connection to the url is being made
+     * @throws IllegalStateException if there is an unexpected error
+     */
+    private StompSession connect(String url) {
+        var client = new StandardWebSocketClient();
+        var stomp = new WebSocketStompClient(client);
+        stomp.setMessageConverter(new MappingJackson2MessageConverter());
+        try {
+            return stomp.connect(url, new StompSessionHandlerAdapter() {}).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        throw new IllegalStateException();
+    }
 
+    /**
+     * Every time a new message is received, it is deserialized into the generic type and registers
+     * a consumer to receive messages
+     * @param dest destination of the subscription
+     * @param type type of the message payload
+     * @param consumer consumer that is informed every time there is a new message
+     * @param <T> Generic type
+     * @throws ResponseStatusException If any of the parameters are null
+     */
+    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+        try {
+            session.subscribe(dest, new StompFrameHandler() {
+
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return type;
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    consumer.accept((T) payload);
+                }
+            });
+        } catch (IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Arguments");
+        }
+    }
+
+    /**
+     * Sends an object to the specified destination if there is a connection made
+     * @param dest destination where the object is going to be sent
+     * @param o object to be sent
+     * @throws IllegalArgumentException if the destination is null
+     */
+    public void send(String dest, Object o) {
+        if (dest == null) {
+            throw new IllegalArgumentException("Destination cannot be null");
+        }
+        session.send(dest, o);
+    }
 }
