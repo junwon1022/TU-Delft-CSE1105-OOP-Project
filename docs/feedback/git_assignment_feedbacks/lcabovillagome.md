@@ -10,23 +10,23 @@ Feedback: Full name and TUD email address was used.
 
 #### .gitignore
 
-Grade: Fail
+Grade: Pass
 
-Feedback: The repository contains meaninless files (.idea folder specifically and .DS_Store). This is not mandatory but I personally recommend having the demo files in the repository directly instead of a subfolder. Also note on the .DS_Store files, MacOS does that so I recommend adding them to the .gitignore so you don't have to delete them everytime.
+Feedback: build/ and .gradle folders have not been commited and .gitignore is there.
 
 
 #### History
 
-Grade: Fail
+Grade: Pass
 
-Feedback: There is only one form/merge from main. There should be a different one for each feature. 
+Feedback: There is a merge commit, which solves the conflict between the "uppercase" feature and "changed greeting".
 
 
 #### Merge Requests
 
-Grade: Fail
+Grade: Pass
 
-Feedback: Only one MR has been merged. The merge of the feature branches needs have been performed via Merge Requests. There should be at least 4 MRs.
+Feedback: The merge of the feature branches has been performed via Merge Requests
 
 
 #### Clean-up
@@ -38,5 +38,5 @@ Feedback: The repository contains only one branch.
 
 #### Assignment Completion
 
-Grade: Fail. One or more of the above criteria were failed. Please fix it until Friday evening of W4.
+Grade: Pass
 
