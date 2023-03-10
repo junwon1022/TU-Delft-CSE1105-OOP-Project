@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.ListOfCards;
+import jakarta.ws.rs.WebApplicationException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -35,6 +37,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private ListView<Card> list;
 
     private ObservableList<Card> data;
+
 
     /**
      * Create a new CardListCtrl
@@ -110,5 +113,24 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             throw new RuntimeException(e);
         }
 
+    }
+
+    /**
+     * Method that removes the list from the server
+     * @param event - the 'x' button being clicked
+     */
+    public void remove(ActionEvent event){
+        try {
+            server.deleteList(cardData);
+            Thread.sleep(100);
+        } catch (WebApplicationException e) {
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        board.refresh();
     }
 }

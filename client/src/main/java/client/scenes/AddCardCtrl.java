@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class AddCardCtrl {
@@ -18,6 +19,8 @@ public class AddCardCtrl {
     @FXML
     private TextField cardTitle;
 
+    @FXML
+    private Label nullTitle;
 
     /**
      * Create a new AddCardCtrl.
@@ -25,7 +28,7 @@ public class AddCardCtrl {
      */
     @Inject
     public AddCardCtrl() {
-
+        nullTitle = new Label("");
     }
 
     /**
@@ -50,14 +53,21 @@ public class AddCardCtrl {
     }
 
     /**
-     * Clear the fields.
+     * Adds the new task to the list,
+     * if the user didn't input anything
+     * they can't proceed.
      * @param event the ActionEvent
      */
     public void ok(ActionEvent event) {
         success = true;
         storedText = cardTitle.getText();
-        clearFields();
-        closeWindow(event);
+        if(storedText == null || storedText.length() == 0){
+            nullTitle.setText("Please enter a title");
+        }
+        else{
+            clearFields();
+            closeWindow(event);
+        }
     }
 
     /**
