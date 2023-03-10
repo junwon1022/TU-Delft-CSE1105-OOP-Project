@@ -95,15 +95,47 @@ public class ServerUtils {
     }
 
     /**
-     * Placeholder for the delete card function.
+     * Placeholder/ method for the delete card function,
+     * the actual method should follow the logic behind this
      * @param card - card to be deleted
      */
     public void deleteCard(Card card){
-        for(ListOfCards list: serverData){
-            for(Card c: list.cards){
-                if(c.equals(card))
-                    list.cards.remove(card);
+        int listNo = 0;
+        int cardNo = 0;
+
+        boolean found = false;
+        if(serverData != null){
+            for(ListOfCards list: serverData){
+                for(Card c: list.cards){
+                    if(c.equals(card)) {
+                        found = true;
+                        break;
+                    }
+                    cardNo++;
+                }
+                if(found)
+                    break;
+                listNo++;
             }
+            serverData.get(listNo).cards.remove(cardNo);
+        }
+
+    }
+
+    /**
+     * Placeholder/ method for the delete card function,
+     * the actual method should follow the logic behind this
+     * @param l - card to be deleted
+     */
+    public void deleteList(ListOfCards l){
+        int listNo = 0;
+        if(serverData != null){
+            for(ListOfCards list: serverData){
+                if(list.equals(l))
+                    break;
+                listNo++;
+            }
+            serverData.remove(listNo);
         }
     }
 
@@ -128,6 +160,10 @@ public class ServerUtils {
 
         return serverData;
     }
+
+//    public ListOfCards getServerCards(){
+//
+//    }
 
     /**
      * Get boards from server
