@@ -118,6 +118,7 @@ public class ServerUtils {
         boolean found = false;
         if(serverData != null){
             for(ListOfCards list: serverData){
+                cardNo = 0;
                 for(Card c: list.cards){
                     if(c.equals(card)) {
                         found = true;
