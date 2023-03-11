@@ -69,6 +69,64 @@ public class AddListOfCardsCtrl {
         }
     }
 
+    // From here are the keyboard cases
+
+    /**
+     * Handle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
+        if (keyEvent.getCode().toString().equals("ENTER")) {
+            ok(keyEvent);
+        }
+        else if(keyEvent.getCode().toString().equals("ESCAPE")){
+            cancel(keyEvent);
+        }
+    }
+
+    /**
+     * Adds thew new list to the board
+     * if the user didn't input anything
+     * they can't proceed.
+     * @param event the KeyEvent
+     */
+    public void ok(javafx.scene.input.KeyEvent event) {
+        success = true;
+        storedText = listTitle.getText();
+        if(storedText == null || storedText.length() == 0){
+            nullTitle.setText("Please enter a title");
+        }
+        else{
+            clearFields();
+            closeWindow(event);
+        }
+    }
+
+    /**
+     * Cancel the creation of a new list.
+     * @param event the KeyEvent
+     */
+    private void cancel(javafx.scene.input.KeyEvent event) {
+        success = false;
+        clearFields();
+        closeWindow(event);
+    }
+
+
+    /**
+     * Close the window
+     * @param event the KeyEvent
+     */
+    private static void closeWindow(javafx.scene.input.KeyEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
+
+
+
+
+
     /**
      * Clear the fields.
      *
