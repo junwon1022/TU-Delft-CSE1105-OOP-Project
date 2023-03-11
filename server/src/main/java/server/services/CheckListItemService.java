@@ -4,7 +4,6 @@ import commons.Card;
 import commons.CheckListItem;
 import org.springframework.stereotype.Service;
 import server.database.CheckListItemRepository;
-import server.database.ListOfCardsRepository;
 
 import java.util.List;
 
@@ -15,9 +14,9 @@ public class CheckListItemService {
 
     /**
      * Constructor with parameters
-     * @param listOfCardsRepository
+     * @param checkListItemRepository
      */
-    public CheckListItemService(ListOfCardsRepository listOfCardsRepository) {
+    public CheckListItemService(CheckListItemRepository checkListItemRepository) {
         this.checklistItemRepository = checklistItemRepository;
     }
 

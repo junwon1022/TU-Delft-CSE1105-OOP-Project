@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import commons.Board;
 import server.services.BoardService;
 
+import java.util.ArrayList;
+
 
 @RestController
 @RequestMapping("/api/boards")
@@ -75,8 +77,9 @@ public class BoardController {
             return ResponseEntity.ok().body(board);
         }
         catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new Board(e.getMessage(), "f", "g", "h", new ArrayList<>()));
         }
+
     }
 
     /**
@@ -95,6 +98,7 @@ public class BoardController {
             return ResponseEntity.ok().build();
         }
         catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

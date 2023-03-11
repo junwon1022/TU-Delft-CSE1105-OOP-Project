@@ -1,0 +1,110 @@
+/*
+ * Copyright 2021 Delft University of Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package server.api;
+
+import commons.Board;
+import commons.Person;
+import commons.Quote;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import server.database.BoardRepository;
+import server.services.BoardService;
+
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
+
+public class BoardControllerTest {
+
+    private BoardRepository repo;
+
+    private BoardController controller;
+
+    private BoardService service;
+
+    @BeforeEach
+    public void setup() {
+
+        repo = Mockito.mock(BoardRepository.class);
+        service = new BoardService(repo);
+        controller = new BoardController(service);
+
+        Board b = new Board(null, "#111111", "read", "write", new ArrayList<>());
+        when(repo.getById(0L)).thenReturn(b);
+
+    }
+
+
+    @Test
+    public void addBoardCorrect() {
+        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        var actual = controller.createBoard(b);
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
+        assertEquals(b, actual.getBody());
+    }
+
+    @Test
+    public void addBoardInCorrectNull() {
+        Board b = new Board(null, "#111111", "read", "write", new ArrayList<>());
+        var actual = controller.createBoard(b);
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+    @Test
+    public void addBoardInCorrectEmpty() {
+        Board b = new Board("", "#111111", "read", "write", new ArrayList<>());
+        var actual = controller.createBoard(b);
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+    @Test
+    public void editBoardTitleByIdCorrect() {
+        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.editBoardTitleById("My New Board", b.id);
+
+        assertEquals(OK, actual.getStatusCode());
+
+    }
+
+    @Test
+    public void editBoardTitleByIdWrong() {
+        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        var actual = controller.editBoardTitleById("", b.id);
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+    @Test
+    public void editBoardTitleByIdWrongNull() {
+        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        var actual = controller.editBoardTitleById(null, b.id);
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+    @Test
+    public void deleteBoardTitleDoesntExist() {
+        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.removeBoardById(0);
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+}
