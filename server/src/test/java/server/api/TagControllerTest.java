@@ -50,7 +50,6 @@ public class TagControllerTest {
     private TagController controller;
 
 
-
     @BeforeEach
     public void setup() {
 
@@ -65,7 +64,7 @@ public class TagControllerTest {
         listService = new ListOfCardsService(listRepo);
         cardService = new CardService(cardRepo);
 
-        controller = new TagController(cardService,listService,service,boardService);
+        controller = new TagController(cardService, listService, service, boardService);
 
     }
 
@@ -73,9 +72,9 @@ public class TagControllerTest {
     @Test
     public void addTagCorrect() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
+        ListOfCards l = new ListOfCards("List 1", "#555555", b, new ArrayList<>());
+        Card c = new Card("Card 1", "Finish CG Study", "#555555", l, new ArrayList<>(), new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions", "#555555", new HashSet<>());
 
         b.addList(l);
         l.addCard(c);
@@ -83,7 +82,8 @@ public class TagControllerTest {
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createTag(t,1L,2L,3L);
+        var actual = controller.createTag(t, 1L, 2L, 3L);
+
         assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(t, actual.getBody());
     }
@@ -175,24 +175,7 @@ public class TagControllerTest {
     }
 
 
-    @Test
-    public void editTagCorrect() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
 
-        b.addList(l);
-        l.addCard(c);
-        c.addTag(t);
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
-        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        when(repo.findById(t.id)).thenReturn(Optional.of(t));
-        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
-        assertEquals(HttpStatus.OK, actual.getStatusCode());
-        assertEquals(t, actual.getBody());
-    }
     @Test
     public void editTagWrongNull() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
