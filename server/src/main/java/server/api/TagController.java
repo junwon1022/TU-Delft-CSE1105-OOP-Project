@@ -227,7 +227,7 @@ public class TagController {
             // Delete the tag
             tagService.deleteTagById(tagId);
             // Return the saved tag with an HTTP 200 OK status
-            return ResponseEntity.ok(tag);
+            return ResponseEntity.ok().build();
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

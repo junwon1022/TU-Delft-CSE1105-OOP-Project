@@ -80,12 +80,11 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         var actual = controller.createTag(t,1L,2L,3L);
-        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(t, actual.getBody());
     }
 
@@ -100,7 +99,6 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -120,7 +118,6 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -138,7 +135,6 @@ public class TagControllerTest {
 
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -154,7 +150,6 @@ public class TagControllerTest {
         Tag t = new Tag(null,"#555555",new HashSet<>());
         b.addList(l);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -172,7 +167,6 @@ public class TagControllerTest {
         Tag t = new Tag(null,"#555555",new HashSet<>());
         b.addList(l);
         c.addTag(t);
-        t.addCard(c2);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -191,7 +185,6 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -210,12 +203,11 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
-        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
+        var actual = controller.editTagName(null,1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
     }
@@ -229,12 +221,11 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
-        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
+        var actual = controller.editTagName("",1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
     }
@@ -247,7 +238,6 @@ public class TagControllerTest {
         Tag t = new Tag(null,"#555555",new HashSet<>());
         b.addList(l);
         c.addTag(t);
-        t.addCard(c2);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
@@ -265,7 +255,6 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
@@ -286,7 +275,6 @@ public class TagControllerTest {
         b.addList(l);
         l.addCard(c);
         c.addTag(t);
-        t.addCard(c);
 
         when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
         when(listRepo.findById(2L)).thenReturn((Optional.of(l)));

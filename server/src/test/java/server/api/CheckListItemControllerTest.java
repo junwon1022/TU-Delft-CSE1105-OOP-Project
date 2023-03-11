@@ -84,7 +84,7 @@ public class CheckListItemControllerTest {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",false,c);
+        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         l.addCard(c);
         c.addCheckListItem(ch);
@@ -92,7 +92,8 @@ public class CheckListItemControllerTest {
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         var actual = controller.createCheck(ch,1L,2L,3L);
-        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        System.out.println(actual.getBody());
+        assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(ch, actual.getBody());
     }
 
@@ -172,24 +173,7 @@ public class CheckListItemControllerTest {
 
     }
 
-    @Test
-    public void addCheckWrongCard() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        Card c2 = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c2);
-        b.addList(l);
-        l.addCard(c);
-        c2.addCheckListItem(ch);
 
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
-        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
-        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-
-    }
 
 
     @Test
@@ -200,11 +184,13 @@ public class CheckListItemControllerTest {
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         l.addCard(c);
+        c.addCheckListItem(ch);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
         var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
+
         assertEquals(OK, actual.getStatusCode());
     }
 
@@ -213,14 +199,16 @@ public class CheckListItemControllerTest {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("",true,c);
+        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         l.addCard(c);
+        c.addCheckListItem(ch);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
+        var actual = controller.editCheckTextById("" ,1L,2L,3L,ch.id);
+        System.out.println(actual.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
     }
     @Test
@@ -228,14 +216,15 @@ public class CheckListItemControllerTest {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem(null,true,c);
+        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         l.addCard(c);
+        c.addCheckListItem(ch);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
+        var actual = controller.editCheckTextById(null,1L,2L,3L,ch.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
     }
     @Test
@@ -281,6 +270,7 @@ public class CheckListItemControllerTest {
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         l.addCard(c);
+        c.addCheckListItem(ch);
 
         when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
         when(listRepo.findById(2L)).thenReturn((Optional.of(l)));

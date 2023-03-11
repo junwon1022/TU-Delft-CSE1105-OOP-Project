@@ -97,7 +97,7 @@ public class CheckListItemService {
         if(newText == null || newText.isEmpty()) {
             throw new Exception("Text should not be null or empty.");
         }
-        CheckListItem check = checklistItemRepository.getById(id);
+        CheckListItem check = getCheckById(id);
         check.text = newText;
         return checklistItemRepository.save(check);
     }
