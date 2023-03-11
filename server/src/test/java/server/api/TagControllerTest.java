@@ -15,22 +15,13 @@
  */
 package server.api;
 
-import commons.Board;
-import commons.Card;
-import commons.CheckListItem;
-import commons.ListOfCards;
+import commons.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
-import server.database.BoardRepository;
-import server.database.CardRepository;
-import server.database.CheckListItemRepository;
-import server.database.ListOfCardsRepository;
-import server.services.BoardService;
-import server.services.CardService;
-import server.services.CheckListItemService;
-import server.services.ListOfCardsService;
+import server.database.*;
+import server.services.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
-public class CheckListItemControllerTest {
+public class TagControllerTest {
 
     private ListOfCardsRepository listRepo;
 
@@ -53,240 +44,255 @@ public class CheckListItemControllerTest {
 
     private CardService cardService;
 
-    private CheckListItemService service;
+    private TagService service;
 
-    private CheckListItemRepository repo;
-    private CheckListItemController controller;
+    private TagRepository repo;
+    private TagController controller;
 
 
 
     @BeforeEach
     public void setup() {
 
-        repo = Mockito.mock(CheckListItemRepository.class);
+        repo = Mockito.mock(TagRepository.class);
         boardRepo = Mockito.mock(BoardRepository.class);
         listRepo = Mockito.mock(ListOfCardsRepository.class);
         cardRepo = Mockito.mock(CardRepository.class);
 
 
-        service = new CheckListItemService(repo);
+        service = new TagService(repo);
         boardService = new BoardService(boardRepo);
         listService = new ListOfCardsService(listRepo);
         cardService = new CardService(cardRepo);
 
-        controller = new CheckListItemController(cardService,listService,service,boardService);
+        controller = new TagController(cardService,listService,service,boardService);
 
     }
 
 
     @Test
-    public void addCheckCorrect() {
+    public void addTagCorrect() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",false,c);
+        Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
+
         b.addList(l);
         l.addCard(c);
-        c.addCheckListItem(ch);
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
+        var actual = controller.createTag(t,1L,2L,3L);
         assertEquals(HttpStatus.OK, actual.getStatusCode());
-        assertEquals(ch, actual.getBody());
+        assertEquals(t, actual.getBody());
     }
 
 
     @Test
-    public void addCheckWrong1() {
+    public void addTagWrong1() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem(null,true,c);
+        Tag t = new Tag("","#555555",new HashSet<>());
+
         b.addList(l);
         l.addCard(c);
-        c.addCheckListItem(ch);
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
+        var actual = controller.createTag(t,1L,2L,3L);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
     }
 
 
     @Test
-    public void addCheckWrong2() {
+    public void addTagWrong2() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("",true,c);
+        Tag t = new Tag(null,"#555555",new HashSet<>());
+
         b.addList(l);
         l.addCard(c);
-        c.addCheckListItem(ch);
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
+        var actual = controller.createTag(t,1L,2L,3L);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-
     }
 
-
     @Test
-    public void addCheckWrongBoardinList() {
+    public void addTagWrongBoardInList() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         Board b2 = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+        Tag t = new Tag(null,"#555555",new HashSet<>());
 
         l.addCard(c);
-        c.addCheckListItem(ch);
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
+        var actual = controller.createTag(t,1L,2L,3L);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-
     }
-
-
-
-
     @Test
-    public void addCheckWrongListInCard() {
+    public void addTagWrongListInCards() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         ListOfCards l2 = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l2,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+        Tag t = new Tag(null,"#555555",new HashSet<>());
         b.addList(l);
-        c.addCheckListItem(ch);
-
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
+        var actual = controller.createTag(t,1L,2L,3L);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-
     }
 
+
     @Test
-    public void addCheckWrongCard() {
+    public void addTagWrongCardTags() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         Card c2 = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c2);
+        Tag t = new Tag(null,"#555555",new HashSet<>());
         b.addList(l);
-        l.addCard(c);
-        c2.addCheckListItem(ch);
-
+        c.addTag(t);
+        t.addCard(c2);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        var actual = controller.createCheck(ch,1L,2L,3L);
-        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-
-    }
-
-
-    @Test
-    public void editCheckCorrect() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
-        b.addList(l);
-        l.addCard(c);
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
-        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
-        assertEquals(OK, actual.getStatusCode());
-    }
-
-    @Test
-    public void editCheckWrong() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("",true,c);
-        b.addList(l);
-        l.addCard(c);
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
-        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
+        var actual = controller.createTag(t,1L,2L,3L);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
     }
+
+
     @Test
-    public void editCheckWrongNull() {
+    public void editTagCorrect() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem(null,true,c);
-        b.addList(l);
-        l.addCard(c);
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
-        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
-        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-    }
-    @Test
-    public void editCheckWrongBoardInList() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        Board b2 = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+        Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
 
+        b.addList(l);
         l.addCard(c);
-        c.addCheckListItem(ch);
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
-        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(t, actual.getBody());
     }
     @Test
-    public void editCheckWrongListInCard() {
+    public void editTagWrongNull() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        ListOfCards l2 = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l2,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
-        b.addList(l);
-        c.addCheckListItem(ch);
+        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Tag t = new Tag(null,"#555555",new HashSet<>());
 
+        b.addList(l);
+        l.addCard(c);
+        c.addTag(t);
+        t.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
-        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-    }
 
+    }
     @Test
-    public void deleteCheckByIdCorrect() {
-        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
-        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+    public void editTagWrongEmpty() {
+        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Tag t = new Tag("","#555555",new HashSet<>());
+
         b.addList(l);
         l.addCard(c);
+        c.addTag(t);
+        t.addCard(c);
+        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
+        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
+        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
+        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
+
+    }
+    @Test
+    public void editTagWrong3() {
+        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c2 = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Tag t = new Tag(null,"#555555",new HashSet<>());
+        b.addList(l);
+        c.addTag(t);
+        t.addCard(c2);
+        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
+        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
+        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
+
+    }
+    @Test
+    public void editTagColorCorrect() {
+        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
+
+        b.addList(l);
+        l.addCard(c);
+        c.addTag(t);
+        t.addCard(c);
+        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
+        when(listRepo.findById(2L)).thenReturn(Optional.of(l));
+        when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.editColour("#333333",1L,2L,3L,t.id);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(t, actual.getBody());
+    }
+
+
+    @Test
+    public void deleteTagByIdCorrect() {
+        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
+
+        b.addList(l);
+        l.addCard(c);
+        c.addTag(t);
+        t.addCard(c);
 
         when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
         when(listRepo.findById(2L)).thenReturn((Optional.of(l)));
         when(cardRepo.findById(3L)).thenReturn((Optional.of(c)));
-        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.removeCheckById(1L,2L,3L,ch.id);
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.removeTagById(1L,2L,3L,t.id);
 
         assertEquals(OK, actual.getStatusCode());
 
