@@ -25,6 +25,9 @@ public class TagTest {
 
     Set<Card> cards;
 
+    /**
+     * Set up all objects needed for testing
+     */
     @BeforeEach
     public void setUp() {
         tags = new HashSet<>();
@@ -47,12 +50,18 @@ public class TagTest {
         tag3 = new Tag("oopp", "#00ff00", cards);
     }
 
+    /**
+     * Test the default constructor
+     */
     @Test
     public void checkConstructor() {
         Tag defaultTag = new Tag();
         assertNotNull(defaultTag);
     }
 
+    /**
+     * Test the constructor with parameters
+     */
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("urgent", tag.name);
@@ -60,18 +69,27 @@ public class TagTest {
         assertEquals(cards, tag.cards);
     }
 
+    /**
+     * Test equals and hashcode methods for two equal objects
+     */
     @Test
     public void equalsHashCode() {
         assertEquals(tag, tag2);
         assertEquals(tag.hashCode(), tag2.hashCode());
     }
 
+    /**
+     * Test equals and hashcode methods for two different objects
+     */
     @Test
     public void notEqualsHashCode() {
         assertNotEquals(tag, tag3);
         assertNotEquals(tag.hashCode(), tag3.hashCode());
     }
 
+    /**
+     * Test toString method
+     */
     @Test
     public void hasToString() {
         var actual = tag.toString();
@@ -82,7 +100,9 @@ public class TagTest {
         assertTrue(actual.contains("cards"));
     }
 
-
+    /**
+     * Test card addition
+     */
     @Test
     public void testAddCard() {
         tag.addCard(card3);
@@ -90,12 +110,18 @@ public class TagTest {
         assertEquals(cards, tag.cards);
     }
 
+    /**
+     * Test null addition
+     */
     @Test
     public void testAddCardNull() {
         tag.addCard(null);
         assertEquals(cards, tag.cards);
     }
 
+    /**
+     * Test card removal
+     */
     @Test
     public void testRemoveCard() {
         tag.removeCard(card2);
@@ -103,6 +129,9 @@ public class TagTest {
         assertEquals(cards, tag.cards);
     }
 
+    /**
+     * Test null removal
+     */
     @Test
     public void testRemoveCardNull() {
         tag.removeCard(null);

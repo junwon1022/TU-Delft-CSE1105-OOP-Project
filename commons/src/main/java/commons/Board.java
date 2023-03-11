@@ -28,7 +28,7 @@ public class Board {
     public String writepassword;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<ListOfCards> lists = new ArrayList<>();
+    public List<ListOfCards> lists;
 
     /**
      * Default constructor
@@ -45,8 +45,7 @@ public class Board {
      * @param lists
      */
     public Board(String title, String colour,
-                 String readpassword, String writepassword,
-                 List<ListOfCards> lists) {
+                 String readpassword, String writepassword,List<ListOfCards> lists) {
         this.title = title;
         this.colour = colour;
         this.readpassword = readpassword;

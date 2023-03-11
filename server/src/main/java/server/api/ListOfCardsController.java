@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Board;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class ListOfCardsController {
      * @param listOfCardsService
      * @param boardService
      */
+    @Autowired
     public ListOfCardsController(ListOfCardsService listOfCardsService,
                                  BoardService boardService) {
         this.listOfCardsService = listOfCardsService;
@@ -34,10 +36,11 @@ public class ListOfCardsController {
 
     /**
      * Get the lists within a given board
+     *
      * @param boardId
      * @return the list of lists
      */
-    @GetMapping("/")
+    @GetMapping(path = {"", "/"})
     private ResponseEntity<List<ListOfCards>> getListsOfCards
     (@PathVariable("board_id") long boardId) {
         try {
@@ -54,11 +57,12 @@ public class ListOfCardsController {
 
     /**
      * Get a list given its id
+     *
      * @param boardId
      * @param listId
      * @return the list
      */
-    @GetMapping("/{list_id}")
+    @GetMapping(path = {"/{list_id}/","/{list_id}"})
     private ResponseEntity<ListOfCards> getListOfCardsById(@PathVariable("board_id") long boardId,
                                                            @PathVariable("list_id") long listId) {
         try {
@@ -77,11 +81,12 @@ public class ListOfCardsController {
 
     /**
      * Create a new list of cards
+     *
      * @param list
      * @param boardId
      * @return the new list
      */
-    @PostMapping("/")
+    @PostMapping(path = {"", "/"})
     public ResponseEntity<ListOfCards> createListOfCards(@RequestBody ListOfCards list,
                                                          @PathVariable("board_id") long boardId) {
         try {
@@ -99,12 +104,13 @@ public class ListOfCardsController {
 
     /**
      * Edit a list's title
+     *
      * @param newTitle
      * @param boardId
      * @param listId
      * @return the edited list
      */
-    @PostMapping("{list_id}")
+    @PostMapping(path = {"/{list_id}/","/{list_id}"})
     public ResponseEntity<ListOfCards> editListOfCardsTitleById(@RequestBody String newTitle,
                                                     @PathVariable("board_id") long boardId,
                                                     @PathVariable("list_id") long listId) {
@@ -125,27 +131,37 @@ public class ListOfCardsController {
 
     /**
      * Delete a list given its id
+     *
      * @param boardId
      * @param listId
      * @return the deleted list
      */
-    @DeleteMapping("/{list_id}")
+    @DeleteMapping(path = {"/{list_id}/","/{list_id}"})
     public ResponseEntity<ListOfCards> removeListOfCardsById(@PathVariable("board_id") long boardId,
                                                              @PathVariable("list_id") long listId) {
         try {
             if(!validPath(boardId, listId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the list
+            ListOfCards list = listOfCardsService.getListById(listId);
             // Delete the list
             listOfCardsService.deleteListOfCardsById(listId);
             // Return the saved list with an HTTP 200 OK status
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(list);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
+    /**
+     * Checks if there is a valid path between a board and a list
+     * @param boardId
+     * @param listId
+     * @return true if the path is valid
+     * @throws Exception
+     */
     private boolean validPath(long boardId, long listId)
             throws Exception {
         // Get the board

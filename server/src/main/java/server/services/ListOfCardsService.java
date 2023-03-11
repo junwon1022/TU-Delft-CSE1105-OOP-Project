@@ -2,6 +2,8 @@ package server.services;
 
 import commons.Board;
 import commons.ListOfCards;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.ListOfCardsRepository;
 
@@ -16,7 +18,8 @@ public class ListOfCardsService {
      * Constructor with parameters
      * @param listOfCardsRepository
      */
-    public ListOfCardsService(ListOfCardsRepository listOfCardsRepository) {
+    @Autowired
+    public ListOfCardsService(@Qualifier("list") ListOfCardsRepository listOfCardsRepository) {
         this.listOfCardsRepository = listOfCardsRepository;
     }
 

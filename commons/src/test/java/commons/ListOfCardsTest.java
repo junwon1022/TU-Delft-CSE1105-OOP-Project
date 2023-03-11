@@ -30,6 +30,9 @@ public class ListOfCardsTest {
     Tag tag1;
     Tag tag2;
 
+    /**
+     * Set up all objects needed for testing
+     */
     @BeforeEach
     public void setUp() {
         checkListItem1 = new CheckListItem("Do X", false, card1);
@@ -60,12 +63,18 @@ public class ListOfCardsTest {
         listOfCards.add(list2);
     }
 
+    /**
+     * Test the default constructor
+     */
     @Test
     public void checkConstructor() {
         ListOfCards defaultList = new ListOfCards();
         assertNotNull(defaultList);
     }
 
+    /**
+     * Test the constructor with parameters
+     */
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("Grasple", list.title);
@@ -74,18 +83,27 @@ public class ListOfCardsTest {
         assertEquals(cards, list.cards);
     }
 
+    /**
+     * Test equals and hashcode methods for two equal objects
+     */
     @Test
     public void equalsHashCode() {
         assertEquals(list, list2);
         assertEquals(list.hashCode(), list2.hashCode());
     }
 
+    /**
+     * Test equals and hashcode methods for two different objects
+     */
     @Test
     public void notEqualsHashCode() {
         assertNotEquals(list, list3);
         assertNotEquals(list.hashCode(), list3.hashCode());
     }
 
+    /**
+     * Test toString method
+     */
     @Test
     public void hasToString() {
         var actual = list.toString();
@@ -97,6 +115,9 @@ public class ListOfCardsTest {
         assertTrue(actual.contains("cards"));
     }
 
+    /**
+     * Test card addition
+     */
     @Test
     public void testAddCard() {
         list.addCard(card3);
@@ -104,12 +125,18 @@ public class ListOfCardsTest {
         assertEquals(cards, list.cards);
     }
 
+    /**
+     * Test null addition
+     */
     @Test
     public void testAddCardNull() {
         list.addCard(null);
         assertEquals(cards, list.cards);
     }
 
+    /**
+     * Test list removal
+     */
     @Test
     public void testRemoveCard() {
         list.removeCard(card2);
@@ -117,12 +144,18 @@ public class ListOfCardsTest {
         assertEquals(cards, list.cards);
     }
 
+    /**
+     * Test null removal
+     */
     @Test
     public void testRemoveCardNull() {
         list.removeCard(null);
         assertEquals(cards, list.cards);
     }
 
+    /**
+     * Test card swapping
+     */
     @Test
     public void testSwapCards() {
         list.swapCard(card1, card2);
@@ -130,6 +163,9 @@ public class ListOfCardsTest {
         assertEquals(cards2, list.cards);
     }
 
+    /**
+     * Test moving cards
+     */
     @Test
     public void testMoveCards() {
         list.moveCard(card1, 1);

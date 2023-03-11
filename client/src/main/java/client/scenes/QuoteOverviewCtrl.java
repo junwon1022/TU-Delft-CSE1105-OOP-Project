@@ -46,23 +46,55 @@ public class QuoteOverviewCtrl implements Initializable {
     @FXML
     private TableColumn<Quote, String> colQuote;
 
+    /**
+     * Create a new QuoteOverviewCtrl.
+     *
+     * @param server The server to use.
+     * @param mainCtrl The main controller to use.
+     */
     @Inject
     public QuoteOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
 
+
+    /**
+     *
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
+     *
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        colFirstName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().person.firstName));
-        colLastName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().person.lastName));
+        colFirstName.setCellValueFactory(q ->
+                new SimpleStringProperty(q.getValue().person.firstName));
+        colLastName.setCellValueFactory(q ->
+                new SimpleStringProperty(q.getValue().person.lastName));
         colQuote.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().quote));
+
+        server.registerForMessages("/topic/quotes", Quote.class, q-> {
+            data.add(q);
+        });
     }
 
+    /**
+     *
+     * Refresh the table.
+     */
     public void addQuote() {
         mainCtrl.showAdd();
     }
 
+    /**
+     *
+     * Refresh the table.
+     */
     public void refresh() {
         var quotes = server.getQuotes();
         data = FXCollections.observableList(quotes);
