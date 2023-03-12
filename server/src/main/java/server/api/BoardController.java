@@ -77,7 +77,6 @@ public class BoardController {
     @PostMapping(path = {"/{board_id}/","/{board_id}"})
     public ResponseEntity<Board> editBoardTitleById(@RequestBody String newTitle,
                                                   @PathVariable("board_id") long boardId) {
-
         try {
             // Edit the board and save it in the database
             Board board = boardService.editBoardTitle(boardId, newTitle);
@@ -85,9 +84,8 @@ public class BoardController {
             return ResponseEntity.ok().body(board);
         }
         catch (Exception e) {
-            return ResponseEntity.badRequest().body(new Board(e.getMessage(), "f", "g", "h", new ArrayList<>()));
+            return ResponseEntity.badRequest().build();
         }
-
     }
 
     /**

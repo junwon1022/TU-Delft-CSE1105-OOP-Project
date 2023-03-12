@@ -54,10 +54,11 @@ public class CheckListItemController {
      * @return the checklist
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<List<CheckListItem>> getChecks
-    (@PathVariable("board_id") long boardId,
-     @PathVariable("list_id") long listId,
-     @PathVariable("card_id") long cardId ) {
+    private ResponseEntity<List<CheckListItem>> getChecks(
+            @PathVariable("board_id") long boardId,
+            @PathVariable("list_id") long listId,
+            @PathVariable("card_id") long cardId
+    ) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
