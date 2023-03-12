@@ -17,11 +17,20 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Board;
 import commons.ListOfCards;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class BoardCtrl {
 
@@ -60,5 +69,39 @@ public class BoardCtrl {
     public void refresh() {
         var serverData = server.getServerData();
         data.setAll(serverData);
+    }
+
+
+    /**
+     * Opens a new window to add a new list of cards.
+     * @param event the ActionEvent
+     */
+    public void addListOfCards(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddListOfCards.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            AddListOfCardsCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Add new list");
+            stage.setScene(new Scene(root, 300, 200));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String title = controller.storedText;
+
+                //Hard coded lines, should be changed to use the server data
+                Board board = new Board("title", "#ffffff", "read", "write", new ArrayList<>());
+                ListOfCards list = new ListOfCards(title, "00B4D8", board, new ArrayList<>());
+                board.addList(list);
+                //End of hard coded lines
+
+                server.addList(list);
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
