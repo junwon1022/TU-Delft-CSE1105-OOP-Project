@@ -34,10 +34,10 @@ public class AddListOfCardsCtrl {
      * Initialize the controller.
      * @param event the ActionEvent
      */
-    public void cancel(ActionEvent event) {
+    public void cancelB(ActionEvent event) {
         success = false;
         clearFields();
-        closeWindow(event);
+        closeWindowB(event);
     }
 
     /**
@@ -45,7 +45,7 @@ public class AddListOfCardsCtrl {
      * @param event the ActionEvent
      */
 
-    private static void closeWindow(ActionEvent event) {
+    private static void closeWindowB(ActionEvent event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -57,7 +57,7 @@ public class AddListOfCardsCtrl {
      * they can't proceed.
      * @param event the ActionEvent
      */
-    public void ok(ActionEvent event) {
+    public void okB(ActionEvent event) {
         success = true;
         storedText = listTitle.getText();
         if(storedText == null || storedText.length() == 0){
@@ -65,7 +65,7 @@ public class AddListOfCardsCtrl {
         }
         else{
             clearFields();
-            closeWindow(event);
+            closeWindowB(event);
         }
     }
 
