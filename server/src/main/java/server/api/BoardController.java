@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import commons.Board;
 import server.services.BoardService;
 
-import java.util.ArrayList;
-
 
 @RestController
 @RequestMapping("/api/boards")
