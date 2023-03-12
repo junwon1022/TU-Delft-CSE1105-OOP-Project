@@ -136,6 +136,16 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @param l - the list which needs a new name
+     */
+    public void addList(ListOfCards l){
+        if(serverData == null)
+            serverData = new ArrayList<>();
+        serverData.add(l);
+    }
+
+    /**
      * Placeholder/ method for the delete card function,
      * the actual method should follow the logic behind this
      * @param l - card to be deleted
