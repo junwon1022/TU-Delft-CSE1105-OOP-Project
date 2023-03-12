@@ -30,7 +30,7 @@ public class TagService {
      * @return true if tag in card
      */
     public boolean tagInCard(Tag tag, Card card) {
-        return card.tags.contains(tag);
+        return tag.cards.contains(card);
     }
 
     /**

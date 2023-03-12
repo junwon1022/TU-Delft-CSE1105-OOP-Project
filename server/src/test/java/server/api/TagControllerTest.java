@@ -16,6 +16,7 @@
 package server.api;
 
 import commons.*;
+import org.hibernate.mapping.Any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,6 +27,7 @@ import server.services.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -175,6 +177,46 @@ public class TagControllerTest {
     }
 
 
+    @Test
+    public void editTagCorrect() {
+        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Set<Tag> m = new HashSet<>();
+
+        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),m);
+
+        Set<Card> s = new HashSet<>();
+        s.add(c);
+
+        Tag t = new Tag("Tag 2","#555555",s);
+
+        b.id = 0L;
+        l.id = 1L;
+        c.id = 2L;
+        t.id = 8L;
+
+
+        b.addList(l);
+        l.addCard(c);
+        c.addTag(t);
+
+        System.out.println("Tag     " + t + "------------------");
+
+        System.out.println("Tag size " + c.tags.size());
+        System.out.println("All tags     " + c.tags);
+
+        when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
+        when(listRepo.findById(l.id)).thenReturn(Optional.of(l));
+        when(cardRepo.findById(c.id)).thenReturn(Optional.of(c));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+
+        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
+
+        var actual = controller.editTagName("New tag",b.id,l.id,c.id,t.id);
+        //System.out.println(actual.getBody());
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(t, actual.getBody());
+    }
 
     @Test
     public void editTagWrongNull() {
@@ -190,6 +232,9 @@ public class TagControllerTest {
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
+
+        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
+
         var actual = controller.editTagName(null,1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
@@ -208,6 +253,8 @@ public class TagControllerTest {
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
+
+        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
         var actual = controller.editTagName("",1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
@@ -224,6 +271,8 @@ public class TagControllerTest {
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
+
+        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
         var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
@@ -242,6 +291,7 @@ public class TagControllerTest {
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
         var actual = controller.editColour("#333333",1L,2L,3L,t.id);
         assertEquals(HttpStatus.OK, actual.getStatusCode());
         assertEquals(t, actual.getBody());

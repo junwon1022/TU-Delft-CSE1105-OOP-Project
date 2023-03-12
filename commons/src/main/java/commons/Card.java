@@ -127,14 +127,6 @@ public class Card {
     }
 
 
-    /**
-     * Generate a hash code for a card
-     * @return an integer
-     */
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
 
     /**
      * Return a String representation of a card
