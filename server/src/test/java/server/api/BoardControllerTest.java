@@ -20,6 +20,7 @@ import commons.Board;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import server.database.BoardRepository;
 import server.services.BoardService;
@@ -31,6 +32,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
+
+@SuppressWarnings({"MissingJavadocMethod","JavadocMethod"})
+@SpringBootTest
 public class BoardControllerTest {
 
     private BoardRepository repo;
@@ -40,6 +44,8 @@ public class BoardControllerTest {
     private BoardService service;
 
     //Begin testing
+
+
     @BeforeEach
     public void setup() {
 
@@ -53,7 +59,7 @@ public class BoardControllerTest {
     }
 
 
-    //Check if the board is added correctly
+
     @Test
     public void addBoardCorrect() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());

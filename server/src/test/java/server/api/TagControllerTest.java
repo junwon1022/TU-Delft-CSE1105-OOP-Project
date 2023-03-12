@@ -19,6 +19,7 @@ import commons.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import server.database.*;
 import server.services.*;
@@ -32,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
+@SuppressWarnings({"MissingJavadocMethod","JavadocMethod"})
+@SpringBootTest
 public class TagControllerTest {
 
     private ListOfCardsRepository listRepo;
