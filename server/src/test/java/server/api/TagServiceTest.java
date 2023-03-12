@@ -68,18 +68,13 @@ public class TagServiceTest {
     public void addTagTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-
         boardService.createBoard(b);
-
         Mockito.verify(boardRepo).save(b);
 
 
         ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
-
         b.addList(l);
-
         listService.createListOfCards(l,b);
-
         Mockito.verify(listRepo).save(l);
 
 
@@ -125,9 +120,7 @@ public class TagServiceTest {
 
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
 
-
         ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
-
 
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 

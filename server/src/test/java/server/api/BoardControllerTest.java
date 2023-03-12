@@ -16,9 +16,7 @@
 package server.api;
 
 import commons.Board;
-import commons.Person;
-import commons.Quote;
-import org.junit.jupiter.api.AfterAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,10 +26,7 @@ import server.services.BoardService;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -44,6 +39,7 @@ public class BoardControllerTest {
 
     private BoardService service;
 
+    //Begin testing
     @BeforeEach
     public void setup() {
 
@@ -57,6 +53,7 @@ public class BoardControllerTest {
     }
 
 
+    //Check if the board is added correctly
     @Test
     public void addBoardCorrect() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
@@ -65,18 +62,21 @@ public class BoardControllerTest {
         assertEquals(b, actual.getBody());
     }
 
+    //Check a null board
     @Test
     public void addBoardInCorrectNull() {
         Board b = new Board(null, "#111111", "read", "write", new ArrayList<>());
         var actual = controller.createBoard(b);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+    //Check an empty board
     @Test
     public void addBoardInCorrectEmpty() {
         Board b = new Board("", "#111111", "read", "write", new ArrayList<>());
         var actual = controller.createBoard(b);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+    //EditByTitle
     @Test
     public void editBoardTitleByIdCorrect() {
         Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
@@ -87,18 +87,21 @@ public class BoardControllerTest {
 
     }
 
+    //EditByTitle-Wrong
     @Test
     public void editBoardTitleByIdWrong() {
         Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
         var actual = controller.editBoardTitleById("", b.id);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+    //EditByTitle-Null
     @Test
     public void editBoardTitleByIdWrongNull() {
         Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
         var actual = controller.editBoardTitleById(null, b.id);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+    //DoesntExist
     @Test
     public void deleteBoardTitleDoesntExist() {
         Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());

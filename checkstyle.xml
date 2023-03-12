@@ -20,6 +20,7 @@
         </module>
 
         <module name="MissingJavadocMethod">
+
             <property name="severity" value="warning"/>
             <property name="scope" value="public"/>
             <property name="minLineCount" value="0"/>

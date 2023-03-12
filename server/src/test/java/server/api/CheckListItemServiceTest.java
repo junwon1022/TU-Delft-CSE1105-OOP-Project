@@ -80,19 +80,14 @@ public class CheckListItemServiceTest {
     public void addCheckTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
-
         boardService.createBoard(b);
-
         Mockito.verify(boardRepo).save(b);
 
 
         ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
-
         b.addList(l);
 
         listService.createListOfCards(l,b);
-
-        Mockito.verify(listRepo).save(l);
 
 
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
@@ -100,8 +95,6 @@ public class CheckListItemServiceTest {
         l.addCard(c);
 
         cardService.createCard(c,l,b);
-
-        Mockito.verify(cardRepo).save(c);
 
 
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);

@@ -157,10 +157,10 @@ public class CheckListItemControllerTest {
 
     @Test
     public void addCheckWrongListInCard() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         ListOfCards l2 = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l2,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("Card 1","F","#555555",l2,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         c.addCheckListItem(ch);
@@ -180,7 +180,7 @@ public class CheckListItemControllerTest {
     public void editCheckCorrect() {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","F","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         l.addCard(c);
@@ -189,7 +189,7 @@ public class CheckListItemControllerTest {
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(cardRepo.findById(3L)).thenReturn(Optional.of(c));
         when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
-        var actual = controller.editCheckTextById("Finish ADS Study",1L,2L,3L,ch.id);
+        var actual = controller.editCheckTextById("ADS",1L,2L,3L,ch.id);
 
         assertEquals(OK, actual.getStatusCode());
     }
@@ -249,7 +249,7 @@ public class CheckListItemControllerTest {
         Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
         ListOfCards l2 = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l2,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("Card 1","F","#555555",l2,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
         c.addCheckListItem(ch);
