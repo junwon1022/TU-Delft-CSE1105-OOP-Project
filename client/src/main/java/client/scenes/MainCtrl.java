@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Board;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -33,16 +34,20 @@ public class MainCtrl {
     private BoardCtrl boardCtrl;
     private Scene board;
 
+    private ConnectCtrl connectCtrl;
+    private Scene connect;
+
     /**
      * Create a new MainCtrl.
      *
      * @param primaryStage The primary stage to use.
-     * @param overview The overview scene to use.
-     * @param add The add scene to use.
-     * @param board The board screen to use.
+     * @param overview     The overview scene to use.
+     * @param add          The add scene to use.
+     * @param board        The board screen to use.
+     * @param connect
      */
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board) {
+                           Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board, Pair<ConnectCtrl, Parent> connect) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -53,15 +58,31 @@ public class MainCtrl {
         this.boardCtrl = board.getKey();
         this.board = new Scene(board.getValue());
 
-        showBoard();
+
+        this.connectCtrl = connect.getKey();
+        this.connect = new Scene(connect.getValue());
+
+
+        showConnect();
         primaryStage.show();
     }
 
     /**
      * Show the board scene.
      */
-    public void showBoard() {
-        primaryStage.setTitle("My board");
+    public void showConnect() {
+        primaryStage.setTitle("Connect");
+        primaryStage.setScene(connect);
+        primaryStage.setHeight(600);
+
+    }
+
+
+    /**
+     * Show the board scene.
+     */
+    public void showBoard(Board b) {
+        primaryStage.setTitle(b.title);
         primaryStage.setScene(board);
         primaryStage.setHeight(600);
         boardCtrl.initialize();

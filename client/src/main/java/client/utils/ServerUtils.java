@@ -94,7 +94,7 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    ArrayList<ListOfCards> serverData = null;
+    public ArrayList<ListOfCards> serverData = null;
 
     /**
      * Placeholder add card function.

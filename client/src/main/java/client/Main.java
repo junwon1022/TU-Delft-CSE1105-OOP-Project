@@ -16,6 +16,7 @@
 package client;
 
 import static com.google.inject.Guice.createInjector;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,8 +24,10 @@ import java.net.URISyntaxException;
 import client.scenes.*;
 import com.google.inject.Injector;
 
+import jakarta.ws.rs.client.ClientBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.glassfish.jersey.client.ClientConfig;
 
 
 public class Main extends Application {
@@ -35,9 +38,9 @@ public class Main extends Application {
     /**
      * The main method for the application.
      * @param args the command line arguments.
-     * @throws IOException If an I/O error occurs.
      */
-    public static void main(String[] args) throws URISyntaxException, IOException {
+    public static void main(String[] args) throws InterruptedException {
+
         launch();
     }
 
@@ -56,8 +59,9 @@ public class Main extends Application {
         var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");
         var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
         var board = FXML.load(BoardCtrl.class, "client", "scenes", "Board.fxml");
+        var connect = FXML.load(ConnectCtrl.class, "client", "scenes", "ConnectToServer.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, overview, add, board);
+        mainCtrl.initialize(primaryStage, overview, add, board, connect);
     }
 }

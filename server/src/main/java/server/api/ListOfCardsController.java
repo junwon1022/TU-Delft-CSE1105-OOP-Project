@@ -28,7 +28,8 @@ public class ListOfCardsController {
      * @param boardService
      */
     @Autowired
-    public ListOfCardsController(ListOfCardsService listOfCardsService,
+    public ListOfCardsController(
+                                 ListOfCardsService listOfCardsService,
                                  BoardService boardService) {
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
