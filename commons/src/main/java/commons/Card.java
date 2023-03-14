@@ -1,7 +1,6 @@
 package commons;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
@@ -127,14 +126,6 @@ public class Card {
     }
 
 
-    /**
-     * Generate a hash code for a card
-     * @return an integer
-     */
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
 
     /**
      * Return a String representation of a card

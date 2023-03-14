@@ -5,6 +5,11 @@
 
 <module name = "Checker">
     <module name="TreeWalker">
+
+        <module name="SuppressWarningsHolder">
+
+        </module>
+
         <module name="UnusedImports" />
 
         <module name="MethodLength">
@@ -20,6 +25,7 @@
         </module>
 
         <module name="MissingJavadocMethod">
+
             <property name="severity" value="warning"/>
             <property name="scope" value="public"/>
             <property name="minLineCount" value="0"/>
@@ -65,5 +71,11 @@
         <property name="max" value="100"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
+
+    <module name="SuppressWarningsFilter">
+
+    </module>
+
+
 
 </module>

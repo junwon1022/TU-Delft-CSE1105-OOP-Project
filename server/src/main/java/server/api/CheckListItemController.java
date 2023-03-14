@@ -54,10 +54,11 @@ public class CheckListItemController {
      * @return the checklist
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<List<CheckListItem>> getChecks
-    (@PathVariable("board_id") long boardId,
-        @PathVariable("list_id") long listId,
-        @PathVariable("card_id") long cardId ) {
+    private ResponseEntity<List<CheckListItem>> getChecks(
+            @PathVariable("board_id") long boardId,
+            @PathVariable("list_id") long listId,
+            @PathVariable("card_id") long cardId
+    ) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
@@ -91,9 +92,9 @@ public class CheckListItemController {
      */
     @GetMapping(path = {"/{check_id}/","/{check_id}"})
     private ResponseEntity<CheckListItem> getCheckById(@PathVariable("board_id") long boardId,
-                                                           @PathVariable("list_id") long listId,
-                                                           @PathVariable("card_id") long cardId,
-                                                           @PathVariable("check_id") long checkId) {
+                                                       @PathVariable("list_id") long listId,
+                                                       @PathVariable("card_id") long cardId,
+                                                       @PathVariable("check_id") long checkId) {
         try {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
@@ -119,9 +120,9 @@ public class CheckListItemController {
      */
     @PostMapping(path = {"", "/"})
     public ResponseEntity<CheckListItem> createCheck(@RequestBody CheckListItem check,
-                                           @PathVariable("board_id") long boardId,
-                                           @PathVariable("list_id") long listId,
-                                            @PathVariable("card_id") long cardId ) {
+                                                     @PathVariable("board_id") long boardId,
+                                                     @PathVariable("list_id") long listId,
+                                                     @PathVariable("card_id") long cardId ) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
@@ -158,10 +159,10 @@ public class CheckListItemController {
      */
     @PostMapping(path = {"/{check_id}/text/","/{check_id}/text"})
     public ResponseEntity<CheckListItem> editCheckTextById(@RequestBody String newText,
-                                                  @PathVariable("board_id") long boardId,
-                                                  @PathVariable("list_id") long listId,
-                                                  @PathVariable("card_id") long cardId,
-                                                  @PathVariable("check_id") long checkId) {
+                                                           @PathVariable("board_id") long boardId,
+                                                           @PathVariable("list_id") long listId,
+                                                           @PathVariable("card_id") long cardId,
+                                                           @PathVariable("check_id") long checkId) {
 
         try {
             if(!validPath(boardId, listId, cardId, checkId)) {
@@ -192,10 +193,10 @@ public class CheckListItemController {
      */
     @PostMapping(path = {"/{check_id}/completion/","/{check_id}/completion"})
     public ResponseEntity<CheckListItem> editCheckCompletion(
-                                                           @PathVariable("board_id") long boardId,
-                                                           @PathVariable("list_id") long listId,
-                                                           @PathVariable("card_id") long cardId,
-                                                           @PathVariable("check_id") long checkId) {
+            @PathVariable("board_id") long boardId,
+            @PathVariable("list_id") long listId,
+            @PathVariable("card_id") long cardId,
+            @PathVariable("check_id") long checkId) {
 
         try {
             if(!validPath(boardId, listId, cardId, checkId)) {
@@ -224,9 +225,9 @@ public class CheckListItemController {
      */
     @DeleteMapping(path = {"/{check_id}/","/{check_id}"})
     public ResponseEntity<CheckListItem> removeCheckById(@PathVariable("board_id") long boardId,
-                                               @PathVariable("list_id") long listId,
-                                               @PathVariable("card_id") long cardId,
-                                               @PathVariable("check_id") long checkId) {
+                                                         @PathVariable("list_id") long listId,
+                                                         @PathVariable("card_id") long cardId,
+                                                         @PathVariable("check_id") long checkId) {
         try {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
@@ -279,3 +280,4 @@ public class CheckListItemController {
         return true;
     }
 }
+

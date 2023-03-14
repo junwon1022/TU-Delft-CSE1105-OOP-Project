@@ -1,7 +1,5 @@
 package commons;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
@@ -79,18 +77,20 @@ public class Tag {
      */
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        //return EqualsBuilder.reflectionEquals(this, obj);
+
+        if(obj instanceof Tag) {
+            Tag t = (Tag) obj;
+            return t.id == this.id && t.colour.equals(this.colour) && t.name.equals(this.name);
+
+        }
+        return false;
     }
 
 
-    /**
-     * Generate a hash code for a tag
-     * @return an integer
-     */
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
+
+
+
 
     /**
      * Return a String representation of a tag

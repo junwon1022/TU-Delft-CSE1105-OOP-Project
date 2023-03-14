@@ -47,10 +47,11 @@ public class TagController {
      * @return the set of tags
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<Set<Tag>> getTags
-    (@PathVariable("board_id") long boardId,
-        @PathVariable("list_id") long listId,
-        @PathVariable("card_id") long cardId ) {
+    private ResponseEntity<Set<Tag>> getTag(
+            @PathVariable("board_id") long boardId,
+            @PathVariable("list_id") long listId,
+            @PathVariable("card_id") long cardId
+    ) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
@@ -85,9 +86,9 @@ public class TagController {
      */
     @GetMapping(path = {"/{tag_id}", "/{tag_id}/"})
     private ResponseEntity<Tag> getTagById(@PathVariable("board_id") long boardId,
-                                                           @PathVariable("list_id") long listId,
-                                                           @PathVariable("card_id") long cardId,
-                                                           @PathVariable("tag_id") long tagId) {
+                                           @PathVariable("list_id") long listId,
+                                           @PathVariable("card_id") long cardId,
+                                           @PathVariable("tag_id") long tagId) {
         try {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
@@ -113,9 +114,9 @@ public class TagController {
      */
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag,
-                                           @PathVariable("board_id") long boardId,
-                                           @PathVariable("list_id") long listId,
-                                            @PathVariable("card_id") long cardId) {
+                                         @PathVariable("board_id") long boardId,
+                                         @PathVariable("list_id") long listId,
+                                         @PathVariable("card_id") long cardId) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
@@ -151,10 +152,10 @@ public class TagController {
      */
     @PostMapping(path = {"/{tag_id}/name", "/{tag_id}/name/"})
     public ResponseEntity<Tag> editTagName(@RequestBody String newName,
-                                                  @PathVariable("board_id") long boardId,
-                                                  @PathVariable("list_id") long listId,
-                                                  @PathVariable("card_id") long cardId,
-                                                  @PathVariable("tag_id") long tagId) {
+                                           @PathVariable("board_id") long boardId,
+                                           @PathVariable("list_id") long listId,
+                                           @PathVariable("card_id") long cardId,
+                                           @PathVariable("tag_id") long tagId) {
 
         try {
             if(!validPath(boardId, listId, cardId, tagId)) {
@@ -181,13 +182,19 @@ public class TagController {
      * @param tagId
      * @return the edited tag
      */
-    @PostMapping(path = {"/{tag_id}/colour", "/{tag_id}/colour",
-        "/{tag_id}/color", "/{tag_id}/color"})
+    @PostMapping(
+            path = {
+                "/{tag_id}/colour",
+                "/{tag_id}/colour",
+                "/{tag_id}/color",
+                "/{tag_id}/color"
+            }
+    )
     public ResponseEntity<Tag> editColour(@RequestBody String newColour,
-                                        @PathVariable("board_id") long boardId,
-                                        @PathVariable("list_id") long listId,
-                                        @PathVariable("card_id") long cardId,
-                                        @PathVariable("tag_id") long tagId) {
+                                          @PathVariable("board_id") long boardId,
+                                          @PathVariable("list_id") long listId,
+                                          @PathVariable("card_id") long cardId,
+                                          @PathVariable("tag_id") long tagId) {
 
         try {
             if(!validPath(boardId, listId, cardId, tagId)) {
@@ -215,9 +222,9 @@ public class TagController {
      */
     @DeleteMapping(path = {"/{tag_id}", "/{tag_id}/"})
     public ResponseEntity<Tag> removeTagById(@PathVariable("board_id") long boardId,
-                                               @PathVariable("list_id") long listId,
-                                               @PathVariable("card_id") long cardId,
-                                               @PathVariable("tag_id") long tagId) {
+                                             @PathVariable("list_id") long listId,
+                                             @PathVariable("card_id") long cardId,
+                                             @PathVariable("tag_id") long tagId) {
         try {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
@@ -227,7 +234,7 @@ public class TagController {
             // Delete the tag
             tagService.deleteTagById(tagId);
             // Return the saved tag with an HTTP 200 OK status
-            return ResponseEntity.ok(tag);
+            return ResponseEntity.ok().build();
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -270,3 +277,4 @@ public class TagController {
         return true;
     }
 }
+

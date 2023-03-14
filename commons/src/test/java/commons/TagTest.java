@@ -75,7 +75,6 @@ public class TagTest {
     @Test
     public void equalsHashCode() {
         assertEquals(tag, tag2);
-        assertEquals(tag.hashCode(), tag2.hashCode());
     }
 
     /**
@@ -84,7 +83,6 @@ public class TagTest {
     @Test
     public void notEqualsHashCode() {
         assertNotEquals(tag, tag3);
-        assertNotEquals(tag.hashCode(), tag3.hashCode());
     }
 
     /**

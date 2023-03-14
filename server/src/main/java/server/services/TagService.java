@@ -30,7 +30,7 @@ public class TagService {
      * @return true if tag in card
      */
     public boolean tagInCard(Tag tag, Card card) {
-        return card.tags.contains(tag);
+        return tag.cards.contains(card);
     }
 
     /**
@@ -85,7 +85,7 @@ public class TagService {
         if(newName == null || newName.isEmpty()) {
             throw new Exception("Name should not be null or empty.");
         }
-        Tag tag = tagRepository.getById(id);
+        Tag tag = getTagById(id);
         tag.name = newName;
         return tagRepository.save(tag);
     }
@@ -100,7 +100,7 @@ public class TagService {
         if(newColour == null || newColour.isEmpty()) {
             throw new Exception("Colour should not be null or empty.");
         }
-        Tag tag = tagRepository.getById(id);
+        Tag tag = getTagById(id);
         tag.colour = newColour;
         return tagRepository.save(tag);
     }
