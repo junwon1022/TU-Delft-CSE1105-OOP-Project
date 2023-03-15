@@ -4,7 +4,9 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #03045E;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #03045E;"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl"
+            onKeyPressed="#openHelpScreen">
    <children>
       <ListView fx:id="list" orientation="HORIZONTAL" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #03045E;" />
       <Button layoutX="513.0" layoutY="521.0" mnemonicParsing="false" onAction="#addListOfCards" text="Add List" />
