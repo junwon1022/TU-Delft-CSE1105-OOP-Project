@@ -121,6 +121,28 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     }
 
     /**
+     * Adds a default card to the CardList, without prompting the user for a title.
+     * The title is generated automatically.
+     *
+     * @param event - the 'Add default card' button being pressed
+     */
+    public void addDefaultCard(ActionEvent event) {
+        int counter = 0;
+        for (Card card : cardData.cards) {
+            if (card.title.startsWith("Card")) {
+                String[] parts = card.title.split(" ");
+                int num = Integer.parseInt(parts[1]);
+                if (num > counter) {
+                    counter = num;
+                }
+            }
+        }
+
+        server.addCard(new Card("Card " + (counter + 1), "", "red", cardData, null, null));
+        board.refresh();
+    }
+
+    /**
      * Method that removes the list from the server
      * @param event - the 'x' button being clicked
      */

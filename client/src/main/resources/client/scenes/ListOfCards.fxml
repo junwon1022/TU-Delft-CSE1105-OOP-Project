@@ -6,18 +6,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="170.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="170.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="title" layoutX="65.0" layoutY="43.0" text="Label" textFill="#03045e">
          <font>
             <Font name="Corbel Bold" size="17.0" />
          </font></Label>
-      <ListView fx:id="list" layoutX="10.0" layoutY="71.0" prefHeight="309.0" prefWidth="150.0" style="-fx-background-color: #00B4D8;" />
-      <Button fx:id="addButton" layoutX="48.0" layoutY="399.0" mnemonicParsing="false" onAction="#addCard" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="Add Card">
+      <ListView fx:id="list" layoutX="10.0" layoutY="71.0" prefHeight="282.0" prefWidth="150.0" style="-fx-background-color: #00B4D8;" />
+      <Button fx:id="addButton" layoutX="48.0" layoutY="408.0" mnemonicParsing="false" onAction="#addCard" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="Add Card">
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
       <Button fx:id="deleteCard" layoutX="137.0" layoutY="15.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="19.0" style="-fx-background-color: rgb(194, 21, 21,0.8); -fx-padding: 0;" text="❌" />
       <Button fx:id="rename" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameList" prefHeight="17.0" prefWidth="57.0" style="-fx-background-color: rgb(0, 180, 216, 0.2);" text="rename" />
+      <Button fx:id="addButton1" layoutX="25.0" layoutY="371.0" mnemonicParsing="false" onAction="#addDefaultCard" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="Add Default Card">
+         <font>
+            <Font name="Corbel" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
