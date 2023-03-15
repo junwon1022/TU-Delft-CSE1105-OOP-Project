@@ -30,6 +30,10 @@ public class HelpScreenCtrl {
     }
 
 
+    /**
+     * Close the window.
+     * @param event - the KeyEvent
+     */
     public void close(KeyEvent event) {
         if(event.getCode().toString().equals("ESCAPE")) {
             Node source = (Node) event.getSource();

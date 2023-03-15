@@ -105,6 +105,10 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Opens the help screen
+     * @param event - Key event when the user presses shift + /
+     */
     public void openHelpScreen(KeyEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
 
