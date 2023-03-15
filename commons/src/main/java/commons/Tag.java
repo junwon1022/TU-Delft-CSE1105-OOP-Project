@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Tag {
     public String colour;
 
     @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
     public Set<Card> cards = new HashSet<>();
 
     /**

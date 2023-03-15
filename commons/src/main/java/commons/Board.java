@@ -1,6 +1,8 @@
 package commons;
 import javax.persistence.*;
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -28,6 +30,7 @@ public class Board {
     public String writepassword;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     public List<ListOfCards> lists;
 
     /**
