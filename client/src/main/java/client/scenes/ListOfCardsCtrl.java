@@ -108,7 +108,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event the KeyEvent
      */
     public void addCard(KeyEvent event) {
-        if(event.getCode().toString().equals("ENTER")){
+        if(event.getCode().toString().equals("ENTER") && !name.getText().equals("") && name.getText() != null){
             storedText = name.getText();
             server.addCard(new Card(storedText, "description", "red", cardData, null, null));
             name.clear();
@@ -123,10 +123,12 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event the Action event
      */
     public void addCardB(ActionEvent event) {
-        storedText = name.getText();
-        server.addCard(new Card(storedText, "description", "red", cardData, null, null));
-        name.clear();
-        board.refresh();
+        if(!name.getText().equals("") && name.getText() != null) {
+            storedText = name.getText();
+            server.addCard(new Card(storedText, "description", "red", cardData, null, null));
+            name.clear();
+            board.refresh();
+        }
     }
 
     /**
@@ -139,30 +141,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     }
 
 
-
-
-
-//    /**
-//     * Adds a default card to the CardList, without prompting the user for a title.
-//     * The title is generated automatically.
-//     *
-//     * @param event - the 'Add default card' button being pressed
-//     */
-//    public void addDefaultCard(ActionEvent event) {
-//        int counter = 0;
-//        for (Card card : cardData.cards) {
-//            if (card.title.startsWith("Card")) {
-//                String[] parts = card.title.split(" ");
-//                int num = Integer.parseInt(parts[1]);
-//                if (num > counter) {
-//                    counter = num;
-//                }
-//            }
-//        }
-//
-//        server.addCard(new Card("Card " + (counter + 1), "", "red", cardData, null, null));
-//        board.refresh();
-//    }
 
     /**
      * Method that removes the list from the server
