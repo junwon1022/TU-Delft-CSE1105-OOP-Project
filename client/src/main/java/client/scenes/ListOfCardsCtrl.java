@@ -111,7 +111,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             if (controller.success) {
                 String title = controller.storedText;
-                server.addCard(new Card(title, "description", "red", cardData, null, null));
+                server.addCard(new Card(title, null, "red", cardData, null, null));
                 board.refresh();
             }
         } catch (IOException e) {

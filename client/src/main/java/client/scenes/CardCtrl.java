@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import java.io.IOException;
@@ -29,6 +30,10 @@ public class CardCtrl extends ListCell<Card> {
 
     @FXML
     private Button delete;
+
+    @FXML
+    private Text text;
+
 
     /**
      * Create a new CardCtrl
@@ -67,6 +72,10 @@ public class CardCtrl extends ListCell<Card> {
             title.setText(item.title);
             data = item;
 
+            if(data.description == null || data.description.equals("")) {
+                setTextOpacity();
+            }
+
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
@@ -89,6 +98,10 @@ public class CardCtrl extends ListCell<Card> {
             throw new RuntimeException(e);
         }
         board.refresh();
+    }
+
+    private void setTextOpacity(){
+        text.setOpacity(0.0);
     }
 
 
