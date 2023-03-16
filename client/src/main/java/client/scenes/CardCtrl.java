@@ -100,6 +100,9 @@ public class CardCtrl extends ListCell<Card> {
         board.refresh();
     }
 
+    /**
+     * Method that removes the task from the list, visually
+     */
     private void setTextOpacity(){
         text.setOpacity(0.0);
     }
