@@ -108,7 +108,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event the KeyEvent
      */
     public void addCard(KeyEvent event) {
-        if(event.getCode().toString().equals("ENTER") && !name.getText().equals("") && name.getText() != null){
+        if(event.getCode().toString().equals("ENTER")
+                && !name.getText().equals("") && name.getText() != null){
             storedText = name.getText();
             server.addCard(new Card(storedText, "description", "red", cardData, null, null));
             name.clear();
