@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,6 +24,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final BoardCtrl board;
 
     private ListOfCards cardData;
+
+    public String storedText;
 
     @FXML
     private AnchorPane root;
@@ -38,6 +41,12 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     @FXML
     private Button rename;
+
+    @FXML
+    private TextField name;
+
+    @FXML
+    private Button addCardButton;
 
     private ObservableList<Card> data;
 
@@ -94,53 +103,66 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     /**
      * Adds a new card to the CardList.
-     * Creates a new window (AddCard) that asks for the title.
-     * If successful, adds the card via the server and forces a board refresh.
-     * @param event the ActionEvent
+     * Shows a text field that asks for the title.
+     * If pressed enter, adds the card via the server and forces a board refresh.
+     * @param event the KeyEvent
      */
-    public void addCard(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCard.fxml"));
-        try {
-            Parent root = fxmlLoader.load();
-            AddCardCtrl controller = fxmlLoader.getController();
-
-            Stage stage = new Stage();
-            stage.setTitle("Add new card");
-            stage.setScene(new Scene(root, 300, 200));
-            stage.showAndWait();
-
-            if (controller.success) {
-                String title = controller.storedText;
-                server.addCard(new Card(title, "description", "red", cardData, null, null));
-                board.refresh();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void addCard(KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")){
+            storedText = name.getText();
+            server.addCard(new Card(storedText, "description", "red", cardData, null, null));
+            name.clear();
+            board.refresh();
         }
-
     }
 
     /**
-     * Adds a default card to the CardList, without prompting the user for a title.
-     * The title is generated automatically.
-     *
-     * @param event - the 'Add default card' button being pressed
+     * Adds a new card to the CardList.
+     * Shows a text field that asks for the title.
+     * If pressed OK button, adds the card via the server and forces a board refresh.
+     * @param event the Action event
      */
-    public void addDefaultCard(ActionEvent event) {
-        int counter = 0;
-        for (Card card : cardData.cards) {
-            if (card.title.startsWith("Card")) {
-                String[] parts = card.title.split(" ");
-                int num = Integer.parseInt(parts[1]);
-                if (num > counter) {
-                    counter = num;
-                }
-            }
-        }
-
-        server.addCard(new Card("Card " + (counter + 1), "", "red", cardData, null, null));
+    public void addCardB(ActionEvent event) {
+        storedText = name.getText();
+        server.addCard(new Card(storedText, "description", "red", cardData, null, null));
+        name.clear();
         board.refresh();
     }
+
+    /**
+     * Shows the text field and the button to add a card
+     * @param event
+     */
+    public void showButton(ActionEvent event) {
+        name.setOpacity(1);
+        addCardButton.setOpacity(1);
+    }
+
+
+
+
+
+//    /**
+//     * Adds a default card to the CardList, without prompting the user for a title.
+//     * The title is generated automatically.
+//     *
+//     * @param event - the 'Add default card' button being pressed
+//     */
+//    public void addDefaultCard(ActionEvent event) {
+//        int counter = 0;
+//        for (Card card : cardData.cards) {
+//            if (card.title.startsWith("Card")) {
+//                String[] parts = card.title.split(" ");
+//                int num = Integer.parseInt(parts[1]);
+//                if (num > counter) {
+//                    counter = num;
+//                }
+//            }
+//        }
+//
+//        server.addCard(new Card("Card " + (counter + 1), "", "red", cardData, null, null));
+//        board.refresh();
+//    }
 
     /**
      * Method that removes the list from the server
