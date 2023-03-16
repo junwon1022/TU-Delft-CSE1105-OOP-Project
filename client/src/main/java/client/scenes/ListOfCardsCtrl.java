@@ -137,7 +137,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event
      */
     public void showButton(ActionEvent event) {
-        name.setOpacity(1);
+        name.setOpacity(0.5);
         addCardButton.setOpacity(1);
     }
 
