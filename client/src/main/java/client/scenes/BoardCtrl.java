@@ -91,7 +91,7 @@ public class BoardCtrl {
                 String title = controller.storedText;
 
                 //Hard coded lines, should be changed to use the server data
-                Board board = new Board("title", "#ffffff", "read", "write", new ArrayList<>());
+                Board board = new Board("title", "#ffffff", "pass", new ArrayList<>());
                 ListOfCards list = new ListOfCards(title, "00B4D8", board, new ArrayList<>());
                 board.addList(list);
                 //End of hard coded lines

@@ -24,7 +24,7 @@ public class CheckListItemTest {
     @BeforeEach
     public void setUp() {
         board = new Board("Algebra", "#ffffff",
-                "read", "write", new ArrayList<ListOfCards>());
+                "pass", new ArrayList<ListOfCards>());
         list = new ListOfCards("Grasple", "#000000",
                                     board, new ArrayList<Card>());
 

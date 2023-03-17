@@ -32,7 +32,7 @@ public class TagTest {
     public void setUp() {
         tags = new HashSet<>();
         board = new Board("Algebra", "#ffffff",
-                "read", "write", new ArrayList<ListOfCards>());
+                "pass", new ArrayList<ListOfCards>());
         list = new ListOfCards("Grasple", "#000000", board, new ArrayList<Card>());
 
         card1 = new Card("Homework", "Somewhat long description",
