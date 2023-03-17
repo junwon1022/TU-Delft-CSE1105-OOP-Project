@@ -110,7 +110,7 @@ public class ListOfCardsController {
      * @param listId
      * @return the edited list
      */
-    @PostMapping(path = {"/{list_id}/","/{list_id}"})
+    @PutMapping(path = {"/{list_id}/","/{list_id}"})
     public ResponseEntity<ListOfCards> editListOfCardsTitleById(@RequestBody String newTitle,
                                                     @PathVariable("board_id") long boardId,
                                                     @PathVariable("list_id") long listId) {

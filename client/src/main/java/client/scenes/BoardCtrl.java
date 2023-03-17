@@ -42,6 +42,8 @@ public class BoardCtrl {
 
     ObservableList<ListOfCards> data;
 
+    private Board board;
+
     /**
      * Create a new BoardCtrl.
      * @param server The server to use.
@@ -49,6 +51,13 @@ public class BoardCtrl {
     @Inject
     public BoardCtrl(ServerUtils server) {
         this.server = server;
+        board = getBoard();
+
+        //add the board to the database
+        Board addedBoard =  server.addBoard(board);
+
+        //change the id of the board locally
+        board.id = server.getBoard(addedBoard.id).id;
     }
 
     /**
@@ -61,13 +70,13 @@ public class BoardCtrl {
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
         list.setStyle("-fx-control-inner-background: " +  "#03045E" + ";");
-        refresh();
     }
 
     /**
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
+        //the method call of getServerData will be with the board parameter
         var serverData = server.getServerData();
         data.setAll(serverData);
     }
@@ -90,14 +99,15 @@ public class BoardCtrl {
 
             if (controller.success) {
                 String title = controller.storedText;
-
-                //Hard coded lines, should be changed to use the server data
-                Board board = new Board("title", "#ffffff", "read", "write", new ArrayList<>());
-                ListOfCards list = new ListOfCards(title, "00B4D8", board, new ArrayList<>());
-                board.addList(list);
-                //End of hard coded lines
-
+                ListOfCards list = getList(title);
                 server.addList(list);
+
+                ListOfCards addedList = server.addListOfCards(list);
+
+
+                //change the id of the board locally
+                list.id = addedList.id;
+
                 this.refresh();
             }
         } catch (IOException e) {
@@ -124,5 +134,18 @@ public class BoardCtrl {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Method that creates a new board
+     * @return the new board
+     */
+    private Board getBoard(){
+        return new Board("hardcoded board", null, null, null, new ArrayList<>());
+    }
+
+
+    private ListOfCards getList(String title){
+        return new ListOfCards(title, "00B4D8",board, new ArrayList<>());
     }
 }

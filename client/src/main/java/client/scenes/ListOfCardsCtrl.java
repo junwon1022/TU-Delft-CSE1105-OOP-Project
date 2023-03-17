@@ -111,7 +111,12 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             if (controller.success) {
                 String title = controller.storedText;
-                server.addCard(new Card(title, "description", "red", cardData, null, null));
+                Card card = getCard(title);
+                server.addCard(card);
+
+                Card addedCard = server.addCard2(card);
+                card.id = addedCard.id;
+
                 board.refresh();
             }
         } catch (IOException e) {
@@ -126,7 +131,12 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void remove(ActionEvent event){
         try {
+            //the first method call only removes the list locally
+            //it can be removed after the get request problem is solved
             server.deleteList(cardData);
+
+            //method that removes the list from the database
+            server.removeList(cardData);
             Thread.sleep(100);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
@@ -161,11 +171,26 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             if (controller.success) {
                 String newTitle = controller.storedText;
+
+                //the first method call only renames the list locally
+                //it can be removed after the get request problem is solved
                 server.renameList1(cardData, newTitle);
+
+                //method that actually renames the list in the database
+                server.renameList(cardData, newTitle);
                 board.refresh();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Method that creates a new card with given title
+     * @param title - title of new card
+     * @return - the new card
+     */
+    public Card getCard(String title){
+        return new Card(title, "description", "red", cardData, null, null);
     }
 }

@@ -78,7 +78,12 @@ public class CardCtrl extends ListCell<Card> {
      */
     public void remove(ActionEvent event){
         try {
+            //the first method call only removes the card locally
+            //it can be removed after the get request problem is solved
             server.deleteCard(data);
+
+            //the method that actually removes the card from the database
+            server.removeCard(data);
             Thread.sleep(100);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
