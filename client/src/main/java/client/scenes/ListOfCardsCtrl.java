@@ -113,6 +113,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             storedText = name.getText();
             server.addCard(new Card(storedText, "description", "red", cardData, null, null));
             name.clear();
+            name.setOpacity(0);
+            addCardButton.setOpacity(0);
             board.refresh();
         }
     }
@@ -128,6 +130,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             storedText = name.getText();
             server.addCard(new Card(storedText, "description", "red", cardData, null, null));
             name.clear();
+            name.setOpacity(0);
+            addCardButton.setOpacity(0);
             board.refresh();
         }
     }

@@ -14,17 +14,17 @@
             <Font name="Corbel Bold" size="17.0" />
          </font></Label>
       <ListView fx:id="list" layoutX="10.0" layoutY="71.0" prefHeight="282.0" prefWidth="150.0" style="-fx-background-color: #00B4D8;" />
-      <Button fx:id="addButton" layoutX="48.0" layoutY="367.0" mnemonicParsing="false" onAction="#showButton" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="Add Card">
+      <Button fx:id="addButton" layoutX="48.0" layoutY="365.0" mnemonicParsing="false" onAction="#showButton" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="Add Card">
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
       <Button fx:id="deleteCard" layoutX="137.0" layoutY="15.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="19.0" style="-fx-background-color: rgb(194, 21, 21,0.8); -fx-padding: 0;" text="❌" />
       <Button fx:id="rename" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameList" prefHeight="17.0" prefWidth="57.0" style="-fx-background-color: rgb(0, 180, 216, 0.2);" text="rename" />
-      <TextField fx:id="name" layoutX="14.0" layoutY="406.0" onKeyPressed="#addCard" opacity="0.0" promptText="Enter Title" style="-fx-background-color: #00B4D8;">
+      <TextField fx:id="name" layoutX="14.0" layoutY="406.0" onKeyPressed="#addCard" opacity="0.0" prefHeight="22.0" prefWidth="107.0" promptText="Enter Title" style="-fx-background-color: #00B4D8;">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></TextField>
-      <Button fx:id="addCardButton" layoutX="131.0" layoutY="367.0" mnemonicParsing="false" onAction="#addCardB" opacity="0.0" prefHeight="27.0" prefWidth="30.0" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="OK">
+      <Button fx:id="addCardButton" layoutX="131.0" layoutY="406.0" mnemonicParsing="false" onAction="#addCardB" opacity="0.0" prefHeight="5.0" prefWidth="30.0" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="OK">
          <font>
             <Font name="Corbel" size="11.0" />
          </font>
