@@ -16,19 +16,14 @@
 package client;
 
 import static com.google.inject.Guice.createInjector;
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import client.scenes.*;
 import com.google.inject.Injector;
 
-import jakarta.ws.rs.client.ClientBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.glassfish.jersey.client.ClientConfig;
-
 
 public class Main extends Application {
 

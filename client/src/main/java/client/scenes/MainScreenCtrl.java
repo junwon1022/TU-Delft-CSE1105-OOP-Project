@@ -56,6 +56,8 @@ public class MainScreenCtrl {
 
     /**
      * Create a new CardListCtrl
+     * @param server
+     * @param mainCtrl
      */
     @Inject
     public MainScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -118,7 +120,8 @@ public class MainScreenCtrl {
 
             if (controller.success) {
                 String title = controller.storedText;
-                BoardTitle boardTitle = new BoardTitle(title,"red",new Board(title, "red","read", new ArrayList<>()));
+                Board board = new Board(title,"red","read",new ArrayList<>());
+                BoardTitle boardTitle = new BoardTitle(title,"red",board);
 
                 //Generates a random invite key (the preset password is "read")
                 boardTitle.board.generateInviteKey();

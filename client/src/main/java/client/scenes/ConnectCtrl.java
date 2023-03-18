@@ -3,24 +3,10 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Board;
-import commons.Card;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Invocation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import org.glassfish.jersey.client.ClientConfig;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class ConnectCtrl {
 
@@ -45,7 +31,9 @@ public class ConnectCtrl {
     private final MainCtrl mainCtrl;
 
     /**
-     * Create a new CardListCtrl
+     * Create a new ConnectCtrl
+     * @param server
+     * @param mainCtrl
      */
     @Inject
     public ConnectCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -66,8 +54,8 @@ public class ConnectCtrl {
     public void connectToMainScreen(ActionEvent event) {
         server.changeServer(field.getText());
 
-            mainCtrl.showMainScreen();
-        }
+        mainCtrl.showMainScreen();
+    }
     /**
      * Enters the standard server (8080) and shows the MainScreen
      * Creates a new window (MainScreen)
@@ -76,10 +64,9 @@ public class ConnectCtrl {
      * @param event the ActionEvent
      * @return
      */
-    public void connectDefault(ActionEvent event) {
-        mainCtrl.showMainScreen();
-    }
-    }
+    public void connectDefault(ActionEvent event) {mainCtrl.showMainScreen();}
+
+}
 
 
 

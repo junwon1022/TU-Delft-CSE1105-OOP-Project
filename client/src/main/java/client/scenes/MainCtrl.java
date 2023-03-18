@@ -16,12 +16,8 @@
 package client.scenes;
 
 import commons.Board;
-import commons.ListOfCards;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -55,11 +51,13 @@ public class MainCtrl {
      * @param overview     The overview scene to use.
      * @param add          The add scene to use.
      * @param board        The board screen to use.
-     * @param connect
+     * @param connect      The connect screen
+     * @param mainScreen   The main screen
      */
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-                           Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board, Pair<ConnectCtrl, Parent> connect
-            , Pair<MainScreenCtrl, Parent> mainScreen) {
+                           Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board,
+                           Pair<ConnectCtrl, Parent> connect
+                         , Pair<MainScreenCtrl, Parent> mainScreen) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -94,6 +92,7 @@ public class MainCtrl {
 
     /**
      * Show the board scene.
+     * @param b
      */
     public void showBoard(Board b) {
         primaryStage.setTitle(b.title);

@@ -82,7 +82,7 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
     }
 
     /**
-     * Method that removes the task from the list, visually
+     * Method that removes the board title from the main screen, visually
      * @param event - the remove button being clicked
      */
 
@@ -101,7 +101,10 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
         mainScreenCtrl.refresh();
     }
 
-
+    /**
+     * Method that lets you join a board according to the title
+     * @param event - the join button being clicked
+     */
     public void join(ActionEvent event){
         mainCtrl.showBoard(data.board);
     }

@@ -66,6 +66,7 @@ public class Board {
      * @param colour
      * @param password
      * @param lists
+     * @param boardTitle
      */
     public Board(String title, String colour,
                   String password,List<ListOfCards> lists, BoardTitle boardTitle) {

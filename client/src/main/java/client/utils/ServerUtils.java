@@ -47,6 +47,10 @@ public class ServerUtils {
 
     private static String SERVER = "http://localhost:8080/";
 
+    /**
+     * Changes the preset server adress from 8080 to the textbox input
+     * @param server
+     */
     public void changeServer(String server){
         this.SERVER = "http://localhost:" + server + "/";
     }
@@ -160,7 +164,6 @@ public class ServerUtils {
      */
     public void deleteBoard(BoardTitle boardTitle){
         int number = 0;
-
         boolean found = false;
         if(boardData != null){
             for(BoardTitle b: boardData){
@@ -168,13 +171,11 @@ public class ServerUtils {
                     found = true;
                     break;
                 }
-                    number++;
-                }
-
+                number++;
             }
-            boardData.remove(number);
-
         }
+        boardData.remove(number);
+    }
 
 
 
@@ -273,6 +274,11 @@ public class ServerUtils {
         return serverData;
     }
 
+    /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
     public List<BoardTitle> getMyBoardTitles(){
 
         if(boardData == null) {
@@ -285,12 +291,12 @@ public class ServerUtils {
 
     /**
      * Get boards from server
-     *
+     * @param boardId
      * @return boards
      */
-    public Board getBoardById(Long board_id){
+    public Board getBoardById(Long boardId){
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/boards/" + board_id) //
+                .target(SERVER).path("api/boards/" + boardId) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Board>() {});
@@ -299,7 +305,7 @@ public class ServerUtils {
 
     /**
      * Get boards from server based on key
-     *
+     * @param key
      * @return boards
      */
     public Board getBoardByKey(String key){
