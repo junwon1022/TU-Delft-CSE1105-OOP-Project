@@ -54,7 +54,7 @@ public class ListOfCardsTest {
         cards.add(card2);
 
         board = new Board("Algebra", "#ffffff",
-                "read", "write", listOfCards);
+                "pass", listOfCards);
         listOfCards = new ArrayList<>();
         list = new ListOfCards("Grasple", "#000000", board, cards);
         list2 = new ListOfCards("Grasple", "#000000", board, cards);
