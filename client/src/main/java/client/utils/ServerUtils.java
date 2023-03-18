@@ -151,6 +151,16 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @param l - the list which needs a new name
+     */
+    public void addList(ListOfCards l){
+        if(serverData == null)
+            serverData = new ArrayList<>();
+        serverData.add(l);
+    }
+
+    /**
      * Placeholder/ method for the delete card function,
      * the actual method should follow the logic behind this
      * @param l - card to be deleted
@@ -185,6 +195,28 @@ public class ServerUtils {
             serverData.get(listNo).title = newTitle;
         }
 
+    }
+
+    /**
+     * Moves a card in a list
+     * from index fromIdx to index toIdx
+     * @param list list of cards
+     * @param fromIdx index to move from
+     * @param toIdx index to move to
+     */
+    public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
+        if (fromIdx < toIdx) {
+            Card aux = list.cards.get(fromIdx);
+            for (int i =  fromIdx; i < toIdx; i++)
+                list.cards.set(i, list.cards.get(i + 1));
+            list.cards.set(toIdx, aux);
+        }
+        else {
+            Card aux = list.cards.get(fromIdx);
+            for (int i =  fromIdx; i >= toIdx + 1; i--)
+                list.cards.set(i, list.cards.get(i - 1));
+            list.cards.set(toIdx, aux);
+        }
     }
 
     /**

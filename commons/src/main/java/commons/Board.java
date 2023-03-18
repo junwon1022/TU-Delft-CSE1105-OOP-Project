@@ -1,6 +1,9 @@
 package commons;
 import javax.persistence.*;
+import java.security.SecureRandom;
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,13 +24,14 @@ public class Board {
     @Column(name = "board_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
-    @Column(name = "read_password")
-    public String readpassword;
+    @Column(name = "password")
+    public String password;
 
-    @Column(name = "write_password")
-    public String writepassword;
+    @Column(name = "invite_key", unique = true)
+    public String key;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     public List<ListOfCards> lists;
 
     @OneToOne(mappedBy = "board")
@@ -45,16 +49,14 @@ public class Board {
      * Constructor with parameters
      * @param title
      * @param colour
-     * @param readpassword
-     * @param writepassword
+     * @param password
      * @param lists
      */
     public Board(String title, String colour,
-                 String readpassword, String writepassword,List<ListOfCards> lists) {
+                 String password, List<ListOfCards> lists) {
         this.title = title;
         this.colour = colour;
-        this.readpassword = readpassword;
-        this.writepassword = writepassword;
+        this.password = password;
         this.lists = lists;
     }
 
@@ -79,6 +81,58 @@ public class Board {
     /*
         BASIC FUNCTIONALITY
      */
+
+    /**
+     * Generates an invite key of a board
+     */
+    @PrePersist
+    public void generateInviteKey() {
+        SecureRandom random = new SecureRandom();
+
+        // Define a list of common words to use in the invite key
+        List<String> words = Arrays.asList(
+                "apple", "banana", "cherry", "dog", "elephant",
+                "flower", "grape", "house", "igloo", "jacket",
+                "kite", "lemon", "monkey", "necklace", "orange",
+                "pizza", "queen", "rainbow", "sun", "tree",
+                "umbrella", "violin", "water", "xylophone", "yellow",
+                "zebra", "airplane", "book", "car", "dragon",
+                "eagle", "fire", "guitar", "honey", "island",
+                "jungle", "key", "lion", "moon", "ninja",
+                "ocean", "parrot", "queen", "rain", "star",
+                "tiger", "unicorn", "volcano", "wolf", "x-ray",
+                "yacht", "zombie"
+        );
+
+        // Select three random words from the words list
+        List<String> selectedWords = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            int index = random.nextInt(words.size());
+            selectedWords.add(words.get(index));
+        }
+
+        // Generate a random 6-letter string
+        String randomChars = getRandomString(6);
+
+        // Combine the selected words and random number into an invite key
+        key = String.join("-", selectedWords) + "-" + randomChars;
+    }
+
+    /**
+     * Generates a random string of some length
+     * @param length
+     * @return the generated string
+     */
+    private String getRandomString(int length) {
+        String CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(CHARS.length());
+            sb.append(CHARS.charAt(index));
+        }
+        return sb.toString();
+    }
 
     /**
      * Add a list to a board

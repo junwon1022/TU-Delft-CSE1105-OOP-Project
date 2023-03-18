@@ -53,7 +53,7 @@ public class BoardControllerTest {
         service = new BoardService(repo);
         controller = new BoardController(service);
 
-        Board b = new Board(null, "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board(null, "#111111", "pass", new ArrayList<>());
         when(repo.getById(0L)).thenReturn(b);
 
     }
@@ -62,7 +62,7 @@ public class BoardControllerTest {
 
     @Test
     public void addBoardCorrect() {
-        Board b = new Board("My Schedule", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
         var actual = controller.createBoard(b);
         assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(b, actual.getBody());
@@ -71,21 +71,21 @@ public class BoardControllerTest {
     //Check a null board
     @Test
     public void addBoardInCorrectNull() {
-        Board b = new Board(null, "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board(null, "#111111", "pass", new ArrayList<>());
         var actual = controller.createBoard(b);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
     //Check an empty board
     @Test
     public void addBoardInCorrectEmpty() {
-        Board b = new Board("", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("", "#111111", "pass", new ArrayList<>());
         var actual = controller.createBoard(b);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
     //EditByTitle
     @Test
     public void editBoardTitleByIdCorrect() {
-        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "pass", new ArrayList<>());
         when(repo.findById(b.id)).thenReturn(Optional.of(b));
         var actual = controller.editBoardTitleById("My New Board", b.id);
 
@@ -96,21 +96,21 @@ public class BoardControllerTest {
     //EditByTitle-Wrong
     @Test
     public void editBoardTitleByIdWrong() {
-        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "pass", new ArrayList<>());
         var actual = controller.editBoardTitleById("", b.id);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
     //EditByTitle-Null
     @Test
     public void editBoardTitleByIdWrongNull() {
-        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "pass", new ArrayList<>());
         var actual = controller.editBoardTitleById(null, b.id);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
     //DoesntExist
     @Test
     public void deleteBoardTitleDoesntExist() {
-        Board b = new Board("My Board", "#111111", "read", "write", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "pass", new ArrayList<>());
         when(repo.findById(b.id)).thenReturn(Optional.of(b));
         var actual = controller.removeBoardById(0);
         assertEquals(OK, actual.getStatusCode());
