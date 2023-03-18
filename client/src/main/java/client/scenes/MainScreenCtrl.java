@@ -5,9 +5,6 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.BoardTitle;
-import commons.Card;
-import commons.ListOfCards;
-import jakarta.ws.rs.client.ClientBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,13 +18,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class MainScreenCtrl {
 
@@ -70,51 +63,48 @@ public class MainScreenCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
 
-  /*      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainScreen.fxml"));
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
-
         data = FXCollections.observableArrayList();
         list = new ListView<>();
 
-        System.out.println(data.toString());
 
-        list.setItems(data);
-        list.setCellFactory(param -> new BoardTitleCtrl(server,this));
-
-
-        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
     /**
      * Gets the board title from the database
      */
     public void refresh() {
-        var boardData = server.getMyBoards();
+        var boardData = server.getMyBoardTitles();
         data.setAll(boardData);
+        list.setItems(data);
+        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl));
+        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
 
 
     /**
-     * Enters a Server (Temporarily, it will enter the board object)
+     * Enters a specific board based on a key
      * Creates a new window (Board)
      * If successful, joins the board through the server
      *
      * @param event the ActionEvent
      * @return
      */
-    public Board connectToBoard(ActionEvent event) {
+    public void connectToBoard(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-        return server.getBoardById(Long.valueOf(joinField.getText()));
+        Board b = server.getBoardByKey(joinField.getText());
+
+        mainCtrl.showBoard(b);
+
     }
 
-
+    /**
+     * Adds a Board
+     *
+     * @param event the ActionEvent
+     * @return
+     */
     public void addBoard(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddBoard.fxml"));
         try {
@@ -128,8 +118,10 @@ public class MainScreenCtrl {
 
             if (controller.success) {
                 String title = controller.storedText;
-                BoardTitle boardTitle = new BoardTitle(title,"red",new Board(title, "red","read","write", new ArrayList<>()));
-                boardTitle.board.boardTitle = boardTitle;
+                BoardTitle boardTitle = new BoardTitle(title,"red",new Board(title, "red","read", new ArrayList<>()));
+
+                //Generates a random invite key (the preset password is "read")
+                boardTitle.board.generateInviteKey();
                 server.addBoardTitle(boardTitle);
 
                 refresh();

@@ -30,6 +30,21 @@ public class BoardService {
                 .orElseThrow(() -> new Exception("Board not found with id " + id));
     }
 
+
+    /**
+     * Retrieve a board given its key
+     * @param key
+     * @return a board
+     */
+    public Board getBoardByKey(String key) throws Exception {
+        for(Board b : boardRepository.findAll()){
+            if(b.key == key) return b;
+        }
+
+        throw new Exception("There is no board with that key");
+    }
+
+
     /**
      * Create a new board
      * @param board

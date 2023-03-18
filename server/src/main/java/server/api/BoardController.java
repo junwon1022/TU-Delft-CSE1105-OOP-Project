@@ -53,6 +53,27 @@ public class BoardController {
     }
 
     /**
+     * Get a board given its key
+     *
+     * @param key
+     * @return the board
+     */
+    @GetMapping(path = {"/{key}/","/{key}"})
+    public ResponseEntity<Board> getBoardByKey(@PathVariable("key") String key){
+        try {
+            // Get the board
+            Board board = boardService.getBoardByKey(key);
+            if(board == null) return ResponseEntity.badRequest().build();
+            // Return the board with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(board);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    /**
      * Create a new board
      *
      * @param board

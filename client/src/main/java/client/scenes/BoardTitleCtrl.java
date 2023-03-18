@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.BoardTitle;
-import commons.Card;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +17,7 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
     private final ServerUtils server;
     private final MainScreenCtrl mainScreenCtrl;
 
+    private final MainCtrl mainCtrl;
     private BoardTitle data;
 
     @FXML
@@ -26,6 +26,8 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
     @FXML
     private Label title;
 
+    @FXML
+    private Label key;
     @FXML
     private Label description;
 
@@ -37,11 +39,13 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
      *
      * @param server         The server to use
      * @param mainScreenCtrl The mainscreen the title is part of
+     * @param mainCtrl
      */
     @Inject
-    public BoardTitleCtrl(ServerUtils server, MainScreenCtrl mainScreenCtrl) {
+    public BoardTitleCtrl(ServerUtils server, MainScreenCtrl mainScreenCtrl, MainCtrl mainCtrl) {
         this.server = server;
         this.mainScreenCtrl = mainScreenCtrl;
+        this.mainCtrl = mainCtrl;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BoardTitle.fxml"));
         fxmlLoader.setController(this);
@@ -69,6 +73,7 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.text);
+            key.setText("Key: " + item.board.key);
             data = item;
 
             setGraphic(root);
@@ -76,6 +81,30 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
         }
     }
 
+    /**
+     * Method that removes the task from the list, visually
+     * @param event - the remove button being clicked
+     */
+
+    public void remove(ActionEvent event){
+        try {
+            server.deleteBoard(data);
+            Thread.sleep(100);
+        } catch (WebApplicationException e) {
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        mainScreenCtrl.refresh();
+    }
+
+
+    public void join(ActionEvent event){
+        mainCtrl.showBoard(data.board);
+    }
 
 
 }

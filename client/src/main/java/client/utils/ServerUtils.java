@@ -97,7 +97,9 @@ public class ServerUtils {
      */
     public ArrayList<ListOfCards> serverData = null;
 
+    //Data related to board titles (How the boards are displayed on the main screen)
     public ArrayList<BoardTitle> boardData = null;
+
 
     /**
      * Placeholder add card function.
@@ -119,6 +121,7 @@ public class ServerUtils {
             boardData = new ArrayList<>();
         }
         boardData.add(boardTitle);
+        addBoard(boardTitle.board);
     }
 
     /**
@@ -149,6 +152,35 @@ public class ServerUtils {
         }
 
     }
+
+    /**
+     * Placeholder/ method for the delete board function,
+     * the actual method should follow the logic behind this
+     * @param boardTitle - board to be deleted
+     */
+    public void deleteBoard(BoardTitle boardTitle){
+        int number = 0;
+
+        boolean found = false;
+        if(boardData != null){
+            for(BoardTitle b: boardData){
+                if(b.equals(boardTitle)) {
+                    found = true;
+                    break;
+                }
+                    number++;
+                }
+
+            }
+            boardData.remove(number);
+
+        }
+
+
+
+
+
+
 
     /**
      * Placeholder method to get data from server
@@ -241,7 +273,7 @@ public class ServerUtils {
         return serverData;
     }
 
-    public List<BoardTitle> getMyBoards(){
+    public List<BoardTitle> getMyBoardTitles(){
 
         if(boardData == null) {
             BoardTitle a = new BoardTitle("Yooo" , "red" , new Board());
@@ -263,6 +295,23 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Board>() {});
     }
+
+
+    /**
+     * Get boards from server based on key
+     *
+     * @return boards
+     */
+    public Board getBoardByKey(String key){
+
+
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/boards/" + key) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<Board>() {});
+    }
+
 
     /**
      * Add a new board to the server

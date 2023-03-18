@@ -64,16 +64,14 @@ public class Board {
      * Constructor with parameters including board title
      * @param title
      * @param colour
-     * @param readpassword
-     * @param writepassword
+     * @param password
      * @param lists
      */
     public Board(String title, String colour,
-                 String readpassword, String writepassword,List<ListOfCards> lists, BoardTitle boardTitle) {
+                  String password,List<ListOfCards> lists, BoardTitle boardTitle) {
         this.title = title;
         this.colour = colour;
-        this.readpassword = readpassword;
-        this.writepassword = writepassword;
+        this.password = password;
         this.lists = lists;
         this.boardTitle = boardTitle;
     }
