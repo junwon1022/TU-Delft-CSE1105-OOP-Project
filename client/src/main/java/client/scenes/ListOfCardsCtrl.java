@@ -23,7 +23,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
     private final BoardCtrl board;
 
-    private ListOfCards cardData;
+    public ListOfCards cardData;
 
     public String storedText;
 
@@ -71,7 +71,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         data = FXCollections.observableArrayList();
 
         list.setItems(data);
-        list.setCellFactory(param -> new CardCtrl(server, board));
+        list.setCellFactory(param -> new CardCtrl(server, board, this));
 
 
         list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");

@@ -183,6 +183,28 @@ public class ServerUtils {
     }
 
     /**
+     * Moves a card in a list
+     * from index fromIdx to index toIdx
+     * @param list list of cards
+     * @param fromIdx index to move from
+     * @param toIdx index to move to
+     */
+    public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
+        if (fromIdx < toIdx) {
+            Card aux = list.cards.get(fromIdx);
+            for (int i =  fromIdx; i < toIdx; i++)
+                list.cards.set(i, list.cards.get(i + 1));
+            list.cards.set(toIdx, aux);
+        }
+        else {
+            Card aux = list.cards.get(fromIdx);
+            for (int i =  fromIdx; i >= toIdx + 1; i--)
+                list.cards.set(i, list.cards.get(i - 1));
+            list.cards.set(toIdx, aux);
+        }
+    }
+
+    /**
      * Placeholder method to get data from server
      * @return a list of cardlists.
      */

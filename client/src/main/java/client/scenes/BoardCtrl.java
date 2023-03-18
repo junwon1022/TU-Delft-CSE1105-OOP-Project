@@ -27,6 +27,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class BoardCtrl {
                 String title = controller.storedText;
 
                 //Hard coded lines, should be changed to use the server data
-                Board board = new Board("title", "#ffffff", "read", "write", new ArrayList<>());
+                Board board = new Board("title", "#ffffff", "pass", new ArrayList<>());
                 ListOfCards list = new ListOfCards(title, "00B4D8", board, new ArrayList<>());
                 board.addList(list);
                 //End of hard coded lines
@@ -102,6 +103,26 @@ public class BoardCtrl {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    /**
+     * Opens the help screen
+     * @param event - Key event when the user presses shift + /
+     */
+    public void openHelpScreen(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
+
+        if(event.getCode().toString().equals("SLASH") && event.isShiftDown()) {
+            try {
+                Parent root = fxmlLoader.load();
+
+                Stage stage = new Stage();
+                stage.setTitle("Help");
+                stage.setScene(new Scene(root, 600, 400));
+                stage.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
