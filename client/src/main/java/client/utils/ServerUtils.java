@@ -27,12 +27,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-import commons.Board;
-import commons.Card;
-import commons.ListOfCards;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -48,7 +45,11 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String SERVER = "http://localhost:8080/";
+
+    public void changeServer(String server){
+        this.SERVER = "http://localhost:" + server + "/";
+    }
 
     /**
      * Get all quotes from the server.
@@ -96,6 +97,8 @@ public class ServerUtils {
      */
     public ArrayList<ListOfCards> serverData = null;
 
+    public ArrayList<BoardTitle> boardData = null;
+
     /**
      * Placeholder add card function.
      * @param card the card to add
@@ -104,6 +107,18 @@ public class ServerUtils {
         for (ListOfCards list: serverData)
             if (card.list.equals(list))
                 list.cards.add(card);
+    }
+
+
+    /**
+     * Placeholder add card function.
+     * @param boardTitle the board title to add
+     */
+    public void addBoardTitle(BoardTitle boardTitle) {
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        boardData.add(boardTitle);
     }
 
     /**
@@ -194,17 +209,27 @@ public class ServerUtils {
         return serverData;
     }
 
+    public List<BoardTitle> getMyBoards(){
+
+        if(boardData == null) {
+            BoardTitle a = new BoardTitle("Yooo" , "red" , new Board());
+            boardData = new ArrayList<>(List.of(a));
+        }
+
+        return boardData;
+    }
+
     /**
      * Get boards from server
      *
      * @return boards
      */
-    public List<Board> getBoard(){
+    public Board getBoardById(Long board_id){
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/boards/{board_id}") //
+                .target(SERVER).path("api/boards/" + board_id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Board>>() {});
+                .get(new GenericType<Board>() {});
     }
 
     /**
@@ -219,6 +244,10 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(board, APPLICATION_JSON), Board.class);
     }
+
+
+
+
 
     /**
      * Get all lists from the server

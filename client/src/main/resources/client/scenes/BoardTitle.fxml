@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="177.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="title" layoutX="23.0" layoutY="11.0" text="Title" />
+        <Button layoutX="91.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" text="🗑" />
+      <Button layoutX="122.0" layoutY="7.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" text="JOIN" />
+    </children>
+</AnchorPane>

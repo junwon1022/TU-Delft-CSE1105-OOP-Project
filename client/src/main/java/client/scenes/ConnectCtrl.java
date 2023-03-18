@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.Card;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,40 +56,29 @@ public class ConnectCtrl {
 
 
     /**
-     * Enters a Server (Temporarily, it will enter the board object)
-     * Creates a new window (Board)
-     * If successful, joins the board through the server
+     * Enters a Server and shows the MainScreen
+     * Creates a new window (MainScreen)
+     * If successful, joins the screen through the server
      *
      * @param event the ActionEvent
      * @return
      */
-    public Board connectToBoard(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
-        ServerUtils s = new ServerUtils();
-        System.out.println(field.getText());
-                int a =  ClientBuilder.newClient(new ClientConfig())
-                        .target("http://localhost:" + field.getText()).path("api/listen/connect")
-                        .request(APPLICATION_JSON)
-                        .accept(APPLICATION_JSON)
-                        .get(Integer.class);
+    public void connectToMainScreen(ActionEvent event) {
+        server.changeServer(field.getText());
 
-                Board c = new Board("My Board","#111111", "read", "write", new ArrayList<>());
-
-
-                Board b = ClientBuilder.newClient(new ClientConfig())
-                        .target("http://localhost:" + field.getText()).path("api/listen/listen?id="+ a + "&board=" + c.id)
-                        .request(APPLICATION_JSON)
-                        .accept(APPLICATION_JSON)
-                        .get(Board.class);
-
-                System.out.println(b);
-
-                    mainCtrl.showBoard(b);
-
-                return c;
-
-
+            mainCtrl.showMainScreen();
         }
+    /**
+     * Enters the standard server (8080) and shows the MainScreen
+     * Creates a new window (MainScreen)
+     * If successful, joins the screen through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectDefault(ActionEvent event) {
+        mainCtrl.showMainScreen();
+    }
     }
 
 

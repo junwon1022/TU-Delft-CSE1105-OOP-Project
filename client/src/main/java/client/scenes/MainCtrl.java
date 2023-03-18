@@ -16,8 +16,12 @@
 package client.scenes;
 
 import commons.Board;
+import commons.ListOfCards;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -37,6 +41,13 @@ public class MainCtrl {
     private ConnectCtrl connectCtrl;
     private Scene connect;
 
+
+
+
+    private MainScreenCtrl mainScreenCtrl;
+    private Scene mainScreen;
+
+
     /**
      * Create a new MainCtrl.
      *
@@ -47,7 +58,8 @@ public class MainCtrl {
      * @param connect
      */
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-                           Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board, Pair<ConnectCtrl, Parent> connect) {
+                           Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board, Pair<ConnectCtrl, Parent> connect
+            , Pair<MainScreenCtrl, Parent> mainScreen) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -58,9 +70,11 @@ public class MainCtrl {
         this.boardCtrl = board.getKey();
         this.board = new Scene(board.getValue());
 
-
         this.connectCtrl = connect.getKey();
         this.connect = new Scene(connect.getValue());
+
+        this.mainScreenCtrl = mainScreen.getKey();
+        this.mainScreen = new Scene(mainScreen.getValue());
 
 
         showConnect();
@@ -87,6 +101,17 @@ public class MainCtrl {
         primaryStage.setHeight(600);
         boardCtrl.initialize();
     }
+
+    /**
+     * Show the board scene.
+     */
+    public void showMainScreen() {
+        primaryStage.setTitle("Main Screen");
+        primaryStage.setScene(mainScreen);
+        primaryStage.setHeight(600);
+    }
+
+
 
     /**
      * Show the overview scene.

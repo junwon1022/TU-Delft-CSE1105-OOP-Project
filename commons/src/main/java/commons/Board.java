@@ -30,6 +30,11 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<ListOfCards> lists;
 
+    @OneToOne(mappedBy = "board")
+    public BoardTitle boardTitle;
+
+
+
     /**
      * Default constructor
      */
@@ -51,6 +56,24 @@ public class Board {
         this.readpassword = readpassword;
         this.writepassword = writepassword;
         this.lists = lists;
+    }
+
+    /**
+     * Constructor with parameters including board title
+     * @param title
+     * @param colour
+     * @param readpassword
+     * @param writepassword
+     * @param lists
+     */
+    public Board(String title, String colour,
+                 String readpassword, String writepassword,List<ListOfCards> lists, BoardTitle boardTitle) {
+        this.title = title;
+        this.colour = colour;
+        this.readpassword = readpassword;
+        this.writepassword = writepassword;
+        this.lists = lists;
+        this.boardTitle = boardTitle;
     }
 
     /*
