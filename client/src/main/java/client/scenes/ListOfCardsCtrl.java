@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,7 +23,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
     private final BoardCtrl board;
 
-    private ListOfCards cardData;
+    public ListOfCards cardData;
+
+    public String storedText;
 
     @FXML
     private AnchorPane root;
@@ -38,6 +41,12 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     @FXML
     private Button rename;
+
+    @FXML
+    private TextField name;
+
+    @FXML
+    private Button addCardButton;
 
     private ObservableList<Card> data;
 
@@ -62,7 +71,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         data = FXCollections.observableArrayList();
 
         list.setItems(data);
-        list.setCellFactory(param -> new CardCtrl(server, board));
+        list.setCellFactory(param -> new CardCtrl(server, board, this));
 
 
         list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
@@ -94,36 +103,62 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     /**
      * Adds a new card to the CardList.
-     * Creates a new window (AddCard) that asks for the title.
-     * If successful, adds the card via the server and forces a board refresh.
-     * @param event the ActionEvent
+     * Shows a text field that asks for the title.
+     * If pressed enter, adds the card via the server and forces a board refresh.
+     * @param event the KeyEvent
+     */
+
+    public void addCardEnter(KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")
+                && !name.getText().equals("") && name.getText() != null){
+            String title = name.getText();
+            Card card = getCard(title);
+            server.addCard(card);
+
+            Card addedCard = server.addCard2(card);
+            card.id = addedCard.id;
+
+            name.clear();
+            name.setOpacity(0);
+            addCardButton.setOpacity(0);
+
+            board.refresh();
+        }
+    }
+
+    /**
+     * Adds a new card to the CardList.
+     * Shows a text field that asks for the title.
+     * If pressed OK button, adds the card via the server and forces a board refresh.
+     * @param event the Action event
      */
     public void addCard(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCard.fxml"));
-        try {
-            Parent root = fxmlLoader.load();
-            AddCardCtrl controller = fxmlLoader.getController();
+        if(!name.getText().equals("") && name.getText() != null){
+            String title = name.getText();
+            Card card = getCard(title);
+            server.addCard(card);
 
-            Stage stage = new Stage();
-            stage.setTitle("Add new card");
-            stage.setScene(new Scene(root, 300, 200));
-            stage.showAndWait();
+            Card addedCard = server.addCard2(card);
+            card.id = addedCard.id;
 
-            if (controller.success) {
-                String title = controller.storedText;
-                Card card = getCard(title);
-                server.addCard(card);
+            name.clear();
+            name.setOpacity(0);
+            addCardButton.setOpacity(0);
 
-                Card addedCard = server.addCard2(card);
-                card.id = addedCard.id;
-
-                board.refresh();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            board.refresh();
         }
-
     }
+
+    /**
+     * Shows the text field and the button to add a card
+     * @param event
+     */
+    public void showButton(ActionEvent event) {
+        name.setOpacity(0.5);
+        addCardButton.setOpacity(1);
+    }
+
+
 
     /**
      * Method that removes the list from the server

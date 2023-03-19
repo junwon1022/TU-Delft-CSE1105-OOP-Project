@@ -99,9 +99,9 @@ public class BoardCtrl {
 
             if (controller.success) {
                 String title = controller.storedText;
+
                 ListOfCards list = getList(title);
                 server.addList(list);
-
                 ListOfCards addedList = server.addListOfCards(list);
 
 
@@ -141,7 +141,7 @@ public class BoardCtrl {
      * @return the new board
      */
     private Board getBoard(){
-        return new Board("hardcoded board", null, null, null, new ArrayList<>());
+        return new Board("hardcoded board", null, null, new ArrayList<>());
     }
 
 

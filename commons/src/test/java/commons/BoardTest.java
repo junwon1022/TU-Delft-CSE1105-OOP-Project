@@ -14,7 +14,7 @@ public class BoardTest {
     Board board;
     Board board2;
     Board board3;
-    List<ListOfCards> listOfCards;
+    List<ListOfCards> listsOfCards;
     ListOfCards list1;
     ListOfCards list2;
     ListOfCards list3;
@@ -24,18 +24,18 @@ public class BoardTest {
      */
     @BeforeEach
     public void setUp() {
-        listOfCards = new ArrayList<>();
+        listsOfCards = new ArrayList<>();
         list1 = new ListOfCards("Grasple", "#000000", board, new ArrayList<>());
         list2 = new ListOfCards("Grasple2", "#000000", board, new ArrayList<>());
         list3 = new ListOfCards("Grasple3", "#000000", board, new ArrayList<>());
-        listOfCards.add(list1);
-        listOfCards.add(list2);
+        listsOfCards.add(list1);
+        listsOfCards.add(list2);
         board = new Board("Algebra", "#ffffff",
-                "read", "write", listOfCards);
+                "pass", listsOfCards);
         board2 = new Board("Algebra", "#ffffff",
-                "read", "write", listOfCards);
+                "pass", listsOfCards);
         board3 = new Board("Algebra", "#ffffff",
-                "read", "write2", listOfCards);
+                "pass2", listsOfCards);
 
     }
 
@@ -55,9 +55,8 @@ public class BoardTest {
     public void checkParametrizedConstructor() {
         assertEquals("Algebra", board.title);
         assertEquals("#ffffff", board.colour);
-        assertEquals("read", board.readpassword);
-        assertEquals("write", board.writepassword);
-        assertEquals(listOfCards, board.lists);
+        assertEquals("pass", board.password);
+        assertEquals(listsOfCards, board.lists);
     }
 
     /**
@@ -88,8 +87,7 @@ public class BoardTest {
         assertTrue(actual.contains("\n"));
         assertTrue(actual.contains("title"));
         assertTrue(actual.contains("colour"));
-        assertTrue(actual.contains("readpassword"));
-        assertTrue(actual.contains("writepassword"));
+        assertTrue(actual.contains("password"));
         assertTrue(actual.contains("lists"));
     }
 
@@ -99,8 +97,8 @@ public class BoardTest {
     @Test
     public void testAddList() {
         board.addList(list3);
-        listOfCards.add(list3);
-        assertEquals(listOfCards, board.lists);
+        listsOfCards.add(list3);
+        assertEquals(listsOfCards, board.lists);
     }
 
     /**
@@ -109,7 +107,7 @@ public class BoardTest {
     @Test
     public void testAddListNull() {
         board.addList(null);
-        assertEquals(listOfCards, board.lists);
+        assertEquals(listsOfCards, board.lists);
     }
 
     /**
@@ -118,8 +116,8 @@ public class BoardTest {
     @Test
     public void testRemoveList() {
         board.removeList(list2);
-        listOfCards.remove(list2);
-        assertEquals(listOfCards, board.lists);
+        listsOfCards.remove(list2);
+        assertEquals(listsOfCards, board.lists);
     }
 
     /**
@@ -128,7 +126,7 @@ public class BoardTest {
     @Test
     public void testRemoveListNull() {
         board.removeList(null);
-        assertEquals(listOfCards, board.lists);
+        assertEquals(listsOfCards, board.lists);
     }
 
     /**
@@ -153,5 +151,14 @@ public class BoardTest {
         listOfCards2.add(list2);
         listOfCards2.add(list1);
         assertEquals(listOfCards2, board.lists);
+    }
+
+    /**
+     * Tests whether an invite key has been generated
+     */
+    @Test
+    public void testGenerateInviteKey() {
+        board.generateInviteKey();
+        assertNotNull(board.key);
     }
 }
