@@ -176,7 +176,7 @@ public class CardController {
             // Delete the card
             cardService.deleteCardById(cardId);
             // Return the saved card with an HTTP 200 OK status
-            return ResponseEntity.ok(card);
+            return ResponseEntity.ok().build();
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
