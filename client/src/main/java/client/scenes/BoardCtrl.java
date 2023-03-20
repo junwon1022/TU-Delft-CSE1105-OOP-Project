@@ -80,11 +80,13 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
+        data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
-        list.setStyle("-fx-control-inner-background: " +  "#03045E" + ";");
+        //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
+//        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }
 
     /**
@@ -161,6 +163,6 @@ public class BoardCtrl {
 
 
     private ListOfCards getList(String title){
-        return new ListOfCards(title, "00B4D8", board, new ArrayList<>());
+        return new ListOfCards(title, "A2E4F1", board, new ArrayList<>());
     }
 }

@@ -1,0 +1,25 @@
+.list-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.list-view .list-cell:filled:selected {
+    -fx-selection-bar: red;
+}
+
+.list-cell:filled:hover {
+    -fx-selection-bar: green;
+}
+
+.list-cell, .list-cell:focused {
+    -fx-border-radius: 20;
+}
+
+#lists {
+    -fx-background-color:  "#CAF0F8";
+    -fx-control-inner-background: #CAF0F8;
+}
+
+#list {
+    -fx-control-inner-background: #CAF0F8;
+}

@@ -59,6 +59,10 @@ public class CardCtrl extends ListCell<Card> {
             throw new RuntimeException(e);
         }
 
+        root.setStyle("-fx-background-color: #00B4D8;" +
+                " -fx-border-radius: 10;" +
+                " -fx-background-radius: 10;");
+
         setOnDragDetected(this::handleDragDetected);
 
         setOnDragOver(this::handleDragOver);

@@ -73,12 +73,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setItems(data);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
-
-        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
+        list.setStyle("-fx-background-color: #A2E4F1;" +
+                " -fx-border-radius: 15;" +
+                " -fx-background-radius: 15;");
     }
 
     /**
-     * Called whenever the parent ListView is changed. Sets the data in thsi controller.
+     * Called whenever the parent ListView is changed. Sets the data in this controller.
      * @param item The new item for the cell.
      * @param empty whether or not this cell represents data from the list. If it
      *        is empty, then it does not represent any domain data, but is a cell
@@ -102,7 +103,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     }
 
     /**
-     * Adds a new card to the CardList.
+     * Adds a new card to the List of Cards.
      * Shows a text field that asks for the title.
      * If pressed enter, adds the card via the server and forces a board refresh.
      * @param event the KeyEvent
@@ -127,7 +128,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     }
 
     /**
-     * Adds a new card to the CardList.
+     * Adds a new card to the List of cards.
      * Shows a text field that asks for the title.
      * If pressed OK button, adds the card via the server and forces a board refresh.
      * @param event the Action event
@@ -154,7 +155,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event
      */
     public void showButton(ActionEvent event) {
-        name.setOpacity(0.5);
+        name.setOpacity(1);
         addCardButton.setOpacity(1);
     }
 

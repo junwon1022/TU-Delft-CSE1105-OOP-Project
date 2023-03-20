@@ -77,8 +77,6 @@ public class BoardServiceTest {
         assertThatThrownBy(() -> {
             boardService.editBoardTitle(b.id,"");
         }).isInstanceOf(Exception.class);
-
-
     }
 
     @Test
@@ -90,10 +88,5 @@ public class BoardServiceTest {
         boardService.deleteBoardById(b.id);
 
         Mockito.verify(boardRepo).deleteById(b.id);
-
-
-
     }
-
-
 }
