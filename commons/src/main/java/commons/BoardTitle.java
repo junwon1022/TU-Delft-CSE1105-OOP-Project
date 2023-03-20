@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -23,12 +24,7 @@ public class BoardTitle{
     @Column(name = "boardtitle_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
-    @OneToOne
-    @JoinTable(
-            name = "titles_boards",
-            joinColumns = @JoinColumn(name = "boardtitle_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id")
-    )
+    @OneToOne(cascade = CascadeType.PERSIST)
     public Board board;
 
     /**

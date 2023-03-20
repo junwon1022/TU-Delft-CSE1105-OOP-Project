@@ -37,6 +37,8 @@ public class BoardCtrl {
 
     private final ServerUtils server;
 
+    private final MainCtrl mainCtrl;
+
     @FXML
     private ListView<ListOfCards> list;
 
@@ -44,11 +46,14 @@ public class BoardCtrl {
 
     /**
      * Create a new BoardCtrl.
-     * @param server The server to use.
+     *
+     * @param server    The server to use.
+     * @param mainCtrl The main control
      */
     @Inject
-    public BoardCtrl(ServerUtils server) {
+    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
+        this.mainCtrl = mainCtrl;
     }
 
     /**
@@ -124,5 +129,13 @@ public class BoardCtrl {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Goes back to overview
+     * @param event - Key event when the user clicks the mouse + /
+     */
+    public void goToOverview(ActionEvent event) {
+        mainCtrl.showMainScreen();
     }
 }

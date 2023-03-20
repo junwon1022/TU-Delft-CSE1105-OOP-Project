@@ -108,6 +108,7 @@ public class MainCtrl {
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
         primaryStage.setHeight(600);
+        mainScreenCtrl.refresh();
     }
 
 

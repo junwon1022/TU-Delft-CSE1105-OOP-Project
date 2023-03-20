@@ -3,6 +3,7 @@ import javax.persistence.*;
 import java.security.SecureRandom;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -34,10 +35,6 @@ public class Board {
     @JsonManagedReference
     public List<ListOfCards> lists;
 
-    @OneToOne(mappedBy = "board")
-    public BoardTitle boardTitle;
-
-
 
     /**
      * Default constructor
@@ -60,22 +57,6 @@ public class Board {
         this.lists = lists;
     }
 
-    /**
-     * Constructor with parameters including board title
-     * @param title
-     * @param colour
-     * @param password
-     * @param lists
-     * @param boardTitle
-     */
-    public Board(String title, String colour,
-                  String password,List<ListOfCards> lists, BoardTitle boardTitle) {
-        this.title = title;
-        this.colour = colour;
-        this.password = password;
-        this.lists = lists;
-        this.boardTitle = boardTitle;
-    }
 
     /*
         BASIC FUNCTIONALITY

@@ -95,6 +95,8 @@ public class MainScreenCtrl {
     public void connectToBoard(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
+        System.out.println(server.getMyBoardTitles());
+        System.out.println(server.getBoardByKey(joinField.getText()));
         Board b = server.getBoardByKey(joinField.getText());
 
         mainCtrl.showBoard(b);
@@ -120,11 +122,12 @@ public class MainScreenCtrl {
 
             if (controller.success) {
                 String title = controller.storedText;
+                System.out.println("The title is "+ title);
                 Board board = new Board(title,"red","read",new ArrayList<>());
+                //Generates a random invite key (the preset password is "read")
+                board.generateInviteKey();
                 BoardTitle boardTitle = new BoardTitle(title,"red",board);
 
-                //Generates a random invite key (the preset password is "read")
-                boardTitle.board.generateInviteKey();
                 server.addBoardTitle(boardTitle);
 
                 refresh();

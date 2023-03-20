@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.ListOfCards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import commons.Board;
 import server.services.BoardService;
+
+import java.util.List;
 
 
 @RestController
@@ -29,6 +32,22 @@ public class BoardController {
 
 
 
+
+    /**
+     * Get the boards
+     *
+     * @return the list of lists
+     */
+    @GetMapping(path = {"", "/"})
+    private ResponseEntity<List<Board>> getBoards() {
+        try {
+            List<Board> boards = boardService.getBoards();
+            return ResponseEntity.status(HttpStatus.OK).body(boards);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 
 
@@ -58,17 +77,18 @@ public class BoardController {
      * @param key
      * @return the board
      */
-    @GetMapping(path = {"/{key}/","/{key}"})
+    @GetMapping(path = {"/getByKey/{key}/","/getByKey/{key}"})
     public ResponseEntity<Board> getBoardByKey(@PathVariable("key") String key){
         try {
             // Get the board
             Board board = boardService.getBoardByKey(key);
-            if(board == null) return ResponseEntity.badRequest().build();
+            System.out.println(board);
+            if(board == null) return ResponseEntity.internalServerError().build();
             // Return the board with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(board);
         }
         catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 

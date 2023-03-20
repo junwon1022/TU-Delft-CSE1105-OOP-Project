@@ -124,8 +124,12 @@ public class ServerUtils {
         if(boardData == null) {
             boardData = new ArrayList<>();
         }
+        Board b = boardTitle.board;
+        addBoard(b);
+        //Gets the id from the last board added
+        boardTitle.board = getBoards().get(getBoards().size()-1);
         boardData.add(boardTitle);
-        addBoard(boardTitle.board);
+
     }
 
     /**
@@ -282,8 +286,7 @@ public class ServerUtils {
     public List<BoardTitle> getMyBoardTitles(){
 
         if(boardData == null) {
-            BoardTitle a = new BoardTitle("Yooo" , "red" , new Board());
-            boardData = new ArrayList<>(List.of(a));
+            boardData = new ArrayList<>();
         }
 
         return boardData;
@@ -291,12 +294,11 @@ public class ServerUtils {
 
     /**
      * Get boards from server
-     * @param boardId
      * @return boards
      */
-    public Board getBoardById(Long boardId){
+    public Board getBoardById(){
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/boards/" + boardId) //
+                .target(SERVER).path("api/boards/{board_id}") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Board>() {});
@@ -310,9 +312,8 @@ public class ServerUtils {
      */
     public Board getBoardByKey(String key){
 
-
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/boards/" + key) //
+                .target(SERVER).path("api/boards/getByKey/" + key) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Board>() {});
@@ -347,6 +348,21 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<ListOfCards>>(){});
     }
+
+
+    /**
+     * Get all lists from the server
+     * @return - the lists from the server
+     */
+    public List<Board> getBoards(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Board>>(){});
+    }
+
+
 
     /**
      * Add a new list to the server

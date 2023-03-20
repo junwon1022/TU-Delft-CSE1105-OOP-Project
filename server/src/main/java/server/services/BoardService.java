@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.BoardRepository;
 
+import java.util.List;
+
 @Service
 public class BoardService {
 
@@ -19,6 +21,15 @@ public class BoardService {
     public BoardService(@Qualifier("board") BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
     }
+
+    /**
+     * Retrieve all boards
+     * @return a list of boards
+     */
+    public List<Board> getBoards() {
+        return boardRepository.findAll();
+    }
+
 
     /**
      * Retrieve a board given its id
@@ -37,8 +48,12 @@ public class BoardService {
      * @return a board
      */
     public Board getBoardByKey(String key) throws Exception {
+
+        System.out.println("Board Repository " + boardRepository.findAll().toString());
+
         for(Board b : boardRepository.findAll()){
-            if(b.key == key) return b;
+            System.out.println("Board to string" + b.toString());
+            if(b.key.equals(key)) return b;
         }
 
         throw new Exception("There is no board with that key");
