@@ -12,12 +12,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
@@ -75,6 +79,55 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
 
         list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
+
+        setOnDragOver(this::handleDragOver);
+        setOnDragDropped(this::handleDragDropped);
+    }
+
+    /**
+     * Handles drag over object
+     * @param event drag event
+     */
+    private void handleDragOver(DragEvent event) {
+        if (event.getGestureSource() != this &&
+                event.getDragboard().hasString()) {
+            if (event.getGestureSource().getClass() == CardCtrl.class)
+                event.acceptTransferModes(TransferMode.MOVE);
+        }
+        event.consume();
+    }
+
+    /**
+     * Handles dropping drag
+     * @param event drag event
+     */
+    private void handleDragDropped(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        if (db.hasString()) {
+            String[] strings = db.getString().split("X");
+            long dbCardId = Long.decode(strings[0]);
+            long dbListId = Long.decode(strings[1]);
+
+            List<Card> draggedList = null;
+            for (ListOfCards loc: this.board.data)
+                if (loc.id == dbListId)
+                    draggedList = loc.cards;
+
+            Card draggedCard = null;
+            for (Card c: draggedList)
+                if (c.id == dbCardId)
+                    draggedCard = c;
+
+            server.removeCard(draggedCard);
+
+            draggedCard.list = this.cardData;
+            draggedCard.order = this.cardData.cards.size();
+            server.addCard2(draggedCard);
+
+            board.refresh();
+        }
+        event.setDropCompleted(true);
+        event.consume();
     }
 
     /**
