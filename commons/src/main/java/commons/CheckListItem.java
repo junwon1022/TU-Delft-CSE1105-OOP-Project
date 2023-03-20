@@ -1,6 +1,7 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,6 +12,10 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 @Table(name = "checklist_items")
+@JsonIdentityInfo(
+        scope = CheckListItem.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class CheckListItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +28,8 @@ public class CheckListItem {
     @Column(name = "completed")
     public boolean completed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "card_id")
-    @JsonBackReference
     public Card card;
 
     /**
