@@ -26,6 +26,9 @@ public class Card {
     @Column(name = "card_id")
     public long id;
 
+    @Column(name = "card_order")
+    public long order;
+
     @Column(name = "card_title")
     public String title;
 
@@ -66,10 +69,12 @@ public class Card {
      * @param tags
      */
     public Card(String title, String description,
+                int order,
                 String colour, ListOfCards list,
                 List<CheckListItem> checklist, Set<Tag> tags) {
         this.title = title;
         this.description = description;
+        this.order = order;
         this.colour = colour;
         this.list = list;
         this.checklist = checklist;
