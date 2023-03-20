@@ -134,8 +134,7 @@ public class CardCtrl extends ListCell<Card> {
 
         Dragboard dragboard = startDragAndDrop(TransferMode.MOVE);
         ClipboardContent content = new ClipboardContent();
-        // TODO change this to ID when server connection is made
-        content.putString(getItem().title);
+        content.putString(String.valueOf(getItem().id));
         dragboard.setContent(content);
 
         event.consume();
@@ -191,8 +190,7 @@ public class CardCtrl extends ListCell<Card> {
                 List<Card> items = this.parent.cardData.cards;
                 int draggedIdx = 0;
                 for (int i = 0; i < items.size(); i++)
-                    // TODO change to id
-                    if (items.get(i).title.equals(db.getString()))
+                    if (items.get(i).id == Long.decode(db.getString()))
                         draggedIdx = i;
                 int thisIdx = items.indexOf(getItem());
 
