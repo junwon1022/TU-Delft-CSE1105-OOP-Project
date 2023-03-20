@@ -35,6 +35,7 @@ public class ListOfCards {
     public Board board;
 
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("order asc")
     public List<Card> cards = new ArrayList<>();
 
     /**

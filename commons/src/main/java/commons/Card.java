@@ -26,6 +26,9 @@ public class Card {
     @Column(name = "card_id")
     public long id;
 
+    @Column(name = "card_order")
+    public long order;
+
     @Column(name = "card_title")
     public String title;
 
