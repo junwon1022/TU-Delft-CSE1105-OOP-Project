@@ -206,9 +206,10 @@ public class ServerUtils {
 
     /**
      * Placeholder method to get data from server
+     * @param boardId the id of the board
      * @return a list of cardlists.
      */
-    public List<ListOfCards> getServerData() {
+    public List<ListOfCards> getServerData(long boardId) {
 
         // once the database references are solved
         // -- as when the get method retrieves the list of all lists
@@ -217,7 +218,7 @@ public class ServerUtils {
         // -- the method signature will get as a parameter
         //Board board --
         //
-        // serverData = getLists(board.id);
+        serverData = getLists(boardId);
         return serverData;
     }
 

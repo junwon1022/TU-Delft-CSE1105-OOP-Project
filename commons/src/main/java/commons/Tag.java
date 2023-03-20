@@ -1,6 +1,7 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
@@ -11,6 +12,10 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 @Table(name = "tags")
+@JsonIdentityInfo(
+        scope = Card.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Tag {
 
     @Id
@@ -25,7 +30,6 @@ public class Tag {
     public String colour;
 
     @ManyToMany(mappedBy = "tags")
-    @JsonIgnore
     public Set<Card> cards = new HashSet<>();
 
     /**
