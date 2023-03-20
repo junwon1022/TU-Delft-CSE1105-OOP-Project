@@ -57,11 +57,11 @@ public class BoardCtrl {
         // Placeholder for when Dave's branch is merged
         // so there are actually multiple boards
         try {
-            board = this.server.getBoard(0);
+            board = this.server.getBoard(1);
         } catch (Exception e) {
             board = getBoard();
-            Board addedBoard =  server.addBoard(board);
-            board.id = server.getBoard(addedBoard.id).id;
+            Board addedBoard = server.addBoard(board);
+            board = server.getBoard(addedBoard.id);
         }
         refresh();
         /*
@@ -116,9 +116,9 @@ public class BoardCtrl {
                 String title = controller.storedText;
 
                 ListOfCards list = getList(title);
-                server.addList(list);
+                //server.addList(list);
                 ListOfCards addedList = server.addListOfCards(list);
-
+                System.out.println(addedList);
 
                 //change the id of the board locally
                 list.id = addedList.id;
