@@ -51,6 +51,20 @@ public class BoardCtrl {
     @Inject
     public BoardCtrl(ServerUtils server) {
         this.server = server;
+
+        data = FXCollections.observableArrayList();
+
+        // Placeholder for when Dave's branch is merged
+        // so there are actually multiple boards
+        try {
+            board = this.server.getBoard(0);
+        } catch (Exception e) {
+            board = getBoard();
+            Board addedBoard =  server.addBoard(board);
+            board.id = server.getBoard(addedBoard.id).id;
+        }
+        refresh();
+        /*
         board = getBoard();
 
         //add the board to the database
@@ -58,13 +72,14 @@ public class BoardCtrl {
 
         //change the id of the board locally
         board.id = server.getBoard(addedBoard.id).id;
+        System.out.println(board.id);
+        */
     }
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
-        data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
@@ -77,7 +92,7 @@ public class BoardCtrl {
      */
     public void refresh() {
         //the method call of getServerData will be with the board parameter
-        var serverData = server.getServerData();
+        var serverData = server.getServerData(board.id);
         data.setAll(serverData);
     }
 
@@ -146,6 +161,6 @@ public class BoardCtrl {
 
 
     private ListOfCards getList(String title){
-        return new ListOfCards(title, "00B4D8",board, new ArrayList<>());
+        return new ListOfCards(title, "00B4D8", board, new ArrayList<>());
     }
 }

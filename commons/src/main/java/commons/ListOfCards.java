@@ -1,7 +1,9 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,6 +15,10 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
 @Table(name = "lists")
+@JsonIdentityInfo(
+        scope = ListOfCards.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ListOfCards {
 
     @Id
@@ -26,13 +32,11 @@ public class ListOfCards {
     @Column(name = "list_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id")
-    @JsonBackReference
     public Board board;
 
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     public List<Card> cards = new ArrayList<>();
 
     /**
