@@ -216,12 +216,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @return - the new card
      */
     public Card getCard(String title){
-        return new Card(title,
+        Card card =  new Card(title,
                 "description",
-                cardData.cards.size(),
                 "red",
                 cardData,
                 null,
                 null);
+        card.order = cardData.cards.size();
+        return card;
     }
 }
