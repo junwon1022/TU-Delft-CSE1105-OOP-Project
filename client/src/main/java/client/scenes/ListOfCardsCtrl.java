@@ -210,8 +210,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addCardButton.setOpacity(1);
     }
 
-
-
     /**
      * Method that removes the list from the server
      * @param event - the 'x' button being clicked
@@ -278,4 +276,5 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         card.order = cardData.cards.size();
         return card;
     }
+
 }
