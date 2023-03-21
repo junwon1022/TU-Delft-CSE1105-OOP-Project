@@ -73,9 +73,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setItems(data);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
-        list.setStyle("-fx-background-color: #A2E4F1;" +
-                " -fx-border-radius: 15;" +
-                " -fx-background-radius: 15;");
+        list.getStylesheets().add("styles.css");
+//        list.setStyle("-fx-background-color: #A2E4F1;" +
+//                " -fx-border-radius: 15;" +
+//                " -fx-background-radius: 15;");
     }
 
     /**

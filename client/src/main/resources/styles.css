@@ -3,23 +3,140 @@
     -fx-faint-focus-color: transparent;
 }
 
-.list-view .list-cell:filled:selected {
-    -fx-selection-bar: red;
+#lists .list-cell:filled:hover {
+    -fx-background-color: derive(-fx-control-inner-background, -5%);
+    -fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);
 }
 
-.list-cell:filled:hover {
-    -fx-selection-bar: green;
+#lists .list-cell:filled:selected {
+    -fx-selection-bar: derive(-fx-control-inner-background, -1%);
+    -fx-border-color: #00B4D8;
+    -fx-selection-bar-non-focused: #CAF0F8;
 }
 
-.list-cell, .list-cell:focused {
-    -fx-border-radius: 20;
+#lists .list-cell, #lists .list-cell:focused {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: #C5EBF3;
+}
+
+#lists .list-cell:empty {
+    -fx-background-color: transparent;
 }
 
 #lists {
-    -fx-background-color:  "#CAF0F8";
+    -fx-background-color:  #CAF0F8;
     -fx-control-inner-background: #CAF0F8;
+    -fx-border-style: none;
+    /*-fx-cell-spacing: 50px;*/
 }
 
 #list {
     -fx-control-inner-background: #CAF0F8;
+    -fx-padding: 3;
+}
+
+#list .list-cell, #list .list-cell:focused {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: transparent;
+    -fx-padding: 3 3;
+    -fx-alignment: center;
+    -fx-pref-width: 100%;
+}
+
+#card {
+    -fx-background-color: #00B4D8;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+#card:hover {
+    -fx-background-color: derive(-fx-background-color, -10%);
+}
+
+#add-list:hover {
+    -fx-background-color: #F8FDFE;
+    -fx-text-fill: #00B4D8;
+    -fx-border-color: #00B4D8;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+#add-list {
+    -fx-background-color: #00B4D8;
+    -fx-text-fill: #F8FDFE;
+    -fx-border-color: #00B4D8;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+#add-card:hover, #rename:hover, #card-confirm:hover {
+    -fx-background-color: #CAF0F8;
+    -fx-text-fill: #00B4D8;
+    -fx-border-color: #00B4D8;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+#add-card, #rename, #card-confirm {
+    -fx-background-color: #4FCAE2;
+    -fx-text-fill: #E4F8FC;
+    -fx-border-color: #4FCAE2;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+#card-confirm {
+    -fx-padding: 0;
+}
+
+/* Style the scroll bar */
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
+    /*-fx-background-color: #E4F8FC; !* Change the background color *!*/
+    -fx-background-color: transparent;
+    -fx-padding: 0; /* Remove any padding */
+}
+
+/* Style the thumb */
+.scroll-bar .thumb {
+    -fx-background-color: #37a0cc; /* Change the background color */
+}
+
+/* Style the track */
+.scroll-bar .track {
+    -fx-background-color: transparent; /* Change the background color */
+}
+
+/* Style the arrows */
+.scroll-bar:horizontal .increment-arrow,
+.scroll-bar:horizontal .decrement-arrow,
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-shape: " ";
+    -fx-padding: 0;
+    -fx-scale-shape: false;
+}
+
+/*!* Style the arrow buttons *!*/
+/*.scroll-bar:horizontal .increment-button,*/
+/*.scroll-bar:horizontal .decrement-button,*/
+/*.scroll-bar:vertical .increment-button,*/
+/*.scroll-bar:vertical .decrement-button {*/
+/*    -fx-background-color: transparent;*/
+/*    -fx-padding: 0;*/
+/*}*/
+
+/* Style the corner */
+/*.scroll-pane:corner {*/
+/*    -fx-background-color: transparent;*/
+/*}*/
+.corner {
+    -fx-background-color: transparent ;
 }

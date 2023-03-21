@@ -6,11 +6,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #00B4D8; -fx-border-radius: 10; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="160.0" minHeight="-Infinity" minWidth="120.0" prefHeight="80.0" prefWidth="135.0" style="-fx-background-color: #00B4D8; -fx-border-radius: 10; -fx-background-radius: 10;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="32.0" layoutY="11.0" prefHeight="17.0" prefWidth="61.0" text="Title" textAlignment="CENTER" wrapText="true" />
-        <Button layoutX="97.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" style="-fx-background-color: #C34042;" text="🗑" />
-        <Text fx:id="text" layoutX="11.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🖹">
+        <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="12.0" layoutY="6.0" prefHeight="25.0" prefWidth="83.0" text="Title" textAlignment="CENTER" wrapText="true" />
+        <Button layoutX="100.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" style="-fx-background-color: #C34042;" text="🗑" />
+        <Text fx:id="text" layoutX="15.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🖹">
          <font>
             <Font name="Corbel Bold" size="19.0" />
          </font></Text>

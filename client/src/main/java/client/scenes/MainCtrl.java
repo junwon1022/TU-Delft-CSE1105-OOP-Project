@@ -31,7 +31,7 @@ public class MainCtrl {
 //    private Scene add;
 
     private BoardCtrl boardCtrl;
-    private Scene board;
+    private Scene boardOverview;
 
     /**
      * Create a new MainCtrl.
@@ -51,11 +51,8 @@ public class MainCtrl {
 //        this.add = new Scene(add.getValue());
 
         this.boardCtrl = board.getKey();
-        this.board = new Scene(board.getValue());
-//        File f = new File("styles.css");
-//        this.board.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
-        this.board.getStylesheets().add("styles.css");
-//        this.board.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        this.boardOverview = new Scene(board.getValue());
+        this.boardOverview.getStylesheets().add("styles.css");
 
         showBoard();
         primaryStage.show();
@@ -66,7 +63,7 @@ public class MainCtrl {
      */
     public void showBoard() {
         primaryStage.setTitle("My board");
-        primaryStage.setScene(board);
+        primaryStage.setScene(boardOverview);
         primaryStage.setHeight(630);
         primaryStage.setWidth(812);
         primaryStage.setResizable(false);

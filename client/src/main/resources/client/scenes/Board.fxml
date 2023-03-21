@@ -6,14 +6,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #E4F8FC;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
-      <ListView fx:id="list" layoutX="24.0" layoutY="65.0" orientation="HORIZONTAL" prefHeight="469.0" prefWidth="750.0" stylesheets="@../../styles.css" />
-      <Button layoutX="362.0" layoutY="549.0" mnemonicParsing="false" onAction="#addListOfCards" style="-fx-background-color: #00B4D8;" text="Add List" textFill="WHITE">
+      <ListView id="lists" fx:id="list" layoutX="24.0" layoutY="55.0" orientation="HORIZONTAL" prefHeight="479.0" prefWidth="750.0" stylesheets="@../../styles.css" />
+      <Button id="add-list" layoutX="362.0" layoutY="549.0" mnemonicParsing="false" onAction="#addListOfCards" stylesheets="@../../styles.css" text="Add List" textFill="WHITE">
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
-      <Text fill="#231f20" layoutX="666.0" layoutY="565.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Press '?' for help">
+      <Text fill="#231f20" layoutX="694.0" layoutY="566.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Press '?' for help" textAlignment="CENTER">
          <font>
             <Font name="Corbel" size="12.0" />
          </font>

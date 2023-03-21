@@ -85,6 +85,8 @@ public class BoardCtrl {
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
+        list.getStylesheets().add("styles.css");
+        refresh();
         //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
 //        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }
