@@ -129,9 +129,40 @@ public class ListOfCardsController {
         }
     }
 
+
+    /**
+     * Move two cards' positions given the list they belong to and their ids
+     * @param boardId the id of the board
+     * @param listId the id of the list
+     * @param fromId the id of the first card
+     * @param toId the id of the second card
+     * @return the updated list
+     */
+    @PutMapping(path = {"/{list_id}/from/{from}/to/{to}/","/{list_id}/from/{from}/to/{to}"})
+    public ResponseEntity<ListOfCards> moveCards(@PathVariable("board_id") long boardId,
+                                                 @PathVariable("list_id") long listId,
+                                                 @PathVariable("from") int fromId,
+                                                 @PathVariable("to") int toId) {
+
+        try {
+            if(!validPath(boardId, listId)
+                    || !validIndex(boardId, listId, fromId)
+                    || !validIndex(boardId, listId, toId)) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Edit the list and save it in the database
+            ListOfCards list = listOfCardsService.moveCardsInListOfCards(listId, fromId, toId);
+            // Return the edited list with an HTTP 200 OK status
+            return ResponseEntity.ok().body(list);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Delete a list given its id
-     *
      * @param boardId
      * @param listId
      * @return the deleted list
@@ -173,5 +204,22 @@ public class ListOfCardsController {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Checks if the index exists
+     * @param boardId the id of the board
+     * @param listId the id of the list
+     * @param cardIndex the index of the card
+     * @return true if the index is valid
+     * @throws Exception
+     */
+    private boolean validIndex(long boardId, long listId, long cardIndex)
+            throws Exception {
+        // Get the board
+        Board board = boardService.getBoardById(boardId);
+        // Get the list
+        ListOfCards list = listOfCardsService.getListById(listId);
+        return list.cards.size() > cardIndex;
     }
 }

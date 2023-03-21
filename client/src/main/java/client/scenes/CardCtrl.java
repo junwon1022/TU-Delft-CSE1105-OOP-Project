@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
+import commons.ListOfCards;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -138,8 +139,7 @@ public class CardCtrl extends ListCell<Card> {
 
         Dragboard dragboard = startDragAndDrop(TransferMode.MOVE);
         ClipboardContent content = new ClipboardContent();
-        // TODO change this to ID when server connection is made
-        content.putString(getItem().title);
+        content.putString(getItem().id + "X" + getItem().list.id);
         dragboard.setContent(content);
 
         event.consume();
@@ -152,11 +152,8 @@ public class CardCtrl extends ListCell<Card> {
     private void handleDragOver(DragEvent event) {
         if (event.getGestureSource() != this &&
                 event.getDragboard().hasString()) {
-            if (event.getGestureSource().getClass() == CardCtrl.class) {
-                CardCtrl other = (CardCtrl) event.getGestureSource();
-                if (this.parent == other.parent)
-                    event.acceptTransferModes(TransferMode.MOVE);
-            }
+            if (event.getGestureSource().getClass() == CardCtrl.class)
+                event.acceptTransferModes(TransferMode.MOVE);
         }
         event.consume();
     }
@@ -189,25 +186,88 @@ public class CardCtrl extends ListCell<Card> {
      */
     private void handleDragDropped(DragEvent event) {
         if (getItem() != null) {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasString()) {
+            dragDroppedOnCell(event);
+        }
+        else {
+            dragDroppedOnEmptyList(event);
+        }
+
+    }
+
+    /**
+     * Handles dropping drag on a particular cell
+     * @param event drag event
+     */
+    private void dragDroppedOnCell(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        if (db.hasString()) {
+            String[] strings = db.getString().split("X");
+            long dbCardId = Long.decode(strings[0]);
+            long dbListId = Long.decode(strings[1]);
+            if (dbListId != this.parent.cardData.id) {
+                Card draggedCard = moveCardToOtherList(dbCardId, dbListId);
+                List<Card> items = this.parent.cardData.cards;
+
+                int draggedIdx = (int) draggedCard.order;
+                int thisIdx = items.indexOf(getItem());
+                server.moveCard(this.parent.cardData, draggedIdx, thisIdx);
+            }
+            else {
                 List<Card> items = this.parent.cardData.cards;
                 int draggedIdx = 0;
                 for (int i = 0; i < items.size(); i++)
-                    // TODO change to id
-                    if (items.get(i).title.equals(db.getString()))
+                    if (items.get(i).id == dbCardId)
                         draggedIdx = i;
                 int thisIdx = items.indexOf(getItem());
-
                 server.moveCard(this.parent.cardData, draggedIdx, thisIdx);
-                board.refresh();
-
-                success = true;
             }
-            event.setDropCompleted(success);
-            event.consume();
+            board.refresh();
         }
+        event.setDropCompleted(true);
+        event.consume();
+    }
 
+    /**
+     * Handles dropping drag on an empty list
+     * @param event drag event
+     */
+    private void dragDroppedOnEmptyList(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        if (db.hasString()) {
+            String[] strings = db.getString().split("X");
+            long dbCardId = Long.decode(strings[0]);
+            long dbListId = Long.decode(strings[1]);
+
+            moveCardToOtherList(dbCardId, dbListId);
+
+            board.refresh();
+        }
+        event.setDropCompleted(true);
+        event.consume();
+    }
+
+    /**
+     * Moves a card from one list to a different one
+     * @param dbCardId the id of the card from the database
+     * @param dbListId the id of the card from the database
+     * @return the moved card
+     */
+    private Card moveCardToOtherList(long dbCardId, long dbListId) {
+        List<Card> draggedList = null;
+        for (ListOfCards loc: this.board.data)
+            if (loc.id == dbListId)
+                draggedList = loc.cards;
+
+        Card draggedCard = null;
+        for (Card c: draggedList)
+            if (c.id == dbCardId)
+                draggedCard = c;
+
+        server.removeCard(draggedCard);
+
+        draggedCard.list = this.parent.cardData;
+        draggedCard.order = this.parent.cardData.cards.size();
+        server.addCard2(draggedCard);
+        return draggedCard;
     }
 }

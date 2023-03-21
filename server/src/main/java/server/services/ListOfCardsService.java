@@ -88,4 +88,26 @@ public class ListOfCardsService {
         list.title = newTitle;
         return listOfCardsRepository.save(list);
     }
+
+    /**
+     * Move two cards' positions given the list they belong to and their ids
+     * @param listId the id of the list
+     * @param fromIdx the index of the first card
+     * @param toIdx the index of the second card
+     * @return the updated list
+     */
+    public ListOfCards moveCardsInListOfCards(long listId, int fromIdx, int toIdx) {
+        ListOfCards list = listOfCardsRepository.getById(listId);
+        if (fromIdx < toIdx) {
+            list.cards.get(fromIdx).order = toIdx;
+            for (int i = fromIdx + 1; i <= toIdx; i++)
+                list.cards.get(i).order = i - 1;
+        }
+        else {
+            list.cards.get(fromIdx).order = toIdx;
+            for (int i = toIdx; i < fromIdx; i++)
+                list.cards.get(i).order = i + 1;
+        }
+        return listOfCardsRepository.save(list);
+    }
 }
