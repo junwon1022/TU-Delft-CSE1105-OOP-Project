@@ -103,9 +103,11 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
+//        Tooltip tooltip = new Tooltip("Copy the invitamtion key.");
+//        tooltip.setX(1000);
+//        tooltip.setY(100);
+//        Tooltip.install(copyButton, tooltip);
         refresh();
-        //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
-//        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }
 
     /**
@@ -183,12 +185,11 @@ public class BoardCtrl {
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
-        Tooltip.install(copyButton, tooltip);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
         tooltip.show(Window.getWindows().get(0));
-        tooltip.setAnchorX(1000);
-        tooltip.setAnchorY(100);
+        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
+        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
