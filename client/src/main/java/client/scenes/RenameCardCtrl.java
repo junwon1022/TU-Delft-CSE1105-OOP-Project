@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class DetailedViewCtrl {
+public class RenameCardCtrl {
     @FXML
     private TextField titleField;
 
@@ -27,10 +27,10 @@ public class DetailedViewCtrl {
     public boolean success;
 
     /**
-     * Constructor for the Detailed View Controller
+     * Constructor for the Rename Card Controller
      */
     @Inject
-    public DetailedViewCtrl(){
+    public RenameCardCtrl(){
         success = false;
         nullTitle = new Label("");
     }

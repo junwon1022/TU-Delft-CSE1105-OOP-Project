@@ -283,11 +283,11 @@ public class CardCtrl extends ListCell<Card> {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DetailedView.fxml"));
         try {
             Parent root = fxmlLoader.load();
-            DetailedViewCtrl controller = fxmlLoader.getController();
+            RenameCardCtrl controller = fxmlLoader.getController();
             controller.initialize(data);
 
             Stage stage = new Stage();
-            stage.setTitle("Detailed view of " + data.title);
+            stage.setTitle("Rename the card: " + data.title);
             stage.setScene(new Scene(root, 600, 400));
             stage.showAndWait();
 
