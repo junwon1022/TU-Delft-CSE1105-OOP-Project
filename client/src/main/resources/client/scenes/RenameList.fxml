@@ -6,19 +6,28 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="169.0" prefWidth="316.0" style="-fx-background-color: #90E0EF;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RenameListCtrl">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RenameListCtrl">
    <children>
-      <Label layoutX="14.0" layoutY="27.0" text="Rename the list" textFill="#03045e">
+      <TextField fx:id="textField" layoutX="32.0" layoutY="67.0" onKeyPressed="#handleKeyPressed" prefHeight="33.0" prefWidth="237.0" promptText="Enter a new title . . ." stylesheets="@../../styles.css">
          <font>
-            <Font name="Corbel Bold" size="15.0" />
+            <Font name="Corbel" size="12.0" />
+         </font></TextField>
+      <Label layoutX="90.0" layoutY="31.0" text="Rename the list" textAlignment="CENTER" textFill="#231f20">
+         <font>
+            <Font name="Corbel Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="rename" layoutX="14.0" layoutY="121.0" mnemonicParsing="false" onAction="#rename" style="-fx-background-color: rgb(255,255,255,0.8);" text="Rename" />
-      <Button fx:id="cancel" cancelButton="true" layoutX="251.0" layoutY="15.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #c21515;" text="Cancel" />
-      <Label fx:id="nullTitle" layoutX="14.0" layoutY="85.0" prefHeight="33.0" prefWidth="173.0" text="" textFill="#fb0303">
+      <Button fx:id="rename" layoutX="214.0" layoutY="153.0" mnemonicParsing="false" onAction="#rename" styleClass="normal-button" stylesheets="@../../styles.css" text="Rename" textFill="WHITE">
+         <font>
+            <Font size="13.0" />
+         </font></Button>
+      <Button fx:id="cancel" cancelButton="true" layoutX="142.0" layoutY="153.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="59.0" styleClass="red-button" stylesheets="@../../styles.css" text="Cancel" textFill="WHITE">
+         <font>
+            <Font size="13.0" />
+         </font></Button>
+      <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="53.0" layoutY="110.0" prefHeight="33.0" prefWidth="202.0" text="" textAlignment="CENTER" textFill="#8f2e30">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></Label>
-      <TextField fx:id="textField" layoutX="14.0" layoutY="49.0" prefHeight="33.0" prefWidth="173.0" />
    </children>
 </AnchorPane>

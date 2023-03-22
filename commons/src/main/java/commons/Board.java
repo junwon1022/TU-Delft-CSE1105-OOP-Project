@@ -80,7 +80,7 @@ public class Board {
                 "zebra", "airplane", "book", "car", "dragon",
                 "eagle", "fire", "guitar", "honey", "island",
                 "jungle", "key", "lion", "moon", "ninja",
-                "ocean", "parrot", "queen", "rain", "star",
+                "ocean", "parrot", "quest", "rain", "star",
                 "tiger", "unicorn", "volcano", "wolf", "x-ray",
                 "yacht", "zombie"
         );

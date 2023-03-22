@@ -1,0 +1,12 @@
+.root {
+    --grey: #231F20;
+    --light: #F8FDFE;
+    --background-cyan: #CAF0F8;
+    --light-cyan: #A2E4F1;
+    --cyan: #4DC2D9;
+    --saturated-cyan:  #00B4D8;
+    --blue: #37a0cc;
+    --light-blue: #66c2e6;
+    --red:  #C34042;
+    --dark-red: #8f2e30;
+}

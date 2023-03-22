@@ -58,8 +58,6 @@ public class BoardControllerTest {
 
     }
 
-
-
     @Test
     public void addBoardCorrect() {
         Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());

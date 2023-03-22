@@ -21,7 +21,6 @@ public class CardController {
 
     private final CardService cardService;
     private final ListOfCardsService listOfCardsService;
-
     private final BoardService boardService;
 
     /**

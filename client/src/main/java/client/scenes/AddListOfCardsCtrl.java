@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class AddListOfCardsCtrl {
 
-    public boolean success = false;
+    public boolean success;
 
     public String storedText;
 
@@ -20,6 +20,8 @@ public class AddListOfCardsCtrl {
     @FXML
     private Label nullTitle;
 
+    private String MESSAGE = "Please enter a title!";
+
 
     /**
      * Create a new AddCardCtrl.
@@ -27,6 +29,7 @@ public class AddListOfCardsCtrl {
      */
     @Inject
     public AddListOfCardsCtrl() {
+        success = false;
         nullTitle = new Label("");
     }
 
@@ -61,7 +64,7 @@ public class AddListOfCardsCtrl {
         success = true;
         storedText = listTitle.getText();
         if(storedText == null || storedText.length() == 0){
-            nullTitle.setText("Please enter a title");
+            nullTitle.setText(MESSAGE);
         }
         else{
             clearFields();
@@ -94,7 +97,7 @@ public class AddListOfCardsCtrl {
         success = true;
         storedText = listTitle.getText();
         if(storedText == null || storedText.length() == 0){
-            nullTitle.setText("Please enter a title");
+            nullTitle.setText(MESSAGE);
         }
         else{
             clearFields();
@@ -122,10 +125,6 @@ public class AddListOfCardsCtrl {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
-
-
-
-
 
     /**
      * Clear the fields.

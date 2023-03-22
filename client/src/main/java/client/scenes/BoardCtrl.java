@@ -19,6 +19,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,9 +27,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +47,13 @@ public class BoardCtrl {
 
     @FXML
     private ListView<ListOfCards> list;
+
+    @FXML
+    private Label key;
+    @FXML
+    private Label title;
+    @FXML
+    private Button copyButton;
 
     ObservableList<ListOfCards> data;
 
@@ -80,11 +95,17 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
+        data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
-        list.setStyle("-fx-control-inner-background: " +  "#03045E" + ";");
+        list.getStylesheets().add("styles.css");
+        key.setText(board.key);
+        title.setText(board.title);
+        refresh();
+        //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
+//        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }
 
     /**
@@ -109,7 +130,11 @@ public class BoardCtrl {
 
             Stage stage = new Stage();
             stage.setTitle("Add new list");
-            stage.setScene(new Scene(root, 300, 200));
+            Scene addListScene = new Scene(root);
+            addListScene.getStylesheets().add("styles.css");
+            stage.setHeight(240);
+            stage.setWidth(320);
+            stage.setScene(addListScene);
             stage.showAndWait();
 
             if (controller.success) {
@@ -152,15 +177,42 @@ public class BoardCtrl {
     }
 
     /**
+     * Copies the key to the clipboard and shows a notification to the user
+     * @param event
+     */
+    public void copyKeyToClipboard(ActionEvent event) {
+        copyToClipboard(board.key);
+        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        Tooltip.install(copyButton, tooltip);
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        delay.setOnFinished(e -> tooltip.hide());
+        tooltip.show(Window.getWindows().get(0));
+        tooltip.setAnchorX(1040);
+        tooltip.setAnchorY(110);
+        delay.play();
+    }
+
+    /**
+     * Copies a given key to the clipboard.
+     * @param key
+     */
+    private void copyToClipboard(String key) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(key);
+        clipboard.setContent(content);
+    }
+
+    /**
      * Method that creates a new board
      * @return the new board
      */
     private Board getBoard(){
-        return new Board("hardcoded board", null, null, new ArrayList<>());
+        return new Board("My Board", null, null, new ArrayList<>());
     }
 
 
     private ListOfCards getList(String title){
-        return new ListOfCards(title, "00B4D8", board, new ArrayList<>());
+        return new ListOfCards(title, "A2E4F1", board, new ArrayList<>());
     }
 }

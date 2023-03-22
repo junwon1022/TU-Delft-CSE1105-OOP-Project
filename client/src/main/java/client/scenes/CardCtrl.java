@@ -17,7 +17,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -35,13 +34,12 @@ public class CardCtrl extends ListCell<Card> {
     private Label title;
 
     @FXML
-    private Label description;
-
-    @FXML
     private Button delete;
-
     @FXML
     private Text text;
+
+    @FXML
+    private Label description;
 
     @FXML
     private Button detailedView;
@@ -66,6 +64,10 @@ public class CardCtrl extends ListCell<Card> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        root.setStyle("-fx-background-color: #00B4D8;" +
+                " -fx-border-radius: 10;" +
+                " -fx-background-radius: 10;");
 
         setOnDragDetected(this::handleDragDetected);
 
@@ -99,7 +101,7 @@ public class CardCtrl extends ListCell<Card> {
             data = item;
 
             if(data.description == null || data.description.equals("")) {
-                setTextOpacity();
+                description.setOpacity(0);
             }
 
             setGraphic(root);
