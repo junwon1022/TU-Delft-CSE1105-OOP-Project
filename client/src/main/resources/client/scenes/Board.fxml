@@ -43,9 +43,9 @@
             <ColorAdjust brightness="-0.16" />
          </effect>
       </Button>
-      <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="11.0" prefHeight="62.0" prefWidth="211.0" text="TALIO" textFill="#00b4d8">
+      <Label alignment="CENTER_RIGHT" layoutX="7.0" layoutY="18.0" prefHeight="63.0" prefWidth="223.0" text="TimeWise" textFill="#00b4d8">
          <font>
-            <Font name="Corbel Light" size="63.0" />
+            <Font name="Corbel Light" size="53.0" />
          </font>
       </Label>
       <Label fx:id="title" layoutX="251.0" layoutY="31.0" prefHeight="45.0" prefWidth="352.0" text="My Board" textFill="#231f20">
