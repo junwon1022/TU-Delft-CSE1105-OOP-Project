@@ -4,7 +4,6 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.ListOfCards;
 import jakarta.ws.rs.WebApplicationException;
-import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,7 +19,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.List;
@@ -80,9 +78,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
         list.getStylesheets().add("styles.css");
-//        list.setStyle("-fx-background-color: #A2E4F1;" +
-//                " -fx-border-radius: 15;" +
-//                " -fx-background-radius: 15;");
 
         setOnDragOver(this::handleDragOver);
         setOnDragDropped(this::handleDragDropped);
@@ -214,9 +209,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             name.setStyle("-fx-prompt-text-fill: #C34042;");
             addCardButton.setStyle("-fx-border-color: #C34042; -fx-background-color: #C34042;");
             addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
-                    ("-fx-border-color: #C34042; -fx-background-color: #CAF0F8; -fx-text-fill: #C34042;"));
+                    ("-fx-border-color: #C34042; -fx-background-color: #CAF0F8;" +
+                            " -fx-text-fill: #C34042;"));
             addCardButton.setOnMouseExited(e -> addCardButton.setStyle
-                    ("-fx-border-color: #C34042; -fx-background-color: #C34042; -fx-text-fill: #E4F8FC;"));
+                    ("-fx-border-color: #C34042; -fx-background-color: #C34042;" +
+                            " -fx-text-fill: #E4F8FC;"));
         }
     }
 
