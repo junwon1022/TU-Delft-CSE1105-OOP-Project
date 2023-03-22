@@ -250,7 +250,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Stage stage = new Stage();
             stage.setTitle("Add new card");
-            stage.setScene(new Scene(root, 320, 200));
+            stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
             if (controller.success) {

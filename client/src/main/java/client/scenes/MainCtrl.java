@@ -64,8 +64,8 @@ public class MainCtrl {
     public void showBoard() {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
-        primaryStage.setHeight(630);
-        primaryStage.setWidth(812);
+        primaryStage.setHeight(690);
+        primaryStage.setWidth(1040);
         primaryStage.setResizable(false);
 
         boardCtrl.initialize();

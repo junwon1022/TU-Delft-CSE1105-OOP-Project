@@ -17,11 +17,11 @@
             <Font name="Corbel Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="rename" layoutX="225.0" layoutY="160.0" mnemonicParsing="false" onAction="#rename" style="-fx-background-color: #00B4D8;" text="Rename" textFill="WHITE">
+      <Button fx:id="rename" layoutX="214.0" layoutY="153.0" mnemonicParsing="false" onAction="#rename" styleClass="normal-button" stylesheets="@../../styles.css" text="Rename" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font></Button>
-      <Button fx:id="cancel" cancelButton="true" layoutX="150.0" layoutY="160.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="59.0" style="-fx-background-color: #C34042;" text="Cancel" textFill="WHITE">
+      <Button fx:id="cancel" cancelButton="true" layoutX="142.0" layoutY="153.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="59.0" styleClass="red-button" stylesheets="@../../styles.css" text="Cancel" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font></Button>

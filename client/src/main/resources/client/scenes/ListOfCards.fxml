@@ -4,39 +4,46 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="170.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="list-background" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="190.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="43.0" prefHeight="21.0" prefWidth="150.0" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
-         <font>
-            <Font name="Corbel Bold" size="17.0" />
-         </font></Label>
-      <ListView fx:id="list" layoutX="10.0" layoutY="71.0" prefHeight="282.0" prefWidth="150.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
+      <ListView fx:id="list" layoutX="20.0" layoutY="71.0" prefHeight="282.0" prefWidth="150.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
          <effect>
-            <InnerShadow blurType="GAUSSIAN" choke="0.05" height="46.23" radius="22.634999999999998" width="46.31">
+            <InnerShadow blurType="GAUSSIAN" choke="0.05" height="46.27" radius="22.645000000000003" width="46.31">
                <color>
-                  <Color red="0.21568627655506134" green="0.6274510025978088" blue="0.800000011920929" opacity="0.8700000047683716" />
+                  <Color red="0.2160000056028366" green="0.6345333456993103" blue="0.800000011920929" opacity="0.6136549115180969" />
                </color>
             </InnerShadow>
          </effect></ListView>
-      <Button id="add-card" fx:id="addButton" layoutX="48.0" layoutY="365.0" mnemonicParsing="false" onAction="#showButton" stylesheets="@../../styles.css" text="Add Card" textFill="WHITE">
+      <Button id="add-card" fx:id="addButton" layoutX="58.0" layoutY="365.0" mnemonicParsing="false" onAction="#showButton" stylesheets="@../../styles.css" text="Add Card" textFill="WHITE">
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
-      <Button fx:id="deleteCard" layoutX="142.0" layoutY="15.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="17.0" style="-fx-background-color: rgb(194, 21, 21,0.8); -fx-padding: 0;" text="❌" textFill="#231f20" />
-      <Button id="rename" fx:id="rename" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameList" prefHeight="25.0" prefWidth="63.0" stylesheets="@../../styles.css" text="rename" textFill="WHITE" />
-      <TextField fx:id="name" layoutX="9.0" layoutY="406.0" opacity="0.0" prefHeight="36.0" prefWidth="111.0" promptText="Enter a title . . ." style="-fx-background-color: #E4F8FC; -fx-prompt-text-fill: #665A5D; -fx-text-fill: #231f20;">
+      <Button id="delete-list" fx:id="deleteCard" layoutX="152.0" layoutY="15.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="17.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+         <font>
+            <Font name="Corbel Bold" size="13.0" />
+         </font></Button>
+      <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="43.0" prefHeight="21.0" prefWidth="150.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
+         <font>
+            <Font name="Corbel Bold" size="17.0" />
+         </font></Label>
+      <Button fx:id="rename" layoutX="153.0" layoutY="45.0" mnemonicParsing="false" onAction="#renameList" prefHeight="9.0" prefWidth="16.0" styleClass="rename" stylesheets="@../../styles.css" textFill="WHITE" />
+      <TextField fx:id="name" layoutX="13.0" layoutY="406.0" opacity="0.0" prefHeight="29.0" prefWidth="111.0" promptText="Enter a title . . ." style="-fx-background-color: #E4F8FC; -fx-prompt-text-fill: #665A5D; -fx-text-fill: #231f20;">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></TextField>
-      <Button id="card-confirm" fx:id="addCardButton" layoutX="126.0" layoutY="406.0" mnemonicParsing="false" onAction="#addCard" opacity="0.0" prefHeight="36.0" prefWidth="37.0" stylesheets="@../../styles.css" text="OK" textFill="#f2f2f2">
+      <Button id="card-confirm" fx:id="addCardButton" layoutX="133.0" layoutY="406.0" mnemonicParsing="false" onAction="#addCard" opacity="0.0" prefHeight="29.0" prefWidth="37.0" stylesheets="@../../styles.css" text="OK" textFill="#f2f2f2">
          <font>
             <Font name="Corbel" size="13.0" />
          </font>
       </Button>
    </children>
+   <effect>
+      <ColorAdjust />
+   </effect>
 </AnchorPane>

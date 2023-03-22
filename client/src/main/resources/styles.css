@@ -3,31 +3,48 @@
     -fx-faint-focus-color: transparent;
 }
 
-#lists .list-cell:filled:hover {
-    -fx-background-color: derive(-fx-control-inner-background, -5%);
-    -fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);
+#lists .list-cell:filled:selected:hover {
+    -fx-background-color: derive(-fx-control-inner-background, 20%);
+    /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
 #lists .list-cell:filled:selected {
-    -fx-selection-bar: derive(-fx-control-inner-background, -1%);
-    -fx-border-color: #00B4D8;
+    -fx-selection-bar: #CAF0F8;
+    -fx-border-color: #04839f;
     -fx-selection-bar-non-focused: #CAF0F8;
+    -fx-background-color: #CAF0F8;
+    /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
 #lists .list-cell, #lists .list-cell:focused {
     -fx-border-radius: 15;
     -fx-background-radius: 15;
-    -fx-background-color: #C5EBF3;
+    -fx-background-color: transparent;
+    -fx-padding: 0 7;
+    /*-fx-pref-height: 100%;*/
 }
 
 #lists .list-cell:empty {
     -fx-background-color: transparent;
 }
 
+#list-background:hover {
+    -fx-background-radius: 10;
+    -fx-background-color: derive(-fx-control-inner-background, +20%);
+    /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
+}
+
+#list-background {
+     -fx-background-color: #CAF0F8;
+     -fx-background-radius: 10;
+ }
+
 #lists {
-    -fx-background-color:  #CAF0F8;
+    -fx-background-color: #A2E4F1;
     -fx-control-inner-background: #CAF0F8;
     -fx-border-style: none;
+    -fx-padding: 6;
+    -fx-background-radius: 10;
     /*-fx-cell-spacing: 50px;*/
 }
 
@@ -52,10 +69,10 @@
 }
 
 #card:hover {
-    -fx-background-color: derive(-fx-background-color, -10%);
+    -fx-background-color: derive(color, -10%);
 }
 
-#add-list:hover {
+#add-list:hover, .normal-button:hover {
     -fx-background-color: #F8FDFE;
     -fx-text-fill: #00B4D8;
     -fx-border-color: #00B4D8;
@@ -64,7 +81,7 @@
     -fx-border-radius: 4px;
 }
 
-#add-list {
+#add-list, .normal-button {
     -fx-background-color: #00B4D8;
     -fx-text-fill: #F8FDFE;
     -fx-border-color: #00B4D8;
@@ -73,7 +90,11 @@
     -fx-border-radius: 4px;
 }
 
-#add-card:hover, #rename:hover, #card-confirm:hover {
+.normal-button:hover {
+    -fx-background-color: #E4F8FC;
+}
+
+#add-card:hover, #card-confirm:hover {
     -fx-background-color: #CAF0F8;
     -fx-text-fill: #00B4D8;
     -fx-border-color: #00B4D8;
@@ -82,7 +103,7 @@
     -fx-border-radius: 4px;
 }
 
-#add-card, #rename, #card-confirm {
+#add-card, #card-confirm {
     -fx-background-color: #4FCAE2;
     -fx-text-fill: #E4F8FC;
     -fx-border-color: #4FCAE2;
@@ -124,19 +145,67 @@
     -fx-scale-shape: false;
 }
 
-/*!* Style the arrow buttons *!*/
-/*.scroll-bar:horizontal .increment-button,*/
-/*.scroll-bar:horizontal .decrement-button,*/
-/*.scroll-bar:vertical .increment-button,*/
-/*.scroll-bar:vertical .decrement-button {*/
-/*    -fx-background-color: transparent;*/
-/*    -fx-padding: 0;*/
-/*}*/
-
-/* Style the corner */
-/*.scroll-pane:corner {*/
-/*    -fx-background-color: transparent;*/
-/*}*/
+/* Style the corner between two scroll panes */
 .corner {
-    -fx-background-color: transparent ;
+    -fx-background-color: transparent;
 }
+
+#delete-list, #delete-card {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-text-fill: #37a0cc;
+}
+
+#delete-card {
+    -fx-text-fill: #1e88b6;
+}
+
+#delete-list:hover, #delete-card:hover {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-text-fill: #8f2e30;
+}
+
+.red-button {
+    -fx-background-color: #C34042;
+    -fx-text-fill: #F8FDFE;
+    -fx-border-color: #C34042;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+.red-button:hover {
+    -fx-background-color: #E4F8FC;
+    -fx-text-fill: #C34042;
+    -fx-border-color: #C34042;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+.image-button {
+    -fx-background-image: url("copy-icon-img.png");
+    -fx-background-color: transparent;
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+.image-button:hover {
+     -fx-background-image: url("copy-icon-hover.png");
+ }
+
+.button {
+    -fx-cursor: hand;
+}
+
+.rename {
+    -fx-background-image: url("edit-icon.png");
+    -fx-background-color: transparent;
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    /*-fx-opacity: 0;*/
+}
+
+/*.title:hover + .rename {*/
+/*    -fx-opacity: 1;*/
+/*}*/

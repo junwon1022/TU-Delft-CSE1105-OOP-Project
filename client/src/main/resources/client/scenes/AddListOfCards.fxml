@@ -12,11 +12,11 @@
             <font>
                 <Font name="Corbel" size="12.0" />
             </font></TextField>
-        <Button layoutX="247.0" layoutY="160.0" mnemonicParsing="false" onAction="#okB" style="-fx-background-color: #00B4D8;" text="OK" textFill="WHITE">
+        <Button layoutX="247.0" layoutY="157.0" mnemonicParsing="false" onAction="#okB" styleClass="normal-button" stylesheets="@../../styles.css" text="OK" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font></Button>
-        <Button layoutX="176.0" layoutY="160.0" mnemonicParsing="false" onAction="#cancelB" style="-fx-background-color: #C34042;" text="Cancel" textFill="WHITE">
+        <Button layoutX="171.0" layoutY="157.0" mnemonicParsing="false" onAction="#cancelB" prefHeight="31.0" prefWidth="60.0" styleClass="red-button" stylesheets="@../../styles.css" text="Cancel" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font></Button>

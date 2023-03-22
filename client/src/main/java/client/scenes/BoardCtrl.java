@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -39,6 +40,11 @@ public class BoardCtrl {
 
     @FXML
     private ListView<ListOfCards> list;
+
+    @FXML
+    private Label key;
+    @FXML
+    private Label title;
 
     ObservableList<ListOfCards> data;
 
@@ -86,6 +92,8 @@ public class BoardCtrl {
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
         list.getStylesheets().add("styles.css");
+        key.setText(board.key);
+        title.setText(board.title);
         refresh();
         //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
 //        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
@@ -113,7 +121,12 @@ public class BoardCtrl {
 
             Stage stage = new Stage();
             stage.setTitle("Add new list");
-            stage.setScene(new Scene(root, 300, 200));
+            Scene addListScene = new Scene(root);
+            addListScene.getStylesheets().add("styles.css");
+            stage.setHeight(240);
+            stage.setWidth(320);
+            stage.setScene(addListScene);
+//            stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
             if (controller.success) {
