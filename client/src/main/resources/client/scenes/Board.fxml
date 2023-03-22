@@ -25,7 +25,7 @@
             <String fx:value="normal-button" />
             <String fx:value="add-button" />
          </styleClass></Button>
-      <Text fill="#231f20" layoutX="899.0" layoutY="615.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Press '?' for help" textAlignment="CENTER">
+      <Text fill="#231f20" layoutX="899.0" layoutY="621.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Press '?' for help" textAlignment="CENTER">
          <font>
             <Font name="Corbel Light" size="16.0" />
          </font>
