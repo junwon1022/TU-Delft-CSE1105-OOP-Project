@@ -25,7 +25,7 @@
             <Font name="Corbel" size="13.0" />
          </font>
       </Text>
-      <Label fx:id="key" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="734.0" layoutY="34.0" prefHeight="38.0" prefWidth="204.0" text="invite key" textAlignment="CENTER" textFill="#018198">
+      <Label fx:id="key" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="643.0" layoutY="34.0" prefHeight="38.0" prefWidth="295.0" text="invite key" textAlignment="CENTER" textFill="#018198">
          <font>
             <Font name="Corbel Italic" size="17.0" />
          </font>

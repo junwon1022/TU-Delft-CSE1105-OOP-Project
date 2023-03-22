@@ -8,7 +8,7 @@
 
 <AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="160.0" minHeight="-Infinity" minWidth="120.0" prefHeight="80.0" prefWidth="135.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="12.0" layoutY="6.0" prefHeight="25.0" prefWidth="83.0" text="Title" textAlignment="CENTER" wrapText="true" />
+        <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="12.0" layoutY="6.0" prefHeight="38.0" prefWidth="83.0" text="Title" textAlignment="CENTER" wrapText="true" />
         <Button id="delete-card" layoutX="111.0" layoutY="9.0" mnemonicParsing="false" onAction="#remove" stylesheets="@../../styles.css" text="❌" />
         <Text fx:id="text" layoutX="15.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="🖹">
          <font>
