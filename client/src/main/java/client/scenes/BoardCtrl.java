@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -104,6 +105,11 @@ public class BoardCtrl {
         key.setText(board.key);
         title.setText(board.title);
         refresh();
+
+        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+            System.out.println("oasdzc");
+            Platform.runLater(() -> data.setAll(s.lists));
+        });
         //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
 //        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }

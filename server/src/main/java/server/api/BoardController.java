@@ -3,6 +3,7 @@ package server.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import commons.Board;
@@ -15,14 +16,19 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     /**
      * Constructor with parameters
      *
      * @param boardService
+     * @param simpMessagingTemplate
      */
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, SimpMessagingTemplate simpMessagingTemplate) {
         this.boardService = boardService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
@@ -57,6 +63,8 @@ public class BoardController {
         try {
             // Save the new board to the database
             boardService.createBoard(board);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved board with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(board);
         }
@@ -76,10 +84,14 @@ public class BoardController {
     public ResponseEntity<Board> editBoardTitleById(@RequestBody String newTitle,
                                                   @PathVariable("board_id") long boardId) {
         try {
+            // Get the initial board
+            Board board = boardService.getBoardById(boardId);
             // Edit the board and save it in the database
-            Board board = boardService.editBoardTitle(boardId, newTitle);
+            Board newBoard = boardService.editBoardTitle(boardId, newTitle);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited board with an HTTP 200 OK status
-            return ResponseEntity.ok().body(board);
+            return ResponseEntity.ok().body(newBoard);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -99,6 +111,8 @@ public class BoardController {
             Board board = boardService.getBoardById(boardId);
             // Delete the board
             boardService.deleteBoardById(boardId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved board with an HTTP 200 OK status
             return ResponseEntity.ok(board);
         }

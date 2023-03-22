@@ -5,6 +5,7 @@ import commons.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import commons.ListOfCards;
@@ -23,20 +24,26 @@ public class CardController {
     private final ListOfCardsService listOfCardsService;
     private final BoardService boardService;
 
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     /**
      * Constructor with parameters
      *
      * @param cardService
      * @param listOfCardsService
      * @param boardService
+     * @param simpMessagingTemplate
      */
     @Autowired
     public CardController(CardService cardService,
                        ListOfCardsService listOfCardsService,
-                       BoardService boardService) {
+                       BoardService boardService,
+                       SimpMessagingTemplate simpMessagingTemplate) {
         this.cardService = cardService;
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
@@ -117,6 +124,10 @@ public class CardController {
             }
             // Save the new card to the database
             cardService.createCard(card, list, board);
+
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+
             // Return the saved card with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(card);
         }
@@ -144,8 +155,12 @@ public class CardController {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board in which the card will be updated
+            Board board = boardService.getBoardById(boardId);
             // Edit the list and save it in the database
             Card card = cardService.editCardTitle(cardId, newTitle);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(card);
         }
@@ -170,10 +185,14 @@ public class CardController {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board from which the card will be deleted
+            Board board = boardService.getBoardById(boardId);
             // Get the card
             Card card = cardService.getCardById(cardId);
             // Delete the card
             cardService.deleteCardById(cardId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved card with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }

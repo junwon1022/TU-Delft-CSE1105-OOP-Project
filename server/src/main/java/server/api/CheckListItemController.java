@@ -7,6 +7,7 @@ import commons.ListOfCards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.services.BoardService;
 import server.services.CardService;
@@ -26,6 +27,9 @@ public class CheckListItemController {
     private final ListOfCardsService listOfCardsService;
     private final BoardService boardService;
 
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     /**
      * Constructor with parameters
      *
@@ -33,16 +37,19 @@ public class CheckListItemController {
      * @param cardService
      * @param listOfCardsService
      * @param boardService
+     * @param simpMessagingTemplate
      */
     @Autowired
     public CheckListItemController(CardService cardService,
                                    ListOfCardsService listOfCardsService,
                                    CheckListItemService checkListItemService,
-                                   BoardService boardService) {
+                                   BoardService boardService,
+                                   SimpMessagingTemplate simpMessagingTemplate) {
         this.cardService = cardService;
         this.checkListItemService = checkListItemService;
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
@@ -139,6 +146,8 @@ public class CheckListItemController {
 
             // Save the new check to the database
             checkListItemService.createCheckListItem(check, card);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved checklist item with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(check);
         }
@@ -168,9 +177,12 @@ public class CheckListItemController {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
-
+            // Get the board in which the check will be updated
+            Board board = boardService.getBoardById(boardId);
             // Edit the check and save it in the database
             CheckListItem check = checkListItemService.editCheckText(checkId,newText);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited checklist item with an HTTP 200 OK status
             return ResponseEntity.ok().body(check);
         }
@@ -202,9 +214,13 @@ public class CheckListItemController {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board in which the checklist item will be updated
+            Board board = boardService.getBoardById(boardId);
             // Edit the checklist item and save it in the database
             CheckListItem check = checkListItemService.getCheckById(checkId);
             checkListItemService.editCompletion(check);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited checklist item with an HTTP 200 OK status
             return ResponseEntity.ok().body(check);
         }
@@ -232,10 +248,14 @@ public class CheckListItemController {
             if(!validPath(boardId, listId, cardId, checkId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board from which the check will be removed
+            Board board = boardService.getBoardById(boardId);
             // Get the item
             CheckListItem checkListItem = checkListItemService.getCheckById(checkId);
             // Delete the checklist item
             checkListItemService.deleteCheckListItemById(checkId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved checklist item with an HTTP 200 OK status
             return ResponseEntity.ok(checkListItem);
         }

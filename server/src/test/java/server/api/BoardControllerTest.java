@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
 import server.services.BoardService;
 
@@ -43,6 +44,8 @@ public class BoardControllerTest {
 
     private BoardService service;
 
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     //Begin testing
 
 
@@ -51,7 +54,8 @@ public class BoardControllerTest {
 
         repo = Mockito.mock(BoardRepository.class);
         service = new BoardService(repo);
-        controller = new BoardController(service);
+        simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
+        controller = new BoardController(service, simpMessagingTemplate);
 
         Board b = new Board(null, "#111111", "pass", new ArrayList<>());
         when(repo.getById(0L)).thenReturn(b);

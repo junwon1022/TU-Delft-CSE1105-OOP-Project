@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.CheckListItemRepository;
@@ -61,6 +62,8 @@ public class CheckListItemControllerTest {
     private CheckListItemRepository repo;
     private CheckListItemController controller;
 
+    private SimpMessagingTemplate simpMessagingTemplate;
+
 
 
     @BeforeEach
@@ -76,8 +79,13 @@ public class CheckListItemControllerTest {
         boardService = new BoardService(boardRepo);
         listService = new ListOfCardsService(listRepo);
         cardService = new CardService(cardRepo);
+        simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
 
-        controller = new CheckListItemController(cardService,listService,service,boardService);
+        controller = new CheckListItemController(cardService,
+                listService,
+                service,
+                boardService,
+                simpMessagingTemplate);
 
     }
 

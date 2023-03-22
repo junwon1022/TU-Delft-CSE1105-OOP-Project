@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.ListOfCardsRepository;
@@ -57,7 +58,7 @@ public class CardControllerTest {
 
     private CardController controller;
 
-
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @BeforeEach
     public void setup() {
@@ -69,8 +70,9 @@ public class CardControllerTest {
         service = new CardService(repo);
         boardService = new BoardService(boardRepo);
         listService = new ListOfCardsService(listRepo);
+        simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
 
-        controller = new CardController(service,listService,boardService);
+        controller = new CardController(service,listService,boardService,simpMessagingTemplate);
 
     }
 

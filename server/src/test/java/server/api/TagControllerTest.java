@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.*;
 import server.services.*;
 
@@ -53,6 +54,8 @@ public class TagControllerTest {
     private TagRepository repo;
     private TagController controller;
 
+    private SimpMessagingTemplate simpMessagingTemplate;
+
 
     @BeforeEach
     public void setup() {
@@ -67,8 +70,13 @@ public class TagControllerTest {
         boardService = new BoardService(boardRepo);
         listService = new ListOfCardsService(listRepo);
         cardService = new CardService(cardRepo);
+        simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
 
-        controller = new TagController(cardService, listService, service, boardService);
+        controller = new TagController(cardService,
+                listService,
+                service,
+                boardService,
+                simpMessagingTemplate);
 
     }
 

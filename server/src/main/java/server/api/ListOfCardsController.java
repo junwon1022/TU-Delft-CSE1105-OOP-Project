@@ -4,6 +4,7 @@ import commons.Board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import commons.ListOfCards;
@@ -21,17 +22,23 @@ public class ListOfCardsController {
 
     private final BoardService boardService;
 
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     /**
      * Constructor with parameters
      *
      * @param listOfCardsService
      * @param boardService
+     * @param simpMessagingTemplate
      */
     @Autowired
     public ListOfCardsController(ListOfCardsService listOfCardsService,
-                                 BoardService boardService) {
+                                 BoardService boardService,
+                                 SimpMessagingTemplate simpMessagingTemplate) {
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
@@ -94,6 +101,8 @@ public class ListOfCardsController {
             Board board = boardService.getBoardById(boardId);
             // Save the new list of cards to the database
             listOfCardsService.createListOfCards(list, board);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved list with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(list);
         }
@@ -119,8 +128,12 @@ public class ListOfCardsController {
             if(!validPath(boardId, listId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board to which the list of cards will be edited
+            Board board = boardService.getBoardById(boardId);
             // Edit the list and save it in the database
             ListOfCards list = listOfCardsService.editListOfCardsTitle(listId, newTitle);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited list with an HTTP 200 OK status
             return ResponseEntity.ok().body(list);
         }
@@ -150,9 +163,12 @@ public class ListOfCardsController {
                     || !validIndex(boardId, listId, toId)) {
                 return ResponseEntity.badRequest().build();
             }
-
+            // Get the board in which the cards will be moved
+            Board board = boardService.getBoardById(boardId);
             // Edit the list and save it in the database
             ListOfCards list = listOfCardsService.moveCardsInListOfCards(listId, fromId, toId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited list with an HTTP 200 OK status
             return ResponseEntity.ok().body(list);
         }
@@ -174,10 +190,14 @@ public class ListOfCardsController {
             if(!validPath(boardId, listId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board from which the list of cards will be removed
+            Board board = boardService.getBoardById(boardId);
             // Get the list
             ListOfCards list = listOfCardsService.getListById(listId);
             // Delete the list
             listOfCardsService.deleteListOfCardsById(listId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved list with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }
