@@ -8,12 +8,16 @@ import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -38,6 +42,9 @@ public class CardCtrl extends ListCell<Card> {
 
     @FXML
     private Text text;
+
+    @FXML
+    private Button detailedView;
 
 
     /**
@@ -266,4 +273,34 @@ public class CardCtrl extends ListCell<Card> {
         server.addCard2(draggedCard);
         return draggedCard;
     }
+
+    /**
+     * Method that opens the detailed view
+     * --right now only does the renaming of a card functionality--
+     * @param event - the rename button being clicked
+     */
+    public void openDetailedView(ActionEvent event){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            RenameCardCtrl controller = fxmlLoader.getController();
+            controller.initialize(data);
+
+            Stage stage = new Stage();
+            stage.setTitle("Rename the card: " + data.title);
+            stage.setScene(new Scene(root, 600, 400));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String newTitle = controller.storedText;
+
+                //method that actually renames the list in the database
+                server.renameCard(data, newTitle);
+                board.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
