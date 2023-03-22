@@ -72,7 +72,7 @@
     -fx-background-color: derive(color, -10%);
 }
 
-#add-list:hover, .normal-button:hover {
+.normal-button:hover {
     -fx-background-color: #F8FDFE;
     -fx-text-fill: #00B4D8;
     -fx-border-color: #00B4D8;
@@ -81,17 +81,30 @@
     -fx-border-radius: 4px;
 }
 
-#add-list, .normal-button {
+.normal-button {
     -fx-background-color: #00B4D8;
     -fx-text-fill: #F8FDFE;
     -fx-border-color: #00B4D8;
     -fx-border-width: 1.5;
-    -fx-background-radius: 4px;
-    -fx-border-radius: 4px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 .normal-button:hover {
     -fx-background-color: #E4F8FC;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+
+.add-button {
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.add-button:hover {
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
 }
 
 #add-card:hover, #card-confirm:hover {
@@ -99,8 +112,8 @@
     -fx-text-fill: #00B4D8;
     -fx-border-color: #00B4D8;
     -fx-border-width: 1.5;
-    -fx-background-radius: 4px;
-    -fx-border-radius: 4px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 #add-card, #card-confirm {
@@ -108,8 +121,8 @@
     -fx-text-fill: #E4F8FC;
     -fx-border-color: #4FCAE2;
     -fx-border-width: 1.5;
-    -fx-background-radius: 4px;
-    -fx-border-radius: 4px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 #card-confirm {
@@ -203,9 +216,25 @@
     -fx-background-color: transparent;
     -fx-background-size: contain;
     -fx-background-repeat: no-repeat;
-    /*-fx-opacity: 0;*/
+}
+
+.button, .button:hover {
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.image {
+    -fx-smooth: true;
 }
 
 /*.title:hover + .rename {*/
 /*    -fx-opacity: 1;*/
 /*}*/
+
+.text-field {
+    -fx-background-color: #F8FDFE;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-prompt-text-fill:  #665A5D;
+    -fx-text-fill: #231f20;
+}

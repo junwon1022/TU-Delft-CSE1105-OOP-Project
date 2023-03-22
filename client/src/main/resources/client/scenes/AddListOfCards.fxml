@@ -8,7 +8,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddListOfCardsCtrl">
     <children>
-        <TextField fx:id="listTitle" layoutX="36.0" layoutY="73.0" onKeyPressed="#handleKeyPressed" prefHeight="33.0" prefWidth="228.0" promptText="Enter a titile . . ." style="-fx-background-color: #E4F8FC; -fx-prompt-text-fill: #665A5D; -fx-text-fill: #231F20;">
+        <TextField fx:id="listTitle" layoutX="36.0" layoutY="73.0" onKeyPressed="#handleKeyPressed" prefHeight="33.0" prefWidth="228.0" promptText="Enter a titile . . ." stylesheets="@../../styles.css">
             <font>
                 <Font name="Corbel" size="12.0" />
             </font></TextField>

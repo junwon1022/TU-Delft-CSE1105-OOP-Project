@@ -19,6 +19,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,10 +27,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +52,8 @@ public class BoardCtrl {
     private Label key;
     @FXML
     private Label title;
+    @FXML
+    private Button copyButton;
 
     ObservableList<ListOfCards> data;
 
@@ -126,7 +135,6 @@ public class BoardCtrl {
             stage.setHeight(240);
             stage.setWidth(320);
             stage.setScene(addListScene);
-//            stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
             if (controller.success) {
@@ -166,6 +174,29 @@ public class BoardCtrl {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void copyKeyToClipboard(ActionEvent event) {
+        copyToClipboard(board.key);
+        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        Tooltip.install(copyButton, tooltip);
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        delay.setOnFinished(e -> tooltip.hide());
+        tooltip.show(Window.getWindows().get(0));
+        tooltip.setAnchorX(1040);
+        tooltip.setAnchorY(110);
+        delay.play();
+    }
+
+    /**
+     * Copies a given key to the clipboard.
+     * @param key
+     */
+    private void copyToClipboard(String key) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(key);
+        clipboard.setContent(content);
     }
 
     /**

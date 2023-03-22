@@ -8,7 +8,7 @@
 
 <AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RenameListCtrl">
    <children>
-      <TextField fx:id="textField" layoutX="32.0" layoutY="67.0" onKeyPressed="#handleKeyPressed" prefHeight="33.0" prefWidth="237.0" promptText="Enter a new title . . ." style="-fx-background-color: #E4F8FC; -fx-prompt-text-fill: #665A5D;">
+      <TextField fx:id="textField" layoutX="32.0" layoutY="67.0" onKeyPressed="#handleKeyPressed" prefHeight="33.0" prefWidth="237.0" promptText="Enter a new title . . ." stylesheets="@../../styles.css">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></TextField>
