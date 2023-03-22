@@ -54,9 +54,6 @@ public class BoardCtrl {
     @FXML
     private Button copyButton;
 
-    @FXML
-    private Tooltip tooltip;
-
     ObservableList<ListOfCards> data;
 
     private Board board;
@@ -186,7 +183,7 @@ public class BoardCtrl {
      */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
-        tooltip = new Tooltip("Key copied to clipboard!");
+        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
         tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
