@@ -280,7 +280,7 @@ public class CardCtrl extends ListCell<Card> {
      * @param event - the rename button being clicked
      */
     public void openDetailedView(ActionEvent event){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DetailedView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
         try {
             Parent root = fxmlLoader.load();
             RenameCardCtrl controller = fxmlLoader.getController();
