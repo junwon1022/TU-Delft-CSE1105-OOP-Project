@@ -35,7 +35,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -54,6 +53,9 @@ public class BoardCtrl {
     private Label title;
     @FXML
     private Button copyButton;
+
+    @FXML
+    private Tooltip tooltip;
 
     ObservableList<ListOfCards> data;
 
@@ -103,7 +105,7 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
-//        Tooltip tooltip = new Tooltip("Copy the invitamtion key.");
+//        Tooltip tooltip = new Tooltip("Copy the invitation key.");
 //        tooltip.setX(1000);
 //        tooltip.setY(100);
 //        Tooltip.install(copyButton, tooltip);
@@ -184,12 +186,12 @@ public class BoardCtrl {
      */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
-        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        tooltip = new Tooltip("Key copied to clipboard!");
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(Window.getWindows().get(0));
-        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
-        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
+        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
+//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
