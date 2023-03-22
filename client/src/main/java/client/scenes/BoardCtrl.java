@@ -184,11 +184,11 @@ public class BoardCtrl {
         copyToClipboard(board.key);
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
         Tooltip.install(copyButton, tooltip);
-        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
         tooltip.show(Window.getWindows().get(0));
-        tooltip.setAnchorX(1040);
-        tooltip.setAnchorY(110);
+        tooltip.setAnchorX(1000);
+        tooltip.setAnchorY(100);
         delay.play();
     }
 
