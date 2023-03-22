@@ -65,7 +65,7 @@ public class RenameCardCtrl {
     }
 
     /**
-     * Rename method for the list, only does it locally,
+     * Rename method for the card,
      * if the textField for the title is null,
      * it doesn't let the user proceed with renaming
      * @param event - the rename button being pressed
@@ -98,7 +98,7 @@ public class RenameCardCtrl {
     }
 
     /**
-     * Renames the new list
+     * Renames the new card
      * if the user didn't input anything
      * they can't proceed.
      * @param event the KeyEvent
@@ -116,7 +116,7 @@ public class RenameCardCtrl {
     }
 
     /**
-     * Cancel the renaming of a new list.
+     * Cancel the renaming of a new card.
      * @param event the KeyEvent
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
