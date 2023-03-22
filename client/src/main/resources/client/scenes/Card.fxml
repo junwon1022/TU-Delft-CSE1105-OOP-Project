@@ -23,5 +23,10 @@
                   </ImageView>
              </graphic>
         </Label>
+      <Button fx:id="detailedView" layoutX="107.0" layoutY="47.0" mnemonicParsing="false" onAction="#openDetailedView" style="-fx-background-color: rgb(0,0,0,0,7); -fx-padding: 0;" text="✍">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

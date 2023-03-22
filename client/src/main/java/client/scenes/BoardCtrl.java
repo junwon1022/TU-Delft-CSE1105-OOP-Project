@@ -176,6 +176,10 @@ public class BoardCtrl {
         }
     }
 
+    /**
+     * Copies the key to the clipboard and shows a notification to the user
+     * @param event
+     */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
