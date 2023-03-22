@@ -42,7 +42,7 @@ public class CardCtrl extends ListCell<Card> {
     private Label description;
 
     @FXML
-    private Button detailedView;
+    private Button renameButton;
 
 
     /**
@@ -281,7 +281,7 @@ public class CardCtrl extends ListCell<Card> {
      * --right now only does the renaming of a card functionality--
      * @param event - the rename button being clicked
      */
-    public void openDetailedView(ActionEvent event){
+    public void renameCard(ActionEvent event){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
         try {
             Parent root = fxmlLoader.load();
@@ -290,7 +290,7 @@ public class CardCtrl extends ListCell<Card> {
 
             Stage stage = new Stage();
             stage.setTitle("Rename the card: " + data.title);
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
             if (controller.success) {

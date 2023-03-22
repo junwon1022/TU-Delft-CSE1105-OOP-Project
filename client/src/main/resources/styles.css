@@ -4,7 +4,7 @@
 }
 
 #lists .list-cell:filled:selected:hover {
-    -fx-background-color: derive(-fx-control-inner-background, 20%);
+    -fx-background-color: derive(-fx-control-inner-background, 30%);
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
@@ -30,7 +30,7 @@
 
 #list-background:hover {
     -fx-background-radius: 10;
-    -fx-background-color: derive(-fx-control-inner-background, +20%);
+    -fx-background-color: derive(-fx-control-inner-background, +30%);
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
@@ -218,6 +218,10 @@
     -fx-background-repeat: no-repeat;
 }
 
+.rename:hover {
+    -fx-background-image: url("edit-custom.png");
+}
+
 .button, .button:hover {
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
@@ -238,3 +242,4 @@
     -fx-prompt-text-fill:  #665A5D;
     -fx-text-fill: #231f20;
 }
+
