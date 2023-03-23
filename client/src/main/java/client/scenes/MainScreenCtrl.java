@@ -123,10 +123,10 @@ public class MainScreenCtrl {
             if (controller.success) {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"red","read",new ArrayList<>());
+                Board board = new Board(title,"","","" , "" , "" , new ArrayList<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
-                BoardTitle boardTitle = new BoardTitle(title,"red",board);
+                BoardTitle boardTitle = new BoardTitle(title,"red", board);
 
                 server.addBoardTitle(boardTitle);
 
