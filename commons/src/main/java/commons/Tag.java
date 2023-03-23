@@ -29,6 +29,10 @@ public class Tag {
     @Column(name = "tag_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "board_id")
+    public Board board;
+
     @ManyToMany(mappedBy = "tags")
     public Set<Card> cards = new HashSet<>();
 
@@ -45,9 +49,10 @@ public class Tag {
      * @param colour
      * @param cards
      */
-    public Tag(String name, String colour, Set<Card> cards) {
+    public Tag(String name, String colour, Board board, Set<Card> cards) {
         this.name = name;
         this.colour = colour;
+        this.board = board;
         this.cards = cards;
     }
 

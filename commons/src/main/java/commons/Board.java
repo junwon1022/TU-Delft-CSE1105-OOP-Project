@@ -38,6 +38,9 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<ListOfCards> lists;
 
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Tag> tags;
+
     /**
      * Default constructor
      */
@@ -52,11 +55,12 @@ public class Board {
      * @param lists
      */
     public Board(String title, String colour,
-                 String password, List<ListOfCards> lists) {
+                 String password, List<ListOfCards> lists, Set<Tag> tags) {
         this.title = title;
         this.colour = colour;
         this.password = password;
         this.lists = lists;
+        this.tags = tags;
     }
 
     /*
@@ -158,6 +162,31 @@ public class Board {
         this.lists.set(index1, list2);
         this.lists.set(index2, list1);
     }
+
+    /**
+     * Add a tag to a board
+     * @param tag
+     */
+    public void addTag(Tag tag) {
+        if(tag != null) {
+            tags.add(tag);
+            //tag.board = this;
+        }
+    }
+
+    /**
+     * Remove an existing tag from a board
+     * @param tag
+     */
+    public void removeTag(Tag tag) {
+        if (tag != null) {
+            tags.remove(tag);
+            //tag.board = null;
+        }
+    }
+
+
+
 
     /**
      * Check if two boards are equal

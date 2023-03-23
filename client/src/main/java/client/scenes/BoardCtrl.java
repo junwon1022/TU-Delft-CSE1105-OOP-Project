@@ -39,6 +39,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BoardCtrl {
 
@@ -222,8 +223,8 @@ public class BoardCtrl {
      * Method that creates a new board
      * @return the new board
      */
-    private Board getBoard(){
-        return new Board("My Board", null, null, new ArrayList<>());
+    public Board getBoard(){
+        return new Board("My Board", null, null, new ArrayList<>(), new HashSet<>());
     }
 
 
