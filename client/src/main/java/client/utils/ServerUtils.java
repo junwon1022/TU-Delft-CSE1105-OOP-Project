@@ -99,10 +99,10 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    private ArrayList<ListOfCards> serverData = null;
+    private List<ListOfCards> serverData = null;
 
     //Data related to board titles (How the boards are displayed on the main screen)
-    private ArrayList<BoardTitle> boardData = null;
+    private List<BoardTitle> boardData = null;
 
 
     /**
@@ -256,6 +256,21 @@ public class ServerUtils {
         }
     }
 
+
+
+    /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<ListOfCards> getLists(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<ListOfCards>>(){});
+    }
+
     /**
      * Placeholder method to get data from server
      * @param boardId the id of the board
@@ -341,19 +356,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<ListOfCards>(){});
-    }
-
-    /**
-     * Method that returns the lists from the database
-     * @param boardId - the id of the board of the lists
-     * @return a list containing all lists of cards
-     */
-    public List<ListOfCards> getLists(long boardId){
-        return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists")
-                .request(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .get(new GenericType<List<ListOfCards>>(){});
     }
 
     /**
