@@ -76,6 +76,23 @@ public class Tag {
             card.tags.remove(this);
         }
     }
+
+    /**
+     * Set the color of the tag
+     * @param colour
+     */
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    /**
+     * Get the color of the tag
+     * @return color
+     */
+    public String getColour() {
+        return this.colour;
+    }
+
     /**
      * Check if two tags are equal
      * @param obj

@@ -177,6 +177,21 @@ public class BoardCtrl {
         }
     }
 
+    public void openTagManageScreen(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Tag.fxml"));
+
+        try {
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Manage Tags");
+            stage.setScene(new Scene(root, 600, 400));
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Copies the key to the clipboard and shows a notification to the user
      * @param event

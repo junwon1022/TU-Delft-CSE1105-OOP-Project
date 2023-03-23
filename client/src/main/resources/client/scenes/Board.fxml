@@ -155,7 +155,7 @@
                 </TitledPane>
               </panes>
             </Accordion>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Manage Tags">
+            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" onAction="#openTagManageScreen" stylesheets="@../../styles.css" text="Manage Tags">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
