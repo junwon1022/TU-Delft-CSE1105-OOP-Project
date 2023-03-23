@@ -25,16 +25,19 @@ public class BoardTest {
     @BeforeEach
     public void setUp() {
         listsOfCards = new ArrayList<>();
-        list1 = new ListOfCards("Grasple", "#000000", board, new ArrayList<>());
-        list2 = new ListOfCards("Grasple2", "#000000", board, new ArrayList<>());
-        list3 = new ListOfCards("Grasple3", "#000000", board, new ArrayList<>());
+        list1 = new ListOfCards("Grasple",  board, new ArrayList<>() );
+        list2 = new ListOfCards("Grasple2", board, new ArrayList<>());
+        list3 = new ListOfCards("Grasple3", board, new ArrayList<>());
         listsOfCards.add(list1);
         listsOfCards.add(list2);
-        board = new Board("Algebra", "#ffffff",
+        board = new Board("Algebra", "#ffffff", "#000000",
+                "#ffffff", "#000000",
                 "pass", listsOfCards);
-        board2 = new Board("Algebra", "#ffffff",
+        board2 = new Board("Algebra", "#ffffff", "#000000",
+                "#ffffff", "#000000",
                 "pass", listsOfCards);
-        board3 = new Board("Algebra", "#ffffff",
+        board3 = new Board("Algebra", "#ffffff", "#000000",
+                "#ffffff", "#000000",
                 "pass2", listsOfCards);
 
     }
@@ -55,6 +58,9 @@ public class BoardTest {
     public void checkParametrizedConstructor() {
         assertEquals("Algebra", board.title);
         assertEquals("#ffffff", board.colour);
+        assertEquals("#000000", board.font);
+        assertEquals("#ffffff", board.listColour);
+        assertEquals("#000000", board.listFont);
         assertEquals("pass", board.password);
         assertEquals(listsOfCards, board.lists);
     }
@@ -87,6 +93,9 @@ public class BoardTest {
         assertTrue(actual.contains("\n"));
         assertTrue(actual.contains("title"));
         assertTrue(actual.contains("colour"));
+        assertTrue(actual.contains("font"));
+        assertTrue(actual.contains("listColour"));
+        assertTrue(actual.contains("listFont"));
         assertTrue(actual.contains("password"));
         assertTrue(actual.contains("lists"));
     }
@@ -154,7 +163,7 @@ public class BoardTest {
     }
 
     /**
-     * Tests whether an invite key has been generated
+     * Tests whether an 'invite' key has been generated
      */
     @Test
     public void testGenerateInviteKey() {

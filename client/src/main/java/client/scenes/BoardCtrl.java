@@ -107,11 +107,8 @@ public class BoardCtrl {
         refresh();
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-            System.out.println("oasdzc");
             Platform.runLater(() -> data.setAll(s.lists));
         });
-        //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
-//        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }
 
     /**
@@ -214,11 +211,11 @@ public class BoardCtrl {
      * @return the new board
      */
     private Board getBoard(){
-        return new Board("My Board", null, null, new ArrayList<>());
+        return new Board("My Board", null, null,null , null, null, new ArrayList<>());
     }
 
 
     private ListOfCards getList(String title){
-        return new ListOfCards(title, "A2E4F1", board, new ArrayList<>());
+        return new ListOfCards(title, board, new ArrayList<>());
     }
 }
