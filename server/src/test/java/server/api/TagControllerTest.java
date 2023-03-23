@@ -83,7 +83,8 @@ public class TagControllerTest {
 
     @Test
     public void addTagCorrect() {
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1", b, new ArrayList<>());
         Card c = new Card("Card 1", "F", "#555555", l, new ArrayList<>(), new HashSet<>());
         Tag t = new Tag("S", "#555555", new HashSet<>());
@@ -103,7 +104,8 @@ public class TagControllerTest {
 
     @Test
     public void addTagWrong1() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag("","#555555",new HashSet<>());
@@ -122,7 +124,8 @@ public class TagControllerTest {
 
     @Test
     public void addTagWrong2() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag(null,"#555555",new HashSet<>());
@@ -139,8 +142,10 @@ public class TagControllerTest {
 
     @Test
     public void addTagWrongBoardInList() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b2,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag(null,"#555555",new HashSet<>());
@@ -155,7 +160,8 @@ public class TagControllerTest {
     }
     @Test
     public void addTagWrongListInCards() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         ListOfCards l2 = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l2,new ArrayList<>(),new HashSet<>());
@@ -172,7 +178,8 @@ public class TagControllerTest {
 
     @Test
     public void addTagWrongCardTags() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag(null,"#555555",new HashSet<>());
@@ -188,7 +195,8 @@ public class TagControllerTest {
 
     @Test
     public void editTagCorrect() {
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Set<Tag> m = new HashSet<>();
 
@@ -229,7 +237,8 @@ public class TagControllerTest {
 
     @Test
     public void editTagWrongNull() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag(null,"#555555",new HashSet<>());
@@ -250,9 +259,11 @@ public class TagControllerTest {
     }
     @Test
     public void editTagWrongEmpty() {
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
-        Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("Card 1","Finish CG Study","#555555",
+                l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag("","#555555",new HashSet<>());
 
         b.addList(l);
@@ -270,7 +281,8 @@ public class TagControllerTest {
     }
     @Test
     public void editTagWrong3() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag(null,"#555555",new HashSet<>());
@@ -281,13 +293,15 @@ public class TagControllerTest {
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
 
         when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
-        var actual = controller.editTagName("Solve CG Questions",1L,2L,3L,t.id);
+        var actual = controller.editTagName("Solve CG Questions"
+                ,1L,2L,3L,t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
     }
     @Test
     public void editTagColorCorrect() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());
@@ -308,7 +322,8 @@ public class TagControllerTest {
 
     @Test
     public void deleteTagByIdCorrect() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         Tag t = new Tag("Solve Phong Shading Questions","#555555",new HashSet<>());

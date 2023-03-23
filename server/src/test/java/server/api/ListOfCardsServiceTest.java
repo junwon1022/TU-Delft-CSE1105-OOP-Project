@@ -52,7 +52,8 @@ public class ListOfCardsServiceTest {
     @Test
     public void addListTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
 
         boardService.createBoard(b);
 
@@ -88,7 +89,8 @@ public class ListOfCardsServiceTest {
     @Test
     public void editListTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
 
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
@@ -118,7 +120,8 @@ public class ListOfCardsServiceTest {
     @Test
     public void deleteListTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
@@ -138,7 +141,8 @@ public class ListOfCardsServiceTest {
     @Test
     public void getAllListsTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 

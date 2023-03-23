@@ -65,7 +65,8 @@ public class ListOfCardsControllerTest {
 
     @Test
     public void addListOfCardsCorrect() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         b.addList(l);
         when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
@@ -76,7 +77,8 @@ public class ListOfCardsControllerTest {
 
     @Test
     public void addListOfCardsWrong() {
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards(null,b,new ArrayList<>());
         b.addList(l);
         when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
@@ -86,7 +88,8 @@ public class ListOfCardsControllerTest {
     }
     @Test
     public void addListOfCardsWrongEmpty() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("",b,new ArrayList<>());
         b.addList(l);
         when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
@@ -99,7 +102,8 @@ public class ListOfCardsControllerTest {
 
     @Test
     public void editListOfCardTitleByIdCorrect() {
-        Board b = new Board("My Board", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         b.addList(l);
         when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
@@ -112,7 +116,8 @@ public class ListOfCardsControllerTest {
 
     @Test
     public void editListOfCardTitleByIdWrongNull1() {
-        Board b = new Board("My Board", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Board", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
         b.addList(l);
         when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
@@ -124,7 +129,8 @@ public class ListOfCardsControllerTest {
     }
     @Test
     public void editListOfCardTitleByIdWrongEmpty() {
-        Board b = new Board("My Board", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         b.addList(l);
         when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
@@ -136,8 +142,10 @@ public class ListOfCardsControllerTest {
     }
     @Test
     public void editListOfCardTitleByIdWrongNoListInBoard() {
-        Board b = new Board("My Board 2", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Board 3", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Board 2", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        Board b2 = new Board("My Board 3", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("My List",b2,new ArrayList<>());
 
         when(boardRepo.findById(3L)).thenReturn((Optional.of(b)));
@@ -151,7 +159,8 @@ public class ListOfCardsControllerTest {
 
     @Test
     public void deleteListOfCardByIdWrong() {
-        Board b = new Board("My Board", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
         when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));

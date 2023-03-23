@@ -68,7 +68,8 @@ public class TagServiceTest {
     @Test
     public void addTagTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         boardService.createBoard(b);
         Mockito.verify(boardRepo).save(b);
 
@@ -119,7 +120,8 @@ public class TagServiceTest {
     @Test
     public void editTagTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
@@ -171,7 +173,8 @@ public class TagServiceTest {
     @Test
     public void deleteTagTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
@@ -198,7 +201,8 @@ public class TagServiceTest {
     @Test
     public void getAllTagsTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
@@ -229,7 +233,8 @@ public class TagServiceTest {
 
     @Test
     void tagInCardTest() {
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1", b, new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study",
                 "#555555", l, new ArrayList<>(),new HashSet<>());
