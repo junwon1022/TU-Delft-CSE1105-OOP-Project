@@ -107,14 +107,21 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * If pressed enter, adds the card via the server and forces a board refresh.
      * @param event the KeyEvent
      */
-    public void addCard(KeyEvent event) {
+
+    public void addCardEnter(KeyEvent event) {
         if(event.getCode().toString().equals("ENTER")
                 && !name.getText().equals("") && name.getText() != null){
-            storedText = name.getText();
-            server.addCard(new Card(storedText, "description", "red", cardData, null, null));
+            String title = name.getText();
+            Card card = getCard(title);
+            server.addCard(card);
+
+            Card addedCard = server.addCard2(card);
+            card.id = addedCard.id;
+
             name.clear();
             name.setOpacity(0);
             addCardButton.setOpacity(0);
+
             board.refresh();
         }
     }
@@ -125,13 +132,18 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * If pressed OK button, adds the card via the server and forces a board refresh.
      * @param event the Action event
      */
-    public void addCardB(ActionEvent event) {
-        if(!name.getText().equals("") && name.getText() != null) {
-            storedText = name.getText();
-            server.addCard(new Card(storedText, "description", "red", cardData, null, null));
+    public void addCard(ActionEvent event) {
+        if(!name.getText().equals("") && name.getText() != null){
+            String title = name.getText();
+            Card card = getCard(title);
+
+            Card addedCard = server.addCard2(card);
+            card.id = addedCard.id;
+
             name.clear();
             name.setOpacity(0);
             addCardButton.setOpacity(0);
+
             board.refresh();
         }
     }
@@ -153,7 +165,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void remove(ActionEvent event){
         try {
-            server.deleteList(cardData);
+            server.removeList(cardData);
             Thread.sleep(100);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
@@ -188,11 +200,22 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             if (controller.success) {
                 String newTitle = controller.storedText;
-                server.renameList1(cardData, newTitle);
+
+                //method that actually renames the list in the database
+                server.renameList(cardData, newTitle);
                 board.refresh();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Method that creates a new card with given title
+     * @param title - title of new card
+     * @return - the new card
+     */
+    public Card getCard(String title){
+        return new Card(title, "description", "red", cardData, null, null);
     }
 }

@@ -99,10 +99,10 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    public ArrayList<ListOfCards> serverData = null;
+    private ArrayList<ListOfCards> serverData = null;
 
     //Data related to board titles (How the boards are displayed on the main screen)
-    public ArrayList<BoardTitle> boardData = null;
+    private ArrayList<BoardTitle> boardData = null;
 
 
     /**
@@ -258,23 +258,19 @@ public class ServerUtils {
 
     /**
      * Placeholder method to get data from server
+     * @param boardId the id of the board
      * @return a list of cardlists.
      */
-    public List<ListOfCards> getServerData() {
-        if (serverData == null) {
-            Board board = new Board();
+    public List<ListOfCards> getServerData(long boardId) {
 
-            ListOfCards list1 = new ListOfCards("List 1", "red", board, new ArrayList<>());
-            list1.cards.add(new Card("Card 1", "desc", "red", list1, null, null));
-            list1.cards.add(new Card("Card 2", "desc", "red", list1, null, null));
-
-            ListOfCards list2 = new ListOfCards("List 2", "red", board, new ArrayList<>());
-            list2.cards.add(new Card("Card 3", "desc", "red", list2, null, null));
-            list2.cards.add(new Card("Card 4", "desc", "red", list2, null, null));
-
-            serverData = new ArrayList<>(List.of(list1, list2));
-        }
-
+        // once the database references are solved
+        // -- as when the get method retrieves the list of all lists
+        //the reference to the board is null --
+        //this part can be uncommented
+        // -- the method signature will get as a parameter
+        //Board board --
+        //
+        serverData = getLists(boardId);
         return serverData;
     }
 
@@ -294,16 +290,17 @@ public class ServerUtils {
 
     /**
      * Get boards from server
+     *
+     * @param boardId
      * @return boards
      */
-    public Board getBoardById(){
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/boards/{board_id}") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
+    public Board getBoard(long boardId) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .get(new GenericType<Board>() {});
     }
-
 
     /**
      * Get boards from server based on key
@@ -333,22 +330,31 @@ public class ServerUtils {
                 .post(Entity.entity(board, APPLICATION_JSON), Board.class);
     }
 
-
-
-
-
     /**
      * Get all lists from the server
+     *
      * @return - the lists from the server
      */
-    public List<ListOfCards> getLists(){
+    public ListOfCards getList(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}/lists")
+                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<ListOfCards>(){});
+    }
+
+    /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<ListOfCards> getLists(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/lists")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<ListOfCards>>(){});
     }
-
 
     /**
      * Get all lists from the server
@@ -363,7 +369,6 @@ public class ServerUtils {
     }
 
 
-
     /**
      * Add a new list to the server
      * @param list - the list that needs to be added to the server
@@ -371,7 +376,7 @@ public class ServerUtils {
      */
     public ListOfCards addListOfCards(ListOfCards list){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards")
+                .target(SERVER).path("/api/boards/" + list.board.id + "/lists")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
@@ -395,8 +400,10 @@ public class ServerUtils {
      * @return - the added card
      */
     public Card addCard2(Card card){
+        long boardId = card.list.board.id;
+        long listId = card.list.id;
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards")
+                .target(SERVER).path("/api/boards/" + boardId +"/lists/"+ listId + "/cards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(card, APPLICATION_JSON), Card.class);
@@ -404,11 +411,15 @@ public class ServerUtils {
 
     /**
      * Removes a card from the server
+     * @param card the card that needs to be removed
      * @return - the removed card
      */
-    public Card removeCard(){
+    public Card removeCard(Card card){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .delete(Card.class);
@@ -416,11 +427,15 @@ public class ServerUtils {
 
     /**
      * Removal of List from server
+     *
+     * @param list
      * @return - return the removed List
      */
-    public ListOfCards removeList(){
+    public ListOfCards removeList(ListOfCards list){
+        long boardId = list.board.id;
+        long listId = list.id;
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}")
+                .target(SERVER).path("api/boards/" + boardId + "/lists/" + listId)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .delete(ListOfCards.class);
@@ -445,13 +460,15 @@ public class ServerUtils {
      * @return the Card that was renamed
      */
     public Card renameCard(Card card, String title){
-        card.title = title;
 
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(card, APPLICATION_JSON), Card.class);
+                .put(Entity.entity(title, APPLICATION_JSON), Card.class);
     }
 
     /**
@@ -461,13 +478,13 @@ public class ServerUtils {
      * @return the list with the new name
      */
     public ListOfCards renameList(ListOfCards list, String title){
-        list.title = title;
-
+        long boardId = list.board.id;
+        long listId = list.id;
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/boards/{board_id}/lists/{list_id}")
+                .target(SERVER).path("api/boards/" + boardId + "/lists/" + listId)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
+                .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
     }
 
     private StompSession session = connect("ws://localhost:8080/websocket");

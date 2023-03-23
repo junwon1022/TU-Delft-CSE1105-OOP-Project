@@ -105,15 +105,12 @@ public class CardCtrl extends ListCell<Card> {
      */
     public void remove(ActionEvent event){
         try {
-            server.deleteCard(data);
-            Thread.sleep(100);
+            server.removeCard(data);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
         board.refresh();
     }

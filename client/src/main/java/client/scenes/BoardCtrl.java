@@ -44,6 +44,8 @@ public class BoardCtrl {
 
     ObservableList<ListOfCards> data;
 
+    private Board board;
+
     /**
      * Create a new BoardCtrl.
      *
@@ -53,6 +55,29 @@ public class BoardCtrl {
     @Inject
     public BoardCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
+
+        data = FXCollections.observableArrayList();
+
+        // Placeholder for when Dave's branch is merged
+        // so there are actually multiple boards
+        try {
+            board = this.server.getBoard(1);
+        } catch (Exception e) {
+            board = getBoard();
+            Board addedBoard = server.addBoard(board);
+            board = server.getBoard(addedBoard.id);
+        }
+        refresh();
+        /*
+        board = getBoard();
+
+        //add the board to the database
+        Board addedBoard =  server.addBoard(board);
+
+        //change the id of the board locally
+        board.id = server.getBoard(addedBoard.id).id;
+        System.out.println(board.id);
+        */
         this.mainCtrl = mainCtrl;
     }
 
@@ -60,20 +85,19 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
-        data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
         list.setStyle("-fx-control-inner-background: " +  "#03045E" + ";");
-        refresh();
     }
 
     /**
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
-        var serverData = server.getServerData();
+        //the method call of getServerData will be with the board parameter
+        var serverData = server.getServerData(board.id);
         data.setAll(serverData);
     }
 
@@ -96,13 +120,14 @@ public class BoardCtrl {
             if (controller.success) {
                 String title = controller.storedText;
 
-                //Hard coded lines, should be changed to use the server data
-                Board board = new Board("title", "#ffffff", "pass", new ArrayList<>());
-                ListOfCards list = new ListOfCards(title, "00B4D8", board, new ArrayList<>());
-                board.addList(list);
-                //End of hard coded lines
+                ListOfCards list = getList(title);
+                //server.addList(list);
+                ListOfCards addedList = server.addListOfCards(list);
+                System.out.println(addedList);
 
-                server.addList(list);
+                //change the id of the board locally
+                list.id = addedList.id;
+
                 this.refresh();
             }
         } catch (IOException e) {
@@ -137,5 +162,18 @@ public class BoardCtrl {
      */
     public void goToOverview(ActionEvent event) {
         mainCtrl.showMainScreen();
+    }
+
+    /**
+     * Method that creates a new board
+     * @return the new board
+     */
+    private Board getBoard(){
+        return new Board("hardcoded board", null, null, new ArrayList<>());
+    }
+
+
+    private ListOfCards getList(String title){
+        return new ListOfCards(title, "00B4D8", board, new ArrayList<>());
     }
 }

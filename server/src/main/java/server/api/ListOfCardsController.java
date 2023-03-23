@@ -111,7 +111,7 @@ public class ListOfCardsController {
      * @param listId
      * @return the edited list
      */
-    @PostMapping(path = {"/{list_id}/","/{list_id}"})
+    @PutMapping(path = {"/{list_id}/","/{list_id}"})
     public ResponseEntity<ListOfCards> editListOfCardsTitleById(@RequestBody String newTitle,
                                                     @PathVariable("board_id") long boardId,
                                                     @PathVariable("list_id") long listId) {
@@ -149,7 +149,7 @@ public class ListOfCardsController {
             // Delete the list
             listOfCardsService.deleteListOfCardsById(listId);
             // Return the saved list with an HTTP 200 OK status
-            return ResponseEntity.ok(list);
+            return ResponseEntity.ok().build();
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
