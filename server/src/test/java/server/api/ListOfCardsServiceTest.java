@@ -13,6 +13,7 @@ import server.services.BoardService;
 import server.services.ListOfCardsService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +53,7 @@ public class ListOfCardsServiceTest {
     @Test
     public void addListTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
 
@@ -88,7 +89,7 @@ public class ListOfCardsServiceTest {
     @Test
     public void editListTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
 
         ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
@@ -118,7 +119,7 @@ public class ListOfCardsServiceTest {
     @Test
     public void deleteListTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
 
@@ -138,7 +139,7 @@ public class ListOfCardsServiceTest {
     @Test
     public void getAllListsTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
 

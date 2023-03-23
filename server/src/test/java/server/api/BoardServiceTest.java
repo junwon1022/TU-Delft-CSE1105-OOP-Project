@@ -10,6 +10,7 @@ import server.database.BoardRepository;
 import server.services.BoardService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,20 +37,20 @@ public class BoardServiceTest {
     @Test
     public void addBoardTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
 
         Mockito.verify(boardRepo).save(b);
 
 
-        Board nullBoard = new Board(null, "#111111", "pass", new ArrayList<>());
+        Board nullBoard = new Board(null, "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         assertThatThrownBy(() -> {
             boardService.createBoard(nullBoard);
         }).isInstanceOf(Exception.class);
 
-        Board emptyBoard = new Board("", "#111111", "pass", new ArrayList<>());
+        Board emptyBoard = new Board("", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         assertThatThrownBy(() -> {
             boardService.createBoard(emptyBoard);
@@ -60,7 +61,7 @@ public class BoardServiceTest {
     @Test
     public void editBoardTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
 
@@ -82,7 +83,7 @@ public class BoardServiceTest {
     @Test
     public void deleteBoardTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
         boardService.deleteBoardById(b.id);

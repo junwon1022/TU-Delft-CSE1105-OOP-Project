@@ -327,8 +327,14 @@ public class ServerUtils {
     }
 
 
-    public void addTag(Tag tag) {
-
+    public Tag addTag(Tag tag) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + tag.board.id
+                        + "/tags")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
+        return tag;
     }
 
     /**
@@ -457,5 +463,12 @@ public class ServerUtils {
             throw new IllegalArgumentException("Destination cannot be null");
         }
         session.send(dest, o);
+    }
+
+    public void addTag(Board board, String text) {
+        Tag tag = new Tag();
+        tag.board = board;
+        tag.name = text;
+        addTag(tag);
     }
 }

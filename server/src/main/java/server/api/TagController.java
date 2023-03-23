@@ -51,7 +51,7 @@ public class TagController {
             // Get the board
             Board board = boardService.getBoardById(boardId);
             Set<Tag> tags = tagService.getTags(board);
-                    //listOfCardsService.getListsOfCards(board);
+            //listOfCardsService.getListsOfCards(board);
             // Return the lists with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(tags);
         }
@@ -135,6 +135,36 @@ public class TagController {
         }
     }
 
+
+    /**
+     * Update the color of the tag
+     *
+     * @param newColor
+     * @param boardId
+     * @param tagId
+     */
+    @PutMapping(path = {"/{tag_id}/color", "/{tag_id}/color/"})
+    public ResponseEntity<Tag> updateColor(@RequestBody String newColor,
+                                           @PathVariable("board_id") long boardId,
+                                           @PathVariable("tag_id") long tagId) {
+        try {
+            if(!validPath(boardId, tagId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            // Get the board to which the tag will be edited
+            Board board = boardService.getBoardById(boardId);
+            // Edit the tag and save it in the database
+            Tag tag = TagService.editTagColor(tagId, newColor);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the edited list with an HTTP 200 OK status
+            return ResponseEntity.ok().body(tag);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Delete a tag
      *
@@ -183,6 +213,12 @@ public class TagController {
             return false;
         }
         return true;
+    }
+
+    public void updateTagColor(String s, long l, long id) throws Exception {
+        Tag tag = tagService.getTagById(id);
+        tag.setColour(s);
+        tagService.saveTag(tag);
     }
 }
 

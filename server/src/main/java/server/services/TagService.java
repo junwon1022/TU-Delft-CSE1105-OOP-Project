@@ -32,6 +32,13 @@ public class TagService {
         return tag.board == board;
     }
 
+    public static Tag editTagColor(long tagId, String newColor) {
+        Tag tag = tagRepository.findById(tagId).get();
+        tag.colour = newColor;
+        tagRepository.save(tag);
+        return tag;
+    }
+
     /**
      * Get all tags of a given card
      * @param board
@@ -102,5 +109,9 @@ public class TagService {
         Tag tag = getTagById(id);
         tag.colour = newColour;
         return tagRepository.save(tag);
+    }
+
+    public void saveTag(Tag tag) {
+        tagRepository.save(tag);
     }
 }
