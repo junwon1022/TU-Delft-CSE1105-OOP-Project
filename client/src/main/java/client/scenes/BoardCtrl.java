@@ -20,7 +20,6 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,7 +35,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -104,14 +102,11 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
+//        Tooltip tooltip = new Tooltip("Copy the invitation key.");
+//        tooltip.setX(1000);
+//        tooltip.setY(100);
+//        Tooltip.install(copyButton, tooltip);
         refresh();
-
-        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-            System.out.println("oasdzc");
-            Platform.runLater(() -> data.setAll(s.lists));
-        });
-        //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
-//        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
     }
 
     /**
@@ -189,12 +184,11 @@ public class BoardCtrl {
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
-        Tooltip.install(copyButton, tooltip);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(Window.getWindows().get(0));
-        tooltip.setAnchorX(1000);
-        tooltip.setAnchorY(100);
+        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
+//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 

@@ -34,6 +34,10 @@
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
+#list .list-cell:filled:hover {
+    -fx-border-color: #04839f;
+}
+
 #list-background {
      -fx-background-color: #CAF0F8;
      -fx-background-radius: 10;
@@ -68,17 +72,13 @@
     -fx-background-radius: 10;
 }
 
-#card:hover {
-    -fx-background-color: derive(color, -10%);
-}
-
 .normal-button:hover {
     -fx-background-color: #F8FDFE;
     -fx-text-fill: #00B4D8;
     -fx-border-color: #00B4D8;
     -fx-border-width: 1.5;
-    -fx-background-radius: 4px;
-    -fx-border-radius: 4px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 .normal-button {
@@ -207,10 +207,6 @@
      -fx-background-image: url("copy-icon-hover.png");
  }
 
-.button {
-    -fx-cursor: hand;
-}
-
 .rename {
     -fx-background-image: url("edit-icon.png");
     -fx-background-color: transparent;
@@ -222,7 +218,19 @@
     -fx-background-image: url("edit-custom.png");
 }
 
-.button, .button:hover {
+.search {
+    -fx-background-image: url("search-icon.png");
+    -fx-background-color: transparent;
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+.search:hover {
+    -fx-background-image: url("search-custom.png");
+}
+
+.button, .button:hover, .titled-pane, .titled-pane:hover {
+    -fx-cursor: hand;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
@@ -230,10 +238,6 @@
 .image {
     -fx-smooth: true;
 }
-
-/*.title:hover + .rename {*/
-/*    -fx-opacity: 1;*/
-/*}*/
 
 .text-field {
     -fx-background-color: #F8FDFE;
@@ -246,7 +250,73 @@
 .tooltip {
     -fx-background-color: #00B4D8;
     -fx-opacity: 0.8;
+    -fx-font-family: Corbel;
     -fx-padding: 20 10 6 10px;
     -fx-effect: dropshadow(gaussian, #015164, 10, 0.01, 3, 3);
     -fx-shape: "M1379.53 1095.5C1389.99 1129.64 1406.11 1165.02 1419.4 1199.78L1431.78 1237.79 1584.24 1237.79C1643.48 1237.79 1691.5 1285.89 1691.5 1345.22L1691.5 1354.07C1691.5 1413.4 1643.48 1461.5 1584.24 1461.5L797.763 1461.5C738.523 1461.5 690.5 1413.4 690.5 1354.07L690.5 1345.22C690.5 1285.89 738.523 1237.79 797.763 1237.79L1281.61 1237.79 1320.9 1196.56C1345.49 1166.44 1364.93 1133.01 1379.53 1095.5Z"
+}
+
+/* style the Accordion */
+.accordion {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-style: none;
+}
+
+.titled-pane {
+    -fx-background-color: #CAF0F8;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-style: none;
+}
+
+.titled-pane .content {
+    -fx-padding: 10px;
+    -fx-background-color: #CAF0F8;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: transparent;
+}
+
+.titled-pane .title {
+    -fx-background-color: #00B4D8;
+    -fx-padding: 10px;
+    -fx-border-color: #00B4D8;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.titled-pane .arrow {
+    -fx-background-color: white;
+}
+
+.list-view {
+    -fx-background-color: #CAF0F8;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-style: none;
+}
+
+.titled-pane > .content {
+    -fx-background-color: #CAF0F8;
+    -fx-border-style: none;
+}
+
+.titled-pane:hover .title {
+    -fx-background-color: #E4F8FC;
+    -fx-border-color: #00B4D8;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.accordion:hover .titled-pane {
+    -fx-text-fill: #00B4D8;
+}
+
+.accordion:hover .arrow {
+    -fx-background-color: #00B4D8;
+    -fx-effect: none;
 }

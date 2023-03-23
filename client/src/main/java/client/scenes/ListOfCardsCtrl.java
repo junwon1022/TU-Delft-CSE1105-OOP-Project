@@ -78,9 +78,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
         list.getStylesheets().add("styles.css");
-//        list.setStyle("-fx-background-color: #A2E4F1;" +
-//                " -fx-border-radius: 15;" +
-//                " -fx-background-radius: 15;");
 
         setOnDragOver(this::handleDragOver);
         setOnDragDropped(this::handleDragDropped);
@@ -189,6 +186,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void addCard(ActionEvent event) {
         if(!name.getText().equals("") && name.getText() != null){
+            name.setPromptText("Enter a title . . .");
+            name.setStyle("-fx-prompt-text-fill: #665A5D;");
+            addCardButton.setStyle("-fx-border-color: #4FCAE2; -fx-background-color: #4FCAE2;");
+            addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
+                    ("-fx-background-color: #CAF0F8; -fx-text-fill: #00B4D8;"));
+            addCardButton.setOnMouseExited(e -> addCardButton.setStyle
+                    ("-fx-background-color: #4FCAE2; -fx-text-fill: #E4F8FC;"));
             String title = name.getText();
             Card card = getCard(title);
 
@@ -200,6 +204,16 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             addCardButton.setOpacity(0);
 
             board.refresh();
+        } else {
+            name.setPromptText("You need a title.");
+            name.setStyle("-fx-prompt-text-fill: #C34042;");
+            addCardButton.setStyle("-fx-border-color: #C34042; -fx-background-color: #C34042;");
+            addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
+                    ("-fx-border-color: #C34042; -fx-background-color: #CAF0F8;" +
+                            " -fx-text-fill: #C34042;"));
+            addCardButton.setOnMouseExited(e -> addCardButton.setStyle
+                    ("-fx-border-color: #C34042; -fx-background-color: #C34042;" +
+                            " -fx-text-fill: #E4F8FC;"));
         }
     }
 
@@ -209,6 +223,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void showButton(ActionEvent event) {
         name.setOpacity(1);
+        name.requestFocus();
         addCardButton.setOpacity(1);
     }
 
