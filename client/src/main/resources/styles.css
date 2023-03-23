@@ -49,7 +49,6 @@
     -fx-border-style: none;
     -fx-padding: 6;
     -fx-background-radius: 10;
-    /*-fx-cell-spacing: 50px;*/
 }
 
 #list {
@@ -260,7 +259,6 @@
 .accordion {
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
-    -fx-border-style: none;
 }
 
 .titled-pane {
@@ -269,6 +267,10 @@
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
     -fx-border-style: none;
+}
+
+.anchor {
+    -fx-padding: 0;
 }
 
 .titled-pane .content {
@@ -302,9 +304,10 @@
 .titled-pane > .content {
     -fx-background-color: #CAF0F8;
     -fx-border-style: none;
+    -fx-padding: 0;
 }
 
-.titled-pane:hover .title {
+.accordion:hover .titled-pane .title{
     -fx-background-color: #E4F8FC;
     -fx-border-color: #00B4D8;
     -fx-border-width: 1.5;
@@ -312,11 +315,33 @@
     -fx-border-radius: 10px;
 }
 
-.accordion:hover .titled-pane {
+.titled-pane:hover {
     -fx-text-fill: #00B4D8;
 }
 
 .accordion:hover .arrow {
     -fx-background-color: #00B4D8;
     -fx-effect: none;
+}
+
+.menu-vbox {
+    -fx-cursor: default;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
+#add {
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+}
+
+.tag-hbox {
+    -fx-orientation: horizontal;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-background-color: #00B4D8;
+}
+
+.rename-tag {
+    -fx-content-display: center;
 }
