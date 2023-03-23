@@ -30,16 +30,10 @@ public class MainCtrl {
 //
 //    private AddQuoteCtrl addCtrl;
 //    private Scene add;
-
     private BoardCtrl boardCtrl;
     private Scene boardOverview;
-
     private ConnectCtrl connectCtrl;
     private Scene connect;
-
-
-
-
     private MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
 
@@ -72,7 +66,6 @@ public class MainCtrl {
         this.mainScreenCtrl = mainScreen.getKey();
         this.mainScreen = new Scene(mainScreen.getValue());
 
-
         showConnect();
         primaryStage.show();
     }
@@ -80,12 +73,13 @@ public class MainCtrl {
     /**
      * Show the board scene.
      */
-    public void showBoard() {
+    public void showBoard(String boardKey) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setHeight(690);
         primaryStage.setWidth(1040);
         primaryStage.setResizable(false);
+        boardCtrl.boardKey = boardKey;
         boardCtrl.initialize();
     }
 

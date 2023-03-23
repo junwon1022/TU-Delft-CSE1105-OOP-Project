@@ -97,9 +97,9 @@ public class MainScreenCtrl {
 
         System.out.println(server.getMyBoardTitles());
         System.out.println(server.getBoardByKey(joinField.getText()));
-        Board b = server.getBoardByKey(joinField.getText());
-
-        mainCtrl.showBoard(b);
+       // Board b = server.getBoardByKey(joinField.getText());
+        System.out.println(joinField.getText());
+        mainCtrl.showBoard(joinField.getText());
 
     }
 

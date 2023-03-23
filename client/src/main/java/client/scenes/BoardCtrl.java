@@ -50,6 +50,8 @@ public class BoardCtrl {
 
     private final MainCtrl mainCtrl;
 
+    public String boardKey;
+
     @FXML
     private ListView<ListOfCards> list;
 
@@ -85,17 +87,20 @@ public class BoardCtrl {
      * @param mainCtrl The main control
      */
     @Inject
-    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl, String boardKey) {
         this.server = server;
+        this.boardKey = boardKey;
 
         data = FXCollections.observableArrayList();
 
         // Placeholder for when Dave's branch is merged
         // so there are actually multiple boards
         try {
-            board = this.server.getBoard(1);
+            board = this.server.getBoardByKey(boardKey);
         } catch (Exception e) {
-            board = getBoard();
+                System.out.println("So Bad");
+
+                board = getBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
