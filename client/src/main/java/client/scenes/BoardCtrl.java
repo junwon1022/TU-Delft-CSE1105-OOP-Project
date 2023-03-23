@@ -105,6 +105,10 @@ public class BoardCtrl {
         key.setText(board.key);
         title.setText(board.title);
         refresh();
+
+        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+            Platform.runLater(() -> data.setAll(s.lists));
+        });
     }
 
     /**
