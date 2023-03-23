@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.ListOfCardsRepository;
@@ -57,7 +58,7 @@ public class CardControllerTest {
 
     private CardController controller;
 
-
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @BeforeEach
     public void setup() {
@@ -69,16 +70,18 @@ public class CardControllerTest {
         service = new CardService(repo);
         boardService = new BoardService(boardRepo);
         listService = new ListOfCardsService(listRepo);
+        simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
 
-        controller = new CardController(service,listService,boardService);
+        controller = new CardController(service,listService,boardService,simpMessagingTemplate);
 
     }
 
 
     @Test
     public void addListOfCardsCorrect() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);
@@ -92,8 +95,9 @@ public class CardControllerTest {
 
     @Test
     public void addListOfCardsWrongNull() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);
@@ -106,8 +110,9 @@ public class CardControllerTest {
 
     @Test
     public void addListOfCardsWrongEmpty() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);
@@ -119,9 +124,11 @@ public class CardControllerTest {
     }
     @Test
     public void addListOfCardsWrongBoardListUnrelate() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule 2", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule 2", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b2,new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 
         l.addCard(c);
@@ -134,8 +141,9 @@ public class CardControllerTest {
 
     @Test
     public void editListOfCardsCorrect() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);
@@ -148,8 +156,9 @@ public class CardControllerTest {
 
     @Test
     public void editListOfCardsWrongEmpty() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555", b, new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b, new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);
@@ -161,39 +170,46 @@ public class CardControllerTest {
     }
     @Test
     public void editListOfCardsWrongNull() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(repo.findById(c.id)).thenReturn(Optional.of(c));
-        var actual = controller.editCardTitleById("Finish ADS Study",1L,2L,c.id);
+        var actual = controller.editCardTitleById("Finish ADS Study",
+                1L,2L,c.id);
         assertEquals(OK, actual.getStatusCode());
     }
 
     @Test
     public void editListOfCardsWrongBoardListUnrelate() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule 2", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule 2", "#111111", "#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b2,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 
         l.addCard(c);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(listRepo.findById(2L)).thenReturn(Optional.of(l));
         when(repo.findById(c.id)).thenReturn(Optional.of(c));
-        var actual = controller.editCardTitleById("Finish ADS Study",1L,2L,c.id);
+        var actual = controller.editCardTitleById("Finish ADS Study",
+                1L,2L,c.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
     }
 
     @Test
     public void editListOfCardsWrongBoardListUnrelateCard() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule 2", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
-        ListOfCards l2 = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule 2", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b2,new ArrayList<>());
+        ListOfCards l2 = new ListOfCards("List 1",b2,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l2,new ArrayList<>(),new HashSet<>());
 
         b.addList(l);
@@ -207,8 +223,9 @@ public class CardControllerTest {
 
     @Test
     public void deleteListOfCardByIdCorrect() {
-        Board b = new Board("My Board", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
         l.addCard(c);

@@ -1,0 +1,21 @@
+2023-03-23 10:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "'#changeit' (9)"; SQL statement:
+update boards set board_colour=?, b_font_colour=?, invite_key=?, password=?, board_title=? where board_id=? [22001-200]
+2023-03-23 10:27:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "'#changeit' (9)"; SQL statement:
+insert into boards (board_id, board_colour, b_font_colour, invite_key, password, board_title) values (null, ?, ?, ?, ?, ?) [22001-200]
+2023-03-23 10:28:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "STRINGDECODE('{   \r\n    \""title\"": \""gaga\"",\r\n    \""colour\"": \""#aaaaaa\"",\r\n    \""font\"": \""#ffffff\"",\r\n    \""password\""... (166)"; SQL statement:
+update boards set board_colour=?, b_font_colour=?, invite_key=?, password=?, board_title=? where board_id=? [22001-200]
+2023-03-23 10:29:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "STRINGDECODE('{   \r\n    \""title\"": \""gaga\"",\r\n    \""colour\"": \""#aaaaa\"",\r\n    \""font\"": \""#ffffff\"",\r\n    \""password\"":... (165)"; SQL statement:
+update boards set board_colour=?, b_font_colour=?, invite_key=?, password=?, board_title=? where board_id=? [22001-200]
+2023-03-23 10:29:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "STRINGDECODE('{   \""id\"": 97,\r\n    \""title\"": \""gaga\"",\r\n    \""colour\"": \""#aaaaa\"",\r\n    \""font\"": \""#ffffff\"",\r\n    \""... (174)"; SQL statement:
+update boards set board_colour=?, b_font_colour=?, invite_key=?, password=?, board_title=? where board_id=? [22001-200]
+2023-03-23 10:31:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "STRINGDECODE('{   \r\n    \""colour\"": \""#hahaha\""\r\n}') (32)"; SQL statement:
+update boards set board_colour=?, b_font_colour=?, invite_key=?, password=?, board_title=? where board_id=? [22001-200]
+2023-03-23 10:31:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BOARD_COLOUR VARCHAR(7)": "'""#hahaha""' (9)"; SQL statement:
+update boards set board_colour=?, b_font_colour=?, invite_key=?, password=?, board_title=? where board_id=? [22001-200]

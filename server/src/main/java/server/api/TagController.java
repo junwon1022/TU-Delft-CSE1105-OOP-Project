@@ -4,6 +4,7 @@ import commons.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.services.*;
 
@@ -20,6 +21,9 @@ public class TagController {
     private final ListOfCardsService listOfCardsService;
     private final BoardService boardService;
 
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     /**
      * Constructor with parameters
      *
@@ -27,15 +31,18 @@ public class TagController {
      * @param listOfCardsService
      * @param tagService
      * @param boardService
+     * @param simpMessagingTemplate
      */
     @Autowired
     public TagController(CardService cardService,
                          ListOfCardsService listOfCardsService,
-                         TagService tagService, BoardService boardService) {
+                         TagService tagService, BoardService boardService,
+                         SimpMessagingTemplate simpMessagingTemplate) {
         this.cardService = cardService;
         this.listOfCardsService = listOfCardsService;
         this.tagService = tagService;
         this.boardService = boardService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
@@ -132,6 +139,8 @@ public class TagController {
 
             // Save the new tag to the database
             tagService.createTag(tag, card);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved tag with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(tag);
         }
@@ -161,9 +170,12 @@ public class TagController {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
-
+            // Get the board in which the tag will be updated
+            Board board = boardService.getBoardById(boardId);
             // Edit the tag and save it in the database
             Tag tag = tagService.editTagName(tagId,newName);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited tag with an HTTP 200 OK status
             return ResponseEntity.ok().body(tag);
         }
@@ -200,9 +212,12 @@ public class TagController {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
-
+            // Get the board in which the colour will be updated
+            Board board = boardService.getBoardById(boardId);
             // Edit the tag and save it in the database
             Tag tag = tagService.editTagColour(tagId,newColour);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited tag with an HTTP 200 OK status
             return ResponseEntity.ok().body(tag);
         }
@@ -229,10 +244,14 @@ public class TagController {
             if(!validPath(boardId, listId, cardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board from which the tag will be deleted
+            Board board = boardService.getBoardById(boardId);
             // Get the card
             Tag tag = tagService.getTagById(tagId);
             // Delete the tag
             tagService.deleteTagById(tagId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved tag with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }

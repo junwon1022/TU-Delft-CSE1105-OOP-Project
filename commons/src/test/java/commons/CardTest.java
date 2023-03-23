@@ -52,12 +52,13 @@ public class CardTest {
         tags.add(tag1);
         tags.add(tag2);
 
-        board = new Board("Algebra", "#ffffff",
+        board = new Board("Algebra", "#ffffff", "#ffffff",
+                "#ffff22", "#ffff22",
                 "pass", listOfCards);
         listOfCards = new ArrayList<>();
-        list = new ListOfCards("Grasple", "#000000", board, cards);
-        list2 = new ListOfCards("Grasple", "#000000", board, cards);
-        list3 = new ListOfCards("Grasple3", "#000000", board, cards);
+        list = new ListOfCards("Grasple",board, cards);
+        list2 = new ListOfCards("Grasple", board, cards);
+        list3 = new ListOfCards("Grasple3",  board, cards);
         listOfCards.add(list);
         listOfCards.add(list2);
 
