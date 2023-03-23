@@ -122,11 +122,8 @@ public class TagServiceTest {
 
         Board b = new Board("My Schedule", "#111111","#111111",
                 "#111111","#111111", "pass", new ArrayList<>());
-
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
-
         Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
-
         Tag t = new Tag("Tag 2","#555555",new HashSet<>());
 
 

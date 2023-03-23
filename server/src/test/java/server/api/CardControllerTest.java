@@ -79,7 +79,8 @@ public class CardControllerTest {
 
     @Test
     public void addListOfCardsCorrect() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -94,7 +95,8 @@ public class CardControllerTest {
 
     @Test
     public void addListOfCardsWrongNull() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -108,7 +110,8 @@ public class CardControllerTest {
 
     @Test
     public void addListOfCardsWrongEmpty() {
-        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -121,8 +124,10 @@ public class CardControllerTest {
     }
     @Test
     public void addListOfCardsWrongBoardListUnrelate() {
-        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule 2", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule 2", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
         ListOfCards l = new ListOfCards("List 1", b2,new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 
