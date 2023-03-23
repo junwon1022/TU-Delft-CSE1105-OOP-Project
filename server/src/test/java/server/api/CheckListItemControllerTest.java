@@ -92,8 +92,8 @@ public class CheckListItemControllerTest {
 
     @Test
     public void addCheckCorrect() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
@@ -111,8 +111,8 @@ public class CheckListItemControllerTest {
 
     @Test
     public void addCheckWrong1() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem(null,true,c);
         b.addList(l);
@@ -129,8 +129,8 @@ public class CheckListItemControllerTest {
 
     @Test
     public void addCheckWrong2() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("",true,c);
         b.addList(l);
@@ -147,9 +147,9 @@ public class CheckListItemControllerTest {
 
     @Test
     public void addCheckWrongBoardinList() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b2,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
 
@@ -168,9 +168,9 @@ public class CheckListItemControllerTest {
 
     @Test
     public void addCheckWrongListInCard() {
-        Board b = new Board("schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        ListOfCards l2 = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("schedule", "#111111", "#111111","#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
+        ListOfCards l2 = new ListOfCards("List 1", b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l2,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
@@ -189,8 +189,8 @@ public class CheckListItemControllerTest {
 
     @Test
     public void editCheckCorrect() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("CG","F","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
@@ -207,8 +207,8 @@ public class CheckListItemControllerTest {
 
     @Test
     public void editCheckWrong() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
@@ -224,8 +224,8 @@ public class CheckListItemControllerTest {
     }
     @Test
     public void editCheckWrongNull() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
@@ -240,9 +240,9 @@ public class CheckListItemControllerTest {
     }
     @Test
     public void editCheckWrongBoardInList() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        Board b2 = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b2,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        Board b2 = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b2,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
 
@@ -257,9 +257,9 @@ public class CheckListItemControllerTest {
     }
     @Test
     public void editCheckWrongListInCard() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555",b,new ArrayList<>());
-        ListOfCards l2 = new ListOfCards("List 1","#555555",b,new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
+        ListOfCards l2 = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l2,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);
@@ -275,8 +275,8 @@ public class CheckListItemControllerTest {
 
     @Test
     public void deleteCheckByIdCorrect() {
-        Board b = new Board("My Board", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        Board b = new Board("My Board", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);

@@ -53,12 +53,13 @@ public class ListOfCardsTest {
         cards.add(card1);
         cards.add(card2);
 
-        board = new Board("Algebra", "#ffffff",
+        board = new Board("Algebra", "#ffffff", "#ff00ff",
+                "#ffffff", "#ff00ff",
                 "pass", listOfCards);
         listOfCards = new ArrayList<>();
-        list = new ListOfCards("Grasple", "#000000", board, cards);
-        list2 = new ListOfCards("Grasple", "#000000", board, cards);
-        list3 = new ListOfCards("Grasple3", "#000000", board, cards);
+        list = new ListOfCards("Grasple",board, cards);
+        list2 = new ListOfCards("Grasple", board, cards);
+        list3 = new ListOfCards("Grasple3", board, cards);
         listOfCards.add(list);
         listOfCards.add(list2);
     }
@@ -78,7 +79,6 @@ public class ListOfCardsTest {
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("Grasple", list.title);
-        assertEquals("#000000", list.colour);
         assertEquals(board, list.board);
         assertEquals(cards, list.cards);
     }
@@ -110,7 +110,6 @@ public class ListOfCardsTest {
         assertTrue(actual.contains(ListOfCards.class.getSimpleName()));
         assertTrue(actual.contains("\n"));
         assertTrue(actual.contains("title"));
-        assertTrue(actual.contains("colour"));
         assertTrue(actual.contains("board"));
         assertTrue(actual.contains("cards"));
     }

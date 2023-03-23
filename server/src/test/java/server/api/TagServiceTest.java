@@ -68,12 +68,12 @@ public class TagServiceTest {
     @Test
     public void addTagTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
         boardService.createBoard(b);
         Mockito.verify(boardRepo).save(b);
 
 
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         b.addList(l);
         listService.createListOfCards(l,b);
         Mockito.verify(listRepo).save(l);
@@ -119,9 +119,9 @@ public class TagServiceTest {
     @Test
     public void editTagTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
 
@@ -171,9 +171,9 @@ public class TagServiceTest {
     @Test
     public void deleteTagTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         b.addList(l);
 
@@ -198,9 +198,9 @@ public class TagServiceTest {
     @Test
     public void getAllTagsTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111","#111111","#111111", "pass", new ArrayList<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
 
@@ -229,8 +229,8 @@ public class TagServiceTest {
 
     @Test
     void tagInCardTest() {
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
-        ListOfCards l = new ListOfCards("List 1","#555555", b, new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111","#111111","#111111","pass", new ArrayList<>());
+        ListOfCards l = new ListOfCards("List 1", b, new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study",
                 "#555555", l, new ArrayList<>(),new HashSet<>());
         Tag t = new Tag("Tag 2","#555555",new HashSet<>());
