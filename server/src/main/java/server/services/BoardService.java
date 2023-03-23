@@ -96,4 +96,56 @@ public class BoardService {
         board.title = newTitle;
         return boardRepository.save(board);
     }
+
+    /**
+     * Method that changes the board's background colour in the database
+     * @param id
+     * @param colour
+     * @return the edited board
+     * @throws Exception
+     */
+    public Board editBoardBackground(Long id, String colour) throws Exception{
+        Board board = getBoardById(id);
+        board.colour = colour;
+        return boardRepository.save(board);
+    }
+
+    /**
+     * Method that changes the board's font colour in the database
+     * @param id
+     * @param colour
+     * @return the edited board
+     * @throws Exception
+     */
+    public Board editBoardFont(Long id, String colour) throws Exception{
+        Board board = getBoardById(id);
+        board.font = colour;
+        return boardRepository.save(board);
+    }
+
+    /**
+     * Method that changes the lists' font color in the database
+     * @param id
+     * @param colour
+     * @return the edited board
+     * @throws Exception
+     */
+    public Board editListsFont(Long id, String colour) throws Exception{
+        Board board = getBoardById(id);
+        board.listFont = colour;
+        return boardRepository.save(board);
+    }
+
+    /**
+     * Method that changes the lists' background color in the database
+     * @param id
+     * @param colour
+     * @return the edited board
+     * @throws Exception
+     */
+    public Board editListsBackground(Long id, String colour) throws Exception{
+        Board board = getBoardById(id);
+        board.listColour = colour;
+        return boardRepository.save(board);
+    }
 }

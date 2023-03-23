@@ -242,18 +242,14 @@ public class ServerUtils {
      * @param toIdx index to move to
      */
     public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
-        if (fromIdx < toIdx) {
-            Card aux = list.cards.get(fromIdx);
-            for (int i =  fromIdx; i < toIdx; i++)
-                list.cards.set(i, list.cards.get(i + 1));
-            list.cards.set(toIdx, aux);
-        }
-        else {
-            Card aux = list.cards.get(fromIdx);
-            for (int i =  fromIdx; i >= toIdx + 1; i--)
-                list.cards.set(i, list.cards.get(i - 1));
-            list.cards.set(toIdx, aux);
-        }
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boards/" + list.board.id
+                        + "/lists/" + list.id
+                        + "/from/" + fromIdx
+                        + "/to/" + toIdx)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+                .put(Entity.json(""));
     }
 
 

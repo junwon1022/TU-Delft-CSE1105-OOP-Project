@@ -29,6 +29,14 @@ public class Board {
     @Column(name = "board_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
+    @Column(name = "b_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String font;
+
+    @Column(name = "list_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String listColour;
+
+    @Column(name = "list_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String listFont;
     @Column(name = "password")
     public String password;
 
@@ -48,14 +56,22 @@ public class Board {
     /**
      * Constructor with parameters
      * @param title
-     * @param colour
+     * @param boardColour
+     * @param fontColour
+     * @param listColour
+     * @param listFont
      * @param password
      * @param lists
      */
-    public Board(String title, String colour,
+    public Board(String title, String boardColour, String fontColour,
+                 String listColour, String listFont,
                  String password, List<ListOfCards> lists) {
         this.title = title;
-        this.colour = colour;
+        this.colour = boardColour;
+        this.font = fontColour;
+
+        this.listColour = listColour;
+        this.listFont = listFont;
         this.password = password;
         this.lists = lists;
     }
@@ -82,7 +98,7 @@ public class Board {
                 "zebra", "airplane", "book", "car", "dragon",
                 "eagle", "fire", "guitar", "honey", "island",
                 "jungle", "key", "lion", "moon", "ninja",
-                "ocean", "parrot", "queen", "rain", "star",
+                "ocean", "parrot", "quest", "rain", "star",
                 "tiger", "unicorn", "volcano", "wolf", "x-ray",
                 "yacht", "zombie"
         );

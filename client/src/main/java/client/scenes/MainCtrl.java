@@ -24,15 +24,15 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
-
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
-
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+//
+//    private QuoteOverviewCtrl overviewCtrl;
+//    private Scene overview;
+//
+//    private AddQuoteCtrl addCtrl;
+//    private Scene add;
 
     private BoardCtrl boardCtrl;
-    private Scene board;
+    private Scene boardOverview;
 
     private ConnectCtrl connectCtrl;
     private Scene connect;
@@ -48,25 +48,23 @@ public class MainCtrl {
      * Create a new MainCtrl.
      *
      * @param primaryStage The primary stage to use.
-     * @param overview     The overview scene to use.
-     * @param add          The add scene to use.
      * @param board        The board screen to use.
      * @param connect      The connect screen
      * @param mainScreen   The main screen
      */
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-                           Pair<AddQuoteCtrl, Parent> add, Pair<BoardCtrl, Parent> board,
-                           Pair<ConnectCtrl, Parent> connect
-                         , Pair<MainScreenCtrl, Parent> mainScreen) {
+    public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board,
+                           Pair<ConnectCtrl, Parent> connect, Pair<MainScreenCtrl, Parent> mainScreen) {
+//            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
-
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+//        this.overviewCtrl = overview.getKey();
+//        this.overview = new Scene(overview.getValue());
+//
+//        this.addCtrl = add.getKey();
+//        this.add = new Scene(add.getValue());
 
         this.boardCtrl = board.getKey();
-        this.board = new Scene(board.getValue());
+        this.boardOverview = new Scene(board.getValue());
+        this.boardOverview.getStylesheets().add("styles.css");
 
         this.connectCtrl = connect.getKey();
         this.connect = new Scene(connect.getValue());
@@ -82,6 +80,15 @@ public class MainCtrl {
     /**
      * Show the board scene.
      */
+    public void showBoard() {
+        primaryStage.setTitle("My board");
+        primaryStage.setScene(boardOverview);
+        primaryStage.setHeight(690);
+        primaryStage.setWidth(1040);
+        primaryStage.setResizable(false);
+        boardCtrl.initialize();
+    }
+
     public void showConnect() {
         primaryStage.setTitle("Connect");
         primaryStage.setScene(connect);
@@ -96,7 +103,7 @@ public class MainCtrl {
      */
     public void showBoard(Board b) {
         primaryStage.setTitle(b.title);
-        primaryStage.setScene(board);
+        primaryStage.setScene(boardOverview);
         primaryStage.setHeight(600);
         boardCtrl.initialize();
     }
@@ -116,18 +123,18 @@ public class MainCtrl {
     /**
      * Show the overview scene.
      */
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
-    }
+//    public void showOverview() {
+//        primaryStage.setTitle("Quotes: Overview");
+//        primaryStage.setScene(overview);
+//        overviewCtrl.refresh();
+//    }
 
     /**
      * Show the add scene.
      */
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-    }
+//    public void showAdd() {
+//        primaryStage.setTitle("Quotes: Adding Quote");
+//        primaryStage.setScene(add);
+//        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+//    }
 }

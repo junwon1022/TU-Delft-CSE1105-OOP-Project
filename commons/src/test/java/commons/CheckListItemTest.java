@@ -23,10 +23,10 @@ public class CheckListItemTest {
      */
     @BeforeEach
     public void setUp() {
-        board = new Board("Algebra", "#ffffff",
+        board = new Board("Algebra", "#ffffff", "#ffffff",
+                "#ffff22", "#ffff22",
                 "pass", new ArrayList<ListOfCards>());
-        list = new ListOfCards("Grasple", "#000000",
-                                    board, new ArrayList<Card>());
+        list = new ListOfCards("Grasple", board, new ArrayList<Card>());
 
         card = new Card("Homework", "Somewhat long description",
                 "#ffffff", list, new ArrayList<CheckListItem>(), new HashSet<Tag>());

@@ -5,11 +5,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane onKeyPressed="#close" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19"
-            style="-fx-background-color: #CAF0F8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HelpScreenCtrl">
+<AnchorPane onKeyPressed="#close" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #CAF0F8" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HelpScreenCtrl">
    <children>
-      <Button layoutX="527.0" layoutY="350.0" mnemonicParsing="false" onAction="#closeHelpScreen" style="-fx-background-color: #00B4D8" prefHeight="35.0" prefWidth="58.0" text="Close" />
-      <Text layoutX="30.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Help Screen">
+      <Button layoutX="527.0" layoutY="350.0" mnemonicParsing="false" onAction="#closeHelpScreen" prefHeight="35.0" prefWidth="58.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Close" textFill="WHITE">
+         <font>
+            <Font name="Corbel" size="15.0" />
+         </font></Button>
+      <Text fill="#231f20" layoutX="30.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Help Screen">
          <font>
             <Font name="Corbel Bold" size="36.0" />
          </font>

@@ -27,14 +27,12 @@ public class ListOfCards {
     @Column(name = "list_title")
     public String title;
 
-    @Column(name = "list_colour", columnDefinition = "varchar(7) default '#ffffff'")
-    public String colour;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id")
     public Board board;
 
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("order asc")
     public List<Card> cards = new ArrayList<>();
 
     /**
@@ -47,14 +45,11 @@ public class ListOfCards {
     /**
      * Constructor with parameters
      * @param title
-     * @param colour
      * @param board
      * @param cards
      */
-    public ListOfCards(String title, String colour,
-                       Board board, List<Card> cards) {
+    public ListOfCards(String title, Board board, List<Card> cards) {
         this.title = title;
-        this.colour = colour;
         this.board = board;
         this.cards = cards;
     }

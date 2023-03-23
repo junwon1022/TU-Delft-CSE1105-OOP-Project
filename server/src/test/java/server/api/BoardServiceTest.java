@@ -36,20 +36,23 @@ public class BoardServiceTest {
     @Test
     public void addBoardTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         boardService.createBoard(b);
 
         Mockito.verify(boardRepo).save(b);
 
 
-        Board nullBoard = new Board(null, "#111111", "pass", new ArrayList<>());
+        Board nullBoard = new Board(null, "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         assertThatThrownBy(() -> {
             boardService.createBoard(nullBoard);
         }).isInstanceOf(Exception.class);
 
-        Board emptyBoard = new Board("", "#111111", "pass", new ArrayList<>());
+        Board emptyBoard = new Board("", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
 
         assertThatThrownBy(() -> {
             boardService.createBoard(emptyBoard);
@@ -60,7 +63,8 @@ public class BoardServiceTest {
     @Test
     public void editBoardTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>());
 
         boardService.createBoard(b);
 
@@ -77,23 +81,17 @@ public class BoardServiceTest {
         assertThatThrownBy(() -> {
             boardService.editBoardTitle(b.id,"");
         }).isInstanceOf(Exception.class);
-
-
     }
 
     @Test
     public void deleteBoardTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>());
 
         boardService.createBoard(b);
         boardService.deleteBoardById(b.id);
 
         Mockito.verify(boardRepo).deleteById(b.id);
-
-
-
     }
-
-
 }

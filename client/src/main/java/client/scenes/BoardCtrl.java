@@ -19,6 +19,8 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,9 +28,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +52,27 @@ public class BoardCtrl {
 
     @FXML
     private ListView<ListOfCards> list;
+
+    @FXML
+    private Label key;
+    @FXML
+    private Label title;
+    @FXML
+    private Button copyButton;
+
+    @FXML
+    private Button addTag;
+
+    @FXML
+    private AnchorPane anchorPane;
+
+    @FXML
+    private VBox vBox;
+    @FXML
+    private AnchorPane anchorPane2;
+
+    @FXML
+    private VBox vBox2;
 
     ObservableList<ListOfCards> data;
 
@@ -85,11 +117,22 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
+        data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
-        list.setStyle("-fx-control-inner-background: " +  "#03045E" + ";");
+        list.getStylesheets().add("styles.css");
+        key.setText(board.key);
+        title.setText(board.title);
+        AnchorPane.setBottomAnchor(addTag, 5.0);
+        loadVBox();
+        loadVBox2();
+        refresh();
+
+        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+            Platform.runLater(() -> data.setAll(s.lists));
+        });
     }
 
     /**
@@ -99,6 +142,40 @@ public class BoardCtrl {
         //the method call of getServerData will be with the board parameter
         var serverData = server.getServerData(board.id);
         data.setAll(serverData);
+    }
+
+    /**
+     * Loads the vbox to auto-fit its parent
+     */
+    public void loadVBox() {
+        // set the VBox to always grow to fill the AnchorPane
+        vBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        vBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        vBox.setMaxHeight(Double.MAX_VALUE);
+        vBox.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(vBox, 0.0);
+        AnchorPane.setBottomAnchor(vBox, 35.0);
+        AnchorPane.setLeftAnchor(vBox, 0.0);
+        AnchorPane.setRightAnchor(vBox, 0.0);
+    }
+
+    /**
+     * Loads the second vbox to auto-fit its parent
+     */
+    public void loadVBox2() {
+        // set the VBox to always grow to fill the AnchorPane
+        vBox2.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        vBox2.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        vBox2.setMaxHeight(Double.MAX_VALUE);
+        vBox2.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(vBox2, 0.0);
+        AnchorPane.setBottomAnchor(vBox2, 0.0);
+        AnchorPane.setLeftAnchor(vBox2, 0.0);
+        AnchorPane.setRightAnchor(vBox2, 0.0);
     }
 
 
@@ -114,7 +191,11 @@ public class BoardCtrl {
 
             Stage stage = new Stage();
             stage.setTitle("Add new list");
-            stage.setScene(new Scene(root, 300, 200));
+            Scene addListScene = new Scene(root);
+            addListScene.getStylesheets().add("styles.css");
+            stage.setHeight(240);
+            stage.setWidth(320);
+            stage.setScene(addListScene);
             stage.showAndWait();
 
             if (controller.success) {
@@ -127,6 +208,44 @@ public class BoardCtrl {
 
                 //change the id of the board locally
                 list.id = addedList.id;
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Opens a new window to add a new list of cards.
+     * @param event the ActionEvent
+     */
+    public void addTag(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddTag.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            AddTagCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a new tag");
+            Scene addTagScene = new Scene(root);
+            addTagScene.getStylesheets().add("styles.css");
+            stage.setHeight(240);
+            stage.setWidth(320);
+            stage.setScene(addTagScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String name = controller.storedText;
+
+                //TODO add getTag in Server Utils
+                //Tag tag = getTag(name);
+                //TODO add addTag in Server Utils
+                //Tag addedTag = server.addTag(tag);
+                //System.out.println(addedTag);
+
+                //change the id of the board locally
+                //tag.id = addedTag.id;
 
                 this.refresh();
             }
@@ -157,6 +276,32 @@ public class BoardCtrl {
     }
 
     /**
+     * Copies the key to the clipboard and shows a notification to the user
+     * @param event
+     */
+    public void copyKeyToClipboard(ActionEvent event) {
+        copyToClipboard(board.key);
+        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        delay.setOnFinished(e -> tooltip.hide());
+        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
+//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
+        delay.play();
+    }
+
+    /**
+     * Copies a given key to the clipboard.
+     * @param key
+     */
+    private void copyToClipboard(String key) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(key);
+        clipboard.setContent(content);
+    }
+
+    /**
      * Goes back to overview
      * @param event - Key event when the user clicks the mouse + /
      */
@@ -169,11 +314,11 @@ public class BoardCtrl {
      * @return the new board
      */
     private Board getBoard(){
-        return new Board("hardcoded board", null, null, new ArrayList<>());
+        return new Board("My Board", null, null, null, null, null, new ArrayList<>());
     }
 
 
     private ListOfCards getList(String title){
-        return new ListOfCards(title, "00B4D8", board, new ArrayList<>());
+        return new ListOfCards(title, board, new ArrayList<>());
     }
 }

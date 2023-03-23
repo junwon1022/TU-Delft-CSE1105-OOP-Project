@@ -28,6 +28,8 @@ public class RenameListCtrl {
 
     public boolean success;
 
+    private String MESSAGE = "Please enter a title!";
+
     /**
      * Constructor for the Rename List Controller
      */
@@ -76,7 +78,7 @@ public class RenameListCtrl {
     public void rename(ActionEvent event){
         storedText = textField.getText();
         if(storedText == null || storedText.length() == 0){
-            nullTitle.setText("Please enter a title");
+            nullTitle.setText(MESSAGE);
         }
         else{
             success = true;
@@ -84,5 +86,55 @@ public class RenameListCtrl {
         }
     }
 
+    // From here are the keyboard cases
 
+    /**
+     * Handle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
+        if (keyEvent.getCode().toString().equals("ENTER")) {
+            renameKeyboard(keyEvent);
+        }
+        else if(keyEvent.getCode().toString().equals("ESCAPE")){
+            cancelKeyboard(keyEvent);
+        }
+    }
+
+    /**
+     * Renames the new list
+     * if the user didn't input anything
+     * they can't proceed.
+     * @param event the KeyEvent
+     */
+    public void renameKeyboard(javafx.scene.input.KeyEvent event) {
+        success = true;
+        storedText = textField.getText();
+        if(storedText == null || storedText.length() == 0){
+            nullTitle.setText(MESSAGE);
+        }
+        else {
+            success = true;
+            closeWindowKeyboard(event);
+        }
+    }
+
+    /**
+     * Cancel the renaming of a new list.
+     * @param event the KeyEvent
+     */
+    private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
+        success = false;
+        closeWindowKeyboard(event);
+    }
+
+    /**
+     * Close the window
+     * @param event the KeyEvent
+     */
+    private static void closeWindowKeyboard(javafx.scene.input.KeyEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
 }
