@@ -66,6 +66,7 @@ public class Board {
      * @param listFont
      * @param password
      * @param lists
+     * @param tags
      */
     public Board(String title, String boardColour, String fontColour,
                  String listColour, String listFont,

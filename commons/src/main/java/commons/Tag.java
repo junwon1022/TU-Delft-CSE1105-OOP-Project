@@ -47,6 +47,7 @@ public class Tag {
      * Constructor with parameters
      * @param name
      * @param colour
+     * @param board
      * @param cards
      */
     public Tag(String name, String colour, Board board, Set<Card> cards) {
