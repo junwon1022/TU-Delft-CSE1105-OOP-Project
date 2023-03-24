@@ -41,7 +41,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings({"MissingJavadocMethod","JavadocMethod"})
 @SpringBootTest
-public class CardControllerTest {
+public class  CardControllerTest {
 
     private ListOfCardsRepository listRepo;
 
@@ -80,7 +80,7 @@ public class CardControllerTest {
     @Test
     public void addListOfCardsCorrect() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -96,7 +96,7 @@ public class CardControllerTest {
     @Test
     public void addListOfCardsWrongNull() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -111,7 +111,7 @@ public class CardControllerTest {
     @Test
     public void addListOfCardsWrongEmpty() {
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -125,9 +125,9 @@ public class CardControllerTest {
     @Test
     public void addListOfCardsWrongBoardListUnrelate() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         Board b2 = new Board("My Schedule 2", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1", b2,new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 
@@ -142,7 +142,7 @@ public class CardControllerTest {
     @Test
     public void editListOfCardsCorrect() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -157,7 +157,7 @@ public class CardControllerTest {
     @Test
     public void editListOfCardsWrongEmpty() {
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1", b, new ArrayList<>());
         Card c = new Card("","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -171,7 +171,7 @@ public class CardControllerTest {
     @Test
     public void editListOfCardsWrongNull() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
         Card c = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
@@ -187,9 +187,9 @@ public class CardControllerTest {
     @Test
     public void editListOfCardsWrongBoardListUnrelate() {
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet());
         Board b2 = new Board("My Schedule 2", "#111111", "#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1", b2,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 
@@ -205,9 +205,9 @@ public class CardControllerTest {
     @Test
     public void editListOfCardsWrongBoardListUnrelateCard() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         Board b2 = new Board("My Schedule 2", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b2,new ArrayList<>());
         ListOfCards l2 = new ListOfCards("List 1",b2,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l2,new ArrayList<>(),new HashSet<>());
@@ -224,7 +224,7 @@ public class CardControllerTest {
     @Test
     public void deleteListOfCardByIdCorrect() {
         Board b = new Board("My Board", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
         b.addList(l);
