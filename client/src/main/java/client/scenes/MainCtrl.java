@@ -91,16 +91,6 @@ public class MainCtrl {
     }
 
 
-    /**
-     * Show the board scene.
-     * @param b
-     */
-    public void showBoard(Board b) {
-        primaryStage.setTitle(b.title);
-        primaryStage.setScene(boardOverview);
-        primaryStage.setHeight(600);
-        boardCtrl.initialize();
-    }
 
     /**
      * Show the board scene.

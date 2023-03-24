@@ -4,7 +4,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
-import commons.BoardTitle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,9 +47,9 @@ public class MainScreenCtrl {
     private ServerUtils server;
 
     @FXML
-    private ListView<BoardTitle> list;
+    private ListView<Board> list;
 
-    ObservableList<BoardTitle> data;
+    ObservableList<Board> data;
 
     private final MainCtrl mainCtrl;
 
@@ -126,9 +125,7 @@ public class MainScreenCtrl {
                 Board board = new Board(title,"","","" , "" , "" , new ArrayList<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
-                BoardTitle boardTitle = new BoardTitle(title,"red", board);
-
-                server.addBoardTitle(boardTitle);
+                server.addBoardTitle(board);
 
                 refresh();
             }

@@ -181,7 +181,7 @@
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
+            <Button mnemonicParsing="false" fx:id="leave" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>

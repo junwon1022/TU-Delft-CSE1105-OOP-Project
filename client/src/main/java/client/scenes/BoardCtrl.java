@@ -93,35 +93,40 @@ public class BoardCtrl {
 
         data = FXCollections.observableArrayList();
 
-        // Placeholder for when Dave's branch is merged
-        // so there are actually multiple boards
-        try {
-            board = this.server.getBoardByKey(boardKey);
-        } catch (Exception e) {
-                System.out.println("So Bad");
 
+        try {
+            System.out.println("The key in this board would be "+ this.server.getBoardByKey(boardKey));
+            board = this.server.getBoardByKey(boardKey);
+            System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
+
+        } catch (Exception e) {
+            System.out.println("Sb");
                 board = getBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
         refresh();
-        /*
-        board = getBoard();
 
-        //add the board to the database
-        Board addedBoard =  server.addBoard(board);
-
-        //change the id of the board locally
-        board.id = server.getBoard(addedBoard.id).id;
-        System.out.println(board.id);
-        */
         this.mainCtrl = mainCtrl;
     }
+
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
+
+        try {
+            System.out.println("The key in this board would be "+ this.server.getBoardByKey(boardKey));
+            board = this.server.getBoardByKey(boardKey);
+            System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
+
+        } catch (Exception e) {
+            System.out.println("Sb");
+        }
+
         data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
@@ -130,6 +135,10 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
+        System.out.println("This new key is "+ board.key);
+
+        System.out.println("This new title is "+ board.title);
+
         AnchorPane.setBottomAnchor(addTag, 5.0);
         loadVBox();
         loadVBox2();
@@ -319,6 +328,8 @@ public class BoardCtrl {
      * @return the new board
      */
     private Board getBoard(){
+
+
         return new Board("My Board", null, null, null, null, null, new ArrayList<>());
     }
 

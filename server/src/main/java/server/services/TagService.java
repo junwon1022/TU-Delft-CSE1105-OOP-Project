@@ -1,6 +1,5 @@
 package server.services;
 
-import commons.Board;
 import commons.Card;
 import commons.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import java.util.Set;
 @Service
 public class TagService {
 
-    private static TagRepository tagRepository;
+    private TagRepository tagRepository;
 
     /**
      * Constructor with parameters
@@ -24,28 +23,23 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-
     /**
-     * Check if a tag is in the given board
+     * Check if a card contains a tag
+     * @param tag
+     * @param card
+     * @return true if tag in card
      */
-    public static boolean tagInBoard(Tag tag, Board board) {
-        return tag.board == board;
-    }
-
-    public static Tag editTagColor(long tagId, String newColor) {
-        Tag tag = tagRepository.findById(tagId).get();
-        tag.colour = newColor;
-        tagRepository.save(tag);
-        return tag;
+    public boolean tagInCard(Tag tag, Card card) {
+        return tag.cards.contains(card);
     }
 
     /**
      * Get all tags of a given card
-     * @param board
+     * @param card
      * @return the set of tags
      */
-    public Set<Tag> getTags(Board board) {
-        return board.tags;
+    public Set<Tag> getTags(Card card) {
+        return card.tags;
     }
 
     /**
@@ -53,7 +47,7 @@ public class TagService {
      * @param id
      * @return a tag
      */
-    public static Tag getTagById(Long id) throws Exception {
+    public Tag getTagById(Long id) throws Exception {
         return tagRepository.findById(id)
                 .orElseThrow(() -> new Exception("Tag not found with id " + id));
     }
@@ -61,15 +55,15 @@ public class TagService {
     /**
      * Create a new tag
      * @param tag
-     * @param board
+     * @param card
      * @return the new tag
      */
-    public static Tag createTag(Tag tag, Board board) throws Exception {
+    public Tag createTag(Tag tag, Card card) throws Exception {
         if(tag.name == null || tag.name.isEmpty()) {
             throw new Exception("Tag cannot be created without a name.");
         }
-        tag.board = board;
-        board.tags.add(tag);
+        tag.cards.add(card);
+        card.tags.add(tag);
         return tagRepository.save(tag);
     }
 
@@ -87,7 +81,7 @@ public class TagService {
      * @param newName
      * @return the edited tag
      */
-    public static Tag editTagName(Long id, String newName) throws Exception {
+    public Tag editTagName(Long id, String newName) throws Exception {
         if(newName == null || newName.isEmpty()) {
             throw new Exception("Name should not be null or empty.");
         }
@@ -109,9 +103,5 @@ public class TagService {
         Tag tag = getTagById(id);
         tag.colour = newColour;
         return tagRepository.save(tag);
-    }
-
-    public void saveTag(Tag tag) {
-        tagRepository.save(tag);
     }
 }

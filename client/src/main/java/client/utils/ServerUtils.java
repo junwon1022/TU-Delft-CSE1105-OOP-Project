@@ -45,14 +45,23 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
-    private static String SERVER = "http://localhost:8080/";
+    private static String SERVER_ADDRESS = "8080";
+    private static String SERVER = "http://localhost:" + SERVER_ADDRESS + "/";
 
     /**
      * Changes the preset server adress from 8080 to the textbox input
      * @param server
      */
-    public void changeServer(String server){
+    public void changeServer(String server) throws Exception {
+        this.SERVER_ADDRESS = server;
         this.SERVER = "http://localhost:" + server + "/";
+
+        try{
+            connect("ws://localhost:" + SERVER_ADDRESS + "/websocket");
+        }
+        catch(Exception e){
+            throw new Exception("Server invalid");
+        }
     }
 
     /**
@@ -102,7 +111,7 @@ public class ServerUtils {
     private List<ListOfCards> serverData = null;
 
     //Data related to board titles (How the boards are displayed on the main screen)
-    private List<BoardTitle> boardData = null;
+    private List<Board> boardData = null;
 
 
     /**
@@ -120,14 +129,14 @@ public class ServerUtils {
      * Placeholder add card function.
      * @param boardTitle the board title to add
      */
-    public void addBoardTitle(BoardTitle boardTitle) {
+    public void addBoardTitle(Board boardTitle) {
         if(boardData == null) {
             boardData = new ArrayList<>();
         }
-        Board b = boardTitle.board;
+        Board b = boardTitle;
         addBoard(b);
         //Gets the id from the last board added
-        boardTitle.board = getBoards().get(getBoards().size()-1);
+        boardTitle = getBoards().get(getBoards().size()-1);
         boardData.add(boardTitle);
 
     }
@@ -164,21 +173,23 @@ public class ServerUtils {
     /**
      * Placeholder/ method for the delete board function,
      * the actual method should follow the logic behind this
-     * @param boardTitle - board to be deleted
+     * @param board - board to be deleted
      */
-    public void deleteBoard(BoardTitle boardTitle){
+    public void deleteBoard(Board board){
         int number = 0;
         boolean found = false;
         if(boardData != null){
-            for(BoardTitle b: boardData){
-                if(b.equals(boardTitle)) {
+            for(Board b: boardData){
+                if(b.equals(board)) {
                     found = true;
                     break;
                 }
                 number++;
             }
         }
+        if(found == true)
         boardData.remove(number);
+
     }
 
 
@@ -290,7 +301,7 @@ public class ServerUtils {
      * @return a list of board title objects.
      */
 
-    public List<BoardTitle> getMyBoardTitles(){
+    public List<Board> getMyBoardTitles(){
 
         if(boardData == null) {
             boardData = new ArrayList<>();
@@ -496,7 +507,9 @@ public class ServerUtils {
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
     }
 
-    private StompSession session = connect("ws://localhost:8080/websocket");
+    private StompSession session = connect("ws://localhost:" + SERVER_ADDRESS + "/websocket");
+
+
 
     /**
      * Creates a StompSession to connect the client to the server from the specified url

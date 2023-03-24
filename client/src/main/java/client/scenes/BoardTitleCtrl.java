@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.BoardTitle;
+import commons.Board;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,12 +13,12 @@ import javafx.stage.Modality;
 
 import java.io.IOException;
 
-public class BoardTitleCtrl extends ListCell<BoardTitle> {
+public class BoardTitleCtrl extends ListCell<Board> {
     private final ServerUtils server;
     private final MainScreenCtrl mainScreenCtrl;
 
     private final MainCtrl mainCtrl;
-    private BoardTitle data;
+    private Board data;
 
     @FXML
     private AnchorPane root;
@@ -65,15 +65,15 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
      *        being used to render an "empty" row.
      */
     @Override
-    protected void updateItem(BoardTitle item, boolean empty) {
+    protected void updateItem(Board item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            title.setText(item.text);
-            key.setText("Key: " + item.board.key);
+            title.setText(item.title);
+            key.setText("Key: " + item.key);
             data = item;
 
             setGraphic(root);
@@ -106,8 +106,18 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
      * @param event - the join button being clicked
      */
     public void join(ActionEvent event){
-        //System.out.println("The key is " + data.board.key);
-        mainCtrl.showBoard(data.board.key);
+        System.out.println("The key is " + data.key);
+            mainCtrl.showBoard(data.key);
+    }
+
+
+    /**
+     * Method that lets you rename a board according to the title
+     * @param event - the join button being clicked
+     */
+    public void rename(ActionEvent event){
+        System.out.println("The key is " + data.key);
+        mainCtrl.showBoard(data.key);
     }
 
 

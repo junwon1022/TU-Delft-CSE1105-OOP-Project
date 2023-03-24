@@ -51,7 +51,7 @@ public class ConnectCtrl {
      * @param event the ActionEvent
      * @return
      */
-    public void connectToMainScreen(ActionEvent event) {
+    public void connectToMainScreen(ActionEvent event) throws Exception {
         server.changeServer(field.getText());
 
         mainCtrl.showMainScreen();
