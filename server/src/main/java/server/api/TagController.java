@@ -6,19 +6,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import server.database.TagRepository;
 import server.services.*;
 
 import java.util.Set;
 
 
 @RestController
-@RequestMapping("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}/tags")
+@RequestMapping("/api/boards/{board_id}/tags")
 public class TagController {
 
 
     private final TagService tagService;
-    private final CardService cardService;
-    private final ListOfCardsService listOfCardsService;
+
     private final BoardService boardService;
 
     @Autowired
@@ -27,53 +27,33 @@ public class TagController {
     /**
      * Constructor with parameters
      *
-     * @param cardService
-     * @param listOfCardsService
      * @param tagService
      * @param boardService
      * @param simpMessagingTemplate
      */
     @Autowired
-    public TagController(CardService cardService,
-                         ListOfCardsService listOfCardsService,
-                         TagService tagService, BoardService boardService,
+    public TagController(TagService tagService, BoardService boardService,
                          SimpMessagingTemplate simpMessagingTemplate) {
-        this.cardService = cardService;
-        this.listOfCardsService = listOfCardsService;
         this.tagService = tagService;
         this.boardService = boardService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
-     * Get the tags within a given card
+     * Get the tags within a given board
      *
      * @param boardId
-     * @param listId
-     * @param cardId
-     * @return the set of tags
+     * @return the list of tags
+     * @throws Exception
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<Set<Tag>> getTag(
-            @PathVariable("board_id") long boardId,
-            @PathVariable("list_id") long listId,
-            @PathVariable("card_id") long cardId
-    ) {
+    private ResponseEntity<Set<Tag>> getTags
+    (@PathVariable("board_id") long boardId) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
-            // Get the list
-            ListOfCards list = listOfCardsService.getListById(listId);
-            // Get the card
-            Card card = cardService.getCardById(cardId);
-
-            // Check if the list is in the board and the card is in the list
-            if(!listOfCardsService.listInBoard(list, board)
-                    || !cardService.cardInList(card, list)) {
-                return ResponseEntity.badRequest().build();
-            }
-            Set<Tag> tags = tagService.getTags(card);
-            // Return the cards with an HTTP 200 OK status
+            Set<Tag> tags = tagService.getTags(board);
+            // Return the lists with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(tags);
         }
         catch (Exception e) {
@@ -81,25 +61,16 @@ public class TagController {
         }
     }
 
-
     /**
      * Get a tag given its id
      *
      * @param boardId
-     * @param listId
-     * @param cardId
      * @param tagId
-     * @return the tag
      */
     @GetMapping(path = {"/{tag_id}", "/{tag_id}/"})
     private ResponseEntity<Tag> getTagById(@PathVariable("board_id") long boardId,
-                                           @PathVariable("list_id") long listId,
-                                           @PathVariable("card_id") long cardId,
                                            @PathVariable("tag_id") long tagId) {
         try {
-            if(!validPath(boardId, listId, cardId, tagId)) {
-                return ResponseEntity.badRequest().build();
-            }
             // Get the tag
             Tag tag = tagService.getTagById(tagId);
             // Return the tag with an HTTP 200 OK status
@@ -110,38 +81,24 @@ public class TagController {
         }
     }
 
+
     /**
      * Create a new tag
      *
      * @param tag
      * @param boardId
-     * @param listId
-     * @param cardId
-     * @return the new tag
      */
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag,
-                                         @PathVariable("board_id") long boardId,
-                                         @PathVariable("list_id") long listId,
-                                         @PathVariable("card_id") long cardId) {
+                                         @PathVariable("board_id") long boardId) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
-            // Get the list
-            ListOfCards list = listOfCardsService.getListById(listId);
-            // Get the card
-            Card card = cardService.getCardById(cardId);
 
-            // Check if the list is in the board and the card is in the list
-            if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card,list)) {
-                return ResponseEntity.badRequest().build();
-            }
+            tagService.createTag(tag, board);
 
-            // Save the new tag to the database
-            tagService.createTag(tag, card);
-            // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-            // Return the saved tag with an HTTP 201 Created status
+
             return ResponseEntity.status(HttpStatus.CREATED).body(tag);
         }
         catch (Exception e) {
@@ -149,34 +106,61 @@ public class TagController {
         }
     }
 
+
     /**
-     * Edit a tag's name
+     * Update a tag's name
      *
      * @param newName
      * @param boardId
-     * @param listId
-     * @param cardId
      * @param tagId
-     * @return the edited tag
+     *
+     * @return the updated tag
      */
-    @PostMapping(path = {"/{tag_id}/name", "/{tag_id}/name/"})
-    public ResponseEntity<Tag> editTagName(@RequestBody String newName,
+    @PutMapping(path = {"/{tag_id}", "/{tag_id}/"})
+    public ResponseEntity<Tag> updateTag(@RequestBody String newName,
+                                         @PathVariable("board_id") long boardId,
+                                         @PathVariable("tag_id") long tagId) {
+        try {
+            if(!validPath(boardId, tagId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            // Get the board to which the tag will be edited
+            Board board = boardService.getBoardById(boardId);
+            // Edit the tag and save it in the database
+            Tag tag = tagService.editTagName(tagId, newName);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the edited list with an HTTP 200 OK status
+            return ResponseEntity.ok().body(tag);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    /**
+     * Update the color of the tag
+     *
+     * @param newColor
+     * @param boardId
+     * @param tagId
+     */
+    @PutMapping(path = {"/{tag_id}/color", "/{tag_id}/color/"})
+    public ResponseEntity<Tag> updateColor(@RequestBody String newColor,
                                            @PathVariable("board_id") long boardId,
-                                           @PathVariable("list_id") long listId,
-                                           @PathVariable("card_id") long cardId,
                                            @PathVariable("tag_id") long tagId) {
-
         try {
-            if(!validPath(boardId, listId, cardId, tagId)) {
+            if(!validPath(boardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Get the board in which the tag will be updated
+            // Get the board to which the tag will be edited
             Board board = boardService.getBoardById(boardId);
             // Edit the tag and save it in the database
-            Tag tag = tagService.editTagName(tagId,newName);
+            Tag tag = tagService.editTagColour(tagId, newColor);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-            // Return the edited tag with an HTTP 200 OK status
+            // Return the edited list with an HTTP 200 OK status
             return ResponseEntity.ok().body(tag);
         }
         catch (Exception e) {
@@ -184,75 +168,29 @@ public class TagController {
         }
     }
 
-    /**
-     * Edit a tag's colour
-     *
-     * @param newColour
-     * @param boardId
-     * @param listId
-     * @param cardId
-     * @param tagId
-     * @return the edited tag
-     */
-    @PostMapping(
-            path = {
-                "/{tag_id}/colour",
-                "/{tag_id}/colour",
-                "/{tag_id}/color",
-                "/{tag_id}/color"
-            }
-    )
-    public ResponseEntity<Tag> editColour(@RequestBody String newColour,
-                                          @PathVariable("board_id") long boardId,
-                                          @PathVariable("list_id") long listId,
-                                          @PathVariable("card_id") long cardId,
-                                          @PathVariable("tag_id") long tagId) {
-
-        try {
-            if(!validPath(boardId, listId, cardId, tagId)) {
-                return ResponseEntity.badRequest().build();
-            }
-            // Get the board in which the colour will be updated
-            Board board = boardService.getBoardById(boardId);
-            // Edit the tag and save it in the database
-            Tag tag = tagService.editTagColour(tagId,newColour);
-            // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-            // Return the edited tag with an HTTP 200 OK status
-            return ResponseEntity.ok().body(tag);
-        }
-        catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
 
     /**
-     * Delete a tag given its id
+     * Delete a tag
      *
      * @param boardId
-     * @param listId
-     * @param cardId
      * @param tagId
-     * @return the deleted tag
      */
     @DeleteMapping(path = {"/{tag_id}", "/{tag_id}/"})
     public ResponseEntity<Tag> removeTagById(@PathVariable("board_id") long boardId,
-                                             @PathVariable("list_id") long listId,
-                                             @PathVariable("card_id") long cardId,
                                              @PathVariable("tag_id") long tagId) {
         try {
-            if(!validPath(boardId, listId, cardId, tagId)) {
+            if(!validPath(boardId, tagId)) {
                 return ResponseEntity.badRequest().build();
             }
-            // Get the board from which the tag will be deleted
+            // Get the board from which the list of tag will be removed
             Board board = boardService.getBoardById(boardId);
-            // Get the card
+            // Get the tag
             Tag tag = tagService.getTagById(tagId);
             // Delete the tag
             tagService.deleteTagById(tagId);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-            // Return the saved tag with an HTTP 200 OK status
+            // Return the saved list with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }
         catch (Exception e) {
@@ -260,40 +198,40 @@ public class TagController {
         }
     }
 
+
     /**
-     * Checks whether the path to the tag exists
+     * Check if there's a valid path between the board and tag
      *
      * @param boardId
-     * @param listId
-     * @param cardId
      * @param tagId
-     * @return true if path is valid
-     * @throws Exception
+     *
+     * @return true if there's a valid path, false otherwise
      */
-    private boolean validPath(long boardId, long listId, long cardId, long tagId)
-            throws Exception {
+    private boolean validPath(long boardId, long tagId) throws Exception {
         // Get the board
         Board board = boardService.getBoardById(boardId);
-        // Get the list
-        ListOfCards list = listOfCardsService.getListById(listId);
-        // Get the card
-        Card card = cardService.getCardById(cardId);
         // Get the tag
         Tag tag = tagService.getTagById(tagId);
-
-        // Check if the list is in the board
-        if(!listOfCardsService.listInBoard(list, board)) {
-            return false;
-        }
-        // Check if the card is in the list
-        if(!cardService.cardInList(card, list)) {
-            return false;
-        }
-        // Check if the tag is applied to the card
-        if(!tagService.tagInCard(tag, card)){
+        // Check if the tag is in the board
+        if(!tagService.tagInBoard(tag, board)) {
             return false;
         }
         return true;
     }
-}
 
+    /**
+     *
+     * @param s - The new color to set
+     * @param id - The ID of the tag
+     * @throws Exception
+     */
+    public void updateTagColor(String s, long id) throws Exception {
+        Tag tag = tagService.getTagById(id);
+        tag.setColour(s);
+        tagService.saveTag(tag);
+    }
+
+
+
+
+}
