@@ -345,3 +345,19 @@
 .rename-tag {
     -fx-content-display: center;
 }
+
+#lock {
+    -fx-background-image: url("lock-icon.png");
+}
+
+#lock:hover {
+    -fx-background-image: url("lock-custom.png");
+}
+
+#unlock {
+     -fx-background-image: url("unlock-icon.png");
+ }
+
+#unlock:hover {
+    -fx-background-image: url("unlock-custom.png");
+}

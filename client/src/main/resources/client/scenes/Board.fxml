@@ -196,5 +196,7 @@
             <Insets bottom="10.0" left="25.0" right="25.0" top="20.0" />
          </padding>
       </VBox>
+      <Button id="lock" fx:id="lock" layoutX="427.0" layoutY="37.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="27.0" styleClass="image-button" stylesheets="@../../styles.css" />
+      <Button id="unlock" fx:id="unlock" layoutX="469.0" layoutY="37.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="27.0" styleClass="image-button" stylesheets="@../../styles.css" />
    </children>
 </AnchorPane>
