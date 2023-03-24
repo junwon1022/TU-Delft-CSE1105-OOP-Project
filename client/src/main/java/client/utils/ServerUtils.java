@@ -45,7 +45,15 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String SERVER = "http://localhost:8080/";
+
+    /**
+     * Changes the preset server adress from 8080 to the textbox input
+     * @param server
+     */
+    public void changeServer(String server){
+        this.SERVER = "http://localhost:" + server + "/";
+    }
 
     /**
      * Get all quotes from the server.
@@ -91,7 +99,11 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    List<ListOfCards> serverData = null;
+    private List<ListOfCards> serverData = null;
+
+    //Data related to board titles (How the boards are displayed on the main screen)
+    private List<BoardTitle> boardData = null;
+
 
     /**
      * Placeholder add card function.
@@ -101,6 +113,23 @@ public class ServerUtils {
         for (ListOfCards list: serverData)
             if (card.list.equals(list))
                 list.cards.add(card);
+    }
+
+
+    /**
+     * Placeholder add card function.
+     * @param boardTitle the board title to add
+     */
+    public void addBoardTitle(BoardTitle boardTitle) {
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        Board b = boardTitle.board;
+        addBoard(b);
+        //Gets the id from the last board added
+        boardTitle.board = getBoards().get(getBoards().size()-1);
+        boardData.add(boardTitle);
+
     }
 
     /**
@@ -131,6 +160,32 @@ public class ServerUtils {
         }
 
     }
+
+    /**
+     * Placeholder/ method for the delete board function,
+     * the actual method should follow the logic behind this
+     * @param boardTitle - board to be deleted
+     */
+    public void deleteBoard(BoardTitle boardTitle){
+        int number = 0;
+        boolean found = false;
+        if(boardData != null){
+            for(BoardTitle b: boardData){
+                if(b.equals(boardTitle)) {
+                    found = true;
+                    break;
+                }
+                number++;
+            }
+        }
+        boardData.remove(number);
+    }
+
+
+
+
+
+
 
     /**
      * Placeholder method to get data from server
@@ -197,6 +252,21 @@ public class ServerUtils {
                 .put(Entity.json(""));
     }
 
+
+
+    /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<ListOfCards> getLists(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<ListOfCards>>(){});
+    }
+
     /**
      * Placeholder method to get data from server
      * @param boardId the id of the board
@@ -216,18 +286,47 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<BoardTitle> getMyBoardTitles(){
+
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+
+        return boardData;
+    }
+
+    /**
      * Get boards from server
      *
      * @param boardId
      * @return boards
      */
-    public Board getBoard(long boardId){
+    public Board getBoard(long boardId) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<Board>() {});
     }
+
+    /**
+     * Get boards from server based on key
+     * @param key
+     * @return boards
+     */
+    public Board getBoardByKey(String key){
+
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/boards/getByKey/" + key) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<Board>() {});
+    }
+
 
     /**
      * Add a new board to the server
@@ -245,7 +344,6 @@ public class ServerUtils {
     /**
      * Get all lists from the server
      *
-     * @param boardId
      * @return - the lists from the server
      */
     public ListOfCards getList(long boardId){
@@ -257,16 +355,15 @@ public class ServerUtils {
     }
 
     /**
-     * Method that returns the lists from the database
-     * @param boardId - the id of the board of the lists
-     * @return a list containing all lists of cards
+     * Get all lists from the server
+     * @return - the lists from the server
      */
-    public List<ListOfCards> getLists(long boardId){
+    public List<Board> getBoards(){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .target(SERVER).path("/api/boards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<ListOfCards>>(){});
+                .get(new GenericType<List<Board>>(){});
     }
 
 

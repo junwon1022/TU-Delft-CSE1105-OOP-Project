@@ -97,9 +97,9 @@ public class MainScreenCtrl {
 
         System.out.println(server.getMyBoardTitles());
         System.out.println(server.getBoardByKey(joinField.getText()));
-        Board b = server.getBoardByKey(joinField.getText());
-
-        mainCtrl.showBoard(b);
+       // Board b = server.getBoardByKey(joinField.getText());
+        System.out.println(joinField.getText());
+        mainCtrl.showBoard(joinField.getText());
 
     }
 
@@ -123,10 +123,10 @@ public class MainScreenCtrl {
             if (controller.success) {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"red","read",new ArrayList<>());
+                Board board = new Board(title,"","","" , "" , "" , new ArrayList<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
-                BoardTitle boardTitle = new BoardTitle(title,"red",board);
+                BoardTitle boardTitle = new BoardTitle(title,"red", board);
 
                 server.addBoardTitle(boardTitle);
 

@@ -106,7 +106,8 @@ public class BoardTitleCtrl extends ListCell<BoardTitle> {
      * @param event - the join button being clicked
      */
     public void join(ActionEvent event){
-        mainCtrl.showBoard(data.board);
+        //System.out.println("The key is " + data.board.key);
+        mainCtrl.showBoard(data.board.key);
     }
 
 

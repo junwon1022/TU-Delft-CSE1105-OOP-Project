@@ -141,26 +141,47 @@
             </AnchorPane>
             <Accordion>
               <panes>
-                <TitledPane stylesheets="@../../styles.css" text="My Boards">
+                <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="My Boards">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
                            <children>
-                              <ListView layoutX="-11.0" layoutY="-21.0" prefHeight="211.0" prefWidth="200.0" stylesheets="@../../styles.css" />
+                              <VBox fx:id="vBox2" layoutX="-8.0" layoutY="-18.0" prefHeight="127.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
                            </children>
                         </AnchorPane>
                   </content>
                      <font>
-                        <Font name="Corbel" size="17.0" />
+                        <Font name="Corbel" size="19.0" />
                      </font>
                 </TitledPane>
               </panes>
             </Accordion>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" onAction="#openTagManageScreen" stylesheets="@../../styles.css" text="Manage Tags">
+            <Accordion>
+               <panes>
+                  <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="Manage Tags">
+                     <content>
+                        <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
+                           <children>
+                              <Button id="add" fx:id="addTag" alignment="CENTER" contentDisplay="BOTTOM" layoutX="82.0" layoutY="82.0" mnemonicParsing="false" onAction="#addTag" prefHeight="23.0" prefWidth="35.0" styleClass="normal-button" text="➕">
+                                 <font>
+                                    <Font name="Corbel" size="12.0" />
+                                 </font>
+                              </Button>
+                              <VBox fx:id="vBox" layoutX="-7.0" layoutY="-13.0" prefHeight="93.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                     <font>
+                        <Font name="Corbel" size="19.0" />
+                     </font>
+                  </TitledPane>
+               </panes>
+            </Accordion>
+            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
+            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
@@ -172,7 +193,7 @@
             </Button>
          </children>
          <padding>
-            <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+            <Insets bottom="10.0" left="25.0" right="25.0" top="20.0" />
          </padding>
       </VBox>
    </children>
