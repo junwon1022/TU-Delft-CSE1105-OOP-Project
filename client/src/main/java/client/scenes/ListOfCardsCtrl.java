@@ -200,9 +200,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
 
-            name.clear();
-            name.setOpacity(0);
-            addCardButton.setOpacity(0);
+            hideButton(event);
 
             board.refresh();
         } else {
@@ -221,10 +219,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(false);
         // Shorten the list
         Timeline timelineList = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 288))
+                new KeyFrame(Duration.seconds(0.4), new KeyValue(list.prefHeightProperty(), 288))
         );
         Timeline timelineName = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(name.visibleProperty(), true))
+                new KeyFrame(Duration.seconds(0.4), new KeyValue(name.visibleProperty(), true))
         );
         timelineList.play();
         timelineName.play();
@@ -236,6 +234,23 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event the KeyEvent
      */
     public void hideButton(ActionEvent event) {
+        name.clear();
+        name.setVisible(false);
+        addCardButton.setVisible(false);
+        hideCard.setVisible(false);
+        addButton.setVisible(true);
+        // Elongate the list
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+        );
+        timeline.play();
+    }
+
+    /**
+     * Hide add card buttons with keyboard
+     * @param keyEvent
+     */
+    public void hideButtonKeyboard(javafx.scene.input.KeyEvent keyEvent) {
         name.clear();
         name.setVisible(false);
         addCardButton.setVisible(false);
@@ -382,9 +397,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
 
-            name.clear();
-            name.setOpacity(0);
-            addCardButton.setOpacity(0);
+            hideButtonKeyboard(event);
 
             board.refresh();
         } else {
@@ -397,8 +410,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event the KeyEvent
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
-        name.clear();
-        name.setOpacity(0);
-        addCardButton.setOpacity(0);
+        hideButtonKeyboard(event);
     }
 }
