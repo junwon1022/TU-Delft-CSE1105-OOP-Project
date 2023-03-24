@@ -25,7 +25,7 @@ public class CheckListItemTest {
     public void setUp() {
         board = new Board("Algebra", "#ffffff", "#ffffff",
                 "#ffff22", "#ffff22",
-                "pass", new ArrayList<ListOfCards>());
+                "pass", new ArrayList<ListOfCards>(), new HashSet<Tag>());
         list = new ListOfCards("Grasple", board, new ArrayList<Card>());
 
         card = new Card("Homework", "Somewhat long description",
