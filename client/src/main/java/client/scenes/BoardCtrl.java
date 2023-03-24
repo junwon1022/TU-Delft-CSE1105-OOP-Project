@@ -72,6 +72,11 @@ public class BoardCtrl {
     @FXML
     private VBox vBox2;
 
+    @FXML
+    private Button lock;
+    @FXML
+    private Button unlock;
+
     ObservableList<ListOfCards> data;
 
     private Board board;
@@ -124,6 +129,13 @@ public class BoardCtrl {
         loadVBox();
         loadVBox2();
         refresh();
+        if(board.password == null) {
+            lock.setVisible(true);
+            unlock.setVisible(false);
+        } else {
+            lock.setVisible(true);
+            unlock.setVisible(false);
+        }
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
             Platform.runLater(() -> data.setAll(s.lists));
