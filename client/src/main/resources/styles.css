@@ -106,7 +106,7 @@
     -fx-background-radius: 10px;
 }
 
-#add-card:hover, #card-confirm:hover {
+#add-card:hover, #card-confirm:hover, #card-cancel:hover {
     -fx-background-color: #CAF0F8;
     -fx-text-fill: #00B4D8;
     -fx-border-color: #00B4D8;
@@ -115,7 +115,7 @@
     -fx-border-radius: 10px;
 }
 
-#add-card, #card-confirm {
+#add-card, #card-confirm, #card-cancel {
     -fx-background-color: #4FCAE2;
     -fx-text-fill: #E4F8FC;
     -fx-border-color: #4FCAE2;
