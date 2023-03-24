@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-import server.database.TagRepository;
 import server.services.*;
 
 import java.util.Set;
@@ -87,6 +86,7 @@ public class TagController {
      *
      * @param tag
      * @param boardId
+     * @return the new tag
      */
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag,
@@ -145,6 +145,7 @@ public class TagController {
      * @param newColor
      * @param boardId
      * @param tagId
+     * @return the updated tag
      */
     @PutMapping(path = {"/{tag_id}/color", "/{tag_id}/color/"})
     public ResponseEntity<Tag> updateColor(@RequestBody String newColor,
@@ -174,6 +175,7 @@ public class TagController {
      *
      * @param boardId
      * @param tagId
+     * @return the deleted tag
      */
     @DeleteMapping(path = {"/{tag_id}", "/{tag_id}/"})
     public ResponseEntity<Tag> removeTagById(@PathVariable("board_id") long boardId,

@@ -1,7 +1,6 @@
 package server.services;
 
 import commons.Board;
-import commons.Card;
 import commons.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +25,9 @@ public class TagService {
 
     /**
      * Check if a tag is in the given board
+     * @param tag
+     * @param board
+     * @return true if the tag is in the board, false otherwise
      */
     public boolean tagInBoard(Tag tag, Board board) {
         return tag.board == board;
@@ -107,6 +109,11 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
+    /**
+     * Save a tag in the database
+     *
+     * @param tag
+     */
     public void saveTag(Tag tag) {
         tagRepository.save(tag);
     }
