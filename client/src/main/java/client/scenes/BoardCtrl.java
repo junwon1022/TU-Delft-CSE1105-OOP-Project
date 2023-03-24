@@ -129,12 +129,12 @@ public class BoardCtrl {
         loadVBox();
         loadVBox2();
         refresh();
-        if(board.password == null) {
-            lock.setVisible(true);
-            unlock.setVisible(false);
+        if (board.password == null) {
+            lock.setVisible(false);
+            unlock.setVisible(true);
         } else {
-            lock.setVisible(true);
-            unlock.setVisible(false);
+            lock.setVisible(false);
+            unlock.setVisible(true);
         }
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
@@ -209,7 +209,6 @@ public class BoardCtrl {
                 String title = controller.storedText;
 
                 ListOfCards list = getList(title);
-                //server.addList(list);
                 ListOfCards addedList = server.addListOfCards(list);
                 System.out.println(addedList);
 
@@ -309,15 +308,55 @@ public class BoardCtrl {
     }
 
     /**
-     * Method that creates a new board
+     * Method that creates a new board that is shown in case of an exception
      * @return the new board
      */
     private Board getBoard(){
         return new Board("My Board", null, null, null, null, null, new ArrayList<>());
     }
 
-
+    /**
+     * Creates a new list with a given title
+     * @param title
+     * @return
+     */
     private ListOfCards getList(String title){
         return new ListOfCards(title, board, new ArrayList<>());
+    }
+
+    /**
+     * Opens a new window to add a new list of cards.
+     * @param event the ActionEvent
+     */
+    public void addPassword(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddPassword.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            AddPasswordCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Protect your board");
+            Scene addPasswordScene = new Scene(root);
+            addPasswordScene.getStylesheets().add("styles.css");
+            stage.setHeight(317);
+            stage.setWidth(353);
+            stage.setScene(addPasswordScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String title = controller.storedText;
+
+                ListOfCards list = getList(title);
+                ListOfCards addedList = server.addListOfCards(list);
+                System.out.println(addedList);
+
+                //change the id of the board locally
+                list.id = addedList.id;
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
