@@ -52,7 +52,8 @@ public class BoardTitleCtrl extends ListCell<Board> {
 
         try {
             fxmlLoader.load();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -107,7 +108,7 @@ public class BoardTitleCtrl extends ListCell<Board> {
      */
     public void join(ActionEvent event){
         System.out.println("The key is " + data.key);
-            mainCtrl.showBoard(data.key);
+        mainCtrl.showBoard(data.key);
     }
 
 

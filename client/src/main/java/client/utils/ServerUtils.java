@@ -45,19 +45,21 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
-    private static String SERVER_ADDRESS = "8080";
-    private static String SERVER = "http://localhost:" + SERVER_ADDRESS + "/";
+    private static String SERVER = "http://localhost:8080/";
+
+    private static String SERVER_ADDRESS = "localhost:8080";
 
     /**
      * Changes the preset server adress from 8080 to the textbox input
      * @param server
      */
     public void changeServer(String server) throws Exception {
+
+        this.SERVER = "http://" + server + "/";
         this.SERVER_ADDRESS = server;
-        this.SERVER = "http://localhost:" + server + "/";
 
         try{
-            connect("ws://localhost:" + SERVER_ADDRESS + "/websocket");
+            connect("ws://" + server + "/websocket");
         }
         catch(Exception e){
             throw new Exception("Server invalid");
@@ -188,7 +190,7 @@ public class ServerUtils {
             }
         }
         if(found == true)
-        boardData.remove(number);
+            boardData.remove(number);
 
     }
 
@@ -356,6 +358,7 @@ public class ServerUtils {
      * Get all lists from the server
      *
      * @return - the lists from the server
+     * @param boardId
      */
     public ListOfCards getList(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
@@ -435,6 +438,12 @@ public class ServerUtils {
     }
 
 
+    /**
+     * Adds a tag
+     * @param tag - The tag that is being added
+     * @return The tag added
+     */
+
     public Tag addTag(Tag tag) {
         ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + tag.board.id
@@ -507,7 +516,7 @@ public class ServerUtils {
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
     }
 
-    private StompSession session = connect("ws://localhost:" + SERVER_ADDRESS + "/websocket");
+    private StompSession session = connect("ws://" +  SERVER_ADDRESS + "/websocket");
 
 
 
@@ -575,6 +584,11 @@ public class ServerUtils {
         session.send(dest, o);
     }
 
+    /**
+     * Adds a tag to a board
+     * @param board
+     * @param text
+     */
     public void addTag(Board board, String text) {
         Tag tag = new Tag();
         tag.board = board;

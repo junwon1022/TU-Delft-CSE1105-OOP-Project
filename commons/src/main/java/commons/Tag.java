@@ -48,6 +48,7 @@ public class Tag {
      * @param name
      * @param colour
      * @param cards
+     * @param board
      */
     public Tag(String name, String colour, Board board, Set<Card> cards) {
         this.name = name;

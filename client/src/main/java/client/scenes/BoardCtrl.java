@@ -85,6 +85,7 @@ public class BoardCtrl {
      *
      * @param server    The server to use.
      * @param mainCtrl The main control
+     * @param boardKey The key of a specific board
      */
     @Inject
     public BoardCtrl(ServerUtils server, MainCtrl mainCtrl, String boardKey) {
@@ -95,14 +96,14 @@ public class BoardCtrl {
 
 
         try {
-            System.out.println("The key in this board would be "+ this.server.getBoardByKey(boardKey));
             board = this.server.getBoardByKey(boardKey);
-            System.out.println("This Board is " + board.toString());
+          //  System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Sb");
-                board = getBoard();
+            board = getBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
@@ -118,12 +119,12 @@ public class BoardCtrl {
     public void initialize() {
 
         try {
-            System.out.println("The key in this board would be "+ this.server.getBoardByKey(boardKey));
             board = this.server.getBoardByKey(boardKey);
             System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Sb");
         }
 
