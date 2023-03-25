@@ -96,7 +96,8 @@ public class MainScreenCtrl {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-            if(server.getBoardByKey(joinField.getText()) != null) mainCtrl.showBoard(joinField.getText());
+            if(server.getBoardByKey(joinField.getText()) != null)
+                mainCtrl.showBoard(joinField.getText());
             else throw new Exception("Doesnt Exist");
         }
         catch(Exception e){
