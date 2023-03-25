@@ -43,6 +43,16 @@ public class TagService {
         return board.tags;
     }
 
+    /**
+     * Get all tags of a given Card
+     *
+     * @param card
+     * @return the set of tags
+     */
+    public Set<Tag> getTags(commons.Card card) {
+        return card.tags;
+    }
+
 
     /**
      * Retrieve a tag given its id

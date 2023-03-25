@@ -18,6 +18,10 @@ public class TagController {
 
     private final TagService tagService;
 
+    private final CardService cardService;
+
+    private final ListOfCardsService listOfCardsService;
+
     private final BoardService boardService;
 
     @Autowired
@@ -27,13 +31,18 @@ public class TagController {
      * Constructor with parameters
      *
      * @param tagService
+     * @param cardService
+     * @param listOfCardsService
      * @param boardService
      * @param simpMessagingTemplate
      */
     @Autowired
-    public TagController(TagService tagService, BoardService boardService,
+    public TagController(TagService tagService, CardService cardService,
+                         ListOfCardsService listOfCardsService, BoardService boardService,
                          SimpMessagingTemplate simpMessagingTemplate) {
         this.tagService = tagService;
+        this.cardService = cardService;
+        this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
@@ -52,6 +61,31 @@ public class TagController {
             // Get the board
             Board board = boardService.getBoardById(boardId);
             Set<Tag> tags = tagService.getTags(board);
+            // Return the lists with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(tags);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Get the tags within a given card
+     *
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return the list of tags
+     */
+    @GetMapping(path = {"/cards/{card_id}", "/cards/{card_id}/"})
+    private ResponseEntity<Set<Tag>> getTagsByCardId
+    (@PathVariable("board_id") long boardId,
+        @PathVariable("list_id") long listId,
+        @PathVariable("card_id") long cardId) {
+        try {
+            // Get the card
+            Card card = cardService.getCardById(cardId);
+            Set<Tag> tags = tagService.getTags(card);
             // Return the lists with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(tags);
         }

@@ -3,12 +3,14 @@ package server.services;
 import commons.Board;
 import commons.ListOfCards;
 import commons.Card;
+import commons.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CardService {
@@ -92,5 +94,34 @@ public class CardService {
         Card card = getCardById(id);
         card.title = newTitle;
         return cardRepository.save(card);
+    }
+
+    /**
+     * Get all the tags of a given card
+     * @param card
+     * @return the set of tags
+     */
+    public Set<Tag> getTags(Card card) {
+        return card.tags;
+    }
+
+    /**
+     * Add a tag to a card
+     * @param card
+     * @param tag
+     */
+    public void addTagToCard(Card card, Tag tag) {
+        card.tags.add(tag);
+        cardRepository.save(card);
+    }
+
+    /**
+     * Remove a tag from a card
+     * @param card
+     * @param tag
+     */
+    public void removeTagFromCard(Card card, Tag tag) {
+        card.tags.remove(tag);
+        cardRepository.save(card);
     }
 }

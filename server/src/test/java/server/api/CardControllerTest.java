@@ -30,6 +30,7 @@ import server.database.ListOfCardsRepository;
 import server.services.BoardService;
 import server.services.CardService;
 import server.services.ListOfCardsService;
+import server.services.TagService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,6 +59,8 @@ public class  CardControllerTest {
 
     private CardController controller;
 
+    private TagService tagService;
+
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @BeforeEach
@@ -72,7 +75,8 @@ public class  CardControllerTest {
         listService = new ListOfCardsService(listRepo);
         simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
 
-        controller = new CardController(service,listService,boardService,simpMessagingTemplate);
+        controller = new CardController(service,listService,
+                boardService,tagService,simpMessagingTemplate);
 
     }
 

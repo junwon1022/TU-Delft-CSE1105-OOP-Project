@@ -41,6 +41,10 @@ public class TagControllerTest {
     private BoardRepository boardRepo;
     private BoardService boardService;
 
+    private ListOfCardsService listOfCardsService;
+
+    private CardService cardService;
+
     private TagService service;
 
     private TagRepository repo;
@@ -63,6 +67,8 @@ public class TagControllerTest {
 
         controller = new TagController(
                 service,
+                cardService,
+                listOfCardsService,
                 boardService,
                 simpMessagingTemplate);
 
