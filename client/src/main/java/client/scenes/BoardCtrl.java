@@ -43,6 +43,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BoardCtrl {
 
@@ -136,9 +137,6 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
-        System.out.println("This new key is "+ board.key);
-
-        System.out.println("This new title is "+ board.title);
 
         AnchorPane.setBottomAnchor(addTag, 5.0);
         loadVBox();
@@ -331,7 +329,8 @@ public class BoardCtrl {
     private Board getBoard(){
 
 
-        return new Board("My Board", null, null, null, null, null, new ArrayList<>());
+       return new Board("My Board", null, null,
+                null, null, null, new ArrayList<>(), new HashSet<>());
     }
 
 

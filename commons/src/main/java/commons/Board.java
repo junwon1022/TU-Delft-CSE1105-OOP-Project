@@ -37,6 +37,7 @@ public class Board {
 
     @Column(name = "list_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String listFont;
+
     @Column(name = "password")
     public String password;
 
@@ -45,6 +46,9 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<ListOfCards> lists;
+
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Tag> tags;
 
 
     /**
@@ -65,7 +69,7 @@ public class Board {
      */
     public Board(String title, String boardColour, String fontColour,
                  String listColour, String listFont,
-                 String password, List<ListOfCards> lists) {
+                 String password, List<ListOfCards> lists, Set<Tag> tags) {
         this.title = title;
         this.colour = boardColour;
         this.font = fontColour;
@@ -74,8 +78,8 @@ public class Board {
         this.listFont = listFont;
         this.password = password;
         this.lists = lists;
+        this.tags = tags;
     }
-
 
     /*
         BASIC FUNCTIONALITY
@@ -175,6 +179,44 @@ public class Board {
         int index2 = this.lists.indexOf(list2);
         this.lists.set(index1, list2);
         this.lists.set(index2, list1);
+    }
+
+    /**
+     * Add a tag to a board
+     * @param tag
+     */
+    public void addTag(Tag tag) {
+        if (tag != null) {
+            tags.add(tag);
+            tag.board = this;
+        }
+    }
+
+    /**
+     * Remove an existing tag from a board
+     *
+     * @param tag
+     */
+    public void removeTag(Tag tag) {
+        if (tag != null) {
+            tags.remove(tag);
+            tag.board = null;
+        }
+    }
+
+    /**
+     * Get a tag by its name
+     *
+     * @param name
+     * @return the tag
+     */
+    public Tag getTagByName(String name) {
+        for (Tag tag : tags) {
+            if (tag.name.equals(name)) {
+                return tag;
+            }
+        }
+        return null;
     }
 
     /**

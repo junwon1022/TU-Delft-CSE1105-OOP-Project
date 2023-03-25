@@ -81,7 +81,7 @@ public class CheckListItemServiceTest {
     public void addCheckTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         boardService.createBoard(b);
         Mockito.verify(boardRepo).save(b);
 
@@ -129,7 +129,7 @@ public class CheckListItemServiceTest {
     public void editCheckTitleTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
@@ -178,7 +178,7 @@ public class CheckListItemServiceTest {
     public void deleteCheckTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
@@ -206,7 +206,7 @@ public class CheckListItemServiceTest {
     public void getAllChecksTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
