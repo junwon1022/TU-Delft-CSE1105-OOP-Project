@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -9,23 +10,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="160.0" minHeight="-Infinity" minWidth="120.0" prefHeight="80.0" prefWidth="135.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="120.0" prefHeight="72.0" prefWidth="173.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="27.0" layoutY="8.0" prefHeight="43.0" prefWidth="78.0" text="Title" textAlignment="CENTER" wrapText="true">
+        <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="29.0" layoutY="8.0" prefHeight="43.0" prefWidth="113.0" text="Title" textAlignment="CENTER" wrapText="true">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></Label>
-        <Button id="delete-card" layoutX="111.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" stylesheets="@../../styles.css" text="❌" />
-        <Label fx:id="description" layoutX="9.0" layoutY="54.0" prefHeight="18.0" prefWidth="14.0" styleClass="image" stylesheets="@../../styles.css">
-             <graphic>
-                  <ImageView fitHeight="33.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true" styleClass="image">
-                      <image>
-                          <Image url="@../../description-icon.png" />
-                      </image>
-                  </ImageView>
-             </graphic>
-        </Label>
-      <Button id="rename-card" fx:id="detailedView" layoutX="9.0" layoutY="9.0" mnemonicParsing="false" onAction="#renameCard" prefHeight="0.0" prefWidth="12.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
+        <Button id="delete-card" layoutX="147.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" stylesheets="@../../styles.css" text="❌" />
+        <Label fx:id="description" layoutX="9.0" layoutY="54.0" prefHeight="18.0" prefWidth="14.0" styleClass="image" stylesheets="@../../styles.css" />
+      <Button id="rename-card" fx:id="detailedView" layoutX="12.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameCard" prefHeight="0.0" prefWidth="12.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
          <font>
             <Font size="19.0" />
          </font>
@@ -37,5 +30,13 @@
             <ColorAdjust brightness="-0.22" />
          </effect>
       </Button>
+            <ImageView fitHeight="33.0" fitWidth="14.0" layoutX="10.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="image">
+                <image>
+                    <Image url="@../../description-icon.png" />
+                </image>
+            </ImageView>
     </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
 </AnchorPane>

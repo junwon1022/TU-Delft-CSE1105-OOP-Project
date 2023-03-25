@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.ListOfCards;
 import jakarta.ws.rs.WebApplicationException;
+import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +20,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -51,6 +54,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     @FXML
     private Button addCardButton;
+
+    @FXML
+    private Button hideCard;
 
     private ObservableList<Card> data;
 
@@ -186,34 +192,18 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void addCard(ActionEvent event) {
         if(!name.getText().equals("") && name.getText() != null){
-            name.setPromptText("Enter a title . . .");
-            name.setStyle("-fx-prompt-text-fill: #665A5D;");
-            addCardButton.setStyle("-fx-border-color: #4FCAE2; -fx-background-color: #4FCAE2;");
-            addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
-                    ("-fx-background-color: #CAF0F8; -fx-text-fill: #00B4D8;"));
-            addCardButton.setOnMouseExited(e -> addCardButton.setStyle
-                    ("-fx-background-color: #4FCAE2; -fx-text-fill: #E4F8FC;"));
+            regularStyle();
             String title = name.getText();
             Card card = getCard(title);
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
 
-            name.clear();
-            name.setOpacity(0);
-            addCardButton.setOpacity(0);
+            hideButton(event);
 
             board.refresh();
         } else {
-            name.setPromptText("You need a title.");
-            name.setStyle("-fx-prompt-text-fill: #C34042;");
-            addCardButton.setStyle("-fx-border-color: #C34042; -fx-background-color: #C34042;");
-            addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
-                    ("-fx-border-color: #C34042; -fx-background-color: #CAF0F8;" +
-                            " -fx-text-fill: #C34042;"));
-            addCardButton.setOnMouseExited(e -> addCardButton.setStyle
-                    ("-fx-border-color: #C34042; -fx-background-color: #C34042;" +
-                            " -fx-text-fill: #E4F8FC;"));
+            errorStyle();
         }
     }
 
@@ -222,9 +212,90 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event
      */
     public void showButton(ActionEvent event) {
-        name.setOpacity(1);
+        addCardButton.setVisible(true);
+        hideCard.setVisible(true);
+        regularStyle();
+        addButton.setVisible(false);
+        // Shorten the list
+        Timeline timelineList = new Timeline(
+                new KeyFrame(Duration.seconds(0.4), new KeyValue(list.prefHeightProperty(), 288))
+        );
+        Timeline timelineName = new Timeline(
+                new KeyFrame(Duration.seconds(0.4), new KeyValue(name.visibleProperty(), true))
+        );
+        timelineList.play();
+        timelineName.play();
         name.requestFocus();
-        addCardButton.setOpacity(1);
+    }
+
+    /**
+     * Cancel the renaming of a new card.
+     * @param event the KeyEvent
+     */
+    public void hideButton(ActionEvent event) {
+        name.clear();
+        name.setVisible(false);
+        addCardButton.setVisible(false);
+        hideCard.setVisible(false);
+        addButton.setVisible(true);
+        // Elongate the list
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+        );
+        timeline.play();
+    }
+
+    /**
+     * Hide add card buttons with keyboard
+     * @param keyEvent
+     */
+    public void hideButtonKeyboard(javafx.scene.input.KeyEvent keyEvent) {
+        name.clear();
+        name.setVisible(false);
+        addCardButton.setVisible(false);
+        hideCard.setVisible(false);
+        addButton.setVisible(true);
+        // Elongate the list
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+        );
+        timeline.play();
+    }
+
+    private void regularStyle() {
+        name.setPromptText("Enter a title . . .");
+        name.setStyle("-fx-prompt-text-fill: #665A5D;");
+        addCardButton.setStyle("-fx-border-color: #4FCAE2; -fx-background-color: #4FCAE2;");
+        addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
+                ("-fx-background-color: #CAF0F8; -fx-text-fill: #00B4D8;"));
+        addCardButton.setOnMouseExited(e -> addCardButton.setStyle
+                ("-fx-background-color: #4FCAE2; -fx-text-fill: #E4F8FC;"));
+
+        hideCard.setStyle("-fx-border-color: #4FCAE2; -fx-background-color: #4FCAE2;");
+        hideCard.setOnMouseEntered(e -> hideCard.setStyle
+                ("-fx-background-color: #CAF0F8; -fx-text-fill: #00B4D8;"));
+        hideCard.setOnMouseExited(e -> hideCard.setStyle
+                ("-fx-background-color: #4FCAE2; -fx-text-fill: #E4F8FC;"));
+    }
+
+    private void errorStyle() {
+        name.setPromptText("You need a title.");
+        name.setStyle("-fx-prompt-text-fill: #C34042;");
+        addCardButton.setStyle("-fx-border-color: #C34042; -fx-background-color: #C34042;");
+        addCardButton.setOnMouseEntered(e -> addCardButton.setStyle
+                ("-fx-border-color: #C34042; -fx-background-color: #CAF0F8;" +
+                        " -fx-text-fill: #C34042;"));
+        addCardButton.setOnMouseExited(e -> addCardButton.setStyle
+                ("-fx-border-color: #C34042; -fx-background-color: #C34042;" +
+                        " -fx-text-fill: #E4F8FC;"));
+
+        hideCard.setStyle("-fx-border-color: #C34042; -fx-background-color: #C34042;");
+        hideCard.setOnMouseEntered(e -> hideCard.setStyle
+                ("-fx-border-color: #C34042; -fx-background-color: #CAF0F8;" +
+                        " -fx-text-fill: #C34042;"));
+        hideCard.setOnMouseExited(e -> hideCard.setStyle
+                ("-fx-border-color: #C34042; -fx-background-color: #C34042;" +
+                        " -fx-text-fill: #E4F8FC;"));
     }
 
     /**
@@ -294,4 +365,50 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         return card;
     }
 
+
+    // From here are the keyboard cases
+
+    /**
+     * Handle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
+        if (keyEvent.getCode().toString().equals("ENTER")) {
+            addCardKeyboard(keyEvent);
+        }
+        else if(keyEvent.getCode().toString().equals("ESCAPE")){
+            cancelKeyboard(keyEvent);
+        }
+    }
+
+    /**
+     * Renames the new card
+     * if the user didn't input anything
+     * they can't proceed.
+     * @param event the KeyEvent
+     */
+    public void addCardKeyboard(javafx.scene.input.KeyEvent event) {
+        if(!name.getText().equals("") && name.getText() != null){
+            regularStyle();
+            String title = name.getText();
+            Card card = getCard(title);
+
+            Card addedCard = server.addCard2(card);
+            card.id = addedCard.id;
+
+            hideButtonKeyboard(event);
+
+            board.refresh();
+        } else {
+            errorStyle();
+        }
+    }
+
+    /**
+     * Cancel the renaming of a new card.
+     * @param event the KeyEvent
+     */
+    private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
+        hideButtonKeyboard(event);
+    }
 }
