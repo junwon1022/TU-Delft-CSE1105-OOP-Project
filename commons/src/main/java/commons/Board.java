@@ -46,6 +46,10 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<ListOfCards> lists;
 
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Palette> palettes;
+
+
     /**
      * Default constructor
      */
@@ -61,10 +65,11 @@ public class Board {
      * @param listFont
      * @param password
      * @param lists
+     * @param palettes
      */
     public Board(String title, String boardColour, String fontColour,
                  String listColour, String listFont,
-                 String password, List<ListOfCards> lists) {
+                 String password, List<ListOfCards> lists, Set<Palette> palettes) {
         this.title = title;
         this.colour = boardColour;
         this.font = fontColour;
@@ -73,6 +78,7 @@ public class Board {
         this.listFont = listFont;
         this.password = password;
         this.lists = lists;
+        this.palettes = palettes;
     }
 
     /*
@@ -173,6 +179,24 @@ public class Board {
         int index2 = this.lists.indexOf(list2);
         this.lists.set(index1, list2);
         this.lists.set(index2, list1);
+    }
+
+    /**
+     * Add a palette to a board
+     * @param palette
+     */
+    public void addPalette(Palette palette){
+        if(palette != null)
+            palettes.add(palette);
+    }
+
+    /**
+     * Remove a palette from a board
+     * @param palette
+     */
+    public void removePalette(Palette palette){
+        if(palette != null)
+            palettes.remove(palette);
     }
 
     /**
