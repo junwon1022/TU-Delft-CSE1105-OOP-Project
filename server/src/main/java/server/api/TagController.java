@@ -196,10 +196,10 @@ public class TagController {
      */
     @PostMapping(
             path = {
-                    "/{tag_id}/colour",
-                    "/{tag_id}/colour",
-                    "/{tag_id}/color",
-                    "/{tag_id}/color"
+                "/{tag_id}/colour",
+                "/{tag_id}/colour",
+                "/{tag_id}/color",
+                "/{tag_id}/color"
             }
     )
     public ResponseEntity<Tag> editColour(@RequestBody String newColour,
