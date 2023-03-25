@@ -29,10 +29,6 @@ public class Tag {
     @Column(name = "tag_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "board_id")
-    public Board board;
-
     @ManyToMany(mappedBy = "tags")
     public Set<Card> cards = new HashSet<>();
 
@@ -48,12 +44,10 @@ public class Tag {
      * @param name
      * @param colour
      * @param cards
-     * @param board
      */
-    public Tag(String name, String colour, Board board, Set<Card> cards) {
+    public Tag(String name, String colour, Set<Card> cards) {
         this.name = name;
         this.colour = colour;
-        this.board = board;
         this.cards = cards;
     }
 
@@ -82,23 +76,6 @@ public class Tag {
             card.tags.remove(this);
         }
     }
-
-    /**
-     * Set the color of the tag
-     * @param colour
-     */
-    public void setColour(String colour) {
-        this.colour = colour;
-    }
-
-    /**
-     * Get the color of the tag
-     * @return color
-     */
-    public String getColour() {
-        return this.colour;
-    }
-
     /**
      * Check if two tags are equal
      * @param obj
@@ -130,3 +107,4 @@ public class Tag {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
 }
+

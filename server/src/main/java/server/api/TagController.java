@@ -195,11 +195,12 @@ public class TagController {
      * @return the edited tag
      */
     @PostMapping(
-         path = {"/{tag_id}/colour",
-                 "/{tag_id}/colour",
-                 "/{tag_id}/color",
-                 "/{tag_id}/color"
-             }
+            path = {
+                    "/{tag_id}/colour",
+                    "/{tag_id}/colour",
+                    "/{tag_id}/color",
+                    "/{tag_id}/color"
+            }
     )
     public ResponseEntity<Tag> editColour(@RequestBody String newColour,
                                           @PathVariable("board_id") long boardId,
@@ -295,4 +296,5 @@ public class TagController {
         return true;
     }
 }
+
 
