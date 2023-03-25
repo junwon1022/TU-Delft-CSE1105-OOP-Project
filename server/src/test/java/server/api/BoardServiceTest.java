@@ -10,6 +10,7 @@ import server.database.BoardRepository;
 import server.services.BoardService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,7 @@ public class BoardServiceTest {
     public void addBoardTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
 
@@ -45,14 +46,14 @@ public class BoardServiceTest {
 
 
         Board nullBoard = new Board(null, "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         assertThatThrownBy(() -> {
             boardService.createBoard(nullBoard);
         }).isInstanceOf(Exception.class);
 
         Board emptyBoard = new Board("", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
 
         assertThatThrownBy(() -> {
             boardService.createBoard(emptyBoard);
@@ -64,7 +65,7 @@ public class BoardServiceTest {
     public void editBoardTitleTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
 
@@ -87,7 +88,7 @@ public class BoardServiceTest {
     public void deleteBoardTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
         boardService.deleteBoardById(b.id);

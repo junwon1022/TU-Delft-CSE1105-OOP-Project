@@ -1,6 +1,6 @@
 package server.services;
 
-import commons.Card;
+import commons.Board;
 import commons.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,23 +24,35 @@ public class TagService {
     }
 
     /**
-     * Check if a card contains a tag
+     * Check if a tag is in the given board
      * @param tag
-     * @param card
-     * @return true if tag in card
+     * @param board
+     * @return true if the tag is in the board, false otherwise
      */
-    public boolean tagInCard(Tag tag, Card card) {
-        return tag.cards.contains(card);
+    public boolean tagInBoard(Tag tag, Board board) {
+        return tag.board == board;
+    }
+
+
+    /**
+     * Get all tags of a given Board
+     * @param board
+     * @return the set of tags
+     */
+    public Set<Tag> getTags(Board board) {
+        return board.tags;
     }
 
     /**
-     * Get all tags of a given card
+     * Get all tags of a given Card
+     *
      * @param card
      * @return the set of tags
      */
-    public Set<Tag> getTags(Card card) {
+    public Set<Tag> getTags(commons.Card card) {
         return card.tags;
     }
+
 
     /**
      * Retrieve a tag given its id
@@ -52,20 +64,22 @@ public class TagService {
                 .orElseThrow(() -> new Exception("Tag not found with id " + id));
     }
 
+
     /**
      * Create a new tag
      * @param tag
-     * @param card
+     * @param board
      * @return the new tag
      */
-    public Tag createTag(Tag tag, Card card) throws Exception {
+    public Tag createTag(Tag tag, Board board) throws Exception {
         if(tag.name == null || tag.name.isEmpty()) {
             throw new Exception("Tag cannot be created without a name.");
         }
-        tag.cards.add(card);
-        card.tags.add(tag);
+        tag.board = board;
+        board.tags.add(tag);
         return tagRepository.save(tag);
     }
+
 
     /**
      * Delete a tag given its id
@@ -103,5 +117,14 @@ public class TagService {
         Tag tag = getTagById(id);
         tag.colour = newColour;
         return tagRepository.save(tag);
+    }
+
+    /**
+     * Save a tag in the database
+     *
+     * @param tag
+     */
+    public void saveTag(Tag tag) {
+        tagRepository.save(tag);
     }
 }

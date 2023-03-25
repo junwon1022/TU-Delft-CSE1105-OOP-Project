@@ -69,7 +69,7 @@ public class TagServiceTest {
     public void addTagTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         boardService.createBoard(b);
         Mockito.verify(boardRepo).save(b);
 
@@ -89,29 +89,29 @@ public class TagServiceTest {
         Mockito.verify(cardRepo).save(c);
 
 
-        Tag t = new Tag("Tag 2","#555555", new HashSet<>());
+        Tag t = new Tag("Tag 2","#555555",b, new HashSet<>());
 
         c.addTag(t);
 
-        tagService.createTag(t,c);
+        tagService.createTag(t,b);
 
         Mockito.verify(tagRepo).save(t);
 
         //EMPTY
 
-        Tag t2 = new Tag("","#555555", new HashSet<>());
+        Tag t2 = new Tag("","#555555",b, new HashSet<>());
         c.addTag(t2);
 
         assertThatThrownBy(() -> {
-            tagService.createTag(t2,c);
+            tagService.createTag(t2,b);
         }).isInstanceOf(Exception.class);
 
 
-        Tag t3 = new Tag(null,"#555555", new HashSet<>());
+        Tag t3 = new Tag(null,"#555555",b, new HashSet<>());
         c.addTag(t3);
 
         assertThatThrownBy(() -> {
-            tagService.createTag(t3, c);
+            tagService.createTag(t3, b);
         }).isInstanceOf(Exception.class);
 
 
@@ -121,16 +121,16 @@ public class TagServiceTest {
     public void editTagTitleTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
         Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
-        Tag t = new Tag("Tag 2","#555555",new HashSet<>());
+        Tag t = new Tag("Tag 2","#555555",b, new HashSet<>());
 
 
         boardService.createBoard(b);
         listService.createListOfCards(l,b);
         cardService.createCard(c,l,b);
-        tagService.createTag(t,c);
+        tagService.createTag(t,b);
 
 
         when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
@@ -171,7 +171,7 @@ public class TagServiceTest {
     public void deleteTagTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
@@ -181,14 +181,14 @@ public class TagServiceTest {
 
         l.addCard(c);
 
-        Tag t = new Tag("Tag 2","#555555", new HashSet<>());
+        Tag t = new Tag("Tag 2","#555555",b, new HashSet<>());
 
         c.addTag(t);
 
         boardService.createBoard(b);
         listService.createListOfCards(l,b);
         cardService.createCard(c,l,b);
-        tagService.createTag(t,c);
+        tagService.createTag(t,b);
         tagService.deleteTagById(t.id);
 
         Mockito.verify(tagRepo).deleteById(t.id);
@@ -199,47 +199,45 @@ public class TagServiceTest {
     public void getAllTagsTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),new HashSet<>());
 
-        Tag t = new Tag("Tag ","#555555", new HashSet<>());
+        Tag t = new Tag("Tag ","#555555",b, new HashSet<>());
 
-        Tag t2 = new Tag("Tag 3ij","#555555", new HashSet<>());
+        Tag t2 = new Tag("Tag 3ij","#555555",b, new HashSet<>());
 
         Set<Tag> k = new HashSet<>();
 
         b.addList(l);
         l.addCard(c);
 
-        c.addTag(t);
-        c.addTag(t2);
+        b.addTag(t);
+        b.addTag(t2);
 
         k.add(t);
         k.add(t2);
 
         System.out.println("Equal to:" + k);
 
-        assertThat(tagService.getTags(c).size()).isEqualTo(k.size());
-
-
+        assertThat(tagService.getTags(b).size()).isEqualTo(k.size());
     }
 
 
     @Test
     void tagInCardTest() {
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1", b, new ArrayList<>());
         Card c = new Card("Card 1","Finish CG Study",
                 "#555555", l, new ArrayList<>(),new HashSet<>());
-        Tag t = new Tag("Tag 2","#555555",new HashSet<>());
+        Tag t = new Tag("Tag 2","#555555",b,new HashSet<>());
 
         c.addTag(t);
 
-        assertThat(tagService.tagInCard(t, c)).isTrue();
+        assertThat(tagService.tagInBoard(t, b)).isTrue();
     }
 
 }
