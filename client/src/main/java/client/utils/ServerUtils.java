@@ -60,14 +60,17 @@ public class ServerUtils {
         this.SERVER = server;
         this.SERVER_ADDRESS = server;
 
+        //removes the http so that websockets can be accessed
         if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
 
 
         System.out.println(SERVER);
         try{
+            //check that the server is connectable to web sockets
             connect("ws://" + SERVER_ADDRESS + "websocket");
+            //checks if the server is valid , is able to make a dummy request to the api
             String check = checkServer(SERVER);
-            //if(!check.equals("This is a TimeWise Server")) throw new Exception("Server is not a TimeWise server");
+
         }
         catch(Exception e){
             throw new Exception("Server invalid");
