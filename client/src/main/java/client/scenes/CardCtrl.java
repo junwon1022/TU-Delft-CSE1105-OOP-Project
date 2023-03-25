@@ -85,7 +85,7 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
-     * Is called whenever the parent CardList is changed. Sets the data in this controller.
+     * Is called whenever the parent ListOfCards is changed. Sets the data in this controller.
      * @param item The new item for the cell.
      * @param empty whether this cell represents data from the list or not. If it
      *        is empty, then it does not represent any domain data, but is a cell

@@ -133,8 +133,8 @@ public class BoardCtrl {
             lock.setVisible(false);
             unlock.setVisible(true);
         } else {
-            lock.setVisible(false);
-            unlock.setVisible(true);
+            lock.setVisible(true);
+            unlock.setVisible(false);
         }
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
@@ -344,14 +344,9 @@ public class BoardCtrl {
             stage.showAndWait();
 
             if (controller.success) {
-                String title = controller.storedText;
+                String password = controller.storedText;
 
-                ListOfCards list = getList(title);
-                ListOfCards addedList = server.addListOfCards(list);
-                System.out.println(addedList);
-
-                //change the id of the board locally
-                list.id = addedList.id;
+                //TODO add password controllers and Server Utils
 
                 this.refresh();
             }

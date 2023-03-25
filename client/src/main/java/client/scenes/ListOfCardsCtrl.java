@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
 
     /**
-     * Create a new CardListCtrl
+     * Create a new ListOfCardsCtrl
      * @param server The server to use
      * @param board The board this CardList belongs to
      */

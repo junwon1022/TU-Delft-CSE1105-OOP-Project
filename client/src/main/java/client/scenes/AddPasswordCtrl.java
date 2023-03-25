@@ -23,6 +23,7 @@ public class AddPasswordCtrl {
     private Label nullTitle;
 
     private String NO_PASSWORD;
+    private String NO_CONFIRMATION;
     private String NO_MATCH;
 
 
@@ -35,6 +36,7 @@ public class AddPasswordCtrl {
         success = false;
         nullTitle = new Label("");
         NO_PASSWORD = "Please enter a password!";
+        NO_CONFIRMATION = "Please enter the password in the second field again to confirm.";
         NO_MATCH = "Passwords should match!";
     }
 
@@ -71,7 +73,10 @@ public class AddPasswordCtrl {
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(NO_PASSWORD);
         }
-        if(!confirmPassword.equals(storedText)) {
+        else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setText(NO_CONFIRMATION);
+        }
+        else if(!confirmPassword.getText().equals(storedText)) {
             nullTitle.setText(NO_MATCH);
         }
         else {
