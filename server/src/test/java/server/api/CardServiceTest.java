@@ -69,7 +69,7 @@ public class CardServiceTest {
     public void addCardTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>());
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet());
 
         boardService.createBoard(b);
 
@@ -117,7 +117,7 @@ public class CardServiceTest {
     public void editCardTitleTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111","#111111",
-                "#111111", "pass", new ArrayList<>());
+                "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
@@ -155,7 +155,7 @@ public class CardServiceTest {
     public void deleteCardTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111","#111111",
-                "#111111", "pass", new ArrayList<>());
+                "#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
@@ -179,7 +179,7 @@ public class CardServiceTest {
     public void getAllCardsTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>());
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 

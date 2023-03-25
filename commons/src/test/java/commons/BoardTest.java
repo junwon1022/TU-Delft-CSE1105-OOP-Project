@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,13 +33,13 @@ public class BoardTest {
         listsOfCards.add(list2);
         board = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
-                "pass", listsOfCards);
+                "pass", listsOfCards, new HashSet<>(), new HashSet<>());
         board2 = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
-                "pass", listsOfCards);
+                "pass", listsOfCards, new HashSet<>(), new HashSet<>());
         board3 = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
-                "pass2", listsOfCards);
+                "pass2", listsOfCards, new HashSet<>(), new HashSet<>());
 
     }
 

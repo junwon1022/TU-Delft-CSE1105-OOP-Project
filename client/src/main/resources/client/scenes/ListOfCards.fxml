@@ -11,9 +11,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="list-background" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="190.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="list-background" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="220.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView fx:id="list" layoutX="20.0" layoutY="71.0" prefHeight="282.0" prefWidth="150.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
+      <ListView fx:id="list" layoutX="16.0" layoutY="65.0" prefHeight="318.0" prefWidth="187.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
          <effect>
             <InnerShadow blurType="GAUSSIAN" choke="0.05" height="46.27" radius="22.645000000000003" width="46.31">
                <color>
@@ -21,31 +21,36 @@
                </color>
             </InnerShadow>
          </effect></ListView>
-      <Button id="add-card" fx:id="addButton" layoutX="47.0" layoutY="362.0" mnemonicParsing="false" onAction="#showButton" styleClass="add-button" stylesheets="@../../styles.css" text="➕  Add Card" textFill="WHITE">
+      <Button id="add-card" fx:id="addButton" layoutX="62.0" layoutY="396.0" mnemonicParsing="false" onAction="#showButton" styleClass="add-button" stylesheets="@../../styles.css" text="➕  Add Card" textFill="WHITE">
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
-      <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="8.0" prefHeight="56.0" prefWidth="150.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
+      <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="16.0" layoutY="8.0" prefHeight="47.0" prefWidth="187.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
          <font>
             <Font name="Corbel Bold" size="17.0" />
          </font>
          <padding>
             <Insets left="25.0" right="25.0" />
          </padding></Label>
-      <Button fx:id="rename" layoutX="153.0" layoutY="45.0" mnemonicParsing="false" onAction="#renameList" prefHeight="9.0" prefWidth="16.0" styleClass="rename" stylesheets="@../../styles.css" textFill="WHITE" />
-      <TextField fx:id="name" layoutX="13.0" layoutY="406.0" opacity="0.0" prefHeight="29.0" prefWidth="111.0" promptText="Enter a title . . ." styleClass="text-field" stylesheets="@../../styles.css">
+      <Button fx:id="rename" layoutX="16.0" layoutY="13.0" mnemonicParsing="false" onAction="#renameList" prefHeight="9.0" prefWidth="16.0" styleClass="rename" stylesheets="@../../styles.css" textFill="WHITE" />
+      <TextField fx:id="name" layoutX="26.0" layoutY="362.0" onKeyPressed="#handleKeyPressed" prefHeight="32.0" prefWidth="168.0" promptText="Enter a title . . ." styleClass="text-field" stylesheets="@../../styles.css" visible="false">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></TextField>
-      <Button id="card-confirm" fx:id="addCardButton" layoutX="133.0" layoutY="406.0" mnemonicParsing="false" onAction="#addCard" opacity="0.0" prefHeight="29.0" prefWidth="37.0" stylesheets="@../../styles.css" text="OK" textFill="#f2f2f2">
+      <Button id="card-confirm" fx:id="addCardButton" layoutX="36.0" layoutY="406.0" mnemonicParsing="false" onAction="#addCard" prefHeight="29.0" prefWidth="56.0" stylesheets="@../../styles.css" text="Add" textFill="#f2f2f2" visible="false">
          <font>
-            <Font name="Corbel" size="13.0" />
+            <Font name="Corbel Bold" size="14.0" />
          </font>
       </Button>
-      <Button id="delete-list" fx:id="deleteCard" layoutX="152.0" layoutY="15.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="17.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+      <Button id="delete-list" fx:id="deleteCard" layoutX="185.0" layoutY="11.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="17.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
          <font>
             <Font name="Corbel Bold" size="13.0" />
          </font></Button>
+      <Button id="card-cancel" fx:id="hideCard" layoutX="124.0" layoutY="406.0" mnemonicParsing="false" onAction="#hideButton" prefHeight="29.0" prefWidth="56.0" style="-fx-padding: 0;" styleClass="red-button" stylesheets="@../../styles.css" text="❌" textFill="#231f20" visible="false">
+         <font>
+            <Font name="Corbel Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
    <effect>
       <ColorAdjust />

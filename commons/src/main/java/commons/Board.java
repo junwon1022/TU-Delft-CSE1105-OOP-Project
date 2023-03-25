@@ -37,6 +37,7 @@ public class Board {
 
     @Column(name = "list_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String listFont;
+
     @Column(name = "password")
     public String password;
 
@@ -48,6 +49,10 @@ public class Board {
 
     @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<Palette> palettes;
+
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Tag> tags;
+
 
 
     /**
@@ -65,20 +70,23 @@ public class Board {
      * @param listFont
      * @param password
      * @param lists
+     * @param tags
      * @param palettes
      */
+
     public Board(String title, String boardColour, String fontColour,
                  String listColour, String listFont,
-                 String password, List<ListOfCards> lists, Set<Palette> palettes) {
+                 String password, List<ListOfCards> lists, Set<Tag> tags, Set<Palette> palettes) {
         this.title = title;
         this.colour = boardColour;
         this.font = fontColour;
-
         this.listColour = listColour;
         this.listFont = listFont;
         this.password = password;
         this.lists = lists;
         this.palettes = palettes;
+        this.tags = tags;
+
     }
 
     /*
@@ -194,9 +202,47 @@ public class Board {
      * Remove a palette from a board
      * @param palette
      */
-    public void removePalette(Palette palette){
-        if(palette != null)
+    public void removePalette(Palette palette) {
+        if (palette != null)
             palettes.remove(palette);
+    }
+    /**
+     * Add a tag to a board
+     * @param tag
+     */
+    public void addTag(Tag tag) {
+        if (tag != null) {
+            tags.add(tag);
+            tag.board = this;
+        }
+    }
+
+    /**
+     * Remove an existing tag from a board
+     *
+     * @param tag
+     */
+    public void removeTag(Tag tag) {
+        if (tag != null) {
+            tags.remove(tag);
+            tag.board = null;
+        }
+    }
+
+    /**
+     * Get a tag by its name
+     *
+     * @param name
+     * @return the tag
+     */
+    public Tag getTagByName(String name) {
+        for (Tag tag : tags) {
+            if (tag.name.equals(name)) {
+                return tag;
+            }
+        }
+        return null;
+
     }
 
     /**

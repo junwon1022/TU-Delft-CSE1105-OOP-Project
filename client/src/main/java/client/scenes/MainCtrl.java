@@ -41,7 +41,7 @@ public class MainCtrl {
 //     * @param add The add scene to use.
      * @param board The board screen to use.
      */
-    public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board ) {
+    public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board) {
 //            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
 //        this.overviewCtrl = overview.getKey();

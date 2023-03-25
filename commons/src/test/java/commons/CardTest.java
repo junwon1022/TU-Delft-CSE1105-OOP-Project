@@ -45,16 +45,16 @@ public class CardTest {
         checklist.add(checkListItem1);
         checklist.add(checkListItem2);
 
-        tag1 = new Tag("urgent", "#ff00ff", new HashSet<Card>());
-        tag2 = new Tag("math", "#ffff00", new HashSet<Card>());
-        tag3 = new Tag("oopp", "#00ff00", new HashSet<Card>());
+        tag1 = new Tag("urgent", "#ff00ff", board, new HashSet<Card>());
+        tag2 = new Tag("math", "#ffff00", board, new HashSet<Card>());
+        tag3 = new Tag("oopp", "#00ff00",board, new HashSet<Card>());
         tags = new HashSet<>();
         tags.add(tag1);
         tags.add(tag2);
 
         board = new Board("Algebra", "#ffffff", "#ffffff",
                 "#ffff22", "#ffff22",
-                "pass", listOfCards);
+                "pass", listOfCards, tags);
         listOfCards = new ArrayList<>();
         list = new ListOfCards("Grasple",board, cards);
         list2 = new ListOfCards("Grasple", board, cards);
