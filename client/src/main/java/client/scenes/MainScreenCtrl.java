@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MainScreenCtrl {
 
@@ -122,7 +123,8 @@ public class MainScreenCtrl {
             if (controller.success) {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"","","" , "" , "" , new ArrayList<>());
+                Board board = new Board(title,"","","" ,
+                        "" , "", new ArrayList<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);

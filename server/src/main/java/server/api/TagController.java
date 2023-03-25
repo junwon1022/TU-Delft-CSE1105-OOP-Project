@@ -33,7 +33,6 @@ public class TagController {
      * @param tagService
      * @param cardService
      * @param listOfCardsService
-     * @param tagService
      * @param boardService
      * @param simpMessagingTemplate
      */
