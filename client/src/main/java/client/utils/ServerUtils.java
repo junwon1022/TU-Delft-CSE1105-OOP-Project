@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -55,11 +57,17 @@ public class ServerUtils {
      */
     public void changeServer(String server) throws Exception {
 
-        this.SERVER = "http://" + server + "/";
+        this.SERVER = server;
         this.SERVER_ADDRESS = server;
 
+        if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
+
+
+        System.out.println(SERVER);
         try{
-            connect("ws://" + server + "/websocket");
+            connect("ws://" + SERVER_ADDRESS + "websocket");
+            String check = checkServer(SERVER);
+            //if(!check.equals("This is a TimeWise Server")) throw new Exception("Server is not a TimeWise server");
         }
         catch(Exception e){
             throw new Exception("Server invalid");
@@ -278,6 +286,30 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<ListOfCards>>(){});
+    }
+
+
+    /**
+     * Method that returns the lists from the database
+     * @param serverUrl - the url of th server
+     * @return a list containing all lists of cards
+     */
+    public String checkServer(String serverUrl){
+        System.out.println("The Url is " + URLEncoder.encode(SERVER,StandardCharsets.UTF_8));
+
+
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(SERVER).path("/api/checkServer/")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<String>() {
+                    });
+        }
+        catch(Exception e){
+            System.out.println("The exception is " + e);
+            throw new RuntimeException();
+        }
     }
 
     /**
