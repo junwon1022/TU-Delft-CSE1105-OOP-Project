@@ -93,13 +93,27 @@ public class MainScreenCtrl {
      * @return
      */
     public void connectToBoard(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-        System.out.println(server.getMyBoardTitles());
-        System.out.println(server.getBoardByKey(joinField.getText()));
-       // Board b = server.getBoardByKey(joinField.getText());
-        System.out.println(joinField.getText());
-        mainCtrl.showBoard(joinField.getText());
+            if(server.getBoardByKey(joinField.getText()) != null) mainCtrl.showBoard(joinField.getText());
+            else throw new Exception("Doesnt Exist");
+        }
+        catch(Exception e){
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exception.fxml"));
+            try {
+                Parent root = fxmlLoader.load();
+
+                Stage stage = new Stage();
+                stage.setTitle("Error");
+                stage.setScene(new Scene(root, 300, 200));
+                stage.showAndWait();
+
+            } catch (IOException a) {
+                throw new RuntimeException(a);
+            }
+        }
 
     }
 
@@ -132,7 +146,8 @@ public class MainScreenCtrl {
                 refresh();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+
+
         }
 
     }
