@@ -27,10 +27,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.ListOfCardsRepository;
-import server.services.BoardService;
-import server.services.CardService;
-import server.services.ListOfCardsService;
-import server.services.TagService;
+import server.database.PaletteRepository;
+import server.services.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,11 +53,15 @@ public class  CardControllerTest {
 
     private CardRepository repo;
 
+    private PaletteRepository paletteRepository;
+
     private CardService service;
 
     private CardController controller;
 
     private TagService tagService;
+
+    private PaletteService paletteService;
 
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -69,14 +71,16 @@ public class  CardControllerTest {
         repo = Mockito.mock(CardRepository.class);
         boardRepo = Mockito.mock(BoardRepository.class);
         listRepo = Mockito.mock(ListOfCardsRepository.class);
+        paletteRepository = Mockito.mock(PaletteRepository.class);
 
         service = new CardService(repo);
         boardService = new BoardService(boardRepo);
         listService = new ListOfCardsService(listRepo);
+        paletteService = new PaletteService(paletteRepository);
         simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
 
         controller = new CardController(service,listService,
-                boardService,tagService,simpMessagingTemplate);
+                boardService,tagService,paletteService, simpMessagingTemplate);
 
     }
 

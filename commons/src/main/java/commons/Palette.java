@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -41,7 +40,7 @@ public class Palette {
     @JoinColumn(name = "board_id")
     public Board board;
 
-    @ManyToMany(mappedBy = "palettes")
+    @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = false)
     public Set<Card> cards = new HashSet<>();
 
     /**
@@ -77,11 +76,24 @@ public class Palette {
     public void addCard(Card card){
         if (card != null && !cards.contains(card)) {
             cards.add(card);
-            card.palettes.add(this);
+            card.palette = this;
         }
     }
 
+    /**
+     * Method that returns the default palette in a board
+     * @return the default palette of a board
+     */
+    public Palette getDefault(){
+        Board board = this.board;
 
+        for(Palette p: board.palettes){
+            if(p.isDefault)
+                return p;
+        }
+
+        return null;
+    }
     /**
      * Remove this Card from a given palette
      * @param card
@@ -89,22 +101,37 @@ public class Palette {
     public void removeCard(Card card) {
         if (card != null && cards.contains(card)) {
             cards.remove(card);
-            card.palettes.remove(this);
+            card.palette = getDefault();
         }
     }
 
+    /**
+     * Method that sets the background of a palette
+     * @param background
+     */
     public void setBackground(String background) {
         this.background = background;
     }
 
+    /**
+     * Method that sets the font colour of a palette
+     * @param font the font colour
+     */
     public void setFont(String font) {
         this.font = font;
     }
 
+    /**
+     * Method that checks if the palette is default
+     * @return a boolean
+     */
     public boolean isDefault(){
         return this.isDefault;
     }
 
+    /**
+     * Method that sets the palette as default
+     */
     public void setDefault(){
         this.isDefault = true;
     }

@@ -52,13 +52,9 @@ public class Card {
     )
     public Set<Tag> tags = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "cards_palettes",
-            joinColumns = @JoinColumn(name = "card_id"),
-            inverseJoinColumns = @JoinColumn(name = "palette_id")
-    )
-    public Set<Palette> palettes = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "palette_id")
+    public Palette palette;
 
     /**
      * Default constructor
@@ -74,20 +70,20 @@ public class Card {
      * @param colour
      * @param list
      * @param checklist
-     * @param palettes
+     * @param palette
      * @param tags
      */
     public Card(String title, String description,
                 String colour, ListOfCards list,
                 List<CheckListItem> checklist, Set<Tag> tags,
-                Set<Palette> palettes) {
+                Palette palette) {
         this.title = title;
         this.description = description;
         this.colour = colour;
         this.list = list;
         this.checklist = checklist;
         this.tags = tags;
-        this.palettes = palettes;
+        this.palette = palette;
     }
 
     /*
@@ -99,8 +95,8 @@ public class Card {
      * @param palette
      */
     public void addPalette(Palette palette){
-        if (palette != null && !palettes.contains(palette)) {
-            palettes.add(palette);
+        if (palette != null) {
+            this.palette = palette;
             palette.cards.add(this);
         }
     }
@@ -110,9 +106,9 @@ public class Card {
      * @param palette
      */
     public void removePalette(Palette palette){
-        if (palette != null && !palettes.contains(palette)) {
-            palettes.remove(palette);
+        if (palette != null) {
             palette.cards.remove(this);
+            palette = palette.getDefault();
         }
     }
     /**
