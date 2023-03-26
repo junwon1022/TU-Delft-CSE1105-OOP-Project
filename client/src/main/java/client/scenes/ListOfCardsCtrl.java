@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -114,7 +113,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             long dbListId = Long.decode(strings[1]);
 
             List<Card> draggedList = null;
-            for (ListOfCards loc: this.board.data)
+            for (ListOfCards loc: this.board.listOfCards)
                 if (loc.id == dbListId)
                     draggedList = loc.cards;
 

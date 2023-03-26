@@ -61,12 +61,12 @@ public class AddTagCtrl {
      * @param event the ActionEvent
      */
     public void ok(ActionEvent event) {
-        success = true;
         storedText = tagName.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
+            success = true;
             clearFields();
             closeWindow(event);
         }
@@ -94,12 +94,12 @@ public class AddTagCtrl {
      * @param event the KeyEvent
      */
     public void okKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = tagName.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
+            success = true;
             clearFields();
             closeWindowKeyboard(event);
         }

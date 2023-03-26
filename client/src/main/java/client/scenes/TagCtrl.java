@@ -9,13 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 
-public class TagCtrl {
+public class TagCtrl extends ListCell<Tag> {
     private ServerUtils server;
     private BoardCtrl board;
 
@@ -26,21 +27,13 @@ public class TagCtrl {
     private Button removeTag;
 
     @FXML
-    private TextField textField;
-
-    @FXML
     private Label nameLabel;
 
     private Tag tag;
-//
-//    @FXML
-//    private VBox root;
 
     @FXML
-    private Button rename;
+    private HBox root;
 
-    @FXML
-    private TextField name;
 
 
     /**
@@ -62,13 +55,35 @@ public class TagCtrl {
     }
 
     /**
+     * Called whenever the parent ListView is changed. Sets the data in this controller.
+     * @param item The new item for the cell.
+     * @param empty whether this cell represents data from the list. If it
+     *        is empty, then it does not represent any domain data, but is a cell
+     *        being used to render an "empty" row.
+     */
+    @Override
+    protected void updateItem(Tag item, boolean empty) {
+        super.updateItem(item, empty);
+
+        if (empty || item == null) {
+            setText(null);
+            setContentDisplay(ContentDisplay.TEXT_ONLY);
+        } else {
+            nameLabel.setText(item.name);
+            tag = item;
+
+            setGraphic(root);
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }
+    }
+
+    /**
      * Method that removes the tag from the server
      * @param event - the 'x' button being clicked
      */
     public void remove(ActionEvent event){
         try {
-            //TODO in Server Utils
-            //server.removeTag(tag);
+            server.removeTag(tag);
             Thread.sleep(100);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
@@ -105,8 +120,7 @@ public class TagCtrl {
                 String newName = controller.storedText;
 
                 //method that actually renames the list in the database
-                //TODO add renameTag in ServerUtils
-                //server.renameTag(tag, newName);
+                server.renameTag(tag, newName);
                 board.refresh();
             }
         } catch (IOException e) {

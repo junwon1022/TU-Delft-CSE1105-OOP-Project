@@ -103,7 +103,7 @@ public class CardCtrl extends ListCell<Card> {
             data = item;
 
             if(data.description == null || data.description.equals("")) {
-                description.setOpacity(0);
+                description.setVisible(false);
             }
 
             setGraphic(root);
@@ -264,7 +264,7 @@ public class CardCtrl extends ListCell<Card> {
      */
     private Card moveCardToOtherList(long dbCardId, long dbListId) {
         List<Card> draggedList = null;
-        for (ListOfCards loc: this.board.data)
+        for (ListOfCards loc: this.board.listOfCards)
             if (loc.id == dbListId)
                 draggedList = loc.cards;
 

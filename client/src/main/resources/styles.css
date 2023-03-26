@@ -345,3 +345,7 @@
 .rename-tag {
     -fx-content-display: center;
 }
+
+.tag-list, .tag-list .list-cell {
+    -fx-background-color: transparent;
+}

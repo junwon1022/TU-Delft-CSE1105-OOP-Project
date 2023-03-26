@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 public class RenameTagCtrl {
 
     @FXML
-    private TextField textField;
+    private TextField tagName;
 
     @FXML
     private Button rename;
@@ -47,7 +47,7 @@ public class RenameTagCtrl {
      */
     public void initialize(Tag tag){
         String oldName = tag.name;
-        textField.setText(oldName);
+        tagName.setText(oldName);
     }
 
     /**
@@ -76,7 +76,7 @@ public class RenameTagCtrl {
      * @param event - the rename button being pressed
      */
     public void rename(ActionEvent event){
-        storedText = textField.getText();
+        storedText = tagName.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
@@ -109,7 +109,7 @@ public class RenameTagCtrl {
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
         success = true;
-        storedText = textField.getText();
+        storedText = tagName.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
