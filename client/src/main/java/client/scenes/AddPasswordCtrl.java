@@ -34,7 +34,7 @@ public class AddPasswordCtrl {
     @Inject
     public AddPasswordCtrl() {
         success = false;
-        nullTitle = new Label("");
+        nullTitle = new Label("All invited users will be required to enter a password to gain write access for your board.");
         NO_PASSWORD = "Please enter a password!";
         NO_CONFIRMATION = "Please enter the password in the second field again to confirm.";
         NO_MATCH = "Passwords should match!";
@@ -50,13 +50,16 @@ public class AddPasswordCtrl {
      */
     public void ok(ActionEvent event) {
         storedText = password.getText();
-        if(storedText == null || storedText.length() == 0){
+        if(storedText == null || storedText.length() == 0) {
+            nullTitle.setStyle("-fx-text-fill: #8f2e30");
             nullTitle.setText(NO_PASSWORD);
         }
         else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setStyle("-fx-text-fill: #8f2e30");
             nullTitle.setText(NO_CONFIRMATION);
         }
         else if(!confirmPassword.getText().equals(storedText)) {
+            nullTitle.setStyle("-fx-text-fill: #8f2e30");
             nullTitle.setText(NO_MATCH);
         }
         else {
@@ -113,13 +116,16 @@ public class AddPasswordCtrl {
      */
     public void okKeyboard(javafx.scene.input.KeyEvent event) {
         storedText = password.getText();
-        if(storedText == null || storedText.length() == 0){
+        if(storedText == null || storedText.length() == 0) {
+            nullTitle.setStyle("-fx-text-fill: #8f2e30");
             nullTitle.setText(NO_PASSWORD);
         }
         else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setStyle("-fx-text-fill: #8f2e30");
             nullTitle.setText(NO_CONFIRMATION);
         }
         else if(!confirmPassword.getText().equals(storedText)) {
+            nullTitle.setStyle("-fx-text-fill: #8f2e30");
             nullTitle.setText(NO_MATCH);
         }
         else {
