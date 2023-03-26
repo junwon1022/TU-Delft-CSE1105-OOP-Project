@@ -13,7 +13,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Entity
 @Table(name = "tags")
 @JsonIdentityInfo(
-        scope = Card.class,
+        scope = Tag.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Tag {
