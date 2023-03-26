@@ -12,13 +12,15 @@
 
 <AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="120.0" prefHeight="72.0" prefWidth="173.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
+      <Label fx:id="renameCardDisabled" layoutY="1.0" onMouseClicked="#showReadOnlyMessage" prefHeight="28.0" prefWidth="31.0" visible="false" />
+      <Label fx:id="deleteCardDisabled" layoutX="134.0" layoutY="-2.0" onMouseClicked="#showReadOnlyMessage" prefHeight="35.0" prefWidth="38.0" visible="false" />
         <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="29.0" layoutY="8.0" prefHeight="43.0" prefWidth="113.0" text="Title" textAlignment="CENTER" wrapText="true">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></Label>
-        <Button id="delete-card" layoutX="147.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" stylesheets="@../../styles.css" text="❌" />
+        <Button id="delete-card" fx:id="delete" layoutX="147.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" stylesheets="@../../styles.css" text="❌" />
         <Label fx:id="description" layoutX="9.0" layoutY="54.0" prefHeight="18.0" prefWidth="14.0" styleClass="image" stylesheets="@../../styles.css" />
-      <Button id="rename-card" fx:id="detailedView" layoutX="12.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameCard" prefHeight="0.0" prefWidth="12.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
+      <Button id="rename-card" fx:id="renameButton" layoutX="12.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameCard" prefHeight="0.0" prefWidth="12.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
          <font>
             <Font size="19.0" />
          </font>

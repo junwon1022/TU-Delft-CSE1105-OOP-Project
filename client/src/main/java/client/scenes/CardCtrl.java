@@ -46,6 +46,11 @@ public class CardCtrl extends ListCell<Card> {
     @FXML
     private Button renameButton;
 
+    @FXML
+    private Label renameCardDisabled;
+    @FXML
+    private Label deleteCardDisabled;
+
 
     /**
      * Create a new CardCtrl
@@ -70,6 +75,40 @@ public class CardCtrl extends ListCell<Card> {
         root.setStyle("-fx-background-color: #00B4D8;" +
                 " -fx-border-radius: 10;" +
                 " -fx-background-radius: 10;");
+
+        if(!board.isUnlocked()) { //TODO and user doesn't have it stored
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+    }
+
+    /**
+     * Makes the card readOnly
+     */
+    private void readOnly() {
+        renameButton.setDisable(true);
+        delete.setDisable(true);
+        renameCardDisabled.setVisible(true);
+        deleteCardDisabled.setVisible(true);
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
+
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        renameButton.setDisable(false);
+        delete.setDisable(false);
+        renameCardDisabled.setVisible(false);
+        deleteCardDisabled.setVisible(false);
 
         setOnDragDetected(this::handleDragDetected);
 
@@ -101,9 +140,16 @@ public class CardCtrl extends ListCell<Card> {
         } else {
             title.setText(item.title);
             data = item;
+            if(!board.isUnlocked()) { //TODO and user doesn't have it stored
+                this.readOnly();
+            } else {
+                this.writeAccess();
+            }
 
             if(data.description == null || data.description.equals("")) {
-                description.setOpacity(0);
+                description.setVisible(false);
+            } else {
+                description.setVisible(true);
             }
 
             setGraphic(root);

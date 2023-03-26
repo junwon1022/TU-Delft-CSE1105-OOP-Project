@@ -22,8 +22,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="640.0" prefWidth="1030.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
+      <Label fx:id="addListDisabled" layoutX="569.0" layoutY="587.0" onMouseClicked="#showReadOnlyMessage" prefHeight="47.0" prefWidth="114.0" visible="false" />
       <ListView id="lists" fx:id="list" layoutX="251.0" layoutY="104.0" orientation="HORIZONTAL" prefHeight="479.0" prefWidth="750.0" stylesheets="@../../styles.css" />
-      <Button id="add-list" layoutX="571.0" layoutY="593.0" mnemonicParsing="false" onAction="#addListOfCards" prefHeight="38.0" prefWidth="109.0" stylesheets="@../../styles.css" text="➕   Add List" textFill="WHITE">
+      <Button id="add-list" fx:id="addList" layoutX="574.0" layoutY="593.0" mnemonicParsing="false" onAction="#addListOfCards" prefHeight="38.0" prefWidth="109.0" stylesheets="@../../styles.css" text="➕   Add List" textFill="WHITE">
          <font>
             <Font name="Corbel Bold" size="16.0" />
          </font>
@@ -163,6 +164,7 @@
                                  </font>
                               </Button>
                               <VBox fx:id="vBox" layoutX="-7.0" layoutY="-13.0" prefHeight="93.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
+                              <Label fx:id="tagManageDisabled" layoutY="1.0" onMouseClicked="#showReadOnlyMessage" prefHeight="177.0" prefWidth="200.0" visible="false" />
                            </children>
                         </AnchorPane>
                      </content>
@@ -192,19 +194,36 @@
             <Insets bottom="10.0" left="25.0" right="25.0" top="20.0" />
          </padding>
       </VBox>
-      <HBox alignment="CENTER_LEFT" layoutX="250.0" layoutY="21.0" prefHeight="63.0" prefWidth="457.0">
+      <HBox alignment="CENTER_LEFT" layoutX="250.0" layoutY="21.0" prefHeight="63.0" prefWidth="599.0">
          <children>
             <Label fx:id="title" prefHeight="45.0" text="My Board" textFill="#231f20">
                <font>
                   <Font name="Corbel" size="38.0" />
                </font>
             </Label>
-            <AnchorPane prefHeight="71.0" prefWidth="48.0">
+            <AnchorPane prefHeight="63.0" prefWidth="77.0">
                <children>
                   <Button id="lock" fx:id="lock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#enterPassword" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" />
                   <Button id="unlock" fx:id="unlock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#unlockButtonClicked" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" />
                </children>
             </AnchorPane>
+         </children>
+      </HBox>
+      <HBox id="read-only" fx:id="readOnlyMessage" alignment="CENTER" layoutX="398.0" layoutY="295.0" opacity="0.8" prefWidth="471.0" spacing="10.0" stylesheets="@../../styles.css">
+         <children>
+            <Label opacity="0.7" prefHeight="47.0" prefWidth="365.0" stylesheets="@../../styles.css" text="You are viewing this board in read-only mode." textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
+               <font>
+                  <Font name="Corbel" size="16.0" />
+               </font>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+            </Label>
+            <Button id="delete-list" fx:id="closeReadOnly" mnemonicParsing="false" onAction="#closeReadOnlyView" prefHeight="17.0" prefWidth="17.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+               <font>
+                  <Font name="Corbel Bold" size="13.0" />
+               </font>
+            </Button>
          </children>
       </HBox>
    </children>

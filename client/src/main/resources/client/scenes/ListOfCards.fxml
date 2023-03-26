@@ -11,8 +11,11 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="list-background" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="220.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="list-background" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="350.0" minWidth="200.0" prefHeight="450.0" prefWidth="220.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <Label fx:id="renameListDisabled" layoutX="5.0" layoutY="4.0" onMouseClicked="#showReadOnlyMessage" prefHeight="32.0" prefWidth="33.0" visible="false" />
+      <Label fx:id="deleteListDisabled" layoutX="181.0" layoutY="4.0" onMouseClicked="#showReadOnlyMessage" prefHeight="32.0" prefWidth="26.0" visible="false" />
+      <Label fx:id="addCardDisabled" layoutX="60.0" layoutY="396.0" onMouseClicked="#showReadOnlyMessage" prefHeight="32.0" prefWidth="95.0" visible="false" />
       <ListView fx:id="list" layoutX="16.0" layoutY="65.0" prefHeight="318.0" prefWidth="187.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
          <effect>
             <InnerShadow blurType="GAUSSIAN" choke="0.05" height="46.27" radius="22.645000000000003" width="46.31">
@@ -25,7 +28,7 @@
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
-      <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="16.0" layoutY="8.0" prefHeight="47.0" prefWidth="187.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
+      <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="35.0" layoutY="8.0" prefHeight="47.0" prefWidth="149.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
          <font>
             <Font name="Corbel Bold" size="17.0" />
          </font>
@@ -42,7 +45,7 @@
             <Font name="Corbel Bold" size="14.0" />
          </font>
       </Button>
-      <Button id="delete-list" fx:id="deleteCard" layoutX="185.0" layoutY="11.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="17.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+      <Button id="delete-list" fx:id="deleteList" layoutX="185.0" layoutY="11.0" mnemonicParsing="false" onAction="#remove" prefHeight="17.0" prefWidth="17.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
          <font>
             <Font name="Corbel Bold" size="13.0" />
          </font></Button>

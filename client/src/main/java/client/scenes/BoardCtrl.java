@@ -19,31 +19,30 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
-import javafx.animation.PauseTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class BoardCtrl {
 
@@ -61,6 +60,8 @@ public class BoardCtrl {
 
     @FXML
     private Button addTag;
+    @FXML
+    private Button addList;
 
     @FXML
     private AnchorPane anchorPane;
@@ -78,9 +79,23 @@ public class BoardCtrl {
     @FXML
     private Button unlock;
 
+    @FXML
+    private HBox readOnlyMessage;
+
+    @FXML
+    private Button closeReadOnly;
+
+    @FXML
+    private Label addListDisabled;
+
+    @FXML
+    private Label tagManageDisabled;
+
     ObservableList<ListOfCards> data;
 
     private Board board;
+
+    private boolean isUnlocked;
 
     /**
      * Create a new BoardCtrl.
@@ -131,16 +146,79 @@ public class BoardCtrl {
         loadVBox2();
         refresh();
         if (board.password == null) {
+            isUnlocked = true;
             lock.setVisible(false);
             unlock.setVisible(true);
         } else {
+            //TODO check whether user has saved the password
+            isUnlocked = false;
             lock.setVisible(true);
             unlock.setVisible(false);
+            this.readOnly();
         }
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
             Platform.runLater(() -> data.setAll(s.lists));
         });
+    }
+
+    /**
+     * Makes the board read only
+     */
+    private void readOnly() {
+        addTag.setDisable(true);
+        addList.setDisable(true);
+        closeReadOnly.setVisible(true);
+        readOnlyMessage.setVisible(true);
+        addListDisabled.setVisible(true);
+        tagManageDisabled.setVisible(true);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        addTag.setDisable(false);
+        addList.setDisable(false);
+        closeReadOnly.setVisible(false);
+        readOnlyMessage.setVisible(false);
+        addListDisabled.setVisible(false);
+        tagManageDisabled.setVisible(false);
+    }
+
+    public void closeReadOnlyView(ActionEvent event) {
+        FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.5), readOnlyMessage);
+        fadeOutMessage.setFromValue(0.9);
+        fadeOutMessage.setToValue(0.0);
+
+        fadeOutMessage.setOnFinished(e -> {
+            // Hide the message when the transition is finished
+            readOnlyMessage.setVisible(false);
+        });
+        fadeOutMessage.play();
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     */
+    public void showReadOnlyMessage(Event event) {
+        readOnlyMessage.setVisible(true);
+        FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.3), readOnlyMessage);
+        fadeOutMessage.setFromValue(0.0);
+        fadeOutMessage.setToValue(0.9);
+        fadeOutMessage.play();
+        Alert alert = new Alert(Alert.AlertType.WARNING,
+                "Cannot edit in read-only mode. " +
+                        "To gain write access, click on the lock icon and enter the password.",
+                ButtonType.OK);// Load your custom icon image
+
+        // Set the graphic of the alert dialog to custom image
+        alert.setGraphic(new ImageView(new Image("warning-icon.png")));
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("styles.css");
+        dialogPane.getStyleClass().add("alert");
+        dialogPane.lookupButton(ButtonType.OK).getStyleClass().add("normal-button");
+        alert.showAndWait();
     }
 
     /**
@@ -312,10 +390,10 @@ public class BoardCtrl {
      * Method that creates a new board that is shown in case of an exception
      * @return the new board
      */
-    private Board getBoard(){
-        return new Board("My Board", null, null,
-                null, null, null, new ArrayList<>(), new HashSet<>());
-    }
+//    private Board getBoard(){
+//        return new Board("My Board", null, null,
+//                null, null, null, new ArrayList<>(), new HashSet<>());
+//    }
 
     /**
      * Creates a new list with a given title
@@ -362,6 +440,9 @@ public class BoardCtrl {
 
                 lock.setVisible(true);
                 unlock.setVisible(false);
+                //TODO decide whether addition of password should lock the board for the user who added it
+                isUnlocked = false;
+                readOnly();
                 //TODO add password in user file
 
                 this.refresh();
@@ -396,7 +477,8 @@ public class BoardCtrl {
                 //TODO store password locally in user data, so that it can be remembered
                 lock.setVisible(false);
                 unlock.setVisible(true);
-                //TODO close read-only view
+                isUnlocked = true;
+                this.writeAccess();
 
                 this.refresh();
             }
@@ -441,5 +523,22 @@ public class BoardCtrl {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Getter for the board displayed
+     * @return the board entity
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+
+
+    /**
+     * Whether the board has been unlocked (or has no protection)
+     * @return true iff unlocked
+     */
+    public boolean isUnlocked() {
+        return isUnlocked;
     }
 }
