@@ -2,7 +2,6 @@ package client.scenes;
 
 import com.google.inject.Inject;
 import commons.Board;
-import commons.Card;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

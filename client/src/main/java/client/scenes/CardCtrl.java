@@ -95,6 +95,7 @@ public class CardCtrl extends ListCell<Card> {
 
     /**
      * Shows read-only message if button is disabled
+     * @param event
      */
     public void showReadOnlyMessage(Event event) {
         board.showReadOnlyMessage(event);

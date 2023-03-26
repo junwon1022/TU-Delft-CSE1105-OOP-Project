@@ -34,7 +34,8 @@ public class ChangePasswordCtrl {
     @Inject
     public ChangePasswordCtrl() {
         success = false;
-        nullTitle = new Label("Note that these changes will affect all users trying to edit your board.");
+        nullTitle = new Label("Note that these changes will affect all users " +
+                "trying to edit your board.");
         NO_PASSWORD = "Please enter a password!";
         NO_CONFIRMATION = "Please enter the password in the second field again to confirm.";
         NO_MATCH = "Passwords should match!";

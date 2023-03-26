@@ -186,6 +186,10 @@ public class BoardCtrl {
         tagManageDisabled.setVisible(false);
     }
 
+    /**
+     * Closes the read only message
+     * @param event
+     */
     public void closeReadOnlyView(ActionEvent event) {
         FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.5), readOnlyMessage);
         fadeOutMessage.setFromValue(0.9);
@@ -200,6 +204,7 @@ public class BoardCtrl {
 
     /**
      * Shows read-only message if button is disabled
+     * @param event
      */
     public void showReadOnlyMessage(Event event) {
         readOnlyMessage.setVisible(true);
@@ -404,6 +409,11 @@ public class BoardCtrl {
         return new ListOfCards(title, board, new ArrayList<>());
     }
 
+    /**
+     * Handles whether a new password should be added or
+     * it should open manage password pop-up
+     * @param event
+     */
     public void unlockButtonClicked(ActionEvent event) {
         if(board.password != null) {
             changePassword(event);
@@ -440,7 +450,8 @@ public class BoardCtrl {
 
                 lock.setVisible(true);
                 unlock.setVisible(false);
-                //TODO decide whether addition of password should lock the board for the user who added it
+                //TODO decide whether addition of password
+                // should lock the board for the user who added it
                 isUnlocked = false;
                 readOnly();
                 //TODO add password in user file

@@ -34,7 +34,8 @@ public class AddPasswordCtrl {
     @Inject
     public AddPasswordCtrl() {
         success = false;
-        nullTitle = new Label("All invited users will be required to enter a password to gain write access for your board.");
+        nullTitle = new Label("All invited users will be required " +
+                "to enter a password to gain write access for your board.");
         NO_PASSWORD = "Please enter a password!";
         NO_CONFIRMATION = "Please enter the password in the second field again to confirm.";
         NO_MATCH = "Passwords should match!";
