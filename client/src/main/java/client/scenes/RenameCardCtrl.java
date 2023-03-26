@@ -75,7 +75,7 @@ public class RenameCardCtrl {
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
             success = true;
             closeWindow(event);
         }
@@ -104,7 +104,6 @@ public class RenameCardCtrl {
      * @param event the KeyEvent
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = titleField.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);

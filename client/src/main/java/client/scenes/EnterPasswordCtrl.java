@@ -1,6 +1,8 @@
 package client.scenes;
 
 import com.google.inject.Inject;
+import commons.Board;
+import commons.Card;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -8,33 +10,69 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class AddTagCtrl {
+public class EnterPasswordCtrl {
 
     public boolean success;
 
-    public String storedText;
+    public String enteredPassword;
 
     @FXML
-    private TextField tagName;
+    private TextField password;
 
     @FXML
     private Label nullTitle;
 
-    private String MESSAGE = "Please enter a name for the tag!";
+    private String NO_PASSWORD;
+    private String INCORRECT_PASSWORD;
+
+    private Board board;
 
 
     /**
-     * Create a new AddTagCtrl.
+     * Create a new AddCardCtrl.
      *
      */
     @Inject
-    public AddTagCtrl() {
+    public EnterPasswordCtrl() {
         success = false;
         nullTitle = new Label("");
+        NO_PASSWORD = "You need to enter a password to proceed!";
+        INCORRECT_PASSWORD = "Incorrect password. Please try again!";
     }
 
     /**
-     * Initialize the controller.
+     * Initialize method for the controller
+     *
+     * @param board - the board for which enter a password
+     */
+    public void initialize(Board board){
+        this.board = board;
+    }
+
+    /**
+     * Checks whether the entered password is correct.
+     * if the user didn't input anything
+     * or the password is incorrect
+     * they can't proceed.
+     * @param event the ActionEvent
+     */
+    public void ok(ActionEvent event) {
+        enteredPassword = password.getText();
+        if(enteredPassword == null || enteredPassword.length() == 0){
+            nullTitle.setText(NO_PASSWORD);
+        }
+        else if(!board.password.equals(enteredPassword)) {
+            nullTitle.setText(INCORRECT_PASSWORD);
+        }
+        else {
+            success = true;
+            clearFields();
+            closeWindow(event);
+        }
+    }
+
+    /**
+     * Cancel trying to enter a password
      * @param event the ActionEvent
      */
     public void cancel(ActionEvent event) {
@@ -54,23 +92,6 @@ public class AddTagCtrl {
         stage.close();
     }
 
-    /**
-     * Adds the new list to the board.
-     * if the user didn't input anything
-     * they can't proceed.
-     * @param event the ActionEvent
-     */
-    public void ok(ActionEvent event) {
-        storedText = tagName.getText();
-        if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(MESSAGE);
-        }
-        else {
-            success = true;
-            clearFields();
-            closeWindow(event);
-        }
-    }
 
     // From here are the keyboard cases
 
@@ -88,15 +109,18 @@ public class AddTagCtrl {
     }
 
     /**
-     * Adds the new tag to the board
+     * Adds thew new password to the board
      * if the user didn't input anything
      * they can't proceed.
      * @param event the KeyEvent
      */
     public void okKeyboard(javafx.scene.input.KeyEvent event) {
-        storedText = tagName.getText();
-        if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(MESSAGE);
+        enteredPassword = password.getText();
+        if(enteredPassword == null || enteredPassword.length() == 0){
+            nullTitle.setText(NO_PASSWORD);
+        }
+        else if(!board.password.equals(enteredPassword)) {
+            nullTitle.setText(INCORRECT_PASSWORD);
         }
         else {
             success = true;
@@ -106,7 +130,7 @@ public class AddTagCtrl {
     }
 
     /**
-     * Cancel the creation of a new tag.
+     * Cancel the creation of a new list.
      * @param event the KeyEvent
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
@@ -131,6 +155,6 @@ public class AddTagCtrl {
      *
      */
     private void clearFields() {
-        tagName.clear();
+        password.clear();
     }
 }

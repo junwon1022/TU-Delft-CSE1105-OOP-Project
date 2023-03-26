@@ -41,7 +41,34 @@ public class AddPasswordCtrl {
     }
 
     /**
-     * Initialize the controller.
+     * Adds the new password to the board.
+     * if the user didn't input anything
+     * they can't proceed.
+     * if the inputted passwords don't match
+     * they can't proceed
+     * @param event the ActionEvent
+     */
+    public void ok(ActionEvent event) {
+        storedText = password.getText();
+        if(storedText == null || storedText.length() == 0){
+            nullTitle.setText(NO_PASSWORD);
+        }
+        else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setText(NO_CONFIRMATION);
+        }
+        else if(!confirmPassword.getText().equals(storedText)) {
+            nullTitle.setText(NO_MATCH);
+        }
+        else {
+            success = true;
+            clearFields();
+            closeWindow(event);
+        }
+    }
+
+
+    /**
+     * Cancel the addition of a password
      * @param event the ActionEvent
      */
     public void cancel(ActionEvent event) {
@@ -61,30 +88,6 @@ public class AddPasswordCtrl {
         stage.close();
     }
 
-    /**
-     * Adds the new list to the board.
-     * if the user didn't input anything
-     * they can't proceed.
-     * @param event the ActionEvent
-     */
-    public void ok(ActionEvent event) {
-        success = true;
-        storedText = password.getText();
-        if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(NO_PASSWORD);
-        }
-        else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
-            nullTitle.setText(NO_CONFIRMATION);
-        }
-        else if(!confirmPassword.getText().equals(storedText)) {
-            nullTitle.setText(NO_MATCH);
-        }
-        else {
-            clearFields();
-            closeWindow(event);
-        }
-    }
-
     // From here are the keyboard cases
 
     /**
@@ -101,25 +104,33 @@ public class AddPasswordCtrl {
     }
 
     /**
-     * Adds thew new password to the board
+     * Adds the new password to the board
      * if the user didn't input anything
      * they can't proceed.
+     * if the passwords don't match
+     * they can't proceed
      * @param event the KeyEvent
      */
     public void okKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = password.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(NO_PASSWORD);
         }
-        else{
+        else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setText(NO_CONFIRMATION);
+        }
+        else if(!confirmPassword.getText().equals(storedText)) {
+            nullTitle.setText(NO_MATCH);
+        }
+        else {
+            success = true;
             clearFields();
             closeWindowKeyboard(event);
         }
     }
 
     /**
-     * Cancel the creation of a new list.
+     * Cancel the creation of a password.
      * @param event the KeyEvent
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {

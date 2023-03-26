@@ -391,6 +391,36 @@ public class ServerUtils {
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
     }
 
+    /**
+     * Change a board with a new password
+     * @param board - the board that needs to have its password changed
+     * @param password - the password of the new board
+     * @return the board with the new password
+     */
+    public Board changeBoardPassword(Board board, String password){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(password, APPLICATION_JSON), Board.class);
+    }
+
+    /**
+     * Removal of password of a board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removePassword(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password/")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
+    }
+
     private StompSession session = connect("ws://localhost:8080/websocket");
 
     /**

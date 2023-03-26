@@ -5,36 +5,70 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 
-public class AddTagCtrl {
+public class ChangePasswordCtrl {
 
     public boolean success;
 
     public String storedText;
 
     @FXML
-    private TextField tagName;
+    private PasswordField password;
+    @FXML
+    private PasswordField confirmPassword;
 
     @FXML
     private Label nullTitle;
 
-    private String MESSAGE = "Please enter a name for the tag!";
+    private String NO_PASSWORD;
+    private String NO_CONFIRMATION;
+    private String NO_MATCH;
 
 
     /**
-     * Create a new AddTagCtrl.
+     * Create a new AddCardCtrl.
      *
      */
     @Inject
-    public AddTagCtrl() {
+    public ChangePasswordCtrl() {
         success = false;
         nullTitle = new Label("");
+        NO_PASSWORD = "Please enter a password!";
+        NO_CONFIRMATION = "Please enter the password in the second field again to confirm.";
+        NO_MATCH = "Passwords should match!";
     }
 
     /**
-     * Initialize the controller.
+     * Adds the new password to the board.
+     * if the user didn't input anything
+     * they can't proceed.
+     * if the inputted passwords don't match
+     * they can't proceed
+     * @param event the ActionEvent
+     */
+    public void ok(ActionEvent event) {
+        storedText = password.getText();
+        if(storedText == null || storedText.length() == 0){
+            nullTitle.setText(NO_PASSWORD);
+        }
+        else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setText(NO_CONFIRMATION);
+        }
+        else if(!confirmPassword.getText().equals(storedText)) {
+            nullTitle.setText(NO_MATCH);
+        }
+        else {
+            success = true;
+            clearFields();
+            closeWindow(event);
+        }
+    }
+
+
+    /**
+     * Cancel the addition of a password
      * @param event the ActionEvent
      */
     public void cancel(ActionEvent event) {
@@ -55,21 +89,14 @@ public class AddTagCtrl {
     }
 
     /**
-     * Adds the new list to the board.
-     * if the user didn't input anything
-     * they can't proceed.
+     * Removes the password of the board.
      * @param event the ActionEvent
      */
-    public void ok(ActionEvent event) {
-        storedText = tagName.getText();
-        if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(MESSAGE);
-        }
-        else {
-            success = true;
-            clearFields();
-            closeWindow(event);
-        }
+    public void removePassword(ActionEvent event) {
+        success = true;
+        storedText = null;
+        clearFields();
+        closeWindow(event);
     }
 
     // From here are the keyboard cases
@@ -88,15 +115,23 @@ public class AddTagCtrl {
     }
 
     /**
-     * Adds the new tag to the board
+     * Adds the new password to the board
      * if the user didn't input anything
      * they can't proceed.
+     * if the passwords don't match
+     * they can't proceed
      * @param event the KeyEvent
      */
     public void okKeyboard(javafx.scene.input.KeyEvent event) {
-        storedText = tagName.getText();
+        storedText = password.getText();
         if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(MESSAGE);
+            nullTitle.setText(NO_PASSWORD);
+        }
+        else if(confirmPassword.getText() == null || confirmPassword.getText().length() == 0) {
+            nullTitle.setText(NO_CONFIRMATION);
+        }
+        else if(!confirmPassword.getText().equals(storedText)) {
+            nullTitle.setText(NO_MATCH);
         }
         else {
             success = true;
@@ -106,7 +141,7 @@ public class AddTagCtrl {
     }
 
     /**
-     * Cancel the creation of a new tag.
+     * Cancel the creation of a password.
      * @param event the KeyEvent
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
@@ -131,6 +166,7 @@ public class AddTagCtrl {
      *
      */
     private void clearFields() {
-        tagName.clear();
+        password.clear();
+        confirmPassword.clear();
     }
 }

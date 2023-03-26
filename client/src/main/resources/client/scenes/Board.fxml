@@ -201,8 +201,8 @@
             </Label>
             <AnchorPane prefHeight="71.0" prefWidth="48.0">
                <children>
-                  <Button id="lock" fx:id="lock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" />
-                  <Button id="unlock" fx:id="unlock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#addPassword" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" />
+                  <Button id="lock" fx:id="lock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#enterPassword" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" />
+                  <Button id="unlock" fx:id="unlock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#unlockButtonClicked" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" />
                </children>
             </AnchorPane>
          </children>

@@ -326,8 +326,17 @@ public class BoardCtrl {
         return new ListOfCards(title, board, new ArrayList<>());
     }
 
+    public void unlockButtonClicked(ActionEvent event) {
+        if(board.password != null) {
+            changePassword(event);
+        } else {
+            addPassword(event);
+        }
+    }
+
+
     /**
-     * Opens a new window to add a new list of cards.
+     * Opens a new window to add a new password.
      * @param event the ActionEvent
      */
     public void addPassword(ActionEvent event) {
@@ -348,7 +357,84 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
-                //TODO add password controllers and Server Utils
+                board = server.changeBoardPassword(board, password);
+                System.out.println(board);
+
+                lock.setVisible(true);
+                unlock.setVisible(false);
+                //TODO add password in user file
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Opens a new window to add a new list of cards.
+     * @param event the ActionEvent
+     */
+    public void enterPassword(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EnterPassword.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            EnterPasswordCtrl controller = fxmlLoader.getController();
+            controller.initialize(board);
+
+            Stage stage = new Stage();
+            stage.setTitle("Unlock board");
+            Scene enterPasswordScene = new Scene(root);
+            enterPasswordScene.getStylesheets().add("styles.css");
+            stage.setHeight(307);
+            stage.setWidth(353);
+            stage.setScene(enterPasswordScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+
+                //TODO store password locally in user data, so that it can be remembered
+                lock.setVisible(false);
+                unlock.setVisible(true);
+                //TODO close read-only view
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Opens a new window to manage password.
+     * @param event the ActionEvent
+     */
+    public void changePassword(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            ChangePasswordCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Manage passwords of your board");
+            Scene changePasswordScene = new Scene(root);
+            changePasswordScene.getStylesheets().add("styles.css");
+            stage.setHeight(363);
+            stage.setWidth(527);
+            stage.setScene(changePasswordScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String password = controller.storedText;
+
+                if(password != null) {
+                    board = server.changeBoardPassword(board, password);
+                } else {
+                    board = server.removePassword(board);
+                }
+                System.out.println(board);
+
+                //TODO change password in user file
 
                 this.refresh();
             }
