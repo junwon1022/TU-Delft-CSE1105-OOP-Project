@@ -52,6 +52,13 @@ public class ServerUtils {
     private static String SERVER_ADDRESS = "localhost:8080";
 
     /**
+     * @return the address of the server
+     */
+    public String getServerAddress() {
+        return SERVER_ADDRESS;
+    }
+
+    /**
      * Changes the preset server adress from 8080 to the textbox input
      * @param server
      */
