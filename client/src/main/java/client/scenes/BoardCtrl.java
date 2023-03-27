@@ -20,6 +20,8 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.ListOfCards;
 import javafx.animation.*;
+import commons.Tag;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,13 +70,12 @@ public class BoardCtrl {
     private AnchorPane anchorPane;
 
     @FXML
-    private VBox vBox;
+    private ListView tagList;
     @FXML
     private AnchorPane anchorPane2;
 
     @FXML
     private VBox vBox2;
-
     @FXML
     private Button lock;
     @FXML
@@ -91,8 +92,8 @@ public class BoardCtrl {
 
     @FXML
     private Label tagManageDisabled;
-
-    ObservableList<ListOfCards> data;
+    ObservableList<ListOfCards> listOfCards;
+    ObservableList<Tag> tags;
 
     private Board board;
 
@@ -106,7 +107,8 @@ public class BoardCtrl {
     public BoardCtrl(ServerUtils server) {
         this.server = server;
 
-        data = FXCollections.observableArrayList();
+        listOfCards = FXCollections.observableArrayList();
+        tags = FXCollections.observableArrayList();
 
         // Placeholder for when Dave's branch is merged
         // so there are actually multiple boards
@@ -136,16 +138,24 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
-        data = FXCollections.observableArrayList();
+        listOfCards = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
-        list.setItems(data);
+        list.setItems(listOfCards);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
         list.getStylesheets().add("styles.css");
+
+        tags = FXCollections.observableArrayList();
+        tagList.setFixedCellSize(0);
+        tagList.setItems(tags);
+        tagList.setCellFactory(lv -> new TagCtrl(server, this));
+        tagList.setMaxHeight(400);
+        tagList.getStylesheets().add("styles.css");
+
         key.setText(board.key);
         title.setText(board.title);
         AnchorPane.setBottomAnchor(addTag, 5.0);
-        loadVBox();
+        loadTagList();
         loadVBox2();
         refresh();
         if (board.password == null) {
@@ -161,7 +171,8 @@ public class BoardCtrl {
         }
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-            Platform.runLater(() -> data.setAll(s.lists));
+            Platform.runLater(() -> listOfCards.setAll(s.lists));
+            Platform.runLater(() -> tags.setAll(s.tags));
         });
     }
 
@@ -233,26 +244,29 @@ public class BoardCtrl {
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
-        //the method call of getServerData will be with the board parameter
-        var serverData = server.getServerData(board.id);
-        data.setAll(serverData);
+        //the method call of getListsInBoard will be with the board parameter
+        var serverData = server.getListsInBoard(board.id);
+        listOfCards.setAll(serverData);
+        //the method call of getTagsInBoard will be with the board parameter
+        var serverDataTags = server.getTagsInBoard(board.id);
+        tags.setAll(serverDataTags);
     }
 
     /**
-     * Loads the vbox to auto-fit its parent
+     * Loads the list to auto-fit its parent
      */
-    public void loadVBox() {
-        // set the VBox to always grow to fill the AnchorPane
-        vBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        vBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        vBox.setMaxHeight(Double.MAX_VALUE);
-        vBox.setMaxWidth(Double.MAX_VALUE);
+    public void loadTagList() {
+        // set the tagList to always grow to fill the AnchorPane
+        tagList.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        tagList.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        tagList.setMaxHeight(Double.MAX_VALUE);
+        tagList.setMaxWidth(Double.MAX_VALUE);
 
-        // set the constraints for the VBox to fill the AnchorPane
-        AnchorPane.setTopAnchor(vBox, 0.0);
-        AnchorPane.setBottomAnchor(vBox, 35.0);
-        AnchorPane.setLeftAnchor(vBox, 0.0);
-        AnchorPane.setRightAnchor(vBox, 0.0);
+        // set the constraints for the tagList to fill the AnchorPane
+        AnchorPane.setTopAnchor(tagList, 0.0);
+        AnchorPane.setBottomAnchor(tagList, 35.0);
+        AnchorPane.setLeftAnchor(tagList, 0.0);
+        AnchorPane.setRightAnchor(tagList, 0.0);
     }
 
     /**
@@ -331,14 +345,12 @@ public class BoardCtrl {
             if (controller.success) {
                 String name = controller.storedText;
 
-                //TODO add getTag in Server Utils
-                //Tag tag = getTag(name);
-                //TODO add addTag in Server Utils
-                //Tag addedTag = server.addTag(tag);
-                //System.out.println(addedTag);
+                Tag tag = getTag(name);
+                Tag addedTag = server.addTag(tag);
+                System.out.println(addedTag);
 
-                //change the id of the board locally
-                //tag.id = addedTag.id;
+                //change the id of the tag locally
+                tag.id = addedTag.id;
 
                 this.refresh();
             }
@@ -378,8 +390,6 @@ public class BoardCtrl {
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
         tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
-//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
-//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
@@ -404,9 +414,9 @@ public class BoardCtrl {
 //    }
 
     /**
-     * Creates a new list with a given title
+     * Method that creates a new list of cards in the board
      * @param title
-     * @return
+     * @return the new list
      */
     private ListOfCards getList(String title){
         return new ListOfCards(title, board, new ArrayList<>());
@@ -554,5 +564,14 @@ public class BoardCtrl {
      */
     public boolean isUnlocked() {
         return isUnlocked;
+    }
+
+    /**
+     * Makes a new tag
+     * @param name
+     * @return
+     */
+    private Tag getTag(String name) {
+        return new Tag(name, "#00B4D8", board, new HashSet<>());
     }
 }

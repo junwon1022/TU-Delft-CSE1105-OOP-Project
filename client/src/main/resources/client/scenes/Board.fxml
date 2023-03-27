@@ -158,12 +158,12 @@
                      <content>
                         <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
                            <children>
+                              <ListView fx:id="tagList" prefHeight="182.0" prefWidth="200.0" styleClass="tag-list" stylesheets="@../../styles.css" />
                               <Button id="add" fx:id="addTag" alignment="CENTER" contentDisplay="BOTTOM" layoutX="82.0" layoutY="82.0" mnemonicParsing="false" onAction="#addTag" prefHeight="23.0" prefWidth="35.0" styleClass="normal-button" text="➕">
                                  <font>
                                     <Font name="Corbel" size="12.0" />
                                  </font>
                               </Button>
-                              <VBox fx:id="vBox" layoutX="-7.0" layoutY="-13.0" prefHeight="93.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
                               <Label fx:id="tagManageDisabled" layoutY="1.0" onMouseClicked="#showReadOnlyMessage" prefHeight="177.0" prefWidth="200.0" visible="false" />
                            </children>
                         </AnchorPane>

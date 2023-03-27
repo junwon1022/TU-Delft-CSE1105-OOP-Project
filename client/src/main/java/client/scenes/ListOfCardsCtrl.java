@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
@@ -68,6 +69,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     private ObservableList<Card> data;
 
+    private ObservableList<Card> cards;
+
 
     /**
      * Create a new ListOfCardsCtrl
@@ -86,12 +89,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             throw new RuntimeException(e);
         }
 
-        data = FXCollections.observableArrayList();
+        cards = FXCollections.observableArrayList();
 
-        list.setItems(data);
+        list.setItems(cards);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
-        list.getStylesheets().add("styles.css");
         if (!board.isUnlocked()) {
             this.readOnly();
         } else {
@@ -150,7 +152,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             long dbListId = Long.decode(strings[1]);
 
             List<Card> draggedList = null;
-            for (ListOfCards loc: this.board.data)
+            for (ListOfCards loc: this.board.listOfCards)
                 if (loc.id == dbListId)
                     draggedList = loc.cards;
 
@@ -187,7 +189,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
-            data.setAll(item.cards);
+            cards.setAll(item.cards);
             cardData = item;
             if (!board.isUnlocked()) {
                 this.readOnly();
@@ -401,7 +403,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "red",
                 cardData,
                 null,
-                null);
+                new HashSet<>());
         card.order = cardData.cards.size();
         return card;
     }

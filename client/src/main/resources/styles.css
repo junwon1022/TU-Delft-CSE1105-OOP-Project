@@ -376,3 +376,13 @@
     -fx-background-color: #CAF0F8;
     -fx-font-family: Corbel;
 }
+
+.tag-list {
+    -fx-background-color: transparent;
+}
+
+
+.tag-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-pref-width: 90%;
+}

@@ -4,7 +4,10 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,20 +17,25 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
+
+import javax.swing.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CardCtrl extends ListCell<Card> {
     private final ServerUtils server;
     private final BoardCtrl board;
-    private final ListOfCardsCtrl parent;
+    private final ListOfCardsCtrl list;
 
-    private Card data;
+    private Card card;
 
     @FXML
     private AnchorPane root;
@@ -45,6 +53,9 @@ public class CardCtrl extends ListCell<Card> {
 
     @FXML
     private Button renameButton;
+    @FXML
+    private GridPane tagGrid;
+    private List<Tag> tags;
 
     @FXML
     private Label renameCardDisabled;
@@ -56,13 +67,13 @@ public class CardCtrl extends ListCell<Card> {
      * Create a new CardCtrl
      * @param server The server to use
      * @param board The board this card belongs to
-     * @param parent The parent list of cards
+     * @param list The parent list of cards
      */
     @Inject
-    public CardCtrl(ServerUtils server, BoardCtrl board, ListOfCardsCtrl parent) {
+    public CardCtrl(ServerUtils server, BoardCtrl board, ListOfCardsCtrl list) {
         this.server = server;
         this.board = board;
-        this.parent = parent;
+        this.list = list;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
         fxmlLoader.setController(this);
@@ -71,10 +82,7 @@ public class CardCtrl extends ListCell<Card> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        root.setStyle("-fx-background-color: #00B4D8;" +
-                " -fx-border-radius: 10;" +
-                " -fx-background-radius: 10;");
+        board.refresh();
 
         if(!board.isUnlocked()) { //TODO and user doesn't have it stored
             this.readOnly();
@@ -124,6 +132,11 @@ public class CardCtrl extends ListCell<Card> {
         setOnDragDone(Event::consume);
     }
 
+//    private void refresh() {
+//        var serverDataTags = server.getTagsInCard(card.id);
+//        tags.setAll(serverDataTags);
+//    }
+
     /**
      * Is called whenever the parent ListOfCards is changed. Sets the data in this controller.
      * @param item The new item for the cell.
@@ -140,6 +153,7 @@ public class CardCtrl extends ListCell<Card> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
+<<<<<<< HEAD
             data = item;
             if(!board.isUnlocked()) { //TODO and user doesn't have it stored
                 this.readOnly();
@@ -151,10 +165,41 @@ public class CardCtrl extends ListCell<Card> {
                 description.setVisible(false);
             } else {
                 description.setVisible(true);
+=======
+            card = item;
+            this.loadTags();
+
+            if(card.description == null || card.description.equals("")) {
+                description.setVisible(false);
+>>>>>>> tags-frontend
             }
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }
+    }
+
+    /**
+     * loads the tags colors on the card
+     */
+    public void loadTags() {
+        tagGrid.getChildren().clear();
+        int numRows = 0;
+        int numCols = 5;
+        int i = 0;
+        for (Tag tag : card.tags) {
+            Circle circle = new Circle(6, Color.web(tag.colour));
+            circle.setSmooth(true);
+            circle.setStroke(Color.web("#186B90"));
+            circle.setStrokeWidth(0.5);
+            tagGrid.add(circle, i % numCols, numRows);
+
+            if (i % numCols == numCols - 1) {
+                numRows++;
+                double height = root.getPrefHeight() + 0.3;
+                root.setPrefHeight(height);
+            }
+            i++;
         }
     }
 
@@ -164,7 +209,7 @@ public class CardCtrl extends ListCell<Card> {
      */
     public void remove(ActionEvent event){
         try {
-            server.removeCard(data);
+            server.removeCard(card);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.initModality(Modality.APPLICATION_MODAL);
@@ -261,22 +306,22 @@ public class CardCtrl extends ListCell<Card> {
             String[] strings = db.getString().split("X");
             long dbCardId = Long.decode(strings[0]);
             long dbListId = Long.decode(strings[1]);
-            if (dbListId != this.parent.cardData.id) {
+            if (dbListId != this.list.cardData.id) {
                 Card draggedCard = moveCardToOtherList(dbCardId, dbListId);
-                List<Card> items = this.parent.cardData.cards;
+                List<Card> items = this.list.cardData.cards;
 
                 int draggedIdx = (int) draggedCard.order;
                 int thisIdx = items.indexOf(getItem());
-                server.moveCard(this.parent.cardData, draggedIdx, thisIdx);
+                server.moveCard(this.list.cardData, draggedIdx, thisIdx);
             }
             else {
-                List<Card> items = this.parent.cardData.cards;
+                List<Card> items = this.list.cardData.cards;
                 int draggedIdx = 0;
                 for (int i = 0; i < items.size(); i++)
                     if (items.get(i).id == dbCardId)
                         draggedIdx = i;
                 int thisIdx = items.indexOf(getItem());
-                server.moveCard(this.parent.cardData, draggedIdx, thisIdx);
+                server.moveCard(this.list.cardData, draggedIdx, thisIdx);
             }
             board.refresh();
         }
@@ -311,7 +356,7 @@ public class CardCtrl extends ListCell<Card> {
      */
     private Card moveCardToOtherList(long dbCardId, long dbListId) {
         List<Card> draggedList = null;
-        for (ListOfCards loc: this.board.data)
+        for (ListOfCards loc: this.board.listOfCards)
             if (loc.id == dbListId)
                 draggedList = loc.cards;
 
@@ -322,8 +367,8 @@ public class CardCtrl extends ListCell<Card> {
 
         server.removeCard(draggedCard);
 
-        draggedCard.list = this.parent.cardData;
-        draggedCard.order = this.parent.cardData.cards.size();
+        draggedCard.list = this.list.cardData;
+        draggedCard.order = this.list.cardData.cards.size();
         server.addCard2(draggedCard);
         return draggedCard;
     }
@@ -338,10 +383,10 @@ public class CardCtrl extends ListCell<Card> {
         try {
             Parent root = fxmlLoader.load();
             RenameCardCtrl controller = fxmlLoader.getController();
-            controller.initialize(data);
+            controller.initialize(card);
 
             Stage stage = new Stage();
-            stage.setTitle("Rename the card: " + data.title);
+            stage.setTitle("Rename the card: " + card.title);
             stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
@@ -349,7 +394,7 @@ public class CardCtrl extends ListCell<Card> {
                 String newTitle = controller.storedText;
 
                 //method that actually renames the list in the database
-                server.renameCard(data, newTitle);
+                server.renameCard(card, newTitle);
                 board.refresh();
             }
         } catch (IOException e) {

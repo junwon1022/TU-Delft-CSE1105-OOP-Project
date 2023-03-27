@@ -86,6 +86,7 @@ public class TagService {
      * @param id
      */
     public void deleteTagById(Long id) {
+        tagRepository.getById(id).removeTagsFromCards();
         tagRepository.deleteById(id);
     }
 

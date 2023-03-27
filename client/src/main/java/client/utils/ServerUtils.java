@@ -27,12 +27,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-import commons.Board;
-import commons.Card;
-import commons.ListOfCards;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -95,6 +92,8 @@ public class ServerUtils {
      * Placeholder serverData until connection is made.
      */
     List<ListOfCards> serverData = null;
+    List<Tag> serverDataTags = null;
+    List<Tag> serverDataTagsInCard = null;
 
     /**
      * Placeholder add card function.
@@ -203,9 +202,9 @@ public class ServerUtils {
     /**
      * Placeholder method to get data from server
      * @param boardId the id of the board
-     * @return a list of cardlists.
+     * @return a list of lists of cards.
      */
-    public List<ListOfCards> getServerData(long boardId) {
+    public List<ListOfCards> getListsInBoard(long boardId) {
 
         // once the database references are solved
         // -- as when the get method retrieves the list of all lists
@@ -219,12 +218,32 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @param boardId the id of the board
+     * @return a list of tags.
+     */
+    public List<Tag> getTagsInBoard(long boardId) {
+        serverDataTags = getTags(boardId);
+        return serverDataTags;
+    }
+
+    /**
+     * Placeholder method to get data from server
+     * @param cardId the id of the board
+     * @return a list of tags.
+     */
+    public List<Tag> getTagsInCard(long cardId) {
+        serverDataTagsInCard = getTagsCard(cardId);
+        return serverDataTagsInCard;
+    }
+
+    /**
      * Get boards from server
      *
      * @param boardId
      * @return boards
      */
-    public Board getBoard(long boardId){
+    public Board getBoard(long boardId) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId)
                 .request(APPLICATION_JSON)
@@ -272,6 +291,33 @@ public class ServerUtils {
                 .get(new GenericType<List<ListOfCards>>(){});
     }
 
+    /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<Tag> getTags(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId + "/tags")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Tag>>(){});
+    }
+
+    /**
+     * Method that returns the lists from the database
+     * @param cardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<Tag> getTagsCard(long cardId){
+        return ClientBuilder.newClient(new ClientConfig())//
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards"
+                        + cardId + "/tags") //
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Tag>>(){});
+    }
+
 
     /**
      * Add a new list to the server
@@ -284,6 +330,19 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
+    }
+
+    /**
+     * Add a new tag to the server
+     * @param tag - the tag that needs to be added to the server
+     * @return the tag added to the server
+     */
+    public Tag addTag(Tag tag){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + tag.board.id + "/tags")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
     }
 
     /**
@@ -307,7 +366,7 @@ public class ServerUtils {
         long boardId = card.list.board.id;
         long listId = card.list.id;
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists/"+ listId + "/cards")
+                .target(SERVER).path("/api/boards/" + boardId + "/lists/"+ listId + "/cards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(card, APPLICATION_JSON), Card.class);
@@ -327,6 +386,21 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .delete(Card.class);
+    }
+
+    /**
+     * Removes a tag from the server
+     * @param tag the tag that needs to be removed
+     * @return - the removed tag
+     */
+    public Tag removeTag(Tag tag){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/tags/{tag_id}/")
+                .resolveTemplate("board_id", tag.board.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Tag.class);
     }
 
     /**
@@ -373,6 +447,22 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(title, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Renaming a tag with a new name
+     * @param tag - the tag that needs renaming
+     * @param name - the new name of the tag
+     * @return the Card that was renamed
+     */
+    public Tag renameTag(Tag tag, String name) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/tags/{tag_id}/")
+                .resolveTemplate("board_id", tag.board.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(name, APPLICATION_JSON), Tag.class);
     }
 
     /**
