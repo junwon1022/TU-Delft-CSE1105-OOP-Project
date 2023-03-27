@@ -135,7 +135,6 @@ public class ServerUtils {
     List<ListOfCards> serverData = null;
     List<Tag> serverDataTags = null;
     List<Tag> serverDataTagsInCard = null;
-    private List<ListOfCards> serverData = null;
 
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
