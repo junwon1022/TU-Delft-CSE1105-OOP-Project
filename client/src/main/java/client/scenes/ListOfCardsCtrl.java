@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
@@ -357,7 +358,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "red",
                 cardData,
                 null,
-                null);
+                new HashSet<>());
         card.order = cardData.cards.size();
         return card;
     }

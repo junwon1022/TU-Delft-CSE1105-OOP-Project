@@ -129,6 +129,7 @@ public class CardCtrl extends ListCell<Card> {
      * loads the tags colors on the card
      */
     public void loadTags() {
+        tagGrid.getChildren().clear();
         int numRows = 0;
         int numCols = 5;
         int i = 0;
