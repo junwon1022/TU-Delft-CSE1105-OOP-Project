@@ -43,6 +43,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BoardCtrl {
 
@@ -112,7 +113,9 @@ public class BoardCtrl {
         try {
             board = this.server.getBoard(1);
         } catch (Exception e) {
-            board = getBoard();
+            board = new Board("My Board", "#CAF0F8",
+                    "#000000", "#A2E4F1", "#000000",
+                    null, new ArrayList<ListOfCards>(), new HashSet<>());
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
