@@ -49,6 +49,10 @@ public class BoardCtrl {
 
     private final ServerUtils server;
 
+    private final MainCtrl mainCtrl;
+
+    public String boardKey;
+
     @FXML
     private ListView<ListOfCards> list;
 
@@ -79,40 +83,52 @@ public class BoardCtrl {
 
     /**
      * Create a new BoardCtrl.
-     * @param server The server to use.
+     *
+     * @param server    The server to use.
+     * @param mainCtrl The main control
+     * @param boardKey The key of a specific board
      */
     @Inject
-    public BoardCtrl(ServerUtils server) {
+    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl, String boardKey) {
         this.server = server;
+        this.boardKey = boardKey;
 
         data = FXCollections.observableArrayList();
 
-        // Placeholder for when Dave's branch is merged
-        // so there are actually multiple boards
+
         try {
-            board = this.server.getBoard(1);
-        } catch (Exception e) {
+            board = this.server.getBoardByKey(boardKey);
+          //  System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
+
+        }
+        catch (Exception e) {
+            System.out.println("Sb");
             board = getBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
         refresh();
-        /*
-        board = getBoard();
 
-        //add the board to the database
-        Board addedBoard =  server.addBoard(board);
-
-        //change the id of the board locally
-        board.id = server.getBoard(addedBoard.id).id;
-        System.out.println(board.id);
-        */
+        this.mainCtrl = mainCtrl;
     }
+
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
+
+        try {
+            board = this.server.getBoardByKey(boardKey);
+            System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
+
+        }
+        catch (Exception e) {
+            System.out.println("Sb");
+        }
+
         data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
@@ -121,6 +137,7 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
+
         AnchorPane.setBottomAnchor(addTag, 5.0);
         loadVBox();
         loadVBox2();
@@ -298,10 +315,20 @@ public class BoardCtrl {
     }
 
     /**
+     * Goes back to overview
+     * @param event - Key event when the user clicks the mouse + /
+     */
+    public void goToOverview(ActionEvent event) {
+        mainCtrl.showMainScreen();
+    }
+
+    /**
      * Method that creates a new board
      * @return the new board
      */
     private Board getBoard(){
+
+
         return new Board("My Board", null, null,
                 null, null, null, new ArrayList<>(), new HashSet<>());
     }

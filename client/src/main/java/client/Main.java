@@ -26,7 +26,6 @@ import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-
 public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
@@ -58,8 +57,12 @@ public class Main extends Application {
 //        var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
         var board = FXML.load(BoardCtrl.class,
                 "client", "scenes", "Board.fxml");
+        var connect = FXML.load(ConnectCtrl.class,
+                "client", "scenes", "ConnectToServer.fxml");
+        var mainScreen = FXML.load(MainScreenCtrl.class,
+                "client", "scenes", "MainScreen.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, board);
+        mainCtrl.initialize(primaryStage, board, connect, mainScreen);
     }
 }
