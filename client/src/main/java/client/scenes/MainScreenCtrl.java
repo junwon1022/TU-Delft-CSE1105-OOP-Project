@@ -139,7 +139,7 @@ public class MainScreenCtrl {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
                 Board board = new Board(title,"","","" ,
-                        "" , "", new ArrayList<>(), new HashSet<>());
+                        "" , "", new ArrayList<>(), new HashSet<>(), null);
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);
