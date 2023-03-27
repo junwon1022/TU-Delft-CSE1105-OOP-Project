@@ -79,18 +79,13 @@ public class TagServiceTest {
         b.addList(l);
         listService.createListOfCards(l,b);
         Mockito.verify(listRepo).save(l);
-
-
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
                 new HashSet<>(), null);
 
         l.addCard(c);
-
         cardService.createCard(c,l,b);
 
         Mockito.verify(cardRepo).save(c);
-
-
         Tag t = new Tag("Tag 2","#555555",b, new HashSet<>());
 
         c.addTag(t);
