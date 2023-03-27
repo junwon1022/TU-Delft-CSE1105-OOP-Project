@@ -125,3 +125,4 @@ public class Tag {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
     }
 }
+

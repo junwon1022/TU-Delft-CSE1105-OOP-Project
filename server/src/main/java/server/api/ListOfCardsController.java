@@ -36,6 +36,7 @@ public class ListOfCardsController {
     public ListOfCardsController(ListOfCardsService listOfCardsService,
                                  BoardService boardService,
                                  SimpMessagingTemplate simpMessagingTemplate) {
+
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
         this.simpMessagingTemplate = simpMessagingTemplate;

@@ -156,6 +156,13 @@ public class Card {
     }
 
     /**
+     * @return the order of the card
+     */
+    public long getOrder() {
+        return order;
+    }
+
+    /**
      * Check if two cards are equal
      * @param obj
      * @return true if equal

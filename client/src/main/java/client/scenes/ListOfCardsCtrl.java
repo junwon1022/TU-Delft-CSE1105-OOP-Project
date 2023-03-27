@@ -108,7 +108,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     private void handleDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
-        if (db.hasString()) {
+        if (db.hasString() && this.cardData != null) {
             String[] strings = db.getString().split("X");
             long dbCardId = Long.decode(strings[0]);
             long dbListId = Long.decode(strings[1]);

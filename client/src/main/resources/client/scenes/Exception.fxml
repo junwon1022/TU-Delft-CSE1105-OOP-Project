@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ExceptionCtrl">
+    <children>
+        <Button layoutX="254.0" layoutY="160.0" mnemonicParsing="false" onAction="#ok" text="Ok" />
+
+      <Label fx:id="title" layoutX="19.0" layoutY="33.0" prefHeight="67.0" prefWidth="271.0" text="Error, Please try again">
+         <font>
+            <Font name="Corbel" size="12.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>
