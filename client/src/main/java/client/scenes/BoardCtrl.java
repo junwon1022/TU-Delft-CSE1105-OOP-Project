@@ -18,6 +18,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Card;
 import commons.ListOfCards;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -43,6 +44,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 
 public class BoardCtrl {
@@ -144,6 +146,8 @@ public class BoardCtrl {
         refresh();
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+            for (var list: s.lists)
+                list.cards.sort(Comparator.comparingLong(Card::getOrder));
             Platform.runLater(() -> data.setAll(s.lists));
         });
     }
