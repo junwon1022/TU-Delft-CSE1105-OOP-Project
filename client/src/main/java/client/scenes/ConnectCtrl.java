@@ -68,7 +68,7 @@ public class ConnectCtrl {
                 Parent root = fxmlLoader.load();
 
                 Stage stage = new Stage();
-                stage.setTitle("Error");
+                stage.setTitle(e.getMessage());
                 stage.setScene(new Scene(root, 300, 200));
                 stage.showAndWait();
 
