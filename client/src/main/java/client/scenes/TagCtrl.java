@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,6 +34,10 @@ public class TagCtrl extends ListCell<Tag> {
 
     @FXML
     private HBox root;
+    @FXML
+    private Label renameTagDisabled;
+    @FXML
+    private Label deleteTagDisabled;
 
 
 
@@ -51,6 +56,12 @@ public class TagCtrl extends ListCell<Tag> {
             fxmlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        if(!board.isUnlocked()) { //TODO and user doesn't have it stored
+            this.readOnly();
+        } else {
+            this.writeAccess();
         }
     }
 
@@ -75,6 +86,36 @@ public class TagCtrl extends ListCell<Tag> {
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+    }
+
+    /**
+     * Makes the tag readOnly
+     */
+    private void readOnly() {
+        renameTag.setDisable(true);
+        removeTag.setDisable(true);
+        renameTagDisabled.setVisible(true);
+        deleteTagDisabled.setVisible(true);
+    }
+
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
+
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        renameTag.setDisable(false);
+        removeTag.setDisable(false);
+        renameTagDisabled.setVisible(false);
+        deleteTagDisabled.setVisible(false);
     }
 
     /**

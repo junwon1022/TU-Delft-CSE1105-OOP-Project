@@ -164,7 +164,6 @@
                                     <Font name="Corbel" size="12.0" />
                                  </font>
                               </Button>
-                              <Label fx:id="tagManageDisabled" layoutY="1.0" onMouseClicked="#showReadOnlyMessage" prefHeight="177.0" prefWidth="200.0" visible="false" />
                            </children>
                         </AnchorPane>
                      </content>

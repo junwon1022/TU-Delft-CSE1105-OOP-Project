@@ -386,3 +386,8 @@
     -fx-background-color: transparent;
     -fx-pref-width: 90%;
 }
+
+#tags-disabled {
+    -fx-background-color: white;
+    -fx-opacity: 0.5;
+}

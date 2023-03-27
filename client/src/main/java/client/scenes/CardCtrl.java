@@ -153,25 +153,19 @@ public class CardCtrl extends ListCell<Card> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
-<<<<<<< HEAD
-            data = item;
+
+            card = item;
+            this.loadTags();
             if(!board.isUnlocked()) { //TODO and user doesn't have it stored
                 this.readOnly();
             } else {
                 this.writeAccess();
             }
 
-            if(data.description == null || data.description.equals("")) {
+            if(card.description == null || card.description.equals("")) {
                 description.setVisible(false);
             } else {
                 description.setVisible(true);
-=======
-            card = item;
-            this.loadTags();
-
-            if(card.description == null || card.description.equals("")) {
-                description.setVisible(false);
->>>>>>> tags-frontend
             }
 
             setGraphic(root);

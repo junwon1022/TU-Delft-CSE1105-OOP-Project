@@ -90,8 +90,6 @@ public class BoardCtrl {
     @FXML
     private Label addListDisabled;
 
-    @FXML
-    private Label tagManageDisabled;
     ObservableList<ListOfCards> listOfCards;
     ObservableList<Tag> tags;
 
@@ -185,7 +183,6 @@ public class BoardCtrl {
         closeReadOnly.setVisible(true);
         readOnlyMessage.setVisible(true);
         addListDisabled.setVisible(true);
-        tagManageDisabled.setVisible(true);
     }
 
     /**
@@ -197,7 +194,6 @@ public class BoardCtrl {
         closeReadOnly.setVisible(false);
         readOnlyMessage.setVisible(false);
         addListDisabled.setVisible(false);
-        tagManageDisabled.setVisible(false);
     }
 
     /**
