@@ -79,7 +79,8 @@ public class ServerUtils {
         try {
             //checks if the server is valid , is able to make a dummy request to the api
             String check = checkServer(SERVER);
-            if (!check.contains("This is a TimeWise Server")) throw new Exception("Not a TimeWise Server");
+            if (!check.contains("This is a TimeWise Server"))
+                throw new Exception("Not a TimeWise Server");
         }
         catch(Exception e){
             throw new Exception("Not a TimeWise Server");
