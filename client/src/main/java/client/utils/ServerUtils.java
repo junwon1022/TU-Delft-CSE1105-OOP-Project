@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +47,46 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String SERVER = "http://localhost:8080/";
+
+    private static String SERVER_ADDRESS = "localhost:8080";
+
+    /**
+     * Changes the preset server adress from 8080 to the textbox input
+     * @param server
+     */
+    public void changeServer(String server) throws Exception {
+
+        if(server.charAt(server.length() - 1) != '/')  server = server + "/";
+
+        this.SERVER = server;
+        this.SERVER_ADDRESS = server;
+
+
+        //removes the http so that websockets can be accessed
+        if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
+
+
+        System.out.println(SERVER);
+        try {
+            //check that the server is connectable to web sockets
+            connect("ws://" + SERVER_ADDRESS + "websocket");
+        }
+        catch(Exception e) {
+            throw new Exception("Server Invalid");
+        }
+
+        try {
+            //checks if the server is valid , is able to make a dummy request to the api
+            String check = checkServer(SERVER);
+            if (!check.contains("TimeWise Server"))
+                throw new Exception("Not a TimeWise Server");
+        }
+        catch(Exception e){
+            throw new Exception("Not a TimeWise Server");
+        }
+
+    }
 
     /**
      * Get all quotes from the server.
@@ -94,6 +135,11 @@ public class ServerUtils {
     List<ListOfCards> serverData = null;
     List<Tag> serverDataTags = null;
     List<Tag> serverDataTagsInCard = null;
+    private List<ListOfCards> serverData = null;
+
+    //Data related to board titles (How the boards are displayed on the main screen)
+    private List<Board> boardData = null;
+
 
     /**
      * Placeholder add card function.
@@ -103,6 +149,22 @@ public class ServerUtils {
         for (ListOfCards list: serverData)
             if (card.list.equals(list))
                 list.cards.add(card);
+    }
+
+
+    /**
+     * Placeholder add card function.
+     * @param boardTitle the board title to add
+     */
+    public void addBoardTitle(Board boardTitle) {
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        Board b = boardTitle;
+        addBoard(b);
+        //Gets the id from the last board added
+        boardTitle = getBoards().get(getBoards().size()-1);
+        boardData.add(boardTitle);
     }
 
     /**
@@ -132,6 +194,27 @@ public class ServerUtils {
             serverData.get(listNo).cards.remove(cardNo);
         }
 
+    }
+
+    /**
+     * Placeholder/ method for the delete board function,
+     * the actual method should follow the logic behind this
+     * @param board - board to be deleted
+     */
+    public void deleteBoard(Board board){
+        int number = 0;
+        boolean found = false;
+        if(boardData != null){
+            for(Board b: boardData){
+                if(b.equals(board)) {
+                    found = true;
+                    break;
+                }
+                number++;
+            }
+        }
+        if(found == true)
+            boardData.remove(number);
     }
 
     /**
@@ -200,6 +283,42 @@ public class ServerUtils {
     }
 
     /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<ListOfCards> getLists(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<ListOfCards>>(){});
+    }
+
+    /**
+     * Method that returns the lists from the database
+     * @param serverUrl - the url of th server
+     * @return a list containing all lists of cards
+     */
+    public String checkServer(String serverUrl){
+        System.out.println("The Url is " + URLEncoder.encode(SERVER,StandardCharsets.UTF_8));
+
+
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(SERVER).path("/api/checkServer/")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<String>() {
+                    });
+        }
+        catch(Exception e){
+            System.out.println("The exception is " + e);
+            throw new RuntimeException();
+        }
+    }
+
+    /**
      * Placeholder method to get data from server
      * @param boardId the id of the board
      * @return a list of lists of cards.
@@ -238,6 +357,18 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<Board> getMyBoardTitles() {
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        return boardData;
+    }
+
+    /**
      * Get boards from server
      *
      * @param boardId
@@ -248,6 +379,20 @@ public class ServerUtils {
                 .target(SERVER).path("api/boards/" + boardId)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
+                .get(new GenericType<Board>() {});
+    }
+
+    /**
+     * Get boards from server based on key
+     * @param key
+     * @return boards
+     */
+    public Board getBoardByKey(String key){
+
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/boards/getByKey/" + key) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
                 .get(new GenericType<Board>() {});
     }
 
@@ -279,16 +424,15 @@ public class ServerUtils {
     }
 
     /**
-     * Method that returns the lists from the database
-     * @param boardId - the id of the board of the lists
-     * @return a list containing all lists of cards
+     * Get all lists from the server
+     * @return - the lists from the server
      */
-    public List<ListOfCards> getLists(long boardId){
+    public List<Board> getBoards(){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .target(SERVER).path("/api/boards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<ListOfCards>>(){});
+                .get(new GenericType<List<Board>>(){});
     }
 
     /**
@@ -481,7 +625,7 @@ public class ServerUtils {
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
     }
 
-    private StompSession session = connect("ws://localhost:8080/websocket");
+    private StompSession session = connect("ws://" +  SERVER_ADDRESS + "/websocket");
 
     /**
      * Creates a StompSession to connect the client to the server from the specified url
