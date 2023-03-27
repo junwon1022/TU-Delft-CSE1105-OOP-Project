@@ -83,6 +83,17 @@ public class Card {
         BASIC FUNCTIONALITY
      */
 
+
+    /**
+     * Removes the tag to be removed from all cards
+     */
+    @PreRemove
+    public void removeCardsFromTags() {
+        for (Tag t : tags) {
+            t.cards.remove(this);
+        }
+    }
+
     /**
      * Add a tag to a card
      * @param tag

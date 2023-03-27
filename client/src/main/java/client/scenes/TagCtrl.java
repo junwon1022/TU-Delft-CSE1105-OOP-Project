@@ -37,9 +37,9 @@ public class TagCtrl extends ListCell<Tag> {
 
 
     /**
-     * Create a new CardListCtrl
+     * Create a new TagCtrl
      * @param server The server to use
-     * @param board The board this CardList belongs to
+     * @param board The board this TagCtrl belongs to
      */
     public TagCtrl(ServerUtils server, BoardCtrl board) {
         this.server = server;
@@ -71,7 +71,7 @@ public class TagCtrl extends ListCell<Tag> {
         } else {
             nameLabel.setText(item.name);
             tag = item;
-
+            root.setStyle("-fx-background-color: " + tag.colour + ";");
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

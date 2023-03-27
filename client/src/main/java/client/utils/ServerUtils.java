@@ -92,11 +92,8 @@ public class ServerUtils {
      * Placeholder serverData until connection is made.
      */
     List<ListOfCards> serverData = null;
-
-    /**
-     * Placeholder serverData until connection is made.
-     */
     List<Tag> serverDataTags = null;
+    List<Tag> serverDataTagsInCard = null;
 
     /**
      * Placeholder add card function.
@@ -231,6 +228,16 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @param cardId the id of the board
+     * @return a list of tags.
+     */
+    public List<Tag> getTagsInCard(long cardId) {
+        serverDataTagsInCard = getTagsCard(cardId);
+        return serverDataTagsInCard;
+    }
+
+    /**
      * Get boards from server
      *
      * @param boardId
@@ -291,7 +298,21 @@ public class ServerUtils {
      */
     public List<Tag> getTags(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/tags")
+                .target(SERVER).path("/api/boards/" + boardId + "/tags")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Tag>>(){});
+    }
+
+    /**
+     * Method that returns the lists from the database
+     * @param cardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<Tag> getTagsCard(long cardId){
+        return ClientBuilder.newClient(new ClientConfig())//
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards"
+                        + cardId + "/tags") //
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Tag>>(){});
@@ -345,7 +366,7 @@ public class ServerUtils {
         long boardId = card.list.board.id;
         long listId = card.list.id;
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists/"+ listId + "/cards")
+                .target(SERVER).path("/api/boards/" + boardId + "/lists/"+ listId + "/cards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(card, APPLICATION_JSON), Card.class);

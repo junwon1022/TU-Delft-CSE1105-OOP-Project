@@ -62,6 +62,16 @@ public class Tag {
      */
 
     /**
+     * Removes the tag to be removed from all cards
+     */
+    @PreRemove
+    public void removeTagsFromCards() {
+        for (Card c : cards) {
+            c.tags.remove(this);
+        }
+    }
+
+    /**
      * Apply this tag to a given card
      * @param card
      */

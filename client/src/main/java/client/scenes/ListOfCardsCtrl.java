@@ -57,11 +57,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     @FXML
     private Button hideCard;
 
-    private ObservableList<Card> data;
+    private ObservableList<Card> cards;
 
 
     /**
-     * Create a new CardListCtrl
+     * Create a new ListOfCardsCtrl
      * @param server The server to use
      * @param board The board this CardList belongs to
      */
@@ -77,12 +77,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             throw new RuntimeException(e);
         }
 
-        data = FXCollections.observableArrayList();
+        cards = FXCollections.observableArrayList();
 
-        list.setItems(data);
+        list.setItems(cards);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
-
-        list.getStylesheets().add("styles.css");
 
         setOnDragOver(this::handleDragOver);
         setOnDragDropped(this::handleDragDropped);
@@ -150,7 +148,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
-            data.setAll(item.cards);
+            cards.setAll(item.cards);
             cardData = item;
 
             setGraphic(root);
