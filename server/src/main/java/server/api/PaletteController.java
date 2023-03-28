@@ -284,6 +284,4 @@ public class PaletteController {
         }
     }
 
-
-
 }
