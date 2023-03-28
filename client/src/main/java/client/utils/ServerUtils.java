@@ -134,6 +134,11 @@ public class ServerUtils {
     private List<Board> boardData = null;
 
 
+    //Data related to board titles (How the boards are displayed on the main screen)
+    private List<Board> serverBoardData = null;
+
+
+
     /**
      * Placeholder add card function.
      * @param card the card to add
@@ -355,6 +360,20 @@ public class ServerUtils {
         return boardData;
     }
 
+
+    /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<Board> getMyServerBoardTitles(){
+
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        boardData = getBoards();
+        return boardData;
+    }
     /**
      * Get boards from server
      *
@@ -629,7 +648,45 @@ public class ServerUtils {
         boardData.add(b);
 
         return b;
+    }
 
+
+
+
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameServerBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+
+        return b;
 
     }
+
+    /**
+     * Removal of Board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removeBoard(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
+    }
+
+
 }

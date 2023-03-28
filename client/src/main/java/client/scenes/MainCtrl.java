@@ -36,6 +36,9 @@ public class MainCtrl {
     private MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
 
+    private AdminScreenCtrl adminScreenCtrl;
+    private Scene adminScreen;
+
 
     /**
      * Create a new MainCtrl.
@@ -44,10 +47,12 @@ public class MainCtrl {
      * @param board        The board screen to use.
      * @param connect      The connect screen
      * @param mainScreen   The main screen
+     * @param adminScreen The admin screen
      */
     public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board,
                            Pair<ConnectCtrl, Parent> connect,
-                           Pair<MainScreenCtrl, Parent> mainScreen) {
+                           Pair<MainScreenCtrl, Parent> mainScreen,
+                           Pair<AdminScreenCtrl, Parent> adminScreen) {
 //            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
 //        this.overviewCtrl = overview.getKey();
@@ -65,6 +70,9 @@ public class MainCtrl {
 
         this.mainScreenCtrl = mainScreen.getKey();
         this.mainScreen = new Scene(mainScreen.getValue());
+
+        this.adminScreenCtrl = adminScreen.getKey();
+        this.adminScreen = new Scene(adminScreen.getValue());
 
         showConnect();
         primaryStage.show();
@@ -105,6 +113,17 @@ public class MainCtrl {
         primaryStage.setScene(mainScreen);
         primaryStage.setHeight(600);
         mainScreenCtrl.refresh();
+    }
+
+
+    /**
+     * Show the admin scene.
+     */
+    public void showAdmin() {
+        primaryStage.setTitle("Admin Screen");
+        primaryStage.setScene(adminScreen);
+        primaryStage.setHeight(600);
+        adminScreenCtrl.refresh();
     }
 
 

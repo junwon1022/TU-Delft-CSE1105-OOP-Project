@@ -26,6 +26,11 @@ public class ConnectCtrl {
     @FXML
     private TextField field;
 
+
+    @FXML
+    private TextField adminField;
+
+
     @FXML
     private Button connect;
 
@@ -87,6 +92,20 @@ public class ConnectCtrl {
      */
     public void connectDefault(ActionEvent event) {mainCtrl.showMainScreen();}
 
+    /**
+     * Enters the standard server (8080) and shows the Admin Screen
+     * Creates a new window (AdminScreen)
+     * If successful, joins the screen through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectAdmin(ActionEvent event) throws Exception {
+        if(adminField.getText().equals("admin")) {
+            mainCtrl.showAdmin();
+        }
+        else throw new Exception("Admin password wrong");
+    }
 }
 
 
