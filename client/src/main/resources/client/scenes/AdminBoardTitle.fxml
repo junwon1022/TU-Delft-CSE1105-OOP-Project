@@ -23,6 +23,6 @@
                 <ColorAdjust brightness="-0.22" />
             </effect>
         </Button>
-      <Label fx:id="key" layoutX="3.0" layoutY="56.0" prefHeight="62.0" prefWidth="501.0" text="Key:" />
+      <Label fx:id="key" layoutX="3.0" layoutY="56.0" prefHeight="62.0" prefWidth="305.0" text="Key:" />
     </children>
 </AnchorPane>

@@ -50,7 +50,7 @@ public class AdminTitleCtrl extends ListCell<Board> {
         this.adminScreenCtrl = adminScreenCtrl;
         this.mainCtrl = mainCtrl;
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BoardTitle.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdminBoardTitle.fxml"));
         fxmlLoader.setController(this);
 
         try {
