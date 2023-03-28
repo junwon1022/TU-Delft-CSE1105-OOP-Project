@@ -345,3 +345,34 @@
 .rename-tag {
     -fx-content-display: center;
 }
+
+#server-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-pref-width: 95%;
+}
+
+#server-list .list-cell:filled:hover {
+    -fx-text-fill: black;
+    -fx-border-color: #A2E4F1;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+}
+
+#server-list .list-cell:selected {
+    -fx-text-fill: black;
+    -fx-border-color: #00B4D8;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+    -fx-background-color: #A2E4F1;
+    -fx-background-radius: 8px;
+}
+
+#server-list .list-cell:selected:hover {
+    -fx-border-color: #00B4D8;
+    -fx-background-color: #79cdde;
+ }
+
+
+#server-list .list-cell .label {
+    -fx-text-fill: #005364;
+}

@@ -57,15 +57,18 @@ public class ServerUtils {
      */
     public void changeServer(String server) throws Exception {
 
-        if(server.charAt(server.length() - 1) != '/')  server = server + "/";
+        if(server == null || server.equals("")) {
+            throw new Exception("Please enter a valid server to connect or select one from the list with double click!");
+        }
+        if(server.charAt(server.length() - 1) != '/')  {
+            server = server + "/";
+        }
 
         this.SERVER = server;
         this.SERVER_ADDRESS = server;
 
-
         //removes the http so that websockets can be accessed
         if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
-
 
         System.out.println(SERVER);
         try {
@@ -73,17 +76,18 @@ public class ServerUtils {
             connect("ws://" + SERVER_ADDRESS + "websocket");
         }
         catch(Exception e) {
-            throw new Exception("Server Invalid");
+            throw new Exception("This is not a valid server! Please try again!");
         }
 
         try {
-            //checks if the server is valid , is able to make a dummy request to the api
+            //checks if the server is valid,
+            // that is if it is able to make a dummy request to the api
             String check = checkServer(SERVER);
             if (!check.contains("TimeWise Server"))
                 throw new Exception("Not a TimeWise Server");
         }
         catch(Exception e){
-            throw new Exception("Not a TimeWise Server");
+            throw new Exception("This is not a TimeWise server! Please try again!");
         }
 
     }
