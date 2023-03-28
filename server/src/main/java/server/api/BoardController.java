@@ -136,8 +136,13 @@ public class BoardController {
         try {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
+
+            System.out.println("The old Board: "+ board.toString());
+
             // Edit the board and save it in the database
             Board newBoard = boardService.editBoardTitle(boardId, newTitle);
+
+            System.out.println("The new Board: "+ newBoard.toString());
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited board with an HTTP 200 OK status
@@ -171,6 +176,9 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+
 
     /**
      * Method that changes the board's background color
