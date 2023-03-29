@@ -15,8 +15,10 @@
  */
 package client.scenes;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -103,13 +105,23 @@ public class MainCtrl {
      * Show the board scene.
      */
     public void showMainScreen() {
+
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
+
+        // Get the dimensions of the primary screen
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+        // Calculate the x and y coordinates to center the new scene on the primary stage
+        double centerX = primaryStage.getX() + primaryStage.getWidth() / 2 - mainScreen.getWidth() / 2;
+        double centerY = primaryStage.getY() + primaryStage.getHeight() / 2 - mainScreen.getHeight() / 2;
+
+        // Set the new scene's position to the calculated coordinates
+        mainScreen.getWindow().setX(centerX);
+        mainScreen.getWindow().setY(centerY);
         primaryStage.setHeight(600);
         mainScreenCtrl.refresh();
     }
-
-
 
     /**
      * Show the overview scene.
