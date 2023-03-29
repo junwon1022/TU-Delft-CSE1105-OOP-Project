@@ -111,7 +111,7 @@ public class AdminTitleCtrl extends ListCell<Board> {
      */
     public void join(ActionEvent event){
         System.out.println("The key is " + data.key);
-        mainCtrl.showBoard(data.key);
+        mainCtrl.showBoard(data.key,1);
     }
 
 

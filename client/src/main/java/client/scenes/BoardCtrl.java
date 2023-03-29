@@ -79,6 +79,7 @@ public class BoardCtrl {
     @FXML
     private VBox vBox2;
 
+    int adminFlag;
     ObservableList<ListOfCards> data;
 
     private Board board;
@@ -323,7 +324,9 @@ public class BoardCtrl {
      * @param event - Key event when the user clicks the mouse + /
      */
     public void goToOverview(ActionEvent event) {
-        mainCtrl.showMainScreen();
+
+        if(adminFlag == 0) mainCtrl.showMainScreen();
+        else mainCtrl.showAdmin();
     }
 
     /**

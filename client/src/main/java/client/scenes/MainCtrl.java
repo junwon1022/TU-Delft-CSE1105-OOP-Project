@@ -81,14 +81,16 @@ public class MainCtrl {
     /**
      * Show the board scene.
      * @param boardKey the key of a board
+     * @param adminFlag can be either 1 (admin) or 0 (non admin)
      */
-    public void showBoard(String boardKey) {
+    public void showBoard(String boardKey, int adminFlag) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setHeight(690);
         primaryStage.setWidth(1040);
         primaryStage.setResizable(false);
         boardCtrl.boardKey = boardKey;
+        boardCtrl.adminFlag = adminFlag;
         boardCtrl.initialize();
     }
 

@@ -102,7 +102,34 @@ public class ConnectCtrl {
      */
     public void connectAdmin(ActionEvent event) throws Exception {
         if(adminField.getText().equals("admin")) {
-            mainCtrl.showAdmin();
+            if(field.getText().equals("")) mainCtrl.showAdmin();
+
+            else{
+                try {
+                    server.changeServer(field.getText());
+                    mainCtrl.showAdmin();
+                }
+                catch(Exception e){
+                    FXMLLoader fxmlLoader =
+                            new FXMLLoader(getClass().getResource("Exception.fxml"));
+                    try {
+                        Parent root = fxmlLoader.load();
+                        server.changeServer("http://localhost:8080");
+                        Stage stage = new Stage();
+                        stage.setTitle(e.getMessage());
+                        stage.setScene(new Scene(root, 300, 200));
+                        stage.showAndWait();
+
+                    } catch (IOException a) {
+                        throw new RuntimeException(a);
+                    }
+                }
+
+
+
+
+            }
+
         }
         else throw new Exception("Admin password wrong");
     }
