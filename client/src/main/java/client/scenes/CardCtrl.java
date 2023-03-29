@@ -355,6 +355,10 @@ public class CardCtrl extends ListCell<Card> {
         changeDescriptionVisibility(true);
     }
 
+    /**
+     * Changes the visibility of description images
+     * @param t - the boolean that changes the visibility of the images
+     */
     public void changeDescriptionVisibility(Boolean t) {
         description.setVisible(t);
         description.setDisable(!t);
