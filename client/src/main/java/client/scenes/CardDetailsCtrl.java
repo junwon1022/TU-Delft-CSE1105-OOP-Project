@@ -173,6 +173,7 @@ public class CardDetailsCtrl{
      * Creates a checklist with the specific title
      * @param title the title of the new checklist
      * @return the new checklist
+     */
     private CheckListItem getCheckList(String title) {
         CheckListItem checkListItem = new CheckListItem();
         return  checkListItem;
