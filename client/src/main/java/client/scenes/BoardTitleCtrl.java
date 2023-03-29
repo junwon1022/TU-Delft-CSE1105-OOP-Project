@@ -4,7 +4,6 @@ import client.utils.PreferencesBoardInfo;
 import client.utils.ServerUtils;
 import client.utils.UserPreferences;
 import com.google.inject.Inject;
-import commons.Board;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,9 +42,13 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
      * @param server         The server to use
      * @param mainScreenCtrl The mainscreen the title is part of
      * @param mainCtrl
+     * @param prefs
      */
     @Inject
-    public BoardTitleCtrl(ServerUtils server, MainScreenCtrl mainScreenCtrl, MainCtrl mainCtrl, UserPreferences prefs) {
+    public BoardTitleCtrl(ServerUtils server,
+                          MainScreenCtrl mainScreenCtrl,
+                          MainCtrl mainCtrl,
+                          UserPreferences prefs) {
         this.server = server;
         this.mainScreenCtrl = mainScreenCtrl;
         this.mainCtrl = mainCtrl;

@@ -61,10 +61,18 @@ public class PreferencesBoardInfo implements Serializable {
         this.key = key;
     }
 
+    /**
+     * Method to get password
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Method to set password
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }

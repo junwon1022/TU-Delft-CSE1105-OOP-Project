@@ -61,6 +61,7 @@ public class MainScreenCtrl {
      * Create a new CardListCtrl
      * @param server
      * @param mainCtrl
+     * @param prefs
      */
     @Inject
     public MainScreenCtrl(ServerUtils server, MainCtrl mainCtrl, UserPreferences prefs) {
