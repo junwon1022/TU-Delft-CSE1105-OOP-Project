@@ -33,7 +33,7 @@ public class UserPreferences {
 
             List<PreferencesBoardInfo> boards = boardList.getInfo();
 
-            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title, board.key);
+            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title, board.key, board.password);
 
             boards.remove(currentBoard);
 
@@ -78,7 +78,7 @@ public class UserPreferences {
 
             List<PreferencesBoardInfo> boards = boardList.getInfo();
 
-            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title, board.key);
+            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title, board.key, board.password);
 
             boards.remove(currentBoard);
 
@@ -106,7 +106,9 @@ public class UserPreferences {
 
             List<PreferencesBoardInfo> boards = boardList.getInfo();
 
-            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.getTitle(), board.getKey());
+            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.getTitle(),
+                    board.getKey(),
+                    board.getPassword());
 
             boards.remove(currentBoard);
 

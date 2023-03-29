@@ -6,6 +6,7 @@ import java.util.Objects;
 public class PreferencesBoardInfo implements Serializable {
     private String title;
     private String key;
+    private String password;
 
     /**
      * Default constructor
@@ -18,10 +19,12 @@ public class PreferencesBoardInfo implements Serializable {
      * Constructor with parameters
      * @param title
      * @param key
+     * @param password
      */
-    public PreferencesBoardInfo(String title, String key) {
+    public PreferencesBoardInfo(String title, String key, String password) {
         this.title = title;
         this.key = key;
+        this.password = password;
     }
 
     /**
@@ -56,6 +59,14 @@ public class PreferencesBoardInfo implements Serializable {
      */
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
