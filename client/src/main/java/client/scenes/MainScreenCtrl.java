@@ -76,6 +76,7 @@ public class MainScreenCtrl {
      */
     public void refresh() {
         var boardData = server.getMyBoardTitles();
+        System.out.println("All board data " + boardData.toString());
         data.setAll(boardData);
         list.setItems(data);
         list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl));
