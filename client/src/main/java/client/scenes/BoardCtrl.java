@@ -67,12 +67,7 @@ public class BoardCtrl {
     private Button addTag;
 
     @FXML
-    private AnchorPane anchorPane;
-
-    @FXML
     private VBox vBox;
-    @FXML
-    private AnchorPane anchorPane2;
 
     @FXML
     private VBox vBox2;
