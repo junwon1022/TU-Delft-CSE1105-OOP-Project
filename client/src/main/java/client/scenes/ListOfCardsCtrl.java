@@ -380,21 +380,38 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             cancelKeyboard(keyEvent);
         }
         else if (keyEvent.getCode() == KeyCode.E) {
-            ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
-            if (cards.size() == 1) {
-                Card editedCard = cards.get(0);
-                renameCard(editedCard);
-            }
-            keyEvent.consume();
+            editCardKeyboard(keyEvent);
         }
-        else if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE)  {
-            ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
-            if (cards.size() == 1) {
-                Card removedCard = cards.get(0);
-                removeCard(removedCard);
-            }
-            keyEvent.consume();
+        else if (keyEvent.getCode() == KeyCode.DELETE ||
+                keyEvent.getCode() == KeyCode.BACK_SPACE)  {
+            deleteCardKeyboard(keyEvent);
         }
+    }
+
+    /**
+     * Method for delete Card with shortcuts "Delete" and "Backspace"
+     * @param event the KeyEvent
+     */
+    private void deleteCardKeyboard(javafx.scene.input.KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card removedCard = cards.get(0);
+            removeCard(removedCard);
+        }
+        event.consume();
+    }
+
+    /**
+     * Method for edit Card with shortcut "E"
+     * @param event the KeyEvent
+     */
+    private void editCardKeyboard(javafx.scene.input.KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card editedCard = cards.get(0);
+            renameCard(editedCard);
+        }
+        event.consume();
     }
 
     /**
@@ -429,8 +446,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     }
 
     /**
-     * Method that opens the detailed view
-     * --right now only does the renaming of a card functionality--
+     * Method that renames the card
+     * @param card the card
      */
     public void renameCard(Card card){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
@@ -456,6 +473,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         }
     }
 
+    /**
+     * Method that removes the card
+     * @param card the card
+     */
     public void removeCard(Card card) {
         try {
             server.removeCard(card);
