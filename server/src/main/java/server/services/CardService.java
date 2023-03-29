@@ -106,6 +106,12 @@ public class CardService {
         card.description = newDescription;
         return cardRepository.save(card);
     }
+    /**
+     * Gets the description of the card with the specified id
+     * @param id id of the card
+     * @return the description of the card
+     * @throws Exception if a card with the specified id is not found
+     */
 
     public String getCardDescription(Long id) throws Exception {
         Card card = getCardById(id);
