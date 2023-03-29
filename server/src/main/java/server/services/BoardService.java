@@ -94,7 +94,9 @@ public class BoardService {
         }
         Board board = getBoardById(id);
         board.title = newTitle;
+
         return boardRepository.save(board);
+
     }
 
     /**

@@ -62,12 +62,8 @@ public class ServerUtils {
 
         this.SERVER = server;
         this.SERVER_ADDRESS = server;
-
-
         //removes the http so that websockets can be accessed
         if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
-
-
         System.out.println(SERVER);
         try {
             //check that the server is connectable to web sockets
@@ -76,7 +72,6 @@ public class ServerUtils {
         catch(Exception e) {
             throw new Exception("Server Invalid");
         }
-
         try {
             //checks if the server is valid , is able to make a dummy request to the api
             String check = checkServer(SERVER);
@@ -357,7 +352,6 @@ public class ServerUtils {
         if(boardData == null) {
             boardData = new ArrayList<>();
         }
-
         return boardData;
     }
 
@@ -617,5 +611,25 @@ public class ServerUtils {
         session.send(dest, o);
     }
 
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+        boardData.remove(board);
+        boardData.add(b);
 
+        return b;
+
+
+    }
 }
