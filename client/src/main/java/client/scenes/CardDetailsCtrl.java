@@ -141,7 +141,7 @@ public class CardDetailsCtrl{
 
     /**
      * Adds a checklist "to be implemented"
-     * @event adding the checklist event
+     * @param event adding the checklist event
      */
     public void addChecklist(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCheckListItem.fxml"));
