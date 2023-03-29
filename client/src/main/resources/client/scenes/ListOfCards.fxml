@@ -13,6 +13,10 @@
 
 <AnchorPane id="list-background" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="220.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <TextField fx:id="name" layoutX="26.0" layoutY="362.0" onKeyPressed="#handleKeyPressed" prefHeight="32.0" prefWidth="168.0" promptText="Enter a title . . ." styleClass="text-field" stylesheets="@../../styles.css" visible="false">
+      <font>
+         <Font name="Corbel" size="12.0" />
+      </font></TextField>
       <ListView fx:id="list" layoutX="16.0" layoutY="65.0" prefHeight="318.0" prefWidth="187.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
          <effect>
             <InnerShadow blurType="GAUSSIAN" choke="0.05" height="46.27" radius="22.645000000000003" width="46.31">
@@ -33,10 +37,7 @@
             <Insets left="25.0" right="25.0" />
          </padding></Label>
       <Button fx:id="rename" layoutX="16.0" layoutY="13.0" mnemonicParsing="false" onAction="#renameList" prefHeight="9.0" prefWidth="16.0" styleClass="rename" stylesheets="@../../styles.css" textFill="WHITE" />
-      <TextField fx:id="name" layoutX="26.0" layoutY="362.0" onKeyPressed="#handleKeyPressed" prefHeight="32.0" prefWidth="168.0" promptText="Enter a title . . ." styleClass="text-field" stylesheets="@../../styles.css" visible="false">
-         <font>
-            <Font name="Corbel" size="12.0" />
-         </font></TextField>
+
       <Button id="card-confirm" fx:id="addCardButton" layoutX="36.0" layoutY="406.0" mnemonicParsing="false" onAction="#addCard" prefHeight="29.0" prefWidth="56.0" stylesheets="@../../styles.css" text="Add" textFill="#f2f2f2" visible="false">
          <font>
             <Font name="Corbel Bold" size="14.0" />

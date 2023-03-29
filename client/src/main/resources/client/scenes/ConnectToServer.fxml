@@ -14,12 +14,12 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="353.0" prefWidth="519.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
     <children>
+        <TextField id="default" fx:id="field" layoutX="228.0" layoutY="160.0" prefHeight="29.0" prefWidth="257.0" promptText="http://server:port" stylesheets="@../../styles.css">
+            <font>
+                <Font name="Corbel Italic" size="13.0" />
+            </font></TextField>
         <Button id="connect" fx:id="connect" layoutX="361.0" layoutY="207.0" mnemonicParsing="false" onAction="#connectToMainScreen" prefHeight="29.0" prefWidth="123.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect" />
         <Button id="connect_default" fx:id="connect_default" alignment="CENTER" contentDisplay="CENTER" layoutX="228.0" layoutY="207.0" mnemonicParsing="false" onAction="#connectDefault" prefHeight="29.0" prefWidth="123.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect to Default" textAlignment="CENTER" wrapText="true" />
-        <TextField id="default" fx:id="field" layoutX="228.0" layoutY="160.0" prefHeight="29.0" prefWidth="257.0" promptText="http://server:port" stylesheets="@../../styles.css">
-         <font>
-            <Font name="Corbel Italic" size="13.0" />
-         </font></TextField>
       <Label layoutX="64.0" layoutY="14.0" prefHeight="95.0" prefWidth="385.0" text="Connect to a TimeWise Server of Your Choice" textAlignment="CENTER" textFill="#258cb5" wrapText="true">
          <font>
             <Font name="Corbel Light" size="30.0" />
@@ -30,7 +30,7 @@
             <Font name="Corbel" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="nullTitle" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="238.0" layoutY="260.0" prefHeight="63.0" prefWidth="237.0" text="" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
+      <Label fx:id="nullTitle" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="238.0" layoutY="250.0" prefHeight="51.0" prefWidth="237.0" text="" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
          <font>
             <Font name="Corbel" size="13.0" />
          </font>
@@ -86,10 +86,10 @@
             </LinearGradient>
          </stroke>
       </Line>
-      <VBox layoutX="25.0" layoutY="160.0" prefHeight="163.0" prefWidth="169.0">
+      <VBox alignment="CENTER" layoutX="25.0" layoutY="160.0" prefHeight="170.0" prefWidth="169.0">
          <children>
-            <ListView id="server-list" fx:id="serverList" prefWidth="169.0" stylesheets="@../../styles.css" />
-            <Label text="Double click to select" textFill="#1a617d">
+            <ListView id="server-list" fx:id="serverList" maxHeight="160.0" minWidth="60.0" prefWidth="169.0" stylesheets="@../../styles.css" />
+            <Label prefHeight="17.0" prefWidth="158.0" text="Double click to select" textFill="#1a617d">
                <font>
                   <Font name="Corbel Italic" size="13.0" />
                </font>
