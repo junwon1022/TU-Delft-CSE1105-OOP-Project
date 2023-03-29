@@ -74,6 +74,8 @@ public class BoardCtrl {
 
     @FXML
     private VBox vBox2;
+    @FXML
+    private AnchorPane anchorPane;
 
     ObservableList<ListOfCards> data;
 
@@ -137,6 +139,7 @@ public class BoardCtrl {
         title.setText(board.title);
 
         AnchorPane.setBottomAnchor(addTag, 5.0);
+        AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
         loadVBox();
         loadVBox2();
         refresh();
