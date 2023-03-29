@@ -8,9 +8,12 @@ import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -121,8 +124,28 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
      * @param event - the join button being clicked
      */
     public void rename(ActionEvent event){
-        System.out.println("The key is " + data.getKey());
-        mainCtrl.showBoard(data.getKey());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameBoard.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            RenameBoardCtrl controller = fxmlLoader.getController();
+            controller.initialize(data);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add new board");
+            stage.setScene(new Scene(root, 300, 200));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String newTitle = controller.storedText;
+
+                //method that actually renames the list in the database
+                data = server.renameBoard(data, newTitle);
+                System.out.println("New title after calling the command: "+ data.title);
+                mainScreenCtrl.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

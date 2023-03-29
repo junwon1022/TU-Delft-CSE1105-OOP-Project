@@ -25,6 +25,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -68,12 +69,8 @@ public class ServerUtils {
 
         this.SERVER = server;
         this.SERVER_ADDRESS = server;
-
-
         //removes the http so that websockets can be accessed
         if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
-
-
         System.out.println(SERVER);
         try {
             //check that the server is connectable to web sockets
@@ -82,7 +79,6 @@ public class ServerUtils {
         catch(Exception e) {
             throw new Exception("Server Invalid");
         }
-
         try {
             //checks if the server is valid , is able to make a dummy request to the api
             String check = checkServer(SERVER);
@@ -348,6 +344,8 @@ public class ServerUtils {
         //Board board --
         //
         serverData = getLists(boardId);
+        for (var list: serverData)
+            list.cards.sort(Comparator.comparingLong(Card::getOrder));
         return serverData;
     }
 
@@ -361,7 +359,6 @@ public class ServerUtils {
         if(boardData == null) {
             boardData = new ArrayList<>();
         }
-
         return boardData;
     }
 
@@ -621,5 +618,25 @@ public class ServerUtils {
         session.send(dest, o);
     }
 
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+        boardData.remove(board);
+        boardData.add(b);
 
+        return b;
+
+
+    }
 }
