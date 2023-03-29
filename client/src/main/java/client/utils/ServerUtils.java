@@ -644,10 +644,6 @@ public class ServerUtils {
         }
         session.send(dest, o);
     }
-<<<<<<< client/src/main/java/client/utils/ServerUtils.java
-}
-=======
-
     /**
      *
      * @param board
@@ -670,4 +666,3 @@ public class ServerUtils {
 
     }
 }
->>>>>>> client/src/main/java/client/utils/ServerUtils.java
