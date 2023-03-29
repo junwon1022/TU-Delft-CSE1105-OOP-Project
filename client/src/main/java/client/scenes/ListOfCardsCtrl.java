@@ -13,10 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -86,7 +83,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.getStylesheets().add("styles.css");
 
         setOnDragOver(this::handleDragOver);
+
         setOnDragDropped(this::handleDragDropped);
+
+        setOnKeyPressed(this::handleKeyPressed);
     }
 
     /**
@@ -379,6 +379,14 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         else if(keyEvent.getCode().toString().equals("ESCAPE")){
             cancelKeyboard(keyEvent);
         }
+        else if (keyEvent.getCode() == KeyCode.E) {
+            ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+            if (cards.size() == 1) {
+                Card editedCard = cards.get(0);
+                renameCard(editedCard);
+            }
+            keyEvent.consume();
+        }
     }
 
     /**
@@ -410,5 +418,34 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
         hideButtonKeyboard(event);
+    }
+
+    /**
+     * Method that opens the detailed view
+     * --right now only does the renaming of a card functionality--
+     * @param event - the rename button being clicked
+     */
+    public void renameCard(Card card){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            RenameCardCtrl controller = fxmlLoader.getController();
+            controller.initialize(card);
+
+            Stage stage = new Stage();
+            stage.setTitle("Rename the card: " + card.title);
+            stage.setScene(new Scene(root, 300, 200));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String newTitle = controller.storedText;
+
+                //method that actually renames the list in the database
+                server.renameCard(card, newTitle);
+                board.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
