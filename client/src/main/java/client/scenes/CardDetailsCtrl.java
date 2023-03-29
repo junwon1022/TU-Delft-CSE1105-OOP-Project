@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CheckListItem;
-import commons.ListOfCards;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,6 +53,7 @@ public class CardDetailsCtrl{
      * Creates a new CardDetailsCtrl
      * @param server server utils connection
      * @param board board that owns the card
+     * @param cardCtrl the card controller of this card
      */
     @Inject
     public CardDetailsCtrl(ServerUtils server, BoardCtrl board, CardCtrl cardCtrl) {
@@ -141,6 +141,7 @@ public class CardDetailsCtrl{
 
     /**
      * Adds a checklist "to be implemented"
+     * @event adding the checklist event
      */
     public void addChecklist(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCheckListItem.fxml"));
@@ -151,24 +152,27 @@ public class CardDetailsCtrl{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-            AddCheckListItemCtrl controller = fxmlLoader.getController();
+        AddCheckListItemCtrl controller = fxmlLoader.getController();
 
-            addCheckListStage.setTitle("Add a new CheckList");
-            Scene addListScene = new Scene(root);
-            addCheckListStage.setScene(addListScene);
-            addCheckListStage.showAndWait();
+        addCheckListStage.setTitle("Add a new CheckList");
+        Scene addListScene = new Scene(root);
+        addCheckListStage.setScene(addListScene);
+        addCheckListStage.showAndWait();
 
-            if (controller.success) {
-                String title = controller.storedText;
+        if (controller.success) {
+            String title = controller.storedText;
 
-                CheckListItem checkListItem = getCheckList(title);
+            CheckListItem checkListItem = getCheckList(title);
              //   CheckListItem addedCheckListItem = server.addCheckListItem(list);
 
              //   this.refresh();
-            }
-
         }
 
+    }
+    /**
+     * Creates a checklist with the specific title
+     * @param title the title of the new checklist
+     * @return the new checklist
     private CheckListItem getCheckList(String title) {
         CheckListItem checkListItem = new CheckListItem();
         return  checkListItem;
