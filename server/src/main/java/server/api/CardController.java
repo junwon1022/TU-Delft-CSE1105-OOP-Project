@@ -183,6 +183,48 @@ public class CardController {
     }
 
     /**
+     * retrieves the Put messages sent to the specific path
+     * updates the description of the required card
+     * @param newDescription the new description
+     * @param boardId the boardId of the card
+     * @param listId the listId of the card
+     * @param cardId the id of the card
+     * @return returns the updated Card entity
+     */
+    @PutMapping(path = {"/{card_id}/description"})
+    public ResponseEntity<Card> updateCardDescription(@RequestBody String newDescription,
+                                                      @PathVariable("board_id") long boardId,
+                                                      @PathVariable("list_id") long listId,
+                                                      @PathVariable("card_id") long cardId) {
+
+        try {
+            if (!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            Card card = cardService.editCardDescription(cardId, newDescription);
+            return ResponseEntity.ok().body(card);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping(path = {"/{card_id}/description"})
+    public ResponseEntity<String> getCardDescription(@RequestBody String newDescription,
+                                                      @PathVariable("board_id") long boardId,
+                                                      @PathVariable("list_id") long listId,
+                                                      @PathVariable("card_id") long cardId) {
+        try {
+            if (!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            String description = cardService.getCardDescription(cardId);
+            return ResponseEntity.ok().body(description);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Checks whether the path to a card is valid
      *
      * @param boardId

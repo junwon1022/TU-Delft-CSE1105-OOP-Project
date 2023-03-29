@@ -346,6 +346,22 @@ public class ServerUtils {
     }
 
     /**
+     * gets the description of a card from the database
+     * @param card the card to get the description from
+     * @return the description
+     */
+    public String getDescription(Card card) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}/description")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<String>() {});
+    }
+
+    /**
      * Get a card from the server
      * @return the card we need
      */
@@ -389,6 +405,24 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
+    }
+
+    /**
+     * Sends the request to update the description to the specific url,
+     * @param card the card that the description is to be updated
+     * @param description the new description
+     * @return the updated card
+     */
+    public Card updateDescription(Card card, String description){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/description")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(description, APPLICATION_JSON), Card.class);
     }
 
     private StompSession session = connect("ws://localhost:8080/websocket");
