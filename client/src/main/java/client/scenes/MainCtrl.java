@@ -63,7 +63,9 @@ public class MainCtrl {
         this.boardOverview.getStylesheets().add("styles.css");
 
         this.connectCtrl = connect.getKey();
+        this.connectCtrl.initialize();
         this.connect = new Scene(connect.getValue());
+        this.connect.getStylesheets().add("styles.css");
 
         this.mainScreenCtrl = mainScreen.getKey();
         this.mainScreen = new Scene(mainScreen.getValue());
@@ -109,8 +111,20 @@ public class MainCtrl {
      * Show the board scene.
      */
     public void showMainScreen() {
+
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
+
+        // Get the dimensions of the primary screen
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+        // Calculate the x and y coordinates to center the new scene on the primary stage
+        double centerX = primaryStage.getX() + primaryStage.getWidth() / 2 - mainScreen.getWidth() / 2;
+        double centerY = primaryStage.getY() + primaryStage.getHeight() / 2 - mainScreen.getHeight() / 2;
+
+        // Set the new scene's position to the calculated coordinates
+        mainScreen.getWindow().setX(centerX);
+        mainScreen.getWindow().setY(centerY);
         primaryStage.setHeight(600);
         centerStage();
         mainScreenCtrl.refresh();

@@ -5,6 +5,7 @@ import commons.Card;
 import commons.ListOfCards;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -217,14 +218,24 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(false);
         // Shorten the list
         Timeline timelineList = new Timeline(
-                new KeyFrame(Duration.seconds(0.2), new KeyValue(list.prefHeightProperty(), 300))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 300))
         );
         Timeline timelineName = new Timeline(
-                new KeyFrame(Duration.seconds(0.3), new KeyValue(name.visibleProperty(), true))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(name.visibleProperty(), true))
         );
         timelineList.play();
         timelineName.play();
         name.requestFocus();
+        // Requests focus for the text field
+        name.visibleProperty().addListener((observable, oldValue, isVisible) -> {
+
+            if (isVisible) {
+
+                name.requestFocus();
+
+            }
+
+        });
     }
 
     /**
@@ -239,7 +250,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.2), new KeyValue(list.prefHeightProperty(), 350))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 350))
         );
         timeline.play();
     }
