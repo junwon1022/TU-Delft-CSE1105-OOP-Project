@@ -387,6 +387,14 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             }
             keyEvent.consume();
         }
+        else if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE)  {
+            ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+            if (cards.size() == 1) {
+                Card removedCard = cards.get(0);
+                removeCard(removedCard);
+            }
+            keyEvent.consume();
+        }
     }
 
     /**
@@ -423,7 +431,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Method that opens the detailed view
      * --right now only does the renaming of a card functionality--
-     * @param event - the rename button being clicked
      */
     public void renameCard(Card card){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
@@ -447,5 +454,17 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void removeCard(Card card) {
+        try {
+            server.removeCard(card);
+        } catch (WebApplicationException e) {
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+        board.refresh();
     }
 }
