@@ -125,4 +125,42 @@ public class UserPreferences {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Method for updating the title of a board
+     * @param serverAddress
+     * @param board
+     * @param newTitle
+     * @return the updated PreferencesBoardInfo
+     */
+    public PreferencesBoardInfo updateBoardTitle(String serverAddress,
+                                                 PreferencesBoardInfo board,
+                                                 String newTitle) {
+        String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
+
+        try {
+            PreferencesBoardList boardList = objectMapper.readValue(boardListJson,
+                    PreferencesBoardList.class);
+
+            List<PreferencesBoardInfo> boards = boardList.getInfo();
+
+            boards.remove(board);
+
+            PreferencesBoardInfo newBoard = new PreferencesBoardInfo(newTitle,
+                    board.getKey(),
+                    board.getPassword());
+
+            boards.add(newBoard);
+
+            PreferencesBoardList newBoardList = new PreferencesBoardList();
+            newBoardList.setInfo(boards);
+
+            String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
+            prefs.put(serverAddress, newBoardListJson);
+
+            return newBoard;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

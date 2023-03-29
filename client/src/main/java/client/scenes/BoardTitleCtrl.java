@@ -140,7 +140,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
 
                 //method that actually renames the list in the database
                 data = server.renameBoard(data, newTitle);
-                System.out.println("New title after calling the command: "+ data.title);
+                System.out.println("New title after calling the command: "+ data.getTitle());
                 mainScreenCtrl.refresh();
             }
         } catch (IOException e) {

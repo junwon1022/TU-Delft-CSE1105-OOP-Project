@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import com.google.inject.Inject;
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -48,9 +49,20 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
+    private final UserPreferences prefs;
+
     private static String SERVER = "http://localhost:8080/";
 
     private static String SERVER_ADDRESS = "localhost:8080";
+
+    /**
+     * ServerUtils constructor
+     * @param prefs
+     */
+    @Inject
+    public ServerUtils(UserPreferences prefs) {
+        this.prefs = prefs;
+    }
 
     /**
      * @return the address of the server
@@ -281,12 +293,12 @@ public class ServerUtils {
      */
     public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
         ClientBuilder.newClient(new ClientConfig())
-            .target(SERVER).path("api/boards/" + list.board.id
+                .target(SERVER).path("api/boards/" + list.board.id
                         + "/lists/" + list.id
                         + "/from/" + fromIdx
                         + "/to/" + toIdx)
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .put(Entity.json(""));
     }
 
@@ -636,7 +648,27 @@ public class ServerUtils {
         boardData.add(b);
 
         return b;
+    }
 
+    /**
+     * Method to rename a board
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public PreferencesBoardInfo renameBoard(PreferencesBoardInfo board, String newTitle) {
+        // Get board associated with this PreferencesBoardInfo
+        Board actualBoard = getBoardByKey(board.getKey());
 
+        //Puts the board with the new title into the database
+        long boardId = actualBoard.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+        // Update the board title in the preferences
+        return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
     }
 }
