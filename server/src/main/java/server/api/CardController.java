@@ -208,6 +208,14 @@ public class CardController {
         }
     }
 
+    /**
+     * Gets the description of the specified card
+     * @param newDescription
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return the description
+     */
     @GetMapping(path = {"/{card_id}/description"})
     public ResponseEntity<String> getCardDescription(@RequestBody String newDescription,
                                                       @PathVariable("board_id") long boardId,
