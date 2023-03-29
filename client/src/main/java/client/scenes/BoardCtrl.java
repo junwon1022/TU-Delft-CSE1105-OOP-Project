@@ -318,7 +318,6 @@ public class BoardCtrl {
      * @param event - Key event when the user clicks the mouse + /
      */
     public void goToOverview(ActionEvent event) {
-        prefs.leaveBoard(server.getServerAddress(), board);
         mainCtrl.showMainScreen();
     }
 

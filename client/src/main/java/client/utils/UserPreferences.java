@@ -91,4 +91,32 @@ public class UserPreferences {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Method for leave board
+     * @param serverAddress
+     * @param board
+     */
+    public void leaveBoard(String serverAddress, PreferencesBoardInfo board) {
+        String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
+
+        try {
+            PreferencesBoardList boardList = objectMapper.readValue(boardListJson,
+                    PreferencesBoardList.class);
+
+            List<PreferencesBoardInfo> boards = boardList.getInfo();
+
+            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.getTitle(), board.getKey());
+
+            boards.remove(currentBoard);
+
+            PreferencesBoardList newBoardList = new PreferencesBoardList();
+            newBoardList.setInfo(boards);
+
+            String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
+            prefs.put(serverAddress, newBoardListJson);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
