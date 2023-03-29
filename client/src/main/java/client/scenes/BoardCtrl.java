@@ -18,8 +18,10 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Card;
 import commons.ListOfCards;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,16 +36,24 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 
 public class BoardCtrl {
 
     private final ServerUtils server;
+
+    private final MainCtrl mainCtrl;
+
+    public String boardKey;
 
     @FXML
     private ListView<ListOfCards> list;
@@ -55,46 +65,72 @@ public class BoardCtrl {
     @FXML
     private Button copyButton;
 
+    @FXML
+    private Button addTag;
+
+    @FXML
+    private AnchorPane anchorPane;
+
+    @FXML
+    private VBox vBox;
+    @FXML
+    private AnchorPane anchorPane2;
+
+    @FXML
+    private VBox vBox2;
+
     ObservableList<ListOfCards> data;
 
     private Board board;
 
     /**
      * Create a new BoardCtrl.
-     * @param server The server to use.
+     *
+     * @param server    The server to use.
+     * @param mainCtrl The main control
+     * @param boardKey The key of a specific board
      */
     @Inject
-    public BoardCtrl(ServerUtils server) {
+    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl, String boardKey) {
         this.server = server;
+        this.boardKey = boardKey;
 
         data = FXCollections.observableArrayList();
 
-        // Placeholder for when Dave's branch is merged
-        // so there are actually multiple boards
+
         try {
-            board = this.server.getBoard(1);
-        } catch (Exception e) {
+            board = this.server.getBoardByKey(boardKey);
+          //  System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
+
+        }
+        catch (Exception e) {
+            System.out.println("Sb");
             board = getBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
         refresh();
-        /*
-        board = getBoard();
 
-        //add the board to the database
-        Board addedBoard =  server.addBoard(board);
-
-        //change the id of the board locally
-        board.id = server.getBoard(addedBoard.id).id;
-        System.out.println(board.id);
-        */
+        this.mainCtrl = mainCtrl;
     }
+
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
+
+        try {
+            board = this.server.getBoardByKey(boardKey);
+            System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
+
+        }
+        catch (Exception e) {
+            System.out.println("Sb");
+        }
+
         data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
@@ -103,9 +139,17 @@ public class BoardCtrl {
         list.getStylesheets().add("styles.css");
         key.setText(board.key);
         title.setText(board.title);
+
+        AnchorPane.setBottomAnchor(addTag, 5.0);
+        loadVBox();
+        loadVBox2();
         refresh();
-        //list.getStylesheets().add("../../../resources/client/scenes/styles.css");
-//        list.setStyle("-fx-control-inner-background: " +  "#CAF0F8" + ";");
+
+        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+            for (var list: s.lists)
+                list.cards.sort(Comparator.comparingLong(Card::getOrder));
+            Platform.runLater(() -> data.setAll(s.lists));
+        });
     }
 
     /**
@@ -115,6 +159,40 @@ public class BoardCtrl {
         //the method call of getServerData will be with the board parameter
         var serverData = server.getServerData(board.id);
         data.setAll(serverData);
+    }
+
+    /**
+     * Loads the vbox to auto-fit its parent
+     */
+    public void loadVBox() {
+        // set the VBox to always grow to fill the AnchorPane
+        vBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        vBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        vBox.setMaxHeight(Double.MAX_VALUE);
+        vBox.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(vBox, 0.0);
+        AnchorPane.setBottomAnchor(vBox, 35.0);
+        AnchorPane.setLeftAnchor(vBox, 0.0);
+        AnchorPane.setRightAnchor(vBox, 0.0);
+    }
+
+    /**
+     * Loads the second vbox to auto-fit its parent
+     */
+    public void loadVBox2() {
+        // set the VBox to always grow to fill the AnchorPane
+        vBox2.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        vBox2.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        vBox2.setMaxHeight(Double.MAX_VALUE);
+        vBox2.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(vBox2, 0.0);
+        AnchorPane.setBottomAnchor(vBox2, 0.0);
+        AnchorPane.setLeftAnchor(vBox2, 0.0);
+        AnchorPane.setRightAnchor(vBox2, 0.0);
     }
 
 
@@ -156,6 +234,44 @@ public class BoardCtrl {
     }
 
     /**
+     * Opens a new window to add a new list of cards.
+     * @param event the ActionEvent
+     */
+    public void addTag(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddTag.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            AddTagCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a new tag");
+            Scene addTagScene = new Scene(root);
+            addTagScene.getStylesheets().add("styles.css");
+            stage.setHeight(240);
+            stage.setWidth(320);
+            stage.setScene(addTagScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String name = controller.storedText;
+
+                //TODO add getTag in Server Utils
+                //Tag tag = getTag(name);
+                //TODO add addTag in Server Utils
+                //Tag addedTag = server.addTag(tag);
+                //System.out.println(addedTag);
+
+                //change the id of the board locally
+                //tag.id = addedTag.id;
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Opens the help screen
      * @param event - Key event when the user presses shift + /
      */
@@ -183,12 +299,11 @@ public class BoardCtrl {
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
-        Tooltip.install(copyButton, tooltip);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(Window.getWindows().get(0));
-        tooltip.setAnchorX(1000);
-        tooltip.setAnchorY(100);
+        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
+//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
@@ -204,15 +319,26 @@ public class BoardCtrl {
     }
 
     /**
+     * Goes back to overview
+     * @param event - Key event when the user clicks the mouse + /
+     */
+    public void goToOverview(ActionEvent event) {
+        mainCtrl.showMainScreen();
+    }
+
+    /**
      * Method that creates a new board
      * @return the new board
      */
     private Board getBoard(){
-        return new Board("My Board", null, null, new ArrayList<>());
+
+
+        return new Board("My Board", null, null,
+                null, null, null, new ArrayList<>(), new HashSet<>());
     }
 
 
     private ListOfCards getList(String title){
-        return new ListOfCards(title, "A2E4F1", board, new ArrayList<>());
+        return new ListOfCards(title, board, new ArrayList<>());
     }
 }

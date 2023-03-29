@@ -80,12 +80,13 @@ public class CheckListItemServiceTest {
     @Test
     public void addCheckTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         boardService.createBoard(b);
         Mockito.verify(boardRepo).save(b);
 
 
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         b.addList(l);
 
         listService.createListOfCards(l,b);
@@ -127,10 +128,11 @@ public class CheckListItemServiceTest {
     @Test
     public void editCheckTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
 
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
 
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
@@ -175,9 +177,10 @@ public class CheckListItemServiceTest {
     @Test
     public void deleteCheckTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
         b.addList(l);
 
@@ -202,9 +205,10 @@ public class CheckListItemServiceTest {
     @Test
     public void getAllChecksTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
         Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
 

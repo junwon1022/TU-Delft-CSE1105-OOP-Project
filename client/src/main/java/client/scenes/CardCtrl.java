@@ -10,9 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
@@ -153,7 +155,10 @@ public class CardCtrl extends ListCell<Card> {
         ClipboardContent content = new ClipboardContent();
         content.putString(getItem().id + "X" + getItem().list.id);
         dragboard.setContent(content);
-
+        // set drag view to a snapshot of the card
+        SnapshotParameters snapshotParams = new SnapshotParameters();
+        snapshotParams.setFill(Color.TRANSPARENT);
+        dragboard.setDragView(root.snapshot(snapshotParams, null), event.getX(), event.getY());
         event.consume();
     }
 

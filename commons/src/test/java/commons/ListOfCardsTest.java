@@ -39,8 +39,8 @@ public class ListOfCardsTest {
         checkListItem2 = new CheckListItem("Do Y", false, card1);
         checklist = List.of(checkListItem1, checkListItem2);
 
-        tag1 = new Tag("urgent", "#ff00ff", new HashSet<Card>());
-        tag2 = new Tag("math", "#ffff00", new HashSet<Card>());
+        tag1 = new Tag("urgent", "#ff00ff", board, new HashSet<Card>());
+        tag2 = new Tag("math", "#ffff00", board, new HashSet<Card>());
         tags = Set.of(tag1, tag2);
 
         card1 = new Card("Homework", "Somewhat long description",
@@ -53,12 +53,13 @@ public class ListOfCardsTest {
         cards.add(card1);
         cards.add(card2);
 
-        board = new Board("Algebra", "#ffffff",
-                "pass", listOfCards);
+        board = new Board("Algebra", "#ffffff", "#ff00ff",
+                "#ffffff", "#ff00ff",
+                "pass", listOfCards, tags);
         listOfCards = new ArrayList<>();
-        list = new ListOfCards("Grasple", "#000000", board, cards);
-        list2 = new ListOfCards("Grasple", "#000000", board, cards);
-        list3 = new ListOfCards("Grasple3", "#000000", board, cards);
+        list = new ListOfCards("Grasple",board, cards);
+        list2 = new ListOfCards("Grasple", board, cards);
+        list3 = new ListOfCards("Grasple3", board, cards);
         listOfCards.add(list);
         listOfCards.add(list2);
     }
@@ -78,7 +79,6 @@ public class ListOfCardsTest {
     @Test
     public void checkParametrizedConstructor() {
         assertEquals("Grasple", list.title);
-        assertEquals("#000000", list.colour);
         assertEquals(board, list.board);
         assertEquals(cards, list.cards);
     }
@@ -110,7 +110,6 @@ public class ListOfCardsTest {
         assertTrue(actual.contains(ListOfCards.class.getSimpleName()));
         assertTrue(actual.contains("\n"));
         assertTrue(actual.contains("title"));
-        assertTrue(actual.contains("colour"));
         assertTrue(actual.contains("board"));
         assertTrue(actual.contains("cards"));
     }

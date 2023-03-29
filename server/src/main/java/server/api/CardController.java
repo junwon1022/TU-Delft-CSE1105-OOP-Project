@@ -2,17 +2,21 @@ package server.api;
 
 import commons.Board;
 import commons.Card;
+import commons.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import commons.ListOfCards;
 import server.services.BoardService;
 import server.services.CardService;
 import server.services.ListOfCardsService;
+import server.services.TagService;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -23,20 +27,31 @@ public class CardController {
     private final ListOfCardsService listOfCardsService;
     private final BoardService boardService;
 
+    private final TagService tagService;
+
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     /**
      * Constructor with parameters
      *
      * @param cardService
      * @param listOfCardsService
      * @param boardService
+     * @param tagService
+     * @param simpMessagingTemplate
      */
     @Autowired
     public CardController(CardService cardService,
                        ListOfCardsService listOfCardsService,
-                       BoardService boardService) {
+                       BoardService boardService,
+                       TagService tagService,
+                       SimpMessagingTemplate simpMessagingTemplate) {
         this.cardService = cardService;
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
+        this.tagService = tagService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     /**
@@ -117,6 +132,10 @@ public class CardController {
             }
             // Save the new card to the database
             cardService.createCard(card, list, board);
+
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+
             // Return the saved card with an HTTP 201 Created status
             return ResponseEntity.status(HttpStatus.CREATED).body(card);
         }
@@ -144,8 +163,12 @@ public class CardController {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board in which the card will be updated
+            Board board = boardService.getBoardById(boardId);
             // Edit the list and save it in the database
             Card card = cardService.editCardTitle(cardId, newTitle);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(card);
         }
@@ -170,10 +193,14 @@ public class CardController {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
             }
+            // Get the board from which the card will be deleted
+            Board board = boardService.getBoardById(boardId);
             // Get the card
             Card card = cardService.getCardById(cardId);
             // Delete the card
             cardService.deleteCardById(cardId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved card with an HTTP 200 OK status
             return ResponseEntity.ok().build();
         }
@@ -182,7 +209,7 @@ public class CardController {
         }
     }
 
-    /**
+   /**
      * retrieves the Put messages sent to the specific path
      * updates the description of the required card
      * @param newDescription the new description
@@ -228,6 +255,106 @@ public class CardController {
             String description = cardService.getCardDescription(cardId);
             return ResponseEntity.ok().body(description);
         } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Get all the tags of a card
+     *
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return the tags
+     */
+    @GetMapping(path = {"/{card_id}/tags","/{card_id}/tags/"})
+    private ResponseEntity<Set<Tag>> getCardTags(@PathVariable("board_id") long boardId,
+                                                  @PathVariable("list_id") long listId,
+                                                  @PathVariable("card_id") long cardId) {
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            // Get the card
+            Card card = cardService.getCardById(cardId);
+            // Get the tags
+            Set<Tag> tags = cardService.getTags(card);
+            // Return the tags with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(tags);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Add a tag to a card
+     *
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @param tagId
+     * @return the card
+     */
+    @PostMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
+    private ResponseEntity<Card> addTagToCard(@PathVariable("board_id") long boardId,
+                                              @PathVariable("list_id") long listId,
+                                              @PathVariable("card_id") long cardId,
+                                              @PathVariable("tag_id") long tagId) {
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            // Get the board
+            Board board = boardService.getBoardById(boardId);
+            // Get the card
+            Card card = cardService.getCardById(cardId);
+            // Get the tag
+            Tag tag = tagService.getTagById(tagId);
+            // Add the tag to the card
+            cardService.addTagToCard(card, tag);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the card with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(card);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Delete a tag from a card
+     *
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @param tagId
+     * @return the card
+     */
+    @DeleteMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
+    private ResponseEntity<Card> removeTagFromCard(@PathVariable("board_id") long boardId,
+                                                   @PathVariable("list_id") long listId,
+                                                   @PathVariable("card_id") long cardId,
+                                                   @PathVariable("tag_id") long tagId) {
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            // Get the board
+            Board board = boardService.getBoardById(boardId);
+            // Get the card
+            Card card = cardService.getCardById(cardId);
+            // Get the tag
+            Tag tag = tagService.getTagById(tagId);
+            // Remove the tag from the card
+            cardService.removeTagFromCard(card, tag);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the card with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(card);
+        }
+        catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

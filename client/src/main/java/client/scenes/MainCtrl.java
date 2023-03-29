@@ -29,19 +29,25 @@ public class MainCtrl {
 //
 //    private AddQuoteCtrl addCtrl;
 //    private Scene add;
-
     private BoardCtrl boardCtrl;
     private Scene boardOverview;
+    private ConnectCtrl connectCtrl;
+    private Scene connect;
+    private MainScreenCtrl mainScreenCtrl;
+    private Scene mainScreen;
+
 
     /**
      * Create a new MainCtrl.
      *
      * @param primaryStage The primary stage to use.
-//     * @param overview The overview scene to use.
-//     * @param add The add scene to use.
-     * @param board The board screen to use.
+     * @param board        The board screen to use.
+     * @param connect      The connect screen
+     * @param mainScreen   The main screen
      */
-    public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board ) {
+    public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board,
+                           Pair<ConnectCtrl, Parent> connect,
+                           Pair<MainScreenCtrl, Parent> mainScreen) {
 //            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
 //        this.overviewCtrl = overview.getKey();
@@ -54,22 +60,54 @@ public class MainCtrl {
         this.boardOverview = new Scene(board.getValue());
         this.boardOverview.getStylesheets().add("styles.css");
 
-        showBoard();
+        this.connectCtrl = connect.getKey();
+        this.connect = new Scene(connect.getValue());
+
+        this.mainScreenCtrl = mainScreen.getKey();
+        this.mainScreen = new Scene(mainScreen.getValue());
+
+        showConnect();
         primaryStage.show();
     }
 
     /**
      * Show the board scene.
+     * @param boardKey the key of a board
      */
-    public void showBoard() {
+    public void showBoard(String boardKey) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setHeight(690);
         primaryStage.setWidth(1040);
         primaryStage.setResizable(false);
-
+        boardCtrl.boardKey = boardKey;
         boardCtrl.initialize();
     }
+
+    /**
+     * Shows the connect screen
+     */
+
+    public void showConnect() {
+        primaryStage.setTitle("Connect");
+        primaryStage.setScene(connect);
+        primaryStage.setHeight(400);
+
+    }
+
+
+
+    /**
+     * Show the board scene.
+     */
+    public void showMainScreen() {
+        primaryStage.setTitle("Main Screen");
+        primaryStage.setScene(mainScreen);
+        primaryStage.setHeight(600);
+        mainScreenCtrl.refresh();
+    }
+
+
 
     /**
      * Show the overview scene.

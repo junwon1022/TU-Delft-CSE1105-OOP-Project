@@ -29,6 +29,15 @@ public class Board {
     @Column(name = "board_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
+    @Column(name = "b_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String font;
+
+    @Column(name = "list_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String listColour;
+
+    @Column(name = "list_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String listFont;
+
     @Column(name = "password")
     public String password;
 
@@ -37,6 +46,10 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<ListOfCards> lists;
+
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Tag> tags;
+
 
     /**
      * Default constructor
@@ -47,16 +60,26 @@ public class Board {
     /**
      * Constructor with parameters
      * @param title
-     * @param colour
+     * @param boardColour
+     * @param fontColour
+     * @param listColour
+     * @param listFont
      * @param password
      * @param lists
+     * @param tags
      */
-    public Board(String title, String colour,
-                 String password, List<ListOfCards> lists) {
+    public Board(String title, String boardColour, String fontColour,
+                 String listColour, String listFont,
+                 String password, List<ListOfCards> lists, Set<Tag> tags) {
         this.title = title;
-        this.colour = colour;
+        this.colour = boardColour;
+        this.font = fontColour;
+
+        this.listColour = listColour;
+        this.listFont = listFont;
         this.password = password;
         this.lists = lists;
+        this.tags = tags;
     }
 
     /*
@@ -157,6 +180,44 @@ public class Board {
         int index2 = this.lists.indexOf(list2);
         this.lists.set(index1, list2);
         this.lists.set(index2, list1);
+    }
+
+    /**
+     * Add a tag to a board
+     * @param tag
+     */
+    public void addTag(Tag tag) {
+        if (tag != null) {
+            tags.add(tag);
+            tag.board = this;
+        }
+    }
+
+    /**
+     * Remove an existing tag from a board
+     *
+     * @param tag
+     */
+    public void removeTag(Tag tag) {
+        if (tag != null) {
+            tags.remove(tag);
+            tag.board = null;
+        }
+    }
+
+    /**
+     * Get a tag by its name
+     *
+     * @param name
+     * @return the tag
+     */
+    public Tag getTagByName(String name) {
+        for (Tag tag : tags) {
+            if (tag.name.equals(name)) {
+                return tag;
+            }
+        }
+        return null;
     }
 
     /**

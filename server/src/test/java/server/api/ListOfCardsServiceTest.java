@@ -13,6 +13,7 @@ import server.services.BoardService;
 import server.services.ListOfCardsService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,13 +53,14 @@ public class ListOfCardsServiceTest {
     @Test
     public void addListTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
 
         boardService.createBoard(b);
 
         Mockito.verify(boardRepo).save(b);
 
-        ListOfCards l = new ListOfCards("My List","#555555",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
         b.addList(l);
 
@@ -68,14 +70,14 @@ public class ListOfCardsServiceTest {
         assertThat(b.lists).contains(l);
 
         //EMPTY
-        ListOfCards l2 = new ListOfCards("","#555555", b, new ArrayList<>());
+        ListOfCards l2 = new ListOfCards("", b, new ArrayList<>());
         b.addList(l2);
         assertThatThrownBy(() -> {
             listService.createListOfCards(l2,b);
         }).isInstanceOf(Exception.class);
 
         //NULL
-        ListOfCards l3 = new ListOfCards(null,"#555555", b, new ArrayList<>());
+        ListOfCards l3 = new ListOfCards(null, b, new ArrayList<>());
         b.addList(l3);
         assertThatThrownBy(() -> {
             listService.createListOfCards(l3,b);
@@ -88,10 +90,11 @@ public class ListOfCardsServiceTest {
     @Test
     public void editListTitleTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
 
 
-        ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         boardService.createBoard(b);
 
@@ -118,9 +121,10 @@ public class ListOfCardsServiceTest {
     @Test
     public void deleteListTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         b.addList(l);
 
@@ -138,11 +142,12 @@ public class ListOfCardsServiceTest {
     @Test
     public void getAllListsTest() throws Exception {
 
-        Board b = new Board("My Schedule", "#111111", "pass", new ArrayList<>());
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
 
-        ListOfCards l = new ListOfCards("My List","#555555", b, new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
-        ListOfCards l2 = new ListOfCards("My List 2","#555555", b, new ArrayList<>());
+        ListOfCards l2 = new ListOfCards("My List 2", b, new ArrayList<>());
 
         List<ListOfCards> k = new ArrayList<>();
 

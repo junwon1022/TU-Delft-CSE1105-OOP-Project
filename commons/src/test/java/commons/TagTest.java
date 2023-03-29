@@ -31,9 +31,10 @@ public class TagTest {
     @BeforeEach
     public void setUp() {
         tags = new HashSet<>();
-        board = new Board("Algebra", "#ffffff",
-                "pass", new ArrayList<ListOfCards>());
-        list = new ListOfCards("Grasple", "#000000", board, new ArrayList<Card>());
+        board = new Board("Algebra", "#ffffff", "#ffffff",
+                "#ffffff", "#ffffff",
+                "pass", new ArrayList<ListOfCards>(), tags);
+        list = new ListOfCards("Grasple", board, new ArrayList<Card>());
 
         card1 = new Card("Homework", "Somewhat long description",
                 "#ffffff", list, new ArrayList<CheckListItem>(), tags);
@@ -45,9 +46,9 @@ public class TagTest {
         cards.add(card1);
         cards.add(card2);
 
-        tag = new Tag("urgent", "#ff00ff", cards);
-        tag2 = new Tag("urgent", "#ff00ff", cards);
-        tag3 = new Tag("oopp", "#00ff00", cards);
+        tag = new Tag("urgent", "#ff00ff", board, cards);
+        tag2 = new Tag("urgent", "#ff00ff",board, cards);
+        tag3 = new Tag("oopp", "#00ff00",board, cards);
     }
 
     /**
