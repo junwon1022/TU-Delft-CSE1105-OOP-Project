@@ -352,8 +352,8 @@ public class ServerUtils {
      */
     public String getDescription(Card card) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}
-                    /lists/{list_id}/cards/{card_id}/description")
+                .target(SERVER).path("/api/boards/{board_id}" +
+                      "/lists/{list_id}/cards/{card_id}/description")
                 .resolveTemplate("board_id", card.list.board.id)
                 .resolveTemplate("list_id", card.list.id)
                 .resolveTemplate("card_id", card.id)
