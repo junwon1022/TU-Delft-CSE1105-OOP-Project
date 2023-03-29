@@ -51,7 +51,8 @@ public class BoardCtrl {
 
     private final MainCtrl mainCtrl;
 
-    public String boardKey;
+
+    private String boardKey;
 
     @FXML
     private ListView<ListOfCards> list;
@@ -331,5 +332,13 @@ public class BoardCtrl {
 
     private ListOfCards getList(String title){
         return new ListOfCards(title, board, new ArrayList<>());
+    }
+
+    /**
+     * Setter for the board key of the board displayed
+     * @return
+     */
+    public void setBoardKey(String boardKey) {
+        this.boardKey = boardKey;
     }
 }

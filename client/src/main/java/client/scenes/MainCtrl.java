@@ -15,8 +15,10 @@
  */
 package client.scenes;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -78,10 +80,16 @@ public class MainCtrl {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setMaximized(true);
-//        primaryStage.setHeight(690);
-//        primaryStage.setWidth(1040);
-//        primaryStage.setResizable(false);
-        boardCtrl.boardKey = boardKey;
+        // Add a listener to detect when the stage is no longer maximized and center it
+        // Also sets the size of the resized stage
+        primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                primaryStage.setHeight(650);
+                primaryStage.setWidth(1100);
+                centerStage();
+            }
+        });
+        boardCtrl.setBoardKey(boardKey);
         boardCtrl.initialize();
     }
 
@@ -93,7 +101,6 @@ public class MainCtrl {
         primaryStage.setTitle("Connect");
         primaryStage.setScene(connect);
         primaryStage.setHeight(400);
-
     }
 
 
@@ -105,26 +112,23 @@ public class MainCtrl {
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
         primaryStage.setHeight(600);
+        centerStage();
         mainScreenCtrl.refresh();
     }
 
-
-
     /**
-     * Show the overview scene.
+     * Centers the stage in the computer window
      */
-//    public void showOverview() {
-//        primaryStage.setTitle("Quotes: Overview");
-//        primaryStage.setScene(overview);
-//        overviewCtrl.refresh();
-//    }
+    private void centerStage() {
+        // Get the screen size
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-    /**
-     * Show the add scene.
-     */
-//    public void showAdd() {
-//        primaryStage.setTitle("Quotes: Adding Quote");
-//        primaryStage.setScene(add);
-//        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-//    }
+        // Calculate the center position of the screen
+        double centerX = screenBounds.getWidth() / 2;
+        double centerY = screenBounds.getHeight() / 2;
+
+        // Set the position of the stage to the center of the screen
+        primaryStage.setX(centerX - primaryStage.getWidth() / 2);
+        primaryStage.setY(centerY - primaryStage.getHeight() / 2);
+    }
 }
