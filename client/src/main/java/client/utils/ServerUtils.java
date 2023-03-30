@@ -372,7 +372,6 @@ public class ServerUtils {
             boardData = new ArrayList<>();
         }
         boardData = getBoards();
-        System.out.println(boardData.get(boardData.size()-1).toString());
         return boardData;
     }
     /**
