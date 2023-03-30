@@ -29,6 +29,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
     private final MainScreenCtrl mainScreenCtrl;
     private final MainCtrl mainCtrl;
     private final UserPreferences prefs;
+
     private PreferencesBoardInfo data;
 
     @FXML

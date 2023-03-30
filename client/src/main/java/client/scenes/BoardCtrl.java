@@ -31,10 +31,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
@@ -67,6 +64,9 @@ public class BoardCtrl {
     private Label title;
     @FXML
     private Button copyButton;
+
+    @FXML
+    private TextField joinField;
 
     @FXML
     private Button addTag;
@@ -112,7 +112,7 @@ public class BoardCtrl {
         }
         catch (Exception e) {
             System.out.println("Sb");
-            board = getBoard();
+            board = getNewBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
@@ -161,6 +161,7 @@ public class BoardCtrl {
         AnchorPane.setBottomAnchor(addTag, 5.0);
         AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
         loadVBox();
+        loadRecentBoards();
         refresh();
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
@@ -178,6 +179,24 @@ public class BoardCtrl {
         var serverData = server.getServerData(board.id);
         data.setAll(serverData);
     }
+
+    /**
+     * Loads the listview to auto-fit its parent
+     */
+    public void loadRecentBoards() {
+        // set the VBox to always grow to fill the AnchorPane
+        recentBoards.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        recentBoards.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        recentBoards.setMaxHeight(Double.MAX_VALUE);
+        recentBoards.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(recentBoards, 0.0);
+        AnchorPane.setBottomAnchor(recentBoards, 0.0);
+        AnchorPane.setLeftAnchor(recentBoards, 0.0);
+        AnchorPane.setRightAnchor(recentBoards, 0.0);
+    }
+
 
     /**
      * Loads the vbox to auto-fit its parent
@@ -331,9 +350,17 @@ public class BoardCtrl {
      * Method that creates a new board
      * @return the new board
      */
-    private Board getBoard(){
+    private Board getNewBoard(){
         return new Board("My Board", null, null,
                 null, null, null, new ArrayList<>(), new HashSet<>());
+    }
+
+    /**
+     * Method that returns this board
+     * @return the board
+     */
+    public Board getBoard(){
+        return board;
     }
 
 
@@ -348,5 +375,26 @@ public class BoardCtrl {
      */
     public void setBoardKey(String boardKey) {
         this.boardKey = boardKey;
+    }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoard(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+            if (server.getBoardByKey(joinField.getText()) != null) {
+                mainCtrl.showBoard(joinField.getText());
+                joinField.clear();
+            } else throw new Exception("Doesnt Exist");
+        } catch (Exception e) {
+            System.out.println("No such board");
+        }
     }
 }

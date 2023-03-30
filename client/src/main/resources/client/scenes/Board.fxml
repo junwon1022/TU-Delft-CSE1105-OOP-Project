@@ -66,7 +66,7 @@
                   </Label>
                   <HBox alignment="BOTTOM_CENTER" prefHeight="29.0" prefWidth="245.0" spacing="7.0">
                      <children>
-                        <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
                            <effect>
                               <ColorAdjust brightness="-0.05" />
                            </effect>
@@ -74,7 +74,7 @@
                               <Font name="Corbel" size="15.0" />
                            </font>
                         </TextField>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="46.0" prefWidth="46.0" stylesheets="@../../styles.css">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#connectToBoard" prefHeight="46.0" prefWidth="46.0" stylesheets="@../../styles.css">
                            <styleClass>
                               <String fx:value="image-button" />
                               <String fx:value="search" />
@@ -93,7 +93,10 @@
                      <content>
                       <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
                          <children>
-                            <ListView fx:id="recentBoards" prefHeight="91.0" prefWidth="231.0" />
+                            <ListView fx:id="recentBoards" prefHeight="91.0" prefWidth="231.0" styleClass="recent-boards" stylesheets="@../../styles.css">
+                                 <padding>
+                                    <Insets left="7.0" right="7.0" />
+                                 </padding></ListView>
                          </children>
                       </AnchorPane>
                      </content>
