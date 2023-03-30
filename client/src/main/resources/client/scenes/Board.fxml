@@ -88,16 +88,16 @@
             <Accordion>
               <panes>
                 <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="My Boards">
-                  <content>
-                    <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
-                           <children>
-                              <VBox fx:id="vBox2" layoutX="-8.0" layoutY="-18.0" prefHeight="127.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
-                           </children>
-                        </AnchorPane>
-                  </content>
                      <font>
                         <Font name="Corbel" size="19.0" />
                      </font>
+                     <content>
+                      <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
+                         <children>
+                            <ListView fx:id="recentBoards" prefHeight="200.0" prefWidth="200.0" />
+                         </children>
+                      </AnchorPane>
+                     </content>
                 </TitledPane>
               </panes>
             </Accordion>
@@ -127,7 +127,7 @@
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button fx:id="leave" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
+            <Button fx:id="leave" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Go back">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>

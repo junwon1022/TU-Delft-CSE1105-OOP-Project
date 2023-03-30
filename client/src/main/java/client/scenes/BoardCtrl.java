@@ -15,7 +15,9 @@
  */
 package client.scenes;
 
+import client.utils.PreferencesBoardInfo;
 import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.Card;
@@ -48,11 +50,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 public class BoardCtrl {
+    private final UserPreferences prefs;
 
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
-
 
     private String boardKey;
 
@@ -73,9 +75,11 @@ public class BoardCtrl {
     private VBox vBox;
 
     @FXML
-    private VBox vBox2;
-    @FXML
     private AnchorPane anchorPane;
+
+    private ListView<PreferencesBoardInfo> recentBoards;
+
+    ObservableList<PreferencesBoardInfo> recentBoardsData;
 
     ObservableList<ListOfCards> data;
 
@@ -83,13 +87,17 @@ public class BoardCtrl {
 
     /**
      * Create a new BoardCtrl.
-     *
+     * @param prefs the preferences of the user
      * @param server    The server to use.
      * @param mainCtrl The main control
      * @param boardKey The key of a specific board
      */
     @Inject
-    public BoardCtrl(ServerUtils server, MainCtrl mainCtrl, String boardKey) {
+    public BoardCtrl(UserPreferences prefs,
+                     ServerUtils server,
+                     MainCtrl mainCtrl,
+                     String boardKey) {
+        this.prefs = prefs;
         this.server = server;
         this.boardKey = boardKey;
 
@@ -119,11 +127,13 @@ public class BoardCtrl {
      */
     public void initialize() {
 
+        boolean haveBoard = false;
+
         try {
             board = this.server.getBoardByKey(boardKey);
             System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
-
+            haveBoard = true;
         }
         catch (Exception e) {
             System.out.println("Sb");
@@ -138,10 +148,19 @@ public class BoardCtrl {
         key.setText(board.key);
         title.setText(board.title);
         title.setStyle("-fx-text-fill: " + board.font);
+
+        if (haveBoard)
+            prefs.addBoard(server.getServerAddress(), board);
+
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
+        recentBoards.setFixedCellSize(0);
+        recentBoards.setItems(recentBoardsData);
+        recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+        recentBoards.setMaxHeight(600);
+
         AnchorPane.setBottomAnchor(addTag, 5.0);
         AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
         loadVBox();
-        loadVBox2();
         refresh();
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
@@ -176,24 +195,6 @@ public class BoardCtrl {
         AnchorPane.setLeftAnchor(vBox, 0.0);
         AnchorPane.setRightAnchor(vBox, 0.0);
     }
-
-    /**
-     * Loads the second vbox to auto-fit its parent
-     */
-    public void loadVBox2() {
-        // set the VBox to always grow to fill the AnchorPane
-        vBox2.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        vBox2.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        vBox2.setMaxHeight(Double.MAX_VALUE);
-        vBox2.setMaxWidth(Double.MAX_VALUE);
-
-        // set the constraints for the VBox to fill the AnchorPane
-        AnchorPane.setTopAnchor(vBox2, 0.0);
-        AnchorPane.setBottomAnchor(vBox2, 0.0);
-        AnchorPane.setLeftAnchor(vBox2, 0.0);
-        AnchorPane.setRightAnchor(vBox2, 0.0);
-    }
-
 
     /**
      * Opens a new window to add a new list of cards.

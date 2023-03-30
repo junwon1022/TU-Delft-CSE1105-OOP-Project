@@ -1,7 +1,9 @@
 package client.scenes;
 
 
+import client.utils.PreferencesBoardInfo;
 import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import javafx.collections.FXCollections;
@@ -44,22 +46,25 @@ public class MainScreenCtrl {
     private ServerUtils server;
 
     @FXML
-    private ListView<Board> list;
+    private ListView<PreferencesBoardInfo> list;
 
-    ObservableList<Board> data;
+    ObservableList<PreferencesBoardInfo> data;
 
     private final MainCtrl mainCtrl;
+    private final UserPreferences prefs;
 
     /**
      * Create a new CardListCtrl
      * @param server
      * @param mainCtrl
+     * @param prefs
      */
     @Inject
-    public MainScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public MainScreenCtrl(ServerUtils server, MainCtrl mainCtrl, UserPreferences prefs) {
 
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.prefs = prefs;
 
         data = FXCollections.observableArrayList();
         list = new ListView<>();
@@ -71,11 +76,10 @@ public class MainScreenCtrl {
      * Gets the board title from the database
      */
     public void refresh() {
-        var boardData = server.getMyBoardTitles();
-        System.out.println("All board data " + boardData.toString());
+        var boardData = prefs.getBoards(server.getServerAddress());
         data.setAll(boardData);
         list.setItems(data);
-        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl));
+        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl, prefs));
         list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
@@ -142,7 +146,8 @@ public class MainScreenCtrl {
                         "" , password, new ArrayList<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
-                server.addBoardTitle(board);
+                Board newBoard = server.addBoard(board);
+                prefs.addBoard(server.getServerAddress(), newBoard);
 
                 refresh();
             }
