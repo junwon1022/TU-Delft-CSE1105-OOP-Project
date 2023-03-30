@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class BoardCtrl {
     private final UserPreferences prefs;
@@ -80,6 +81,7 @@ public class BoardCtrl {
     @FXML
     private ListView<PreferencesBoardInfo> recentBoards;
     ObservableList<PreferencesBoardInfo> recentBoardsData;
+    ObservableList<Board> adminBoardsData;
 
     int adminFlag;
     ObservableList<ListOfCards> data;
@@ -134,12 +136,28 @@ public class BoardCtrl {
             if (haveBoard)
                 prefs.addBoard(server.getServerAddress(), board);
 
-            recentBoardsData = FXCollections.observableList
-                    (prefs.getBoards(server.getServerAddress()));
-            recentBoards.setFixedCellSize(0);
-            recentBoards.setItems(recentBoardsData);
-            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-            recentBoards.setMaxHeight(600);
+            if(adminFlag == 0) {
+                recentBoardsData = FXCollections.observableList
+                        (prefs.getBoards(server.getServerAddress()));
+            }
+            else {
+                recentBoardsData = FXCollections.observableList
+                        (server.getBoards().stream()
+                                .map(x -> new PreferencesBoardInfo(x.title,x.key,x.password))
+                                .collect(Collectors.toList()));
+                recentBoards.setFixedCellSize(0);
+                recentBoards.setItems(recentBoardsData);
+                recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+                recentBoards.setMaxHeight(600);
+            }
+
+
+
+
+
+
+
+
 
             AnchorPane.setBottomAnchor(addTag, 5.0);
             loadVBox();
