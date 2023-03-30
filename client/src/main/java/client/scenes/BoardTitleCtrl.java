@@ -45,6 +45,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
      * @param server         The server to use
      * @param mainScreenCtrl The mainscreen the title is part of
      * @param mainCtrl
+     * @param prefs - user preferences
      */
     @Inject
     public BoardTitleCtrl(ServerUtils server,

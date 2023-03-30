@@ -131,18 +131,19 @@ public class BoardCtrl {
             key.setText(board.key);
             title.setText(board.title);
 
-        if (haveBoard)
-            prefs.addBoard(server.getServerAddress(), board);
+            if (haveBoard)
+                prefs.addBoard(server.getServerAddress(), board);
 
-        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
-        recentBoards.setFixedCellSize(0);
-        recentBoards.setItems(recentBoardsData);
-        recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-        recentBoards.setMaxHeight(600);
+            recentBoardsData = FXCollections.observableList
+                    (prefs.getBoards(server.getServerAddress()));
+            recentBoards.setFixedCellSize(0);
+            recentBoards.setItems(recentBoardsData);
+            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+            recentBoards.setMaxHeight(600);
 
-        AnchorPane.setBottomAnchor(addTag, 5.0);
-        loadVBox();
-        refresh();
+            AnchorPane.setBottomAnchor(addTag, 5.0);
+            loadVBox();
+            refresh();
 
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists)
