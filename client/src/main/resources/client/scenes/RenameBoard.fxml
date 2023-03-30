@@ -27,7 +27,7 @@
             <Font name="Corbel" size="13.0" />
          </font>
       </Button>
-      <Label layoutX="84.0" layoutY="31.0" text="Rename the card" textAlignment="CENTER" textFill="#231f20">
+      <Label layoutX="78.0" layoutY="30.0" text="Rename the board" textAlignment="CENTER" textFill="#231f20">
          <font>
             <Font name="Corbel Bold" size="18.0" />
          </font>

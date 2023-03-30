@@ -4,7 +4,7 @@ import client.utils.PreferencesBoardInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class RecentBoardsCtrl extends ListCell<PreferencesBoardInfo> {
     private String boardKey;
 
     @FXML
-    private AnchorPane root;
+    private HBox root;
 
     @FXML
     private Button sw;
@@ -59,8 +59,10 @@ public class RecentBoardsCtrl extends ListCell<PreferencesBoardInfo> {
         } else {
             boardTitle = item.getTitle();
             boardKey = item.getKey();
-
             title.setText(item.getTitle());
+            root.getStylesheets().add("styles.css");
+            title.setStyle("-fx-text-fill: " + item.getFont());
+            root.setStyle("-fx-background-color: " + item.getBackgroundColor());
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

@@ -35,7 +35,9 @@ public class UserPreferences {
 
             PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title,
                     board.key,
-                    board.password);
+                    board.password,
+                    board.font,
+                    board.colour);
 
             boards.remove(currentBoard);
 
@@ -82,7 +84,9 @@ public class UserPreferences {
 
             PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title,
                     board.key,
-                    board.password);
+                    board.password,
+                    board.font,
+                    board.colour);
 
             boards.remove(currentBoard);
 
@@ -112,7 +116,9 @@ public class UserPreferences {
 
             PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.getTitle(),
                     board.getKey(),
-                    board.getPassword());
+                    board.getPassword(),
+                    board.getFont(),
+                    board.getBackgroundColor());
 
             boards.remove(currentBoard);
 
@@ -148,7 +154,9 @@ public class UserPreferences {
 
             PreferencesBoardInfo newBoard = new PreferencesBoardInfo(newTitle,
                     board.getKey(),
-                    board.getPassword());
+                    board.getPassword(),
+                    board.getFont(),
+                    board.getBackgroundColor());
 
             boards.add(newBoard);
 

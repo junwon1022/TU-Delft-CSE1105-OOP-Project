@@ -31,10 +31,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
@@ -56,7 +53,10 @@ public class BoardCtrl {
 
     private final MainCtrl mainCtrl;
 
-    public String boardKey;
+    private String boardKey;
+
+    @FXML
+    private Label copied;
 
     @FXML
     private ListView<ListOfCards> list;
@@ -69,16 +69,23 @@ public class BoardCtrl {
     private Button copyButton;
 
     @FXML
-    private Button addTag;
+    private Label nullTitle;
 
     @FXML
-    private AnchorPane anchorPane;
+    private TextField joinField;
+
+    @FXML
+    private Button addTag;
 
     @FXML
     private VBox vBox;
 
     @FXML
+    private AnchorPane anchorPane;
+
+    @FXML
     private ListView<PreferencesBoardInfo> recentBoards;
+
     ObservableList<PreferencesBoardInfo> recentBoardsData;
 
     ObservableList<ListOfCards> data;
@@ -106,13 +113,12 @@ public class BoardCtrl {
 
         try {
             board = this.server.getBoardByKey(boardKey);
-          //  System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
 
         }
         catch (Exception e) {
             System.out.println("Sb");
-            board = getBoard();
+            board = getNewBoard();
             Board addedBoard = server.addBoard(board);
             board = server.getBoard(addedBoard.id);
         }
@@ -144,9 +150,10 @@ public class BoardCtrl {
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
-        list.getStylesheets().add("styles.css");
+        list.setStyle("-fx-background-color: " + board.colour);
         key.setText(board.key);
         title.setText(board.title);
+        title.setStyle("-fx-text-fill: " + board.font);
 
         if (haveBoard)
             prefs.addBoard(server.getServerAddress(), board);
@@ -158,7 +165,9 @@ public class BoardCtrl {
         recentBoards.setMaxHeight(600);
 
         AnchorPane.setBottomAnchor(addTag, 5.0);
+        AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
         loadVBox();
+        loadRecentBoards();
         refresh();
 
         server.registerForMessages("/topic/" + board.id, Board.class, s -> {
@@ -178,6 +187,24 @@ public class BoardCtrl {
     }
 
     /**
+     * Loads the listview to auto-fit its parent
+     */
+    public void loadRecentBoards() {
+        // set the VBox to always grow to fill the AnchorPane
+        recentBoards.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        recentBoards.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        recentBoards.setMaxHeight(Double.MAX_VALUE);
+        recentBoards.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(recentBoards, 0.0);
+        AnchorPane.setBottomAnchor(recentBoards, 0.0);
+        AnchorPane.setLeftAnchor(recentBoards, 0.0);
+        AnchorPane.setRightAnchor(recentBoards, 0.0);
+    }
+
+
+    /**
      * Loads the vbox to auto-fit its parent
      */
     public void loadVBox() {
@@ -193,7 +220,6 @@ public class BoardCtrl {
         AnchorPane.setLeftAnchor(vBox, 0.0);
         AnchorPane.setRightAnchor(vBox, 0.0);
     }
-
 
     /**
      * Opens a new window to add a new list of cards.
@@ -297,10 +323,10 @@ public class BoardCtrl {
      */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
-        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        copied.setVisible(true);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
-        delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+        delay.setOnFinished(e -> copied.setVisible(false));
+//        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
 //        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
 //        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
@@ -329,15 +355,80 @@ public class BoardCtrl {
      * Method that creates a new board
      * @return the new board
      */
-    private Board getBoard(){
-
-
+    private Board getNewBoard(){
         return new Board("My Board", null, null,
                 null, null, null, new ArrayList<>(), new HashSet<>(), new HashSet<>());
+    }
+
+    /**
+     * Method that returns this board
+     * @return the board
+     */
+    public Board getBoard(){
+        return board;
     }
 
 
     private ListOfCards getList(String title){
         return new ListOfCards(title, board, new ArrayList<>());
+    }
+
+    /**
+     * Setter for the board key of the board displayed
+     * @param boardKey
+     * @return
+     */
+    public void setBoardKey(String boardKey) {
+        this.boardKey = boardKey;
+    }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoard(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+            if (server.getBoardByKey(joinField.getText()) != null) {
+                mainCtrl.showBoard(joinField.getText());
+                joinField.clear();
+                nullTitle.setText("");
+            } else throw new Exception("Doesnt Exist");
+        } catch (Exception e) {
+            joinField.clear();
+            nullTitle.setText("There is no board with this key!");
+        }
+    }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoardKey(KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+                if(server.getBoardByKey(joinField.getText()) != null) {
+                    mainCtrl.showBoard(joinField.getText());
+                    joinField.clear();
+                    nullTitle.setText("");
+                }
+                else throw new Exception("Doesn't Exist");
+            }
+            catch(Exception e) {
+                joinField.clear();
+                nullTitle.setText("There is no board with this key!");
+            }
+        }
     }
 }
