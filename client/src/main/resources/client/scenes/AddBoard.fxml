@@ -22,7 +22,7 @@
          <font>
             <Font name="Corbel" size="14.0" />
          </font></Button>
-        <TextField fx:id="boardTitle" layoutX="36.0" layoutY="118.0" prefWidth="230.0" promptText="Enter a board title . . ." stylesheets="@../../styles.css" />
+        <TextField fx:id="boardTitle" layoutX="36.0" layoutY="118.0" onKeyPressed="#handleKeyPressed" prefWidth="230.0" promptText="Enter a board title . . ." stylesheets="@../../styles.css" />
         <Label layoutX="38.0" layoutY="93.0" text="Choose a title:">
          <font>
             <Font name="Corbel" size="14.0" />
@@ -60,7 +60,7 @@
             <Font name="Corbel Italic" size="14.0" />
          </font>
       </Label>
-      <PasswordField fx:id="passwordField" layoutX="36.0" layoutY="187.0" prefWidth="230.0" promptText="Enter a password (optional) . . ." stylesheets="@../../styles.css">
+      <PasswordField fx:id="passwordField" layoutX="36.0" layoutY="187.0" onKeyPressed="#handleKeyPressed" prefWidth="230.0" promptText="Enter a password (optional) . . ." stylesheets="@../../styles.css">
          <font>
             <Font name="Corbel Italic" size="13.0" />
          </font>
@@ -70,7 +70,7 @@
             <Font name="Corbel Italic" size="14.0" />
          </font>
       </Label>
-      <PasswordField fx:id="confirmPassword" layoutX="34.0" layoutY="258.0" prefWidth="230.0" promptText="Enter the same password . . ." stylesheets="@../../styles.css">
+      <PasswordField fx:id="confirmPassword" layoutX="34.0" layoutY="258.0" onKeyPressed="#handleKeyPressed" prefWidth="230.0" promptText="Enter the same password . . ." stylesheets="@../../styles.css">
          <font>
             <Font name="Corbel Italic" size="13.0" />
          </font>

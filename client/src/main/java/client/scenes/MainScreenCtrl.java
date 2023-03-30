@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -102,6 +103,7 @@ public class MainScreenCtrl {
             if(server.getBoardByKey(joinField.getText()) != null) {
                 mainCtrl.showBoard(joinField.getText());
                 joinField.clear();
+                nullTitle.setText("");
             }
             else throw new Exception("Doesnt Exist");
         }
@@ -111,7 +113,34 @@ public class MainScreenCtrl {
                     "or the key you enter is incorrect.");
 
         }
+    }
 
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoard(javafx.scene.input.KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+                if(server.getBoardByKey(joinField.getText()) != null) {
+                    mainCtrl.showBoard(joinField.getText());
+                    joinField.clear();
+                    nullTitle.setText("");
+                }
+                else throw new Exception("Doesnt Exist");
+            }
+            catch(Exception e){
+                nullTitle.setText("There is no board with such a key. " +
+                        "The board might have been deleted " +
+                        "or the key you enter is incorrect.");
+            }
+        }
     }
 
     /**
