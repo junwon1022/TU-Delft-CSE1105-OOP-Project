@@ -1,8 +1,9 @@
 package client.scenes;
 
+import client.utils.PreferencesBoardInfo;
 import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import com.google.inject.Inject;
-import commons.Board;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,12 +17,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class BoardTitleCtrl extends ListCell<Board> {
+public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
     private final ServerUtils server;
     private final MainScreenCtrl mainScreenCtrl;
 
     private final MainCtrl mainCtrl;
-    private Board data;
+    private final UserPreferences prefs;
+    private PreferencesBoardInfo data;
 
     @FXML
     private AnchorPane root;
@@ -45,10 +47,14 @@ public class BoardTitleCtrl extends ListCell<Board> {
      * @param mainCtrl
      */
     @Inject
-    public BoardTitleCtrl(ServerUtils server, MainScreenCtrl mainScreenCtrl, MainCtrl mainCtrl) {
+    public BoardTitleCtrl(ServerUtils server,
+                          MainScreenCtrl mainScreenCtrl,
+                          MainCtrl mainCtrl,
+                          UserPreferences prefs) {
         this.server = server;
         this.mainScreenCtrl = mainScreenCtrl;
         this.mainCtrl = mainCtrl;
+        this.prefs = prefs;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BoardTitle.fxml"));
         fxmlLoader.setController(this);
@@ -69,15 +75,15 @@ public class BoardTitleCtrl extends ListCell<Board> {
      *        being used to render an "empty" row.
      */
     @Override
-    protected void updateItem(Board item, boolean empty) {
+    protected void updateItem(PreferencesBoardInfo item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            title.setText(item.title);
-            key.setText("Key: " + item.key);
+            title.setText(item.getTitle());
+            key.setText("Key: " + item.getKey());
             data = item;
 
             setGraphic(root);
@@ -92,15 +98,12 @@ public class BoardTitleCtrl extends ListCell<Board> {
 
     public void remove(ActionEvent event){
         try {
-            server.deleteBoard(data);
-            Thread.sleep(100);
+            prefs.leaveBoard(server.getServerAddress(), data);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
         mainScreenCtrl.refresh();
     }
@@ -111,7 +114,7 @@ public class BoardTitleCtrl extends ListCell<Board> {
      */
     public void join(ActionEvent event){
         System.out.println("The key is " + data.key);
-        mainCtrl.showBoard(data.key,0);
+        mainCtrl.showBoard(data.getKey(),0);
     }
 
 
@@ -136,7 +139,7 @@ public class BoardTitleCtrl extends ListCell<Board> {
 
                 //method that actually renames the list in the database
                 data = server.renameBoard(data, newTitle);
-                System.out.println("New title after calling the command: "+ data.title);
+                System.out.println("New title after calling the command: "+ data.getTitle());
                 mainScreenCtrl.refresh();
             }
         } catch (IOException e) {
