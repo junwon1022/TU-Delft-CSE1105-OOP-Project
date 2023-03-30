@@ -66,6 +66,9 @@ public class BoardCtrl {
     private Button copyButton;
 
     @FXML
+    private Label nullTitle;
+
+    @FXML
     private TextField joinField;
 
     @FXML
@@ -392,9 +395,11 @@ public class BoardCtrl {
             if (server.getBoardByKey(joinField.getText()) != null) {
                 mainCtrl.showBoard(joinField.getText());
                 joinField.clear();
+                nullTitle.setText("");
             } else throw new Exception("Doesnt Exist");
         } catch (Exception e) {
-            System.out.println("No such board");
+            joinField.clear();
+            nullTitle.setText("There is no board with this key!");
         }
     }
 
@@ -406,16 +411,22 @@ public class BoardCtrl {
      * @param event the ActionEvent
      * @return
      */
-    public void connectToBoard(KeyEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+    public void connectToBoardKey(KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-            if (server.getBoardByKey(joinField.getText()) != null) {
-                mainCtrl.showBoard(joinField.getText());
+                if(server.getBoardByKey(joinField.getText()) != null) {
+                    mainCtrl.showBoard(joinField.getText());
+                    joinField.clear();
+                    nullTitle.setText("");
+                }
+                else throw new Exception("Doesn't Exist");
+            }
+            catch(Exception e) {
                 joinField.clear();
-            } else throw new Exception("Doesnt Exist");
-        } catch (Exception e) {
-            System.out.println("No such board");
+                nullTitle.setText("There is no board with this key!");
+            }
         }
     }
 }

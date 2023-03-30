@@ -65,7 +65,7 @@
                </font>
             </Label>
             <Label text="Enter an invitation key to join a new board:" wrapText="true" />
-              <TextField id="joinField" fx:id="joinField" maxWidth="500.0" onKeyPressed="#connectToBoard" prefHeight="31.0" prefWidth="305.0" promptText="word-word-word-x1Y2Z3 . . ." stylesheets="@../../styles.css">
+              <TextField id="joinField" fx:id="joinField" maxWidth="500.0" onKeyPressed="#connectToBoardKey" prefHeight="31.0" prefWidth="305.0" promptText="word-word-word-x1Y2Z3 . . ." stylesheets="@../../styles.css">
                <font>
                   <Font name="Corbel" size="12.0" />
                </font>

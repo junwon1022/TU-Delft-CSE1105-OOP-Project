@@ -66,7 +66,7 @@
                   </Label>
                   <HBox alignment="BOTTOM_CENTER" prefHeight="29.0" prefWidth="245.0" spacing="7.0">
                      <children>
-                        <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#connectToBoard" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#connectToBoardKey" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
                            <effect>
                               <ColorAdjust brightness="-0.05" />
                            </effect>
@@ -84,6 +84,11 @@
                   </HBox>
                </children>
             </VBox>
+            <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="13.0" prefWidth="232.0" textAlignment="CENTER" textFill="#8f2e30">
+               <font>
+                  <Font name="Corbel Italic" size="14.0" />
+               </font>
+            </Label>
             <Accordion>
               <panes>
                 <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="My Boards">

@@ -77,10 +77,10 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        root.setOnMouseEntered(this::showButtons);
-
-        root.setOnMouseExited(this::hideButtons);
+//
+//        root.setOnMouseEntered(this::showButtons);
+//
+//        root.setOnMouseExited(this::hideButtons);
     }
 
     /**
@@ -189,26 +189,26 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
         content.putString(key);
         clipboard.setContent(content);
     }
-
-    /**
-     * Shows the join and delete button of a board
-     * @param event
-     */
-    public void showButtons(MouseEvent event) {
-        Set<Node> nodes = root.lookupAll(".board-title-button");
-        for (Node node : nodes) {
-            node.setVisible(true);
-        }
-    }
-
-    /**
-     * Hides the join and delete buttons of a board
-     * @param event
-     */
-    public void hideButtons(MouseEvent event) {
-        Set<Node> nodes = root.lookupAll(".board-title-button");
-        for (Node node : nodes) {
-            node.setVisible(false);
-        }
-    }
+//
+//    /**
+//     * Shows the join and delete button of a board
+//     * @param event
+//     */
+//    public void showButtons(MouseEvent event) {
+//        Set<Node> nodes = root.lookupAll(".board-title-button");
+//        for (Node node : nodes) {
+//            node.setVisible(true);
+//        }
+//    }
+//
+//    /**
+//     * Hides the join and delete buttons of a board
+//     * @param event
+//     */
+//    public void hideButtons(MouseEvent event) {
+//        Set<Node> nodes = root.lookupAll(".board-title-button");
+//        for (Node node : nodes) {
+//            node.setVisible(false);
+//        }
+//    }
 }

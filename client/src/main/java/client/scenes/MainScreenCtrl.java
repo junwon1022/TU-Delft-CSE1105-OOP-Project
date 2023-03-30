@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -119,10 +120,10 @@ public class MainScreenCtrl {
      * Creates a new window (Board)
      * If successful, joins the board through the server
      *
-     * @param event the ActionEvent
+     * @param event the KeyEvent
      * @return
      */
-    public void connectToBoard(javafx.scene.input.KeyEvent event) {
+    public void connectToBoardKey(KeyEvent event) {
         if(event.getCode().toString().equals("ENTER")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
@@ -132,7 +133,7 @@ public class MainScreenCtrl {
                     joinField.clear();
                     nullTitle.setText("");
                 }
-                else throw new Exception("Doesnt Exist");
+                else throw new Exception("Doesn't Exist");
             }
             catch(Exception e){
                 nullTitle.setText("There is no board with such a key. " +

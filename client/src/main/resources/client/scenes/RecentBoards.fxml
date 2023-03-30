@@ -15,7 +15,7 @@
             <Button fx:id="sw" mnemonicParsing="false" onAction="#switchBoard" styleClass="normal-button" stylesheets="@../../styles.css" text="Switch" HBox.hgrow="NEVER" />
          </children>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" left="12.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
    </children>

@@ -40,13 +40,13 @@
                   <Insets left="5.0" right="5.0" />
                </padding>
             </Label>
-            <Button mnemonicParsing="false" onAction="#join" prefHeight="28.0" prefWidth="57.0" stylesheets="@../../styles.css" text="JOIN" visible="false">
+            <Button mnemonicParsing="false" onAction="#join" prefHeight="28.0" prefWidth="57.0" stylesheets="@../../styles.css" text="JOIN">
                <styleClass>
                   <String fx:value="normal-button" />
                   <String fx:value="board-title-button" />
                </styleClass>
             </Button>
-            <Button mnemonicParsing="false" onAction="#remove" prefHeight="28.0" prefWidth="57.0" stylesheets="@../../styles.css" text="LEAVE" visible="false">
+            <Button mnemonicParsing="false" onAction="#remove" prefHeight="28.0" prefWidth="57.0" stylesheets="@../../styles.css" text="LEAVE">
                <styleClass>
                   <String fx:value="red-button" />
                   <String fx:value="board-title-button" />
