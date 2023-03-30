@@ -6,6 +6,8 @@ import java.util.Objects;
 public class PreferencesBoardInfo implements Serializable {
     private String title;
     private String key;
+    private String font;
+    private String backgroundColor;
     private String password;
 
     /**
@@ -21,10 +23,13 @@ public class PreferencesBoardInfo implements Serializable {
      * @param key
      * @param password
      */
-    public PreferencesBoardInfo(String title, String key, String password) {
+    public PreferencesBoardInfo(String title, String key, String password,
+                                String font, String backgroundColor) {
         this.title = title;
         this.key = key;
         this.password = password;
+        this.font = font;
+        this.backgroundColor = backgroundColor;
     }
 
     /**
@@ -59,6 +64,22 @@ public class PreferencesBoardInfo implements Serializable {
      */
     public void setKey(String key) {
         this.key = key;
+    }
+
+    /**
+     * Method to get font
+     * @return the font color
+     */
+    public String getFont() {
+        return font;
+    }
+
+    /**
+     * Method to get background color
+     * @return the color
+     */
+    public String getBackgroundColor() {
+        return backgroundColor;
     }
 
     /**

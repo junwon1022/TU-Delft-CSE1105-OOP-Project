@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <GridPane prefHeight="410.0" prefWidth="800.0" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainScreenCtrl">
    <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS" maxWidth="900.0" minWidth="10.0" prefWidth="400.0" />
@@ -76,6 +75,11 @@
                   <Font name="Corbel Bold" size="15.0" />
                </font>
             </Button>
+            <Label fx:id="nullTitle" alignment="CENTER" prefHeight="56.0" prefWidth="297.0" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
+               <font>
+                  <Font name="Corbel" size="12.0" />
+               </font>
+            </Label>
          </children>
          <padding>
             <Insets bottom="15.0" left="25.0" right="15.0" />

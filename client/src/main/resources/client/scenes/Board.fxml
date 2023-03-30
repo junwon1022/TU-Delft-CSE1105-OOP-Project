@@ -22,7 +22,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
 <GridPane fx:id="root" alignment="CENTER" onKeyTyped="#openHelpScreen" prefHeight="625.0" prefWidth="1101.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="1016.0000305175781" minWidth="35.99994786580402" prefWidth="270.0" />
@@ -94,7 +93,7 @@
                      <content>
                       <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
                          <children>
-                            <ListView fx:id="recentBoards" prefHeight="200.0" prefWidth="200.0" />
+                            <ListView fx:id="recentBoards" prefHeight="91.0" prefWidth="231.0" />
                          </children>
                       </AnchorPane>
                      </content>
@@ -127,7 +126,7 @@
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button fx:id="leave" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Go back">
+            <Button fx:id="leave" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" styleClass="red-button" stylesheets="@../../styles.css" text="Exit board">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>

@@ -36,6 +36,8 @@ public class MainScreenCtrl {
     @FXML
     private TextField addBoardField;
 
+    @FXML
+    private Label nullTitle;
 
     @FXML
     private Button addBoard;
@@ -97,24 +99,17 @@ public class MainScreenCtrl {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-            if(server.getBoardByKey(joinField.getText()) != null)
+            if(server.getBoardByKey(joinField.getText()) != null) {
                 mainCtrl.showBoard(joinField.getText());
+                joinField.clear();
+            }
             else throw new Exception("Doesnt Exist");
         }
         catch(Exception e){
+            nullTitle.setText("There is no board with such a key. " +
+                    "The board might have been deleted " +
+                    "or the key you enter is incorrect.");
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exception.fxml"));
-            try {
-                Parent root = fxmlLoader.load();
-
-                Stage stage = new Stage();
-                stage.setTitle("Error");
-                stage.setScene(new Scene(root, 300, 200));
-                stage.showAndWait();
-
-            } catch (IOException a) {
-                throw new RuntimeException(a);
-            }
         }
 
     }

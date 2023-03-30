@@ -77,6 +77,7 @@ public class BoardCtrl {
     @FXML
     private AnchorPane anchorPane;
 
+    @FXML
     private ListView<PreferencesBoardInfo> recentBoards;
 
     ObservableList<PreferencesBoardInfo> recentBoardsData;
@@ -106,7 +107,6 @@ public class BoardCtrl {
 
         try {
             board = this.server.getBoardByKey(boardKey);
-          //  System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
 
         }
@@ -301,7 +301,8 @@ public class BoardCtrl {
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
+        tooltip.show(copyButton, copyButton.getLayoutX(), copyButton.getLayoutY());
+//        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
 //        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
 //        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
@@ -331,8 +332,6 @@ public class BoardCtrl {
      * @return the new board
      */
     private Board getBoard(){
-
-
         return new Board("My Board", null, null,
                 null, null, null, new ArrayList<>(), new HashSet<>());
     }

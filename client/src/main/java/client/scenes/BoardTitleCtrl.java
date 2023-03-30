@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,7 +27,6 @@ import java.util.Set;
 public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
     private final ServerUtils server;
     private final MainScreenCtrl mainScreenCtrl;
-
     private final MainCtrl mainCtrl;
     private final UserPreferences prefs;
     private PreferencesBoardInfo data;
@@ -38,6 +36,8 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
 
     @FXML
     private Label title;
+    @FXML
+    private Label copied;
 
     @FXML
     private Label key;
@@ -100,8 +100,9 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
             title.setText(item.getTitle());
             key.setText(item.getKey());
             data = item;
-            root.setStyle("-fx-background-color: " + data.colour);
-            title.setStyle("-fx-text-fill: " + data.font);
+            root.setStyle("-fx-background-color: " + data.getBackgroundColor());
+            title.setStyle("-fx-text-fill: " + data.getFont());
+            key.setStyle("-fx-text-fill: " + data.getFont());
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -147,7 +148,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
             controller.initialize(data);
 
             Stage stage = new Stage();
-            stage.setTitle("Add new board");
+            stage.setTitle("Rename the board");
             stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
@@ -171,11 +172,9 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
          */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(data.getKey());
-        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
-
+        copied.setVisible(true);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
-        delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(copyButton, copyButton.getLayoutX(), copyButton.getLayoutY());
+        delay.setOnFinished(e -> copied.setVisible(false));
         delay.play();
     }
 
