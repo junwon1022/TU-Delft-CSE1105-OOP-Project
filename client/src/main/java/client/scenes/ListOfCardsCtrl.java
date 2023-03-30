@@ -17,12 +17,11 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     public String storedText;
 
     @FXML
-    private AnchorPane root;
+    private VBox root;
 
     @FXML
     private Label title;
@@ -228,14 +227,24 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(false);
         // Shorten the list
         Timeline timelineList = new Timeline(
-                new KeyFrame(Duration.seconds(0.4), new KeyValue(list.prefHeightProperty(), 288))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 300))
         );
         Timeline timelineName = new Timeline(
-                new KeyFrame(Duration.seconds(0.4), new KeyValue(name.visibleProperty(), true))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(name.visibleProperty(), true))
         );
         timelineList.play();
         timelineName.play();
         name.requestFocus();
+        // Requests focus for the text field
+        name.visibleProperty().addListener((observable, oldValue, isVisible) -> {
+
+            if (isVisible) {
+
+                name.requestFocus();
+
+            }
+
+        });
     }
 
     /**
@@ -250,7 +259,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 350))
         );
         timeline.play();
     }
@@ -267,7 +276,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(list.prefHeightProperty(), 350))
         );
         timeline.play();
     }
