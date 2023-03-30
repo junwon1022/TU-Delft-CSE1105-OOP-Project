@@ -95,25 +95,9 @@ public class BoardCtrl {
     public BoardCtrl(ServerUtils server, MainCtrl mainCtrl, String boardKey) {
         this.server = server;
         this.boardKey = boardKey;
-
-        data = FXCollections.observableArrayList();
-
-
-        try {
-            board = this.server.getBoardByKey(boardKey);
-          //  System.out.println("This Board is " + board.toString());
-            if(board == null) System.out.println("BOARD IS NULL");
-
-        }
-        catch (Exception e) {
-            System.out.println("Sb");
-            board = getBoard();
-            Board addedBoard = server.addBoard(board);
-            board = server.getBoard(addedBoard.id);
-        }
-        refresh();
-
         this.mainCtrl = mainCtrl;
+        data = FXCollections.observableArrayList();
+        initialize();
     }
 
 
@@ -123,34 +107,37 @@ public class BoardCtrl {
     public void initialize() {
 
         try {
-            board = this.server.getBoardByKey(boardKey);
-            System.out.println("This Board is " + board.toString());
-            if(board == null) System.out.println("BOARD IS NULL");
+            if (board != null && !boardKey.isEmpty()) {
+                board = this.server.getBoardByKey(boardKey);
+                System.out.println("This Board is " + board.toString());
+            }
+            if (board == null) throw new NullPointerException();
 
+
+            data = FXCollections.observableArrayList();
+            list.setFixedCellSize(0);
+            list.setItems(data);
+            list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
+            list.setMaxHeight(600);
+            list.getStylesheets().add("styles.css");
+            key.setText(board.key);
+            title.setText(board.title);
+
+            AnchorPane.setBottomAnchor(addTag, 5.0);
+            loadVBox();
+            loadVBox2();
+            refresh();
+
+            server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+                for (var list : s.lists)
+                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
+                Platform.runLater(() -> data.setAll(s.lists));
+            });
         }
-        catch (Exception e) {
-            System.out.println("Sb");
+        catch(Exception e){
+            board = getBoard();
         }
 
-        data = FXCollections.observableArrayList();
-        list.setFixedCellSize(0);
-        list.setItems(data);
-        list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-        list.setMaxHeight(600);
-        list.getStylesheets().add("styles.css");
-        key.setText(board.key);
-        title.setText(board.title);
-
-        AnchorPane.setBottomAnchor(addTag, 5.0);
-        loadVBox();
-        loadVBox2();
-        refresh();
-
-        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-            for (var list: s.lists)
-                list.cards.sort(Comparator.comparingLong(Card::getOrder));
-            Platform.runLater(() -> data.setAll(s.lists));
-        });
     }
 
     /**

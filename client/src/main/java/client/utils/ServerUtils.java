@@ -372,6 +372,7 @@ public class ServerUtils {
             boardData = new ArrayList<>();
         }
         boardData = getBoards();
+        System.out.println(boardData.get(boardData.size()-1).toString());
         return boardData;
     }
     /**
@@ -644,8 +645,14 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-        boardData.remove(board);
-        boardData.add(b);
+
+        int i = 0;
+        for(Board k : boardData){
+            if(k == board) break;
+            i++;
+        }
+
+        boardData.get(i).title = newTitle;
 
         return b;
     }

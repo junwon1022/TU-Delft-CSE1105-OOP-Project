@@ -71,7 +71,7 @@ public class ConnectCtrl {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exception.fxml"));
             try {
                 Parent root = fxmlLoader.load();
-
+                server.changeServer("http://localhost:8080");
                 Stage stage = new Stage();
                 stage.setTitle(e.getMessage());
                 stage.setScene(new Scene(root, 300, 200));
