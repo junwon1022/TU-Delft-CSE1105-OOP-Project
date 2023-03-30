@@ -22,6 +22,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Tooltip?>
 <GridPane fx:id="root" alignment="CENTER" onKeyTyped="#openHelpScreen" prefHeight="625.0" prefWidth="1101.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="1016.0000305175781" minWidth="35.99994786580402" prefWidth="270.0" />
@@ -250,10 +251,18 @@
                   <Font name="Corbel Italic" size="17.0" />
                </font>
             </Label>
+            <Label fx:id="copied" prefHeight="35.0" prefWidth="23.0" styleClass="copied" stylesheets="@../../styles.css" text="✔" textFill="#1dbc20" visible="false">
+               <font>
+                  <Font name="Corbel" size="20.0" />
+               </font>
+            </Label>
             <Button fx:id="copyButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#copyKeyToClipboard" prefHeight="34.0" prefWidth="35.0" styleClass="image-button" stylesheets="@../../styles.css" HBox.hgrow="NEVER">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <tooltip>
+                  <Tooltip text="Click to copy to clipboard!" />
+               </tooltip>
                <effect>
                   <ColorAdjust brightness="-0.16" />
                </effect>

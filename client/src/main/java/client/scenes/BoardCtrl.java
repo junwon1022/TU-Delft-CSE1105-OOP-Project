@@ -56,6 +56,9 @@ public class BoardCtrl {
     private String boardKey;
 
     @FXML
+    private Label copied;
+
+    @FXML
     private ListView<ListOfCards> list;
 
     @FXML
@@ -320,10 +323,9 @@ public class BoardCtrl {
      */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
-        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        copied.setVisible(true);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
-        delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(copyButton, copyButton.getLayoutX(), copyButton.getLayoutY());
+        delay.setOnFinished(e -> copied.setVisible(false));
 //        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
 //        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
 //        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
