@@ -346,6 +346,10 @@
     -fx-content-display: center;
 }
 
+#server-list {
+    -fx-background-color: #b2ebf6;
+}
+
 #server-list .list-cell {
     -fx-background-color: transparent;
     -fx-pref-width: 95%;
@@ -376,3 +380,66 @@
 #server-list .list-cell .label {
     -fx-text-fill: #005364;
 }
+
+.board-title {
+    -fx-background-radius: 10px;
+    -fx-background-color: #A2E4F1;
+}
+
+
+.board-title:hover {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-background-color: #86daea;
+}
+
+.board-list {
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #6bcde0;
+    -fx-background-color: #6bcde0;
+}
+
+
+.board-list .list-cell:focused, .board-list .list-cell:selected {
+    -fx-text-fill: black;
+}
+
+
+.board-list .list-cell:filled:selected {
+    -fx-selection-bar: #CAF0F8;
+    -fx-border-color: #0898b7;
+    -fx-selection-bar-non-focused: #CAF0F8;
+    -fx-background-color: #CAF0F8;
+}
+
+#color-picker {
+    -fx-color-label-visible: false;
+    -fx-background-color: #F8FDFE;
+    -fx-background-radius: 10px;
+}
+
+#color-picker .color-picker-label {
+    -fx-text-fill: #231F20;
+}
+
+#color-picker .color-picker-label .label-text {
+    -fx-background-color: #CAF0F8;
+    -fx-text-fill: #231F20;
+}
+
+/*#color-picker .color-picker-label .label-graphic {*/
+/*    -fx-background-color: #4DC2D9;*/
+/*}*/
+
+/*#color-picker .color-picker-color-rect {*/
+/*    -fx-fill: #00B4D8;*/
+/*}*/
+
+/*#color-picker .color-picker-color-rect-border {*/
+/*    -fx-stroke: #37a0cc;*/
+/*}*/
+
+/*#color-picker .color-picker-popup .color-rect {*/
+/*    -fx-background-color: #66c2e6;*/
+/*}*/

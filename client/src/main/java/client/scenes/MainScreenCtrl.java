@@ -11,10 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -43,7 +40,6 @@ public class MainScreenCtrl {
 
     @FXML
     private Button joinBoard;
-
 
     private ServerUtils server;
 
@@ -133,14 +129,17 @@ public class MainScreenCtrl {
 
             Stage stage = new Stage();
             stage.setTitle("Add new board");
-            stage.setScene(new Scene(root, 300, 200));
+            stage.setScene(new Scene(root, 520, 370));
             stage.showAndWait();
 
             if (controller.success) {
                 String title = controller.storedText;
+                String password = controller.password;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"","","" ,
-                        "" , "", new ArrayList<>(), new HashSet<>());
+                Board board = new Board(title,backgroundColor,fontColor,"" ,
+                        "" , password, new ArrayList<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);
@@ -148,14 +147,9 @@ public class MainScreenCtrl {
                 refresh();
             }
         } catch (IOException e) {
-
-
+            System.out.println(e.getStackTrace());
         }
-
     }
-
-
-
 }
 
 

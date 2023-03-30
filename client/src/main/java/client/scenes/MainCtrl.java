@@ -69,6 +69,7 @@ public class MainCtrl {
 
         this.mainScreenCtrl = mainScreen.getKey();
         this.mainScreen = new Scene(mainScreen.getValue());
+        this.mainScreen.getStylesheets().add("styles.css");
 
         showConnect();
         primaryStage.show();
@@ -113,7 +114,10 @@ public class MainCtrl {
     public void showMainScreen() {
 
         primaryStage.setTitle("Main Screen");
+        primaryStage.setMaximized(false);
         primaryStage.setScene(mainScreen);
+        primaryStage.setHeight(600);
+        primaryStage.setWidth(800);
 
         // Get the dimensions of the primary screen
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -125,7 +129,6 @@ public class MainCtrl {
         // Set the new scene's position to the calculated coordinates
         mainScreen.getWindow().setX(centerX);
         mainScreen.getWindow().setY(centerY);
-        primaryStage.setHeight(600);
         centerStage();
         mainScreenCtrl.refresh();
     }

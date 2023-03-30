@@ -134,10 +134,10 @@ public class BoardCtrl {
         list.setItems(data);
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
-        list.getStylesheets().add("styles.css");
+        list.setStyle("-fx-background-color: " + board.colour);
         key.setText(board.key);
         title.setText(board.title);
-
+        title.setStyle("-fx-text-fill: " + board.font);
         AnchorPane.setBottomAnchor(addTag, 5.0);
         AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
         loadVBox();
@@ -300,7 +300,7 @@ public class BoardCtrl {
         Tooltip tooltip = new Tooltip("Key copied to clipboard!");
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
 //        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
 //        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
