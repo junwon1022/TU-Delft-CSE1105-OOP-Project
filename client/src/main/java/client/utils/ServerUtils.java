@@ -650,7 +650,6 @@ public class ServerUtils {
             if(k == board) break;
             i++;
         }
-
         boardData.get(i).title = newTitle;
 
         return b;
