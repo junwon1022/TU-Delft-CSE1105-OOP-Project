@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="640.0" prefWidth="1030.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane fx:id="boardAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="640.0" prefWidth="1030.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
       <ListView id="lists" fx:id="list" layoutX="251.0" layoutY="104.0" orientation="HORIZONTAL" prefHeight="479.0" prefWidth="750.0" stylesheets="@../../styles.css" />
       <Button id="add-list" layoutX="571.0" layoutY="593.0" mnemonicParsing="false" onAction="#addListOfCards" prefHeight="38.0" prefWidth="109.0" stylesheets="@../../styles.css" text="➕   Add List" textFill="WHITE">
@@ -64,27 +64,27 @@
                <stops>
                   <Stop>
                      <color>
-                        <Color red="0.13725490868091583" green="0.12156862765550613" blue="0.125490203499794" />
+                        <Color blue="0.125490203499794" green="0.12156862765550613" red="0.13725490868091583" />
                      </color>
                   </Stop>
                   <Stop offset="0.423787308342882">
                      <color>
-                        <Color green="0.7139999866485596" blue="0.8399999737739563" />
+                        <Color blue="0.8399999737739563" green="0.7139999866485596" />
                      </color>
                   </Stop>
                   <Stop offset="0.5431467234135428">
                      <color>
-                        <Color green="0.7139999866485596" blue="0.8399999737739563" />
+                        <Color blue="0.8399999737739563" green="0.7139999866485596" />
                      </color>
                   </Stop>
                   <Stop offset="0.7077263054509739">
                      <color>
-                        <Color green="0.7139999866485596" blue="0.8399999737739563" />
+                        <Color blue="0.8399999737739563" green="0.7139999866485596" />
                      </color>
                   </Stop>
                   <Stop offset="1.0">
                      <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
+                        <Color blue="1.0" green="1.0" red="1.0" />
                      </color>
                   </Stop>
                </stops>
@@ -97,17 +97,17 @@
                <stops>
                   <Stop>
                      <color>
-                        <Color red="0.9725490212440491" green="0.9921568632125854" blue="0.9960784316062927" />
+                        <Color blue="0.9960784316062927" green="0.9921568632125854" red="0.9725490212440491" />
                      </color>
                   </Stop>
                   <Stop offset="0.09843400447427292">
                      <color>
-                        <Color red="0.9725490212440491" green="0.9921568632125854" blue="0.9960784316062927" />
+                        <Color blue="0.9960784316062927" green="0.9921568632125854" red="0.9725490212440491" />
                      </color>
                   </Stop>
                   <Stop offset="1.0">
                      <color>
-                        <Color green="0.7058823704719543" blue="0.8470588326454163" />
+                        <Color blue="0.8470588326454163" green="0.7058823704719543" />
                      </color>
                   </Stop>
                </stops>
@@ -176,12 +176,12 @@
                   </TitledPane>
                </panes>
             </Accordion>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
+            <Button fx:id="customization" mnemonicParsing="false" onAction="#openCustomization" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" fx:id="leave" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
+            <Button fx:id="leave" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>

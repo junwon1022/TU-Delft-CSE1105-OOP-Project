@@ -36,9 +36,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -78,6 +76,13 @@ public class BoardCtrl {
 
     @FXML
     private VBox vBox2;
+
+    @FXML
+    private Button customization;
+
+    @FXML
+    private AnchorPane boardAnchor;
+
 
     ObservableList<ListOfCards> data;
 
@@ -128,7 +133,7 @@ public class BoardCtrl {
 
         }
         catch (Exception e) {
-            System.out.println("Sb");
+            System.out.println("what error is this");
         }
 
         data = FXCollections.observableArrayList();
@@ -137,6 +142,7 @@ public class BoardCtrl {
         list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
         list.setMaxHeight(600);
         list.getStylesheets().add("styles.css");
+        changeColours();
         key.setText(board.key);
         title.setText(board.title);
 
@@ -150,6 +156,15 @@ public class BoardCtrl {
                 list.cards.sort(Comparator.comparingLong(Card::getOrder));
             Platform.runLater(() -> data.setAll(s.lists));
         });
+    }
+
+    /**
+     * Method that changes the colours of the board, title and key
+     */
+    private void changeColours(){
+        list.setStyle("-fx-background-color: " + board.colour);
+        title.setStyle("-fx-text-fill: " + board.font);
+        key.setStyle("-fx-text-fill: " + board.font);
     }
 
     /**
@@ -332,13 +347,42 @@ public class BoardCtrl {
      */
     private Board getBoard(){
 
-
         return new Board("My Board", null, null,
                 null, null, null, new ArrayList<>(), new HashSet<>());
     }
 
-
+    /**
+     * Method that returns a list
+     * @param title
+     * @return a new list
+     */
     private ListOfCards getList(String title){
         return new ListOfCards(title, board, new ArrayList<>());
     }
+
+    /**
+     * Method that opens the customization window
+     * @param event
+     */
+    public void openCustomization(ActionEvent event){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Customization.fxml"));
+        try {
+
+            CustomizationCtrl customizationCtrl = new CustomizationCtrl(server,this, board);
+            fxmlLoader.setController(customizationCtrl);
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Customization of board");
+            stage.setScene(new Scene(root, 686, 502));
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        board = server.getBoard(board.id);
+        changeColours();
+
+
+//        refresh();
+    }
+
 }

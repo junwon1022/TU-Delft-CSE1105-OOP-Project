@@ -632,4 +632,44 @@ public class ServerUtils {
 
 
     }
+
+    public Board changeBoardBackground(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/background")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
+    public Board changeBoardFont(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/font")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
+    public Board changeListsBackground(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/listsCol")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
+    public Board changeListsFont(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/listsFontCol")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
 }

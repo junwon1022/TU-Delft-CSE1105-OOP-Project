@@ -139,8 +139,11 @@ public class MainScreenCtrl {
             if (controller.success) {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"","","" ,
-                        "" , "", new ArrayList<>(), new HashSet<>());
+
+                //default values to the board colour fields
+                Board board = new Board(title,"#F8FDFE",
+                        "#000000","#CAF0F8" ,
+                        "#000000" , "", new ArrayList<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);
