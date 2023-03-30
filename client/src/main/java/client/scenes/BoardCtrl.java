@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class BoardCtrl {
     private final UserPreferences prefs;
@@ -52,6 +53,8 @@ public class BoardCtrl {
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
+
+    int adminFlag;
 
     private String boardKey;
 
@@ -146,13 +149,14 @@ public class BoardCtrl {
             else {
                 recentBoardsData = FXCollections.observableList
                         (server.getBoards().stream()
-                                .map(x -> new PreferencesBoardInfo(x.title,x.key,x.password))
+                                .map(x -> new PreferencesBoardInfo(x.title, x.key, x.password, x.font, x.colour))
                                 .collect(Collectors.toList()));
+            }
                 recentBoards.setFixedCellSize(0);
                 recentBoards.setItems(recentBoardsData);
                 recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
                 recentBoards.setMaxHeight(600);
-            }
+
 
 
 
@@ -401,7 +405,7 @@ public class BoardCtrl {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
             if (server.getBoardByKey(joinField.getText()) != null) {
-                mainCtrl.showBoard(joinField.getText());
+                mainCtrl.showBoard(joinField.getText(),adminFlag);
                 joinField.clear();
                 nullTitle.setText("");
             } else throw new Exception("Doesnt Exist");
@@ -425,7 +429,7 @@ public class BoardCtrl {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
                 if(server.getBoardByKey(joinField.getText()) != null) {
-                    mainCtrl.showBoard(joinField.getText());
+                    mainCtrl.showBoard(joinField.getText(),adminFlag);
                     joinField.clear();
                     nullTitle.setText("");
                 }

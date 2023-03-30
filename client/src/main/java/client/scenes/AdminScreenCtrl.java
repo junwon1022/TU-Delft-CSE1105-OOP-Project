@@ -99,14 +99,14 @@ public class AdminScreenCtrl {
 
             Stage stage = new Stage();
             stage.setTitle("Add new board");
-            stage.setScene(new Scene(root, 300, 200));
+            stage.setScene(new Scene(root, 520, 370));
             stage.showAndWait();
 
             if (controller.success) {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
                 Board board = new Board(title,"","","" ,
-                        "" , "", new ArrayList<>(), new HashSet<>());
+                        "" , "", new ArrayList<>(), new HashSet<>(),new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);

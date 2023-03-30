@@ -7,8 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -23,6 +27,10 @@ public class ConnectCtrl {
 
     @FXML
     private TextField field;
+
+
+    @FXML
+    private TextField adminField;
 
     @FXML
     private Button connect;
@@ -91,7 +99,7 @@ public class ConnectCtrl {
                 nullTitle.setText(e.getMessage());
             }
             catch (IOException a) {
-                throw new RuntimeException(a);
+                nullTitle.setText(e.getMessage());
             }
         }
     }
@@ -103,7 +111,11 @@ public class ConnectCtrl {
      * @param event the ActionEvent
      * @return
      */
-    public void connectDefault(ActionEvent event) { mainCtrl.showMainScreen(); }
+    public void connectDefault(ActionEvent event) throws Exception {
+
+        server.changeServer("http://localhost:8080");
+        mainCtrl.showMainScreen();
+    }
 
     /**
      * Enters the standard server (8080) and shows the Admin Screen
@@ -134,7 +146,7 @@ public class ConnectCtrl {
                         stage.showAndWait();
 
                     } catch (IOException a) {
-                        throw new RuntimeException(a);
+                        nullTitle.setText(a.getMessage());
                     }
                 }
 
@@ -144,7 +156,7 @@ public class ConnectCtrl {
             }
 
         }
-        else throw new Exception("Admin password wrong");
+        else nullTitle.setText("Admin Password Wrong");
     }
 }
 

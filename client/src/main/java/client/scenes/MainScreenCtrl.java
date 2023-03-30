@@ -108,7 +108,9 @@ public class MainScreenCtrl {
             else throw new Exception("Doesnt Exist");
         }
         catch(Exception e){
-
+            nullTitle.setText("There is no board with such a key. " +
+                    "The board might have been deleted " +
+                    "or the key you enter is incorrect.");
         }
     }
 
@@ -126,7 +128,7 @@ public class MainScreenCtrl {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
                 if(server.getBoardByKey(joinField.getText()) != null) {
-                    mainCtrl.showBoard(joinField.getText());
+                    mainCtrl.showBoard(joinField.getText(),0);
                     joinField.clear();
                     nullTitle.setText("");
                 }

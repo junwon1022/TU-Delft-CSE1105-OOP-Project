@@ -91,16 +91,15 @@ public class MainCtrl {
     public void showBoard(String boardKey, int adminFlag) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
-        primaryStage.setHeight(690);
-        primaryStage.setWidth(1040);
-        primaryStage.setResizable(false);
+//        primaryStage.setHeight(690);
+//        primaryStage.setWidth(1040);
         primaryStage.setMaximized(true);
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                primaryStage.setHeight(650);
-                primaryStage.setWidth(1100);
+                primaryStage.setHeight(690);
+                primaryStage.setWidth(1150);
                 centerStage();
             }
         });
@@ -117,7 +116,7 @@ public class MainCtrl {
     public void showConnect() {
         primaryStage.setTitle("Connect");
         primaryStage.setScene(connect);
-        primaryStage.setHeight(400);
+        primaryStage.setHeight(450);
 
     }
 
@@ -129,6 +128,7 @@ public class MainCtrl {
     public void showMainScreen() {
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
+        primaryStage.setMaximized(false);
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
 
@@ -156,6 +156,8 @@ public class MainCtrl {
         primaryStage.setTitle("Admin Screen");
         primaryStage.setScene(adminScreen);
         primaryStage.setHeight(600);
+        primaryStage.setMaximized(false);
+        centerStage();
         adminScreenCtrl.refresh();
     }
 
