@@ -13,10 +13,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -39,13 +37,14 @@ public class MainScreenCtrl {
     @FXML
     private TextField addBoardField;
 
+    @FXML
+    private Label nullTitle;
 
     @FXML
     private Button addBoard;
 
     @FXML
     private Button joinBoard;
-
 
     private ServerUtils server;
 
@@ -101,23 +100,42 @@ public class MainScreenCtrl {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-            if(server.getBoardByKey(joinField.getText()) != null)
+            if(server.getBoardByKey(joinField.getText()) != null) {
                 mainCtrl.showBoard(joinField.getText(),0);
+                joinField.clear();
+                nullTitle.setText("");
+            }
             else throw new Exception("Doesnt Exist");
         }
         catch(Exception e){
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exception.fxml"));
+        }
+    }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the KeyEvent
+     * @return
+     */
+    public void connectToBoardKey(KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")) {
             try {
-                Parent root = fxmlLoader.load();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-                Stage stage = new Stage();
-                stage.setTitle("Error");
-                stage.setScene(new Scene(root, 300, 200));
-                stage.showAndWait();
-
-            } catch (IOException a) {
-                throw new RuntimeException(a);
+                if(server.getBoardByKey(joinField.getText()) != null) {
+                    mainCtrl.showBoard(joinField.getText());
+                    joinField.clear();
+                    nullTitle.setText("");
+                }
+                else throw new Exception("Doesn't Exist");
+            }
+            catch(Exception e){
+                nullTitle.setText("There is no board with such a key. " +
+                        "The board might have been deleted " +
+                        "or the key you enter is incorrect.");
             }
         }
 
@@ -137,14 +155,19 @@ public class MainScreenCtrl {
 
             Stage stage = new Stage();
             stage.setTitle("Add new board");
-            stage.setScene(new Scene(root, 300, 200));
+            stage.setScene(new Scene(root, 520, 370));
             stage.showAndWait();
 
             if (controller.success) {
                 String title = controller.storedText;
+                String password = controller.password;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"","","" ,
-                        "" , "", new ArrayList<>(), new HashSet<>());
+
+                Board board = new Board(title,backgroundColor,fontColor,"" ,
+                        "" , password, new ArrayList<>(), new HashSet<>(), null);
+
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);
@@ -153,8 +176,7 @@ public class MainScreenCtrl {
                 refresh();
             }
         } catch (IOException e) {
-
-
+            System.out.println(e.getStackTrace());
         }
 
     }

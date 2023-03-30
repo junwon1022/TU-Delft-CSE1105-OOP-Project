@@ -3,14 +3,12 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -26,16 +24,16 @@ public class ConnectCtrl {
     @FXML
     private TextField field;
 
-
-    @FXML
-    private TextField adminField;
-
-
     @FXML
     private Button connect;
 
     @FXML
-    private Button connect_default;
+    private Button connectDefault;
+
+    @FXML
+    private ListView serverList;
+    @FXML
+    private Label nullTitle;
 
     private ServerUtils server;
 
@@ -53,6 +51,26 @@ public class ConnectCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * Initialize method for the controller
+     *
+     */
+    public void initialize() {
+        ObservableList<String> items = FXCollections.observableArrayList();
+        items.add("http://localhost:8080");
+        items.add("http://145.94.196.182:8080");
+        serverList.setCellFactory(param -> new ServerCellsCtrl(this));
+        serverList.setItems(items);
+    }
+
+    /**
+     * Getter for the textField
+     * @return reference to the textField
+     */
+    public TextField getField() {
+        return field;
+    }
+
 
     /**
      * Enters a Server and shows the MainScreen
@@ -67,17 +85,12 @@ public class ConnectCtrl {
             server.changeServer(field.getText());
             mainCtrl.showMainScreen();
         }
-        catch(Exception e){
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exception.fxml"));
+        catch(Exception e) {
             try {
-                Parent root = fxmlLoader.load();
                 server.changeServer("http://localhost:8080");
-                Stage stage = new Stage();
-                stage.setTitle(e.getMessage());
-                stage.setScene(new Scene(root, 300, 200));
-                stage.showAndWait();
-
-            } catch (IOException a) {
+                nullTitle.setText(e.getMessage());
+            }
+            catch (IOException a) {
                 throw new RuntimeException(a);
             }
         }
@@ -90,7 +103,7 @@ public class ConnectCtrl {
      * @param event the ActionEvent
      * @return
      */
-    public void connectDefault(ActionEvent event) {mainCtrl.showMainScreen();}
+    public void connectDefault(ActionEvent event) { mainCtrl.showMainScreen(); }
 
     /**
      * Enters the standard server (8080) and shows the Admin Screen

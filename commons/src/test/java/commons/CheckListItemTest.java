@@ -25,11 +25,13 @@ public class CheckListItemTest {
     public void setUp() {
         board = new Board("Algebra", "#ffffff", "#ffffff",
                 "#ffff22", "#ffff22",
-                "pass", new ArrayList<ListOfCards>(), new HashSet<Tag>());
+                "pass", new ArrayList<ListOfCards>(),
+                new HashSet<Tag>(), new HashSet<Palette>());
         list = new ListOfCards("Grasple", board, new ArrayList<Card>());
 
         card = new Card("Homework", "Somewhat long description",
-                "#ffffff", list, new ArrayList<CheckListItem>(), new HashSet<Tag>());
+                "#ffffff", list, new ArrayList<CheckListItem>(),
+                new HashSet<Tag>(), null);
 
         checkListItem = new CheckListItem("Do X", false, card);
         checkListItem2 = new CheckListItem("Do X", false, card);
