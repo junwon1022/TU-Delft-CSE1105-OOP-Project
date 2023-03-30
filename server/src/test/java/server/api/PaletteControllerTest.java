@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
 import server.database.PaletteRepository;
-import server.database.TagRepository;
 import server.services.*;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings({"MissingJavadocMethod","JavadocMethod"})
