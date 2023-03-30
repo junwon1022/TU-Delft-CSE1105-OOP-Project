@@ -7,9 +7,9 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="360.0" prefWidth="531.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
+<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="390.0" prefWidth="531.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
    <children>
-      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="78.0" prefWidth="431.0" text="Connect to a TimeWise Server of Your Choice" textAlignment="CENTER" textFill="#258cb5" wrapText="true">
+      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="78.0" prefWidth="431.0" text="Connect to a TimeWise Server" textAlignment="CENTER" textFill="#258cb5" wrapText="true">
          <font>
             <Font name="Corbel Light" size="30.0" />
          </font>
@@ -43,7 +43,7 @@
             </LinearGradient>
          </stroke>
       </Line>
-      <GridPane alignment="BASELINE_CENTER" prefHeight="238.0" prefWidth="535.0">
+      <GridPane alignment="BASELINE_CENTER" prefHeight="343.0" prefWidth="531.0">
          <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="192.66668701171875" />
             <ColumnConstraints hgrow="NEVER" maxWidth="3.0" minWidth="0.0" prefWidth="0.0" />
@@ -80,7 +80,7 @@
                   <Insets bottom="15.0" top="15.0" />
                </padding>
             </VBox>
-            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="328.0" prefWidth="267.0" spacing="15.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <children>
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Or enter a new server address:">
                      <font>
@@ -112,7 +112,7 @@
                      </font>
                   </TextField>
                   <Button id="connect" fx:id="connectAdmin" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectAdmin" prefHeight="29.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect" />
-                  <Label fx:id="nullTitle" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" prefHeight="51.0" prefWidth="237.0" text="" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
+                  <Label fx:id="nullTitle" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" prefHeight="23.0" prefWidth="238.0" text="" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
                      <font>
                         <Font name="Corbel" size="13.0" />
                      </font>

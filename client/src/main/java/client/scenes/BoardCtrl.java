@@ -129,49 +129,35 @@ public class BoardCtrl {
             if(board == null) System.out.println("BOARD IS NULL");
             haveBoard = true;
 
-        data = FXCollections.observableArrayList();
-        list.setFixedCellSize(0);
-        list.setItems(data);
-        list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-        list.setMaxHeight(600);
-        list.setStyle("-fx-background-color: " + board.colour);
-        key.setText(board.key);
-        title.setText(board.title);
-        title.setStyle("-fx-text-fill: " + board.font);
+            data = FXCollections.observableArrayList();
+            list.setFixedCellSize(0);
+            list.setItems(data);
+            list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
+            list.setMaxHeight(600);
+            list.setStyle("-fx-background-color: " + board.colour);
+            key.setText(board.key);
+            title.setText(board.title);
+            title.setStyle("-fx-text-fill: " + board.font);
 
             if (haveBoard)
                 prefs.addBoard(server.getServerAddress(), board);
 
-            if(adminFlag == 0) {
-                recentBoardsData = FXCollections.observableList
+            if(adminFlag == 0) recentBoardsData = FXCollections.observableList
                         (prefs.getBoards(server.getServerAddress()));
-            }
-            else {
-                recentBoardsData = FXCollections.observableList
+            else recentBoardsData = FXCollections.observableList
                         (server.getBoards().stream()
-                                .map(x -> new PreferencesBoardInfo(x.title, x.key, x.password, x.font, x.colour))
+                                .map(x -> new PreferencesBoardInfo
+                                (x.title, x.key, x.password, x.font, x.colour))
                                 .collect(Collectors.toList()));
-            }
-                recentBoards.setFixedCellSize(0);
-                recentBoards.setItems(recentBoardsData);
-                recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-                recentBoards.setMaxHeight(600);
-
-
-
-
-
-
-
-
-
-
-        AnchorPane.setBottomAnchor(addTag, 5.0);
-        AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
-        loadVBox();
-        loadRecentBoards();
-        refresh();
-
+            recentBoards.setFixedCellSize(0);
+            recentBoards.setItems(recentBoardsData);
+            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+            recentBoards.setMaxHeight(600);
+            AnchorPane.setBottomAnchor(addTag, 5.0);
+            AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
+            loadVBox();
+            loadRecentBoards();
+            refresh();
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists)
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
