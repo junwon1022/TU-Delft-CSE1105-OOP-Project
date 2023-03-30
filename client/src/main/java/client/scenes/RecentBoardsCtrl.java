@@ -71,6 +71,6 @@ public class RecentBoardsCtrl extends ListCell<PreferencesBoardInfo> {
      * Method for switch between boards
      */
     public void switchBoard() {
-        mainCtrl.showBoard(this.boardKey);
+        mainCtrl.showBoard(this.boardKey,this.boardCtrl.adminFlag);
     }
 }

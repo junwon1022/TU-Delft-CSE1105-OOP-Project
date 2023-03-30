@@ -693,18 +693,33 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-
-        int i = 0;
-        for(Board k : boardData){
-            if(k == board) break;
-            i++;
-        }
-
-        boardData.get(i).title = newTitle;
+        boardData.remove(board);
+        boardData.add(b);
 
         return b;
     }
 
+    /**
+     * Method to rename a board
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public PreferencesBoardInfo renameBoard(PreferencesBoardInfo board, String newTitle) {
+        // Get board associated with this PreferencesBoardInfo
+        Board actualBoard = getBoardByKey(board.getKey());
+
+        //Puts the board with the new title into the database
+        long boardId = actualBoard.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+        // Update the board title in the preferences
+        return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
+    }
 
 
 
@@ -725,27 +740,7 @@ public class ServerUtils {
 
 
         return b;
-        /**
-         * Method to rename a board
-         * @param board
-         * @param newTitle
-         * @return The renamed board
-         */
-        public PreferencesBoardInfo renameBoard(PreferencesBoardInfo board, String newTitle) {
-            // Get board associated with this PreferencesBoardInfo
-            Board actualBoard = getBoardByKey(board.getKey());
-
-            //Puts the board with the new title into the database
-            long boardId = actualBoard.id;
-            Board b = ClientBuilder.newClient(new ClientConfig())
-                    .target(SERVER).path("api/boards/" + boardId)
-                    .request(APPLICATION_JSON)
-                    .accept(APPLICATION_JSON)
-                    .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-
-            // Update the board title in the preferences
-            return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
-        }
+    }
 
 
     /**

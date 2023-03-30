@@ -113,7 +113,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
      * @param event - the join button being clicked
      */
     public void join(ActionEvent event){
-        System.out.println("The key is " + data.key);
+        System.out.println("The key is " + data.getKey());
         mainCtrl.showBoard(data.getKey(),0);
     }
 
