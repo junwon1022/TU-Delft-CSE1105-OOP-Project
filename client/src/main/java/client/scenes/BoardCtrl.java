@@ -333,7 +333,7 @@ public class BoardCtrl {
 
 
         return new Board("My Board", null, null,
-                null, null, null, new ArrayList<>(), new HashSet<>());
+                null, null, null, new ArrayList<>(), new HashSet<>(), new HashSet<>());
     }
 
 

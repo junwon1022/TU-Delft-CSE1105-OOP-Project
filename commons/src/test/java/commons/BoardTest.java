@@ -33,13 +33,13 @@ public class BoardTest {
         listsOfCards.add(list2);
         board = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
-                "pass", listsOfCards, new HashSet<>());
+                "pass", listsOfCards, new HashSet<>(), new HashSet<>());
         board2 = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
-                "pass", listsOfCards, new HashSet<>());
+                "pass", listsOfCards, new HashSet<>(), new HashSet<>());
         board3 = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
-                "pass2", listsOfCards, new HashSet<>());
+                "pass2", listsOfCards, new HashSet<>(), new HashSet<>());
 
     }
 
