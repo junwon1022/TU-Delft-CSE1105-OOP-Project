@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import com.google.inject.Inject;
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -48,9 +49,27 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
+    private final UserPreferences prefs;
+
     private static String SERVER = "http://localhost:8080/";
 
     private static String SERVER_ADDRESS = "localhost:8080";
+
+    /**
+     * ServerUtils constructor
+     * @param prefs
+     */
+    @Inject
+    public ServerUtils(UserPreferences prefs) {
+        this.prefs = prefs;
+    }
+
+    /**
+     * @return the address of the server
+     */
+    public String getServerAddress() {
+        return SERVER_ADDRESS;
+    }
 
     /**
      * Changes the preset server adress from 8080 to the textbox input
@@ -132,10 +151,6 @@ public class ServerUtils {
 
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
-
-
-    //Data related to board titles (How the boards are displayed on the main screen)
-    private List<Board> serverBoardData = null;
 
 
 
@@ -279,12 +294,12 @@ public class ServerUtils {
      */
     public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
         ClientBuilder.newClient(new ClientConfig())
-            .target(SERVER).path("api/boards/" + list.board.id
+                .target(SERVER).path("api/boards/" + list.board.id
                         + "/lists/" + list.id
                         + "/from/" + fromIdx
                         + "/to/" + toIdx)
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .put(Entity.json(""));
     }
 
@@ -517,6 +532,23 @@ public class ServerUtils {
     }
 
     /**
+     * gets the description of a card from the database
+     * @param card the card to get the description from
+     * @return the description
+     */
+    public String getDescription(Card card) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}" +
+                      "/lists/{list_id}/cards/{card_id}/description")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<String>() {});
+    }
+
+    /**
      * Get a card from the server
      * @return the card we need
      */
@@ -560,6 +592,24 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
+    }
+
+    /**
+     * Sends the request to update the description to the specific url,
+     * @param card the card that the description is to be updated
+     * @param description the new description
+     * @return the updated card
+     */
+    public Card updateDescription(Card card, String description){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/description")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(description, APPLICATION_JSON), Card.class);
     }
 
     private StompSession session = connect("ws://" +  SERVER_ADDRESS + "/websocket");
@@ -629,7 +679,6 @@ public class ServerUtils {
         }
         session.send(dest, o);
     }
-
     /**
      *
      * @param board
@@ -644,17 +693,33 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-
-        int i = 0;
-        for(Board k : boardData){
-            if(k == board) break;
-            i++;
-        }
-        boardData.get(i).title = newTitle;
+        boardData.remove(board);
+        boardData.add(b);
 
         return b;
     }
 
+    /**
+     * Method to rename a board
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public PreferencesBoardInfo renameBoard(PreferencesBoardInfo board, String newTitle) {
+        // Get board associated with this PreferencesBoardInfo
+        Board actualBoard = getBoardByKey(board.getKey());
+
+        //Puts the board with the new title into the database
+        long boardId = actualBoard.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+        // Update the board title in the preferences
+        return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
+    }
 
 
 
@@ -675,8 +740,8 @@ public class ServerUtils {
 
 
         return b;
-
     }
+
 
     /**
      * Removal of Board from server

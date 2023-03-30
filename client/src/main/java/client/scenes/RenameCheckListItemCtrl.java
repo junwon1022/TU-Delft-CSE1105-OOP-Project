@@ -1,7 +1,7 @@
 package client.scenes;
 
-import client.utils.PreferencesBoardInfo;
 import com.google.inject.Inject;
+import commons.CheckListItem;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -10,52 +10,55 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RenameBoardCtrl {
-    @FXML
-    private TextField titleField;
+public class RenameCheckListItemCtrl {
 
     @FXML
-    private Button renameTitle;
+    private TextField text;
 
     @FXML
-    private Label nullTitle;
+    private Button renameText;
+
+    @FXML
+    private Label nullText;
 
     public String storedText;
 
     public boolean success;
 
-    private String MESSAGE = "Please enter a title!";
+    private String MESSAGE = "Please enter a Description!";
 
     /**
-     * Constructor for the Rename Card Controller
+     * Constructor with parameters for RenameCheckListItem Controller
      */
     @Inject
-    public RenameBoardCtrl(){
+    public RenameCheckListItemCtrl() {
         success = false;
-        nullTitle = new Label("");
+        nullText = new Label("");
     }
 
     /**
      * Initialize method for the controller
      *
-     * @param board - the card for which we open the detailed view
+     * @param checkListItem - the checklistItem for which we open the detailed view
      */
-    public void initialize(PreferencesBoardInfo board){
-        String oldTitle = board.getTitle();
-        titleField.setText(oldTitle);
+    public void initialize(CheckListItem checkListItem) {
+        String oldText = checkListItem.text;
+        text.setText(oldText);
     }
 
     /**
      * Method for the cancel button
+     *
      * @param event - the cancel button being pressed
      */
-    public void cancel(ActionEvent event){
+    public void cancel(ActionEvent event) {
         success = false;
         closeWindow(event);
     }
 
     /**
      * Method that closes the current window
+     *
      * @param event - button pressed
      */
     private void closeWindow(ActionEvent event) {
@@ -65,58 +68,56 @@ public class RenameBoardCtrl {
     }
 
     /**
-     * Rename method for the card,
-     * if the textField for the title is null,
-     * it doesn't let the user proceed with renaming
+     * Rename method for the checkListItem,
+     * if the textField for the text inputted is null,
+     * it doesn't let the user proceed with the renaming
+     *
      * @param event - the rename button being pressed
      */
-    public void rename(ActionEvent event){
-        storedText = titleField.getText();
-        if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(MESSAGE);
-        }
-        else{
+    public void rename(ActionEvent event) {
+        storedText = text.getText();
+        if (storedText == null || storedText.length() == 0) {
+            nullText.setText(MESSAGE);
+        } else {
             success = true;
             closeWindow(event);
         }
     }
 
-
-    // From here are the keyboard cases
-
     /**
      * Handle the key pressed event.
+     *
      * @param keyEvent the KeyEvent
      */
     public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
         if (keyEvent.getCode().toString().equals("ENTER")) {
             renameKeyboard(keyEvent);
-        }
-        else if(keyEvent.getCode().toString().equals("ESCAPE")){
+        } else if (keyEvent.getCode().toString().equals("ESCAPE")) {
             cancelKeyboard(keyEvent);
         }
     }
 
     /**
-     * Renames the new card
+     * Renames the checklist
      * if the user didn't input anything
      * they can't proceed.
+     *
      * @param event the KeyEvent
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
         success = true;
-        storedText = titleField.getText();
-        if(storedText == null || storedText.length() == 0){
-            nullTitle.setText(MESSAGE);
-        }
-        else {
+        storedText = text.getText();
+        if (storedText == null || storedText.length() == 0) {
+            nullText.setText(MESSAGE);
+        } else {
             success = true;
             closeWindowKeyboard(event);
         }
     }
 
     /**
-     * Cancel the renaming of a new card.
+     * Cancel the renaming of a checkList
+     *
      * @param event the KeyEvent
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
@@ -126,6 +127,7 @@ public class RenameBoardCtrl {
 
     /**
      * Close the window
+     *
      * @param event the KeyEvent
      */
     private static void closeWindowKeyboard(javafx.scene.input.KeyEvent event) {
@@ -133,4 +135,5 @@ public class RenameBoardCtrl {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
+
 }

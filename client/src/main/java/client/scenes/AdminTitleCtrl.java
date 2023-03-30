@@ -120,10 +120,11 @@ public class AdminTitleCtrl extends ListCell<Board> {
      * @param event - the join button being clicked
      */
     public void rename(ActionEvent event){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameBoard.fxml"));
+        FXMLLoader fxmlLoader =
+                new FXMLLoader(getClass().getResource("AdminRename.fxml"));
         try {
             Parent root = fxmlLoader.load();
-            RenameBoardCtrl controller = fxmlLoader.getController();
+            AdminRenameCtrl controller = fxmlLoader.getController();
             controller.initialize(data);
 
             Stage stage = new Stage();
