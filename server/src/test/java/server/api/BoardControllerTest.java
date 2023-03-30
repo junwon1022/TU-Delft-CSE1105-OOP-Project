@@ -59,7 +59,8 @@ public class BoardControllerTest {
         controller = new BoardController(service, simpMessagingTemplate);
 
         Board b = new Board(null, "#111111", "#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         when(repo.getById(0L)).thenReturn(b);
 
     }
@@ -67,7 +68,8 @@ public class BoardControllerTest {
     @Test
     public void addBoardCorrect() {
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         var actual = controller.createBoard(b);
         assertEquals(HttpStatus.CREATED, actual.getStatusCode());
         assertEquals(b, actual.getBody());
@@ -77,7 +79,8 @@ public class BoardControllerTest {
     @Test
     public void addBoardInCorrectNull() {
         Board b = new Board(null, "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         var actual = controller.createBoard(b);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
@@ -85,7 +88,8 @@ public class BoardControllerTest {
     @Test
     public void addBoardInCorrectEmpty() {
         Board b = new Board("", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         var actual = controller.createBoard(b);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
@@ -93,7 +97,8 @@ public class BoardControllerTest {
     @Test
     public void editBoardTitleByIdCorrect() {
         Board b = new Board("My Board", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         when(repo.findById(b.id)).thenReturn(Optional.of(b));
         var actual = controller.editBoardTitleById("My New Board", b.id);
 
@@ -105,7 +110,8 @@ public class BoardControllerTest {
     @Test
     public void editBoardTitleByIdWrong() {
         Board b = new Board("My Board", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         var actual = controller.editBoardTitleById("", b.id);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
@@ -113,7 +119,8 @@ public class BoardControllerTest {
     @Test
     public void editBoardTitleByIdWrongNull() {
         Board b = new Board("My Board", "#111111","#111111","#111111",
-                "#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         var actual = controller.editBoardTitleById(null, b.id);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
@@ -121,7 +128,8 @@ public class BoardControllerTest {
     @Test
     public void deleteBoardTitleDoesntExist() {
         Board b = new Board("My Board", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         when(repo.findById(b.id)).thenReturn(Optional.of(b));
         var actual = controller.removeBoardById(0);
         assertEquals(OK, actual.getStatusCode());

@@ -365,11 +365,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public Card getCard(String title){
         Card card =  new Card(title,
-                "description",
+                "",
                 "red",
                 cardData,
                 null,
-                null);
+                null,null);
         card.order = cardData.cards.size();
         return card;
     }

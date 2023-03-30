@@ -52,6 +52,10 @@ public class Card {
     )
     public Set<Tag> tags = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "palette_id")
+    public Palette palette;
+
     /**
      * Default constructor
      */
@@ -66,23 +70,47 @@ public class Card {
      * @param colour
      * @param list
      * @param checklist
+     * @param palette
      * @param tags
      */
     public Card(String title, String description,
                 String colour, ListOfCards list,
-                List<CheckListItem> checklist, Set<Tag> tags) {
+                List<CheckListItem> checklist, Set<Tag> tags,
+                Palette palette) {
         this.title = title;
         this.description = description;
         this.colour = colour;
         this.list = list;
         this.checklist = checklist;
         this.tags = tags;
+        this.palette = palette;
     }
 
     /*
         BASIC FUNCTIONALITY
      */
 
+    /**
+     * Method that adds a palette to a card
+     * @param palette
+     */
+    public void addPalette(Palette palette){
+        if (palette != null) {
+            this.palette = palette;
+            palette.cards.add(this);
+        }
+    }
+
+    /**
+     * Method that removes a palette from a card
+     * @param palette
+     */
+    public void removePalette(Palette palette){
+        if (palette != null) {
+            palette.cards.remove(this);
+            palette = palette.getDefault();
+        }
+    }
     /**
      * Add a tag to a card
      * @param tag

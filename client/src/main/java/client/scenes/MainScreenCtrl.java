@@ -165,8 +165,10 @@ public class MainScreenCtrl {
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
                 System.out.println("The title is "+ title);
+
                 Board board = new Board(title,backgroundColor,fontColor,"" ,
-                        "" , password, new ArrayList<>(), new HashSet<>());
+                        "" , password, new ArrayList<>(), new HashSet<>(), null);
+
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);

@@ -1,19 +1,13 @@
 package server.api;
 
-import commons.Board;
-import commons.Card;
-import commons.Tag;
+import commons.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import commons.ListOfCards;
-import server.services.BoardService;
-import server.services.CardService;
-import server.services.ListOfCardsService;
-import server.services.TagService;
+import server.services.*;
 
 import java.util.List;
 import java.util.Set;
@@ -29,6 +23,8 @@ public class CardController {
 
     private final TagService tagService;
 
+    private final PaletteService paletteService;
+
     @Autowired
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -39,6 +35,7 @@ public class CardController {
      * @param listOfCardsService
      * @param boardService
      * @param tagService
+     * @param paletteService
      * @param simpMessagingTemplate
      */
     @Autowired
@@ -46,11 +43,13 @@ public class CardController {
                        ListOfCardsService listOfCardsService,
                        BoardService boardService,
                        TagService tagService,
+                       PaletteService paletteService,
                        SimpMessagingTemplate simpMessagingTemplate) {
         this.cardService = cardService;
         this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
         this.tagService = tagService;
+        this.paletteService = paletteService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
@@ -209,6 +208,56 @@ public class CardController {
         }
     }
 
+   /**
+     * retrieves the Put messages sent to the specific path
+     * updates the description of the required card
+     * @param newDescription the new description
+     * @param boardId the boardId of the card
+     * @param listId the listId of the card
+     * @param cardId the id of the card
+     * @return returns the updated Card entity
+     */
+    @PutMapping(path = {"/{card_id}/description"})
+    public ResponseEntity<Card> updateCardDescription(@RequestBody String newDescription,
+                                                      @PathVariable("board_id") long boardId,
+                                                      @PathVariable("list_id") long listId,
+                                                      @PathVariable("card_id") long cardId) {
+
+        try {
+            if (!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            Card card = cardService.editCardDescription(cardId, newDescription);
+            return ResponseEntity.ok().body(card);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Gets the description of the specified card
+     * @param newDescription
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return the description
+     */
+    @GetMapping(path = {"/{card_id}/description"})
+    public ResponseEntity<String> getCardDescription(@RequestBody String newDescription,
+                                                      @PathVariable("board_id") long boardId,
+                                                      @PathVariable("list_id") long listId,
+                                                      @PathVariable("card_id") long cardId) {
+        try {
+            if (!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            String description = cardService.getCardDescription(cardId);
+            return ResponseEntity.ok().body(description);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Get all the tags of a card
      *
@@ -336,4 +385,72 @@ public class CardController {
         }
         return true;
     }
+
+    /**
+     * Add a palette to a card
+     *
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @param palette
+     * @return the card with the palette
+     */
+    @PostMapping(path = {"/{card_id}/palette/", "/{card_id}/palette"})
+    private ResponseEntity<Card> addPaletteToCard(@PathVariable("board_id") long boardId,
+                                              @PathVariable("list_id") long listId,
+                                              @PathVariable("card_id") long cardId,
+                                              @RequestBody() Palette palette) {
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Board board = boardService.getBoardById(boardId);
+            Card card = cardService.getCardById(cardId);
+
+            cardService.addPaletteToCard(card, palette);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the card with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(card);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Removes a palette from the card
+     *
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @param paletteId
+     * @return the card with the palette
+     */
+    @DeleteMapping(path = {"/{card_id}/palette/{palette_id}", "/{card_id}/palette/{palette_id}/"})
+    private ResponseEntity<Card> deletePaletteFromCard(@PathVariable("board_id") long boardId,
+                                                  @PathVariable("list_id") long listId,
+                                                  @PathVariable("card_id") long cardId,
+                                                  @PathVariable("palette_id") long paletteId) {
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Board board = boardService.getBoardById(boardId);
+            Card card = cardService.getCardById(cardId);
+            Palette palette = paletteService.getPaletteById(paletteId);
+
+            cardService.removePaletteFromCard(card, palette);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the card with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(card);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

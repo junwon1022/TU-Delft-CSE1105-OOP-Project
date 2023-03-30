@@ -217,6 +217,64 @@
     -fx-background-image: url("edit-custom.png");
 }
 
+#description {
+    -fx-background-image: url("description-icon.png");
+    -fx-background-color: transparent;
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-cursor: hand;
+}
+
+#description:hover {
+    -fx-background-image: url("description-icon-hover.png");
+}
+
+#add-description {
+     -fx-background-image: url("add-description-icon.png");
+     -fx-background-color: transparent;
+     -fx-background-size: contain;
+     -fx-background-repeat: no-repeat;
+     -fx-cursor: hand;
+}
+
+#add-description:hover {
+    -fx-background-image: url("add-description-hover.png");
+}
+
+#save-description {
+    -fx-background-color: #4FCAE2;
+}
+
+#save-description:hover {
+    -fx-background-color: #249ec7;
+}
+
+#exitButton {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-text-fill: #37a0cc;
+    -fx-radius: 15px;
+}
+
+#exitButton:hover {
+     -fx-background-color: transparent;
+     -fx-padding: 0;
+     -fx-text-fill: #8f2e30;
+     -fx-radius: 15px;
+}
+
+#add-checklist {
+     -fx-background-image: url("add-checklist-icon.png");
+     -fx-background-color: transparent;
+     -fx-background-size: contain;
+     -fx-background-repeat: no-repeat;
+     -fx-cursor: hand;
+}
+
+#add-checklist:hover {
+     -fx-background-image: url("add-checklist-hover.png");
+}
+
 .search {
     -fx-background-image: url("search-icon.png");
     -fx-background-color: transparent;
