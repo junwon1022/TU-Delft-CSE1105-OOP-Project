@@ -22,6 +22,8 @@ public class PreferencesBoardInfo implements Serializable {
      * @param title
      * @param key
      * @param password
+     * @param font
+     * @param backgroundColor
      */
     public PreferencesBoardInfo(String title, String key, String password,
                                 String font, String backgroundColor) {

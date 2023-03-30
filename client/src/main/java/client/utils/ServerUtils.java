@@ -78,7 +78,8 @@ public class ServerUtils {
     public void changeServer(String server) throws Exception {
 
         if(server == null || server.equals("")) {
-            throw new Exception("Please enter a valid server to connect or select one from the list with double click!");
+            throw new Exception("Please enter a valid server to connect" +
+                    " or select one from the list with double click!");
         }
         if(server.charAt(server.length() - 1) != '/')  {
             server = server + "/";

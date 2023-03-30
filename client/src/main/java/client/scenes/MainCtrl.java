@@ -123,8 +123,10 @@ public class MainCtrl {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
         // Calculate the x and y coordinates to center the new scene on the primary stage
-        double centerX = primaryStage.getX() + primaryStage.getWidth() / 2 - mainScreen.getWidth() / 2;
-        double centerY = primaryStage.getY() + primaryStage.getHeight() / 2 - mainScreen.getHeight() / 2;
+        double centerX = primaryStage.getX()
+                + primaryStage.getWidth() / 2 - mainScreen.getWidth() / 2;
+        double centerY = primaryStage.getY()
+                + primaryStage.getHeight() / 2 - mainScreen.getHeight() / 2;
 
         // Set the new scene's position to the calculated coordinates
         mainScreen.getWindow().setX(centerX);

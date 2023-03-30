@@ -343,6 +343,7 @@ public class BoardCtrl {
 
     /**
      * Setter for the board key of the board displayed
+     * @param boardKey
      * @return
      */
     public void setBoardKey(String boardKey) {
