@@ -11,8 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.event.KeyEvent;
-
 public class AddBoardCtrl {
 
 

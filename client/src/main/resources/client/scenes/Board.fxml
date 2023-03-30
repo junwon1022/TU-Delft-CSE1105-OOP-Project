@@ -66,7 +66,7 @@
                   </Label>
                   <HBox alignment="BOTTOM_CENTER" prefHeight="29.0" prefWidth="245.0" spacing="7.0">
                      <children>
-                        <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#connectToBoard" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
                            <effect>
                               <ColorAdjust brightness="-0.05" />
                            </effect>

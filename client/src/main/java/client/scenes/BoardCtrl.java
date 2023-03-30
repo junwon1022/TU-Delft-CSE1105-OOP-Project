@@ -397,4 +397,25 @@ public class BoardCtrl {
             System.out.println("No such board");
         }
     }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoard(KeyEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+            if (server.getBoardByKey(joinField.getText()) != null) {
+                mainCtrl.showBoard(joinField.getText());
+                joinField.clear();
+            } else throw new Exception("Doesnt Exist");
+        } catch (Exception e) {
+            System.out.println("No such board");
+        }
+    }
 }
