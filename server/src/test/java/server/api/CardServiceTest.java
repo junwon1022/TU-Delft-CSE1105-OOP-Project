@@ -69,7 +69,8 @@ public class CardServiceTest {
     public void addCardTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111", "#111111",
-                "#111111","#111111","pass", new ArrayList<>(), new HashSet());
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet(), new HashSet<>());
 
         boardService.createBoard(b);
 
@@ -83,7 +84,8 @@ public class CardServiceTest {
 
         Mockito.verify(listRepo).save(l);
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,
+                new ArrayList<>(),new HashSet<>() ,null);
 
         l.addCard(c);
 
@@ -94,14 +96,16 @@ public class CardServiceTest {
 
 
         //EMPTY
-        Card c2 = new Card("","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c2 = new Card("","Finish CG Study","#555555",l,
+                new ArrayList<>(),new HashSet<>(), null);
         l.addCard(c2);
         assertThatThrownBy(() -> {
             cardService.createCard(c2,l,b);
         }).isInstanceOf(Exception.class);
 
         //NULL
-        Card c3 = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c3 = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
         l.addCard(c3);
         assertThatThrownBy(() -> {
             cardService.createCard(c2,l,b);
@@ -117,13 +121,15 @@ public class CardServiceTest {
     public void editCardTitleTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111","#111111",
-                "#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
 
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
         boardService.createBoard(b);
         listService.createListOfCards(l,b);
@@ -155,13 +161,15 @@ public class CardServiceTest {
     public void deleteCardTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111","#111111",
-                "#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
         b.addList(l);
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
         l.addCard(c);
 
@@ -179,13 +187,16 @@ public class CardServiceTest {
     public void getAllCardsTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
-        Card c2 = new Card("CG2","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c2 = new Card("CG2","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
 
 

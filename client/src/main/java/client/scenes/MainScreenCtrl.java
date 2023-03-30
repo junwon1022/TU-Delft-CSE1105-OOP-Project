@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -143,11 +144,11 @@ public class MainScreenCtrl {
             if (controller.success) {
                 String title = controller.storedText;
                 System.out.println("The title is "+ title);
-
                 //default values to the board colour fields
                 Board board = new Board(title,"#F8FDFE",
                         "#000000","#CAF0F8" ,
-                        "#000000" , "", new ArrayList<>(), new HashSet<>());
+                        "#000000" , "", new ArrayList<>(), new HashSet<>(), new HashSet<Palette>());
+
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);
