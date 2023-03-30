@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="640.0" prefWidth="1030.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="640.0" prefWidth="1030.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <children>
       <ListView id="lists" fx:id="list" layoutX="251.0" layoutY="104.0" orientation="HORIZONTAL" prefHeight="479.0" prefWidth="750.0" stylesheets="@../../styles.css" />
       <Button id="add-list" layoutX="571.0" layoutY="593.0" mnemonicParsing="false" onAction="#addListOfCards" prefHeight="38.0" prefWidth="109.0" stylesheets="@../../styles.css" text="➕   Add List" textFill="WHITE">
@@ -142,16 +142,12 @@
             <Accordion>
               <panes>
                 <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="My Boards">
-                  <content>
-                    <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
-                           <children>
-                              <VBox fx:id="vBox2" layoutX="-8.0" layoutY="-18.0" prefHeight="127.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
-                           </children>
-                        </AnchorPane>
-                  </content>
                      <font>
                         <Font name="Corbel" size="19.0" />
                      </font>
+                     <content>
+                        <ListView fx:id="recentBoards" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
                 </TitledPane>
               </panes>
             </Accordion>
@@ -181,7 +177,7 @@
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" fx:id="leave" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
+            <Button fx:id="leave" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Go back">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
