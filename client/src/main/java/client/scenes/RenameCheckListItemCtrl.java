@@ -16,7 +16,10 @@ public class RenameCheckListItemCtrl {
     private TextField text;
 
     @FXML
-    private Button renameText;
+    private Button renameChecklist;
+
+    @FXML
+    private Button cancelChecklist;
 
     @FXML
     private Label nullText;
@@ -69,7 +72,7 @@ public class RenameCheckListItemCtrl {
 
     /**
      * Rename method for the checkListItem,
-     * if the textField for the text inputted is null,
+     * if the text for the text inputted is null,
      * it doesn't let the user proceed with the renaming
      *
      * @param event - the rename button being pressed
@@ -105,7 +108,6 @@ public class RenameCheckListItemCtrl {
      * @param event the KeyEvent
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = text.getText();
         if (storedText == null || storedText.length() == 0) {
             nullText.setText(MESSAGE);

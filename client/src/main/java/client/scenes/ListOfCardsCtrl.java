@@ -24,6 +24,7 @@ import javafx.util.Duration;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
@@ -359,7 +360,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "",
                 "red",
                 cardData,
-                null,
+                new ArrayList<>(),
                 null);
         card.order = cardData.cards.size();
         return card;

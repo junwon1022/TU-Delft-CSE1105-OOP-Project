@@ -229,6 +229,9 @@ public class CardController {
                 return ResponseEntity.badRequest().build();
             }
             Card card = cardService.editCardDescription(cardId, newDescription);
+            Board board = boardService.getBoardById(boardId);
+
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             return ResponseEntity.ok().body(card);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -237,15 +240,13 @@ public class CardController {
 
     /**
      * Gets the description of the specified card
-     * @param newDescription
      * @param boardId
      * @param listId
      * @param cardId
      * @return the description
      */
     @GetMapping(path = {"/{card_id}/description"})
-    public ResponseEntity<String> getCardDescription(@RequestBody String newDescription,
-                                                      @PathVariable("board_id") long boardId,
+    public ResponseEntity<String> getCardDescription(@PathVariable("board_id") long boardId,
                                                       @PathVariable("list_id") long listId,
                                                       @PathVariable("card_id") long cardId) {
         try {

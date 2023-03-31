@@ -61,11 +61,8 @@ public class CheckListItemService {
      * @return checkListItemRepository
      */
     public CheckListItem createCheckListItem(CheckListItem check, Card card) throws Exception {
-        if(check.text == null || check.text.isEmpty()) {
-            throw new Exception("A checklist item cannot be created without text.");
-        }
-        card.checklist.add(check);
         check.card = card;
+        card.checklist.add(check);
         return checklistItemRepository.save(check);
     }
 
@@ -73,7 +70,9 @@ public class CheckListItemService {
      * Delete a check item given its id
      * @param id
      */
-    public void deleteCheckListItemById(Long id) {
+    public void deleteCheckListItemById(Long id) throws Exception {
+        CheckListItem checkListItem = getCheckById(id);
+        checkListItem.card.checklist.remove(checkListItem);
         checklistItemRepository.deleteById(id);
     }
 
@@ -94,9 +93,6 @@ public class CheckListItemService {
      * @return the edited check
      */
     public CheckListItem editCheckText(Long id, String newText) throws Exception {
-        if(newText == null || newText.isEmpty()) {
-            throw new Exception("Text should not be null or empty.");
-        }
         CheckListItem check = getCheckById(id);
         check.text = newText;
         return checklistItemRepository.save(check);

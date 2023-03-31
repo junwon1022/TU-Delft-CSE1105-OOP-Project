@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}/checks")
+@RequestMapping("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}/checklists")
 public class CheckListItemController {
 
 
@@ -94,20 +94,21 @@ public class CheckListItemController {
      * @param boardId
      * @param listId
      * @param cardId
-     * @param checkId
+     * @param checklistId
      * @return the checklist item
      */
-    @GetMapping(path = {"/{check_id}/","/{check_id}"})
+    @GetMapping(path = {"/{checklist_id}/","/{checklist_id}"})
     private ResponseEntity<CheckListItem> getCheckById(@PathVariable("board_id") long boardId,
                                                        @PathVariable("list_id") long listId,
                                                        @PathVariable("card_id") long cardId,
-                                                       @PathVariable("check_id") long checkId) {
+                                                       @PathVariable("checklist_id")
+                                                           long checklistId) {
         try {
-            if(!validPath(boardId, listId, cardId, checkId)) {
+            if(!validPath(boardId, listId, cardId, checklistId)) {
                 return ResponseEntity.badRequest().build();
             }
             // Get the checklist item
-            CheckListItem checkListItem = checkListItemService.getCheckById(checkId);
+            CheckListItem checkListItem = checkListItemService.getCheckById(checklistId);
             // Return the checklist item with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(checkListItem);
         }
@@ -125,7 +126,7 @@ public class CheckListItemController {
      * @param cardId
      * @return the new check
      */
-    @PostMapping(path = {"", "/"})
+    @PostMapping(path = {"","/"})
     public ResponseEntity<CheckListItem> createCheck(@RequestBody CheckListItem check,
                                                      @PathVariable("board_id") long boardId,
                                                      @PathVariable("list_id") long listId,
@@ -138,9 +139,7 @@ public class CheckListItemController {
             // Get the card
             Card card = cardService.getCardById(cardId);
 
-            // Check if the list is in the board and the card is in the list
-            if(!listOfCardsService.listInBoard(list, board) ||
-                    !cardService.cardInList(card, list)) {
+            if(!listOfCardsService.listInBoard(list, board)) {
                 return ResponseEntity.badRequest().build();
             }
 
@@ -163,24 +162,25 @@ public class CheckListItemController {
      * @param boardId
      * @param listId
      * @param cardId
-     * @param checkId
+     * @param checklistId
      * @return the edited checklist item
      */
-    @PostMapping(path = {"/{check_id}/text/","/{check_id}/text"})
+    @PutMapping(path = {"/{checklist_id}/text","/{checklist_id}/text/"})
     public ResponseEntity<CheckListItem> editCheckTextById(@RequestBody String newText,
                                                            @PathVariable("board_id") long boardId,
                                                            @PathVariable("list_id") long listId,
                                                            @PathVariable("card_id") long cardId,
-                                                           @PathVariable("check_id") long checkId) {
+                                                           @PathVariable("checklist_id")
+                                                               long checklistId) {
 
         try {
-            if(!validPath(boardId, listId, cardId, checkId)) {
+            if(!validPath(boardId, listId, cardId, checklistId)) {
                 return ResponseEntity.badRequest().build();
             }
             // Get the board in which the check will be updated
             Board board = boardService.getBoardById(boardId);
             // Edit the check and save it in the database
-            CheckListItem check = checkListItemService.editCheckText(checkId,newText);
+            CheckListItem check = checkListItemService.editCheckText(checklistId,newText);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited checklist item with an HTTP 200 OK status
@@ -197,27 +197,29 @@ public class CheckListItemController {
     /**
      * Edit a check's completion
      *
+     * @param completed
      * @param boardId
      * @param listId
      * @param cardId
-     * @param checkId
+     * @param checklistId
      * @return the edited checklist item
      */
-    @PostMapping(path = {"/{check_id}/completion/","/{check_id}/completion"})
-    public ResponseEntity<CheckListItem> editCheckCompletion(
-            @PathVariable("board_id") long boardId,
-            @PathVariable("list_id") long listId,
-            @PathVariable("card_id") long cardId,
-            @PathVariable("check_id") long checkId) {
+    @PutMapping(path = {"/{checklist_id}/completion", "/{checklist_id}/completion/"})
+    public ResponseEntity<CheckListItem> editCheckCompletion(@RequestBody Boolean completed,
+                                                             @PathVariable("board_id") long boardId,
+                                                             @PathVariable("list_id") long listId,
+                                                             @PathVariable("card_id") long cardId,
+                                                             @PathVariable("checklist_id")
+                                                                 long checklistId) {
 
         try {
-            if(!validPath(boardId, listId, cardId, checkId)) {
+            if(!validPath(boardId, listId, cardId, checklistId)) {
                 return ResponseEntity.badRequest().build();
             }
             // Get the board in which the checklist item will be updated
             Board board = boardService.getBoardById(boardId);
             // Edit the checklist item and save it in the database
-            CheckListItem check = checkListItemService.getCheckById(checkId);
+            CheckListItem check = checkListItemService.getCheckById(checklistId);
             checkListItemService.editCompletion(check);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
@@ -236,24 +238,25 @@ public class CheckListItemController {
      * @param boardId
      * @param listId
      * @param cardId
-     * @param checkId
+     * @param checklistId
      * @return the deleted checklist item
      */
-    @DeleteMapping(path = {"/{check_id}/","/{check_id}"})
+    @DeleteMapping(path = {"/{checklist_id}","/{checklist_id}/"})
     public ResponseEntity<CheckListItem> removeCheckById(@PathVariable("board_id") long boardId,
                                                          @PathVariable("list_id") long listId,
                                                          @PathVariable("card_id") long cardId,
-                                                         @PathVariable("check_id") long checkId) {
+                                                         @PathVariable("checklist_id")
+                                                             long checklistId) {
         try {
-            if(!validPath(boardId, listId, cardId, checkId)) {
+            if(!validPath(boardId, listId, cardId, checklistId)) {
                 return ResponseEntity.badRequest().build();
             }
             // Get the board from which the check will be removed
             Board board = boardService.getBoardById(boardId);
             // Get the item
-            CheckListItem checkListItem = checkListItemService.getCheckById(checkId);
+            CheckListItem checkListItem = checkListItemService.getCheckById(checklistId);
             // Delete the checklist item
-            checkListItemService.deleteCheckListItemById(checkId);
+            checkListItemService.deleteCheckListItemById(checklistId);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the saved checklist item with an HTTP 200 OK status
@@ -270,11 +273,11 @@ public class CheckListItemController {
      * @param boardId
      * @param listId
      * @param cardId
-     * @param checkId
+     * @param checklistId
      * @return true if the path is valid
      * @throws Exception
      */
-    private boolean validPath(long boardId, long listId, long cardId, long checkId)
+    private boolean validPath(long boardId, long listId, long cardId, long checklistId)
             throws Exception {
         // Get the board
         Board board = boardService.getBoardById(boardId);
@@ -283,7 +286,7 @@ public class CheckListItemController {
         // Get the card
         Card card = cardService.getCardById(cardId);
         // Get the check
-        CheckListItem check = checkListItemService.getCheckById(checkId);
+        CheckListItem check = checkListItemService.getCheckById(checklistId);
 
         // Check if the list is in the board
         if(!listOfCardsService.listInBoard(list, board)) {
