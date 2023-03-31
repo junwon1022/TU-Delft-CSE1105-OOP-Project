@@ -1,6 +1,5 @@
 package client.scenes;
 
-<<<<<<< client/src/main/java/client/scenes/CheckListItemCtrl.java
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.CheckListItem;
@@ -133,21 +132,4 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
         parent.removeChecklist(data);
         board.refresh();
     }
-=======
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-
-public class CheckListItemCtrl {
-    @FXML
-    CheckBox checkbox;
-
-    @FXML
-    Button removeChecklist;
-
-    @FXML
-    Button addChecklist;
-
-
->>>>>>> client/src/main/java/client/scenes/CheckListItemCtrl.java
 }
