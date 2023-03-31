@@ -123,6 +123,7 @@ public class BoardController {
         }
     }
 
+
     /**
      * Edit a board's title
      *
@@ -132,7 +133,7 @@ public class BoardController {
      */
     @PutMapping(path = {"/{board_id}/","/{board_id}"})
     public ResponseEntity<Board> editBoardTitleById(@RequestBody String newTitle,
-                                                  @PathVariable("board_id") long boardId) {
+                                                    @PathVariable("board_id") long boardId) {
         try {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
@@ -171,6 +172,9 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+
 
     /**
      * Method that changes the board's background color

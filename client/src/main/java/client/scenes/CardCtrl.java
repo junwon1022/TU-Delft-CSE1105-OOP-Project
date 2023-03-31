@@ -24,8 +24,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public class CardCtrl extends ListCell<Card> {
     private Text text;
 
     @FXML
-    private Label description;
+    private Button description;
 
     @FXML
     private Button renameButton;
@@ -57,6 +55,8 @@ public class CardCtrl extends ListCell<Card> {
     private GridPane tagGrid;
     private List<Tag> tags;
 
+    @FXML
+    private Button addDescription;
 
     /**
      * Create a new CardCtrl
@@ -92,17 +92,13 @@ public class CardCtrl extends ListCell<Card> {
         setOnDragDone(Event::consume);
     }
 
-//    private void refresh() {
-//        var serverDataTags = server.getTagsInCard(card.id);
-//        tags.setAll(serverDataTags);
-//    }
-
     /**
      * Is called whenever the parent CardList is changed. Sets the data in this controller.
-     * @param item The new item for the cell.
+     *
+     * @param item  The new item for the cell.
      * @param empty whether this cell represents data from the list or not. If it
-     *        is empty, then it does not represent any domain data, but is a cell
-     *        being used to render an "empty" row.
+     *              is empty, then it does not represent any domain data, but is a cell
+     *              being used to render an "empty" row.
      */
     @Override
     protected void updateItem(Card item, boolean empty) {
@@ -153,7 +149,7 @@ public class CardCtrl extends ListCell<Card> {
      * Method that removes the task from the list, visually
      * @param event - the remove button being clicked
      */
-    public void remove(ActionEvent event){
+    public void remove(ActionEvent event) {
         try {
             server.removeCard(card);
         } catch (WebApplicationException e) {
@@ -168,10 +164,17 @@ public class CardCtrl extends ListCell<Card> {
     /**
      * Method that removes the task from the list, visually
      */
-    private void setTextOpacity(){
+    private void setTextOpacity() {
         text.setOpacity(0.0);
     }
 
+    /**
+     * Retrieves the title of the card
+     * @return the title of the card
+     */
+    public String getTitle() {
+        return title.getText();
+    }
 
     /**
      * Handles drag detected
@@ -235,8 +238,7 @@ public class CardCtrl extends ListCell<Card> {
     private void handleDragDropped(DragEvent event) {
         if (getItem() != null) {
             dragDroppedOnCell(event);
-        }
-        else {
+        } else {
             dragDroppedOnEmptyList(event);
         }
 
@@ -259,8 +261,7 @@ public class CardCtrl extends ListCell<Card> {
                 int draggedIdx = (int) draggedCard.order;
                 int thisIdx = items.indexOf(getItem());
                 server.moveCard(this.list.cardData, draggedIdx, thisIdx);
-            }
-            else {
+            } else {
                 List<Card> items = this.list.cardData.cards;
                 int draggedIdx = 0;
                 for (int i = 0; i < items.size(); i++)
@@ -302,12 +303,12 @@ public class CardCtrl extends ListCell<Card> {
      */
     private Card moveCardToOtherList(long dbCardId, long dbListId) {
         List<Card> draggedList = null;
-        for (ListOfCards loc: this.board.listOfCards)
+        for (ListOfCards loc : this.board.listOfCards)
             if (loc.id == dbListId)
                 draggedList = loc.cards;
 
         Card draggedCard = null;
-        for (Card c: draggedList)
+        for (Card c : draggedList)
             if (c.id == dbCardId)
                 draggedCard = c;
 
@@ -324,7 +325,7 @@ public class CardCtrl extends ListCell<Card> {
      * --right now only does the renaming of a card functionality--
      * @param event - the rename button being clicked
      */
-    public void renameCard(ActionEvent event){
+    public void renameCard(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
         try {
             Parent root = fxmlLoader.load();
@@ -348,4 +349,60 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
+    /**
+     * Opens the detailed view of a card when the description button is double clicked
+     * @param event - the icon-button being clicked
+     */
+    public void openDetails(MouseEvent event) {
+        if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            Stage detailsStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
+            loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
+
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            CardDetailsCtrl cardDetailsCtrl = loader.getController();
+            cardDetailsCtrl.setCard(card);
+            cardDetailsCtrl.setTitle(getTitle());
+            if(card.description.equals(" ")){
+                cardDetailsCtrl.setDescriptionText("");
+            }
+            else {
+                cardDetailsCtrl.setDescriptionText(card.description);
+            }
+
+            Scene scene = new Scene(root);
+            detailsStage.setScene(scene);
+            detailsStage.show();
+        }
+    }
+
+    /**
+     * Prompts the user with an alert stating if they want to add a description or not,
+     * if they agree the images for description will change and you
+     * will be able to add a description
+     * @param event - the add description button being clicked
+     */
+    public void addDescription(MouseEvent event) {
+        changeDescriptionVisibility(true);
+    }
+
+    /**
+     * Changes the visibility of description images
+     * @param t - the boolean that changes the visibility of the images
+     */
+    public void changeDescriptionVisibility(Boolean t) {
+        description.setVisible(t);
+        description.setDisable(!t);
+        addDescription.setVisible(!t);
+        addDescription.setDisable(t);
+        board.refresh();
+    }
 }

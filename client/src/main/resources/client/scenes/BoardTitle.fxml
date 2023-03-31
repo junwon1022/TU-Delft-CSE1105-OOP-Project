@@ -1,13 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="289.0" style="-fx-background-color: rgb(0, 180, 216, 0.6);" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <Label fx:id="title" layoutX="23.0" layoutY="11.0" style="-fx-font-weight: bold;" text="Title" />
-        <Button layoutX="91.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" text="🗑" />
-      <Button layoutX="122.0" layoutY="7.0" mnemonicParsing="false" onAction="#join" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="JOIN" />
-      <Label fx:id="key" layoutX="1.0" layoutY="36.0" prefHeight="78.0" prefWidth="513.0" text="Key:" />
-    </children>
-</AnchorPane>
+<VBox fx:id="root" maxWidth="1.7976931348623157E308" spacing="5.0" styleClass="board-title" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="284.0" spacing="12.0" stylesheets="@../../styles.css">
+         <children>
+            <AnchorPane>
+               <children>
+                    <Button id="rename-card" fx:id="detailedView" layoutY="3.0" mnemonicParsing="false" onAction="#rename" prefHeight="19.0" prefWidth="12.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
+                        <font>
+                            <Font size="19.0" />
+                        </font>
+                        <styleClass>
+                            <String fx:value="image-button" />
+                            <String fx:value="rename" />
+                        </styleClass>
+                        <effect>
+                            <ColorAdjust />
+                        </effect>
+                    </Button>
+               </children>
+            </AnchorPane>
+              <Label fx:id="title" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" prefHeight="56.0" prefWidth="111.0" text="Title" wrapText="true" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Corbel" size="16.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#join" prefHeight="28.0" prefWidth="57.0" stylesheets="@../../styles.css" text="JOIN">
+               <styleClass>
+                  <String fx:value="normal-button" />
+                  <String fx:value="board-title-button" />
+               </styleClass>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#remove" prefHeight="28.0" prefWidth="57.0" stylesheets="@../../styles.css" text="LEAVE">
+               <styleClass>
+                  <String fx:value="red-button" />
+                  <String fx:value="board-title-button" />
+               </styleClass>
+            </Button>
+         </children>
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Button fx:id="copyButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#copyKeyToClipboard" prefHeight="28.0" prefWidth="20.0" styleClass="image-button" stylesheets="@../../styles.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+                <tooltip>
+                    <Tooltip text="Click to copy to clipboard!" />
+                </tooltip>
+               <effect>
+                  <ColorAdjust brightness="-0.1" hue="0.05" />
+               </effect>
+            </Button>
+            <Label fx:id="key" prefHeight="28.0" text="invitation key" textFill="#236780">
+               <font>
+                  <Font name="Corbel" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="copied" styleClass="copied" stylesheets="@../../styles.css" text="✔" textFill="#1dbc20" visible="false">
+               <font>
+                  <Font name="Corbel" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="10.0" top="15.0" />
+   </padding>
+</VBox>

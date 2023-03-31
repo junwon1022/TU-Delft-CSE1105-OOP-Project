@@ -11,147 +11,101 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#openHelpScreen" prefHeight="640.0" prefWidth="1030.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<?import javafx.scene.control.Tooltip?>
+<GridPane fx:id="root" alignment="CENTER" onKeyTyped="#openHelpScreen" prefHeight="625.0" prefWidth="1101.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1016.0000305175781" minWidth="35.99994786580402" prefWidth="270.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1132.0" minWidth="10.0" prefWidth="830.000040690104" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <ListView id="lists" fx:id="list" layoutX="251.0" layoutY="104.0" orientation="HORIZONTAL" prefHeight="479.0" prefWidth="750.0" stylesheets="@../../styles.css" />
-      <Button id="add-list" layoutX="571.0" layoutY="593.0" mnemonicParsing="false" onAction="#addListOfCards" prefHeight="38.0" prefWidth="109.0" stylesheets="@../../styles.css" text="➕   Add List" textFill="WHITE">
-         <font>
-            <Font name="Corbel Bold" size="16.0" />
-         </font>
-         <styleClass>
-            <String fx:value="normal-button" />
-            <String fx:value="add-button" />
-         </styleClass></Button>
-      <Text fill="#231f20" layoutX="897.0" layoutY="617.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Press '?' for help" textAlignment="CENTER">
-         <font>
-            <Font name="Corbel Light" size="16.0" />
-         </font>
-      </Text>
-      <Label fx:id="key" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="643.0" layoutY="34.0" prefHeight="38.0" prefWidth="295.0" text="invite key" textAlignment="CENTER" textFill="#018198">
-         <font>
-            <Font name="Corbel Italic" size="17.0" />
-         </font>
-      </Label>
-      <Button fx:id="copyButton" layoutX="958.0" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#copyKeyToClipboard" prefHeight="34.0" prefWidth="35.0" styleClass="image-button" stylesheets="@../../styles.css">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <effect>
-            <ColorAdjust brightness="-0.16" />
-         </effect>
-      </Button>
-      <Label alignment="CENTER_RIGHT" layoutX="7.0" layoutY="18.0" prefHeight="63.0" prefWidth="223.0" text="TimeWise" textFill="#00b4d8">
-         <font>
-            <Font name="Corbel Light" size="53.0" />
-         </font>
-      </Label>
-      <Label fx:id="title" layoutX="251.0" layoutY="31.0" prefHeight="45.0" prefWidth="352.0" text="My Board" textFill="#231f20">
-         <font>
-            <Font name="Corbel" size="38.0" />
-         </font>
-      </Label>
-      <Line endX="631.3333740234375" endY="-1.6666641235351562" layoutX="330.0" layoutY="86.0" startX="-78.00001525878906" startY="-1.6666641235351562" strokeLineCap="ROUND" strokeWidth="4.0">
-         <stroke>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.13725490868091583" green="0.12156862765550613" blue="0.125490203499794" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.423787308342882">
-                     <color>
-                        <Color green="0.7139999866485596" blue="0.8399999737739563" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.5431467234135428">
-                     <color>
-                        <Color green="0.7139999866485596" blue="0.8399999737739563" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.7077263054509739">
-                     <color>
-                        <Color green="0.7139999866485596" blue="0.8399999737739563" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </stroke>
-      </Line>
-      <Line endX="107.0" endY="-7.62939453125E-6" layoutX="119.0" layoutY="84.0" startX="-100.0" strokeLineCap="ROUND" strokeWidth="4.0">
-         <stroke>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.9725490212440491" green="0.9921568632125854" blue="0.9960784316062927" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.09843400447427292">
-                     <color>
-                        <Color red="0.9725490212440491" green="0.9921568632125854" blue="0.9960784316062927" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color green="0.7058823704719543" blue="0.8470588326454163" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </stroke>
-      </Line>
-      <VBox alignment="TOP_CENTER" layoutX="3.0" layoutY="85.0" prefHeight="555.0" prefWidth="253.0" spacing="10.0">
+      <VBox alignment="TOP_CENTER" prefHeight="678.0" prefWidth="183.0" spacing="10.0" GridPane.rowIndex="1">
          <children>
-            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="202.0">
+            <Line endX="127.33333587646484" endY="1.71661376953125E-5" startX="-100.0" strokeLineCap="ROUND" strokeWidth="4.0">
+               <stroke>
+                  <LinearGradient endX="0.7981072314530141" endY="0.7350157728706626">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.9725490212440491" green="0.9921568632125854" blue="0.9960784316062927" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.09843400447427292">
+                           <color>
+                              <Color red="0.9725490212440491" green="0.9921568632125854" blue="0.9960784316062927" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color green="0.7058823704719543" blue="0.8470588326454163" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </stroke>
+            </Line>
+            <VBox spacing="8.0">
                <children>
-                  <TextField layoutX="1.0" layoutY="31.0" prefHeight="39.0" prefWidth="200.0" promptText="Enter a key . . ." stylesheets="@../../styles.css">
-                     <effect>
-                        <ColorAdjust brightness="-0.05" />
-                     </effect>
-                     <font>
-                        <Font name="Corbel" size="15.0" />
-                     </font>
-                  </TextField>
-                  <Button layoutX="162.0" layoutY="34.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="36.0" stylesheets="@../../styles.css">
-                     <styleClass>
-                        <String fx:value="image-button" />
-                        <String fx:value="search" />
-                     </styleClass>
-                  </Button>
-                  <Label layoutX="2.0" text="Join another board:" textFill="#00b4d8">
+                  <Label text="Join another board:" textFill="#00b4d8">
                      <font>
                         <Font name="Corbel" size="20.0" />
                      </font>
                   </Label>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="29.0" prefWidth="245.0" spacing="7.0">
+                     <children>
+                        <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#connectToBoardKey" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
+                           <effect>
+                              <ColorAdjust brightness="-0.05" />
+                           </effect>
+                           <font>
+                              <Font name="Corbel" size="15.0" />
+                           </font>
+                        </TextField>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#connectToBoard" prefHeight="46.0" prefWidth="46.0" stylesheets="@../../styles.css">
+                           <styleClass>
+                              <String fx:value="image-button" />
+                              <String fx:value="search" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
-            </AnchorPane>
+            </VBox>
+            <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="13.0" prefWidth="232.0" textAlignment="CENTER" textFill="#8f2e30">
+               <font>
+                  <Font name="Corbel Italic" size="14.0" />
+               </font>
+            </Label>
             <Accordion>
               <panes>
                 <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="My Boards">
-                  <content>
-                    <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
-                           <children>
-                              <VBox fx:id="vBox2" layoutX="-8.0" layoutY="-18.0" prefHeight="127.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
-                           </children>
-                        </AnchorPane>
-                  </content>
                      <font>
                         <Font name="Corbel" size="19.0" />
                      </font>
+                     <content>
+                      <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
+                         <children>
+                            <ListView fx:id="recentBoards" prefHeight="91.0" prefWidth="231.0" styleClass="recent-boards" stylesheets="@../../styles.css">
+                                 <padding>
+                                    <Insets left="7.0" right="7.0" />
+                                 </padding></ListView>
+                         </children>
+                      </AnchorPane>
+                     </content>
                 </TitledPane>
               </panes>
             </Accordion>
@@ -162,7 +116,7 @@
                         <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
                            <children>
                               <ListView fx:id="tagList" prefHeight="182.0" prefWidth="200.0" styleClass="tag-list" stylesheets="@../../styles.css" />
-                              <Button id="add" fx:id="addTag" alignment="CENTER" contentDisplay="BOTTOM" layoutX="82.0" layoutY="82.0" mnemonicParsing="false" onAction="#addTag" prefHeight="23.0" prefWidth="35.0" styleClass="normal-button" text="➕">
+                              <Button id="add" fx:id="addTag" alignment="CENTER" contentDisplay="BOTTOM" layoutX="119.0" layoutY="85.0" mnemonicParsing="false" onAction="#addTag" prefHeight="23.0" prefWidth="35.0" styleClass="normal-button" text="➕">
                                  <font>
                                     <Font name="Corbel" size="12.0" />
                                  </font>
@@ -176,25 +130,150 @@
                   </TitledPane>
                </panes>
             </Accordion>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" fx:id="leave" onAction="#goToOverview" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Leave board">
+            <Button fx:id="leave" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" styleClass="red-button" stylesheets="@../../styles.css" text="Exit board">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect">
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
          </children>
          <padding>
-            <Insets bottom="10.0" left="25.0" right="25.0" top="20.0" />
+            <Insets bottom="20.0" left="25.0" right="15.0" />
          </padding>
       </VBox>
+      <VBox alignment="CENTER" prefHeight="527.0" prefWidth="789.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <HBox maxHeight="0.0" prefHeight="0.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Line endX="443.3385314941406" endY="-2.3332927227020264" startX="-341.9947814941406" startY="-2.3333051204681396" strokeLineCap="ROUND" strokeWidth="4.0">
+                     <stroke>
+                        <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.13725490868091583" green="0.12156862765550613" blue="0.125490203499794" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="0.423787308342882">
+                                 <color>
+                                    <Color green="0.7139999866485596" blue="0.8399999737739563" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="0.5431467234135428">
+                                 <color>
+                                    <Color green="0.7139999866485596" blue="0.8399999737739563" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="0.7077263054509739">
+                                 <color>
+                                    <Color green="0.7139999866485596" blue="0.8399999737739563" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </LinearGradient>
+                     </stroke>
+                  </Line>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </HBox>
+            <ListView id="lists" fx:id="list" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="HORIZONTAL" stylesheets="@../../styles.css" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" top="10.0" />
+               </padding>
+            </ListView>
+            <Button id="add-list" mnemonicParsing="false" onAction="#addListOfCards" prefHeight="38.0" prefWidth="109.0" stylesheets="@../../styles.css" text="➕   Add List" textFill="WHITE">
+               <font>
+                  <Font name="Corbel Bold" size="16.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="normal-button" />
+                  <String fx:value="add-button" />
+               </styleClass>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Label alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308" text="Press '?' for help" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font name="Corbel Light" size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" right="5.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="15.0" right="30.0" />
+         </GridPane.margin>
+      </VBox>
+      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="TimeWise" textFill="#00b4d8">
+         <font>
+            <Font name="Corbel Light" size="53.0" />
+         </font>
+         <GridPane.margin>
+            <Insets right="15.0" top="5.0" />
+         </GridPane.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="25.0" />
+         </padding>
+      </Label>
+      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="815.0" spacing="10.0" GridPane.columnIndex="1">
+         <children>
+            <Label fx:id="title" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="My Board" textFill="#231f20" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Corbel" size="38.0" />
+               </font>
+            </Label>
+            <Label fx:id="key" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="38.0" text="invite key" textAlignment="CENTER" textFill="#018198" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Corbel Italic" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="copied" prefHeight="35.0" prefWidth="23.0" styleClass="copied" stylesheets="@../../styles.css" text="✔" textFill="#1dbc20" visible="false">
+               <font>
+                  <Font name="Corbel" size="20.0" />
+               </font>
+            </Label>
+            <Button fx:id="copyButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#copyKeyToClipboard" prefHeight="34.0" prefWidth="35.0" styleClass="image-button" stylesheets="@../../styles.css" HBox.hgrow="NEVER">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Click to copy to clipboard!" />
+               </tooltip>
+               <effect>
+                  <ColorAdjust brightness="-0.16" />
+               </effect>
+            </Button>
+         </children>
+         <GridPane.margin>
+            <Insets left="15.0" right="30.0" top="5.0" />
+         </GridPane.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
    </children>
-</AnchorPane>
+</GridPane>
