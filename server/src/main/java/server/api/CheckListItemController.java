@@ -139,7 +139,7 @@ public class CheckListItemController {
             // Get the card
             Card card = cardService.getCardById(cardId);
 
-            if(!listOfCardsService.listInBoard(list, board)) {
+            if(!listOfCardsService.listInBoard(list, board) || !cardService.cardInList(card,list)) {
                 return ResponseEntity.badRequest().build();
             }
 

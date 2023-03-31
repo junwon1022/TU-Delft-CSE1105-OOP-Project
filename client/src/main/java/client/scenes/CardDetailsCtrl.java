@@ -221,4 +221,17 @@ public class CardDetailsCtrl{
             data.add(checklist.get(i));
         }
     }
+
+    /**
+     * Changes the renamed description in the observable array
+     * so that it updates at the moment
+     * @param addedChecklist the checklist with the new name
+     */
+    public void changeChecklistDescription(CheckListItem addedChecklist) {
+        for(int i = 0; i<data.size(); i++){
+            if(data.get(i).id == (addedChecklist.id)){
+                data.get(i).text = addedChecklist.text;
+            }
+        }
+    }
 }

@@ -5,13 +5,13 @@ import com.google.inject.Inject;
 import commons.CheckListItem;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -54,6 +54,62 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        
+        setOnDragDetected(this::handleDragDetected);
+
+        setOnDragOver(this::handleDragOver);
+
+        setOnDragEntered(this::handleDragEntered);
+
+        setOnDragExited(this::handleDragExited);
+
+        setOnDragDropped(this::handleDragDropped);
+
+        setOnDragDone(Event::consume);
+    }
+
+
+    private void handleDragDropped(DragEvent dragEvent) {
+        Dragboard db = dragEvent.getDragboard();
+        boolean success = false;
+        if (db.hasString()) {
+            String draggedText = db.getString();
+            // Do something with the dragged text
+            success = true;
+        }
+        dragEvent.setDropCompleted(success);
+        dragEvent.consume();
+    }
+
+    private void handleDragExited(DragEvent dragEvent) {
+        // Set the background color back to its original color
+        root.setStyle("-fx-background-color: #f8f8f8;");
+    }
+
+    private void handleDragEntered(DragEvent dragEvent) {
+        if (dragEvent.getGestureSource() != root && dragEvent.getDragboard().hasString()) {
+            // Set the background color to indicate a valid drop target
+            root.setStyle("-fx-background-color: #e0f4fd;");
+        }
+        dragEvent.consume();
+    }
+
+    private void handleDragOver(DragEvent dragEvent) {
+        if (dragEvent.getGestureSource() != root && dragEvent.getDragboard().hasString()) {
+            // Accept the drag and drop transfer mode
+            dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        }
+        dragEvent.consume();
+    }
+
+    private void handleDragDetected(MouseEvent mouseEvent) {
+        // Start a drag-and-drop gesture
+        Dragboard db = root.startDragAndDrop(TransferMode.ANY);
+        // Put the text to be dragged on the dragboard
+        ClipboardContent content = new ClipboardContent();
+        content.putString("Some text to be dragged");
+        db.setContent(content);
+        mouseEvent.consume();
     }
 
     @Override
@@ -107,7 +163,8 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
                 String newDescription = renameCheckListItemCtrl.storedText;
                 checklistDescription.setText(newDescription);
 
-                server.renameChecklist(data, newDescription);
+                CheckListItem addedChecklist= server.renameChecklist(data, newDescription);
+                parent.changeChecklistDescription(addedChecklist);
                 board.refresh();
             }
         }

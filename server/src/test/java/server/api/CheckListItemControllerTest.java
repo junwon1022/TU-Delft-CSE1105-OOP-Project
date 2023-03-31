@@ -176,7 +176,7 @@ public class CheckListItemControllerTest {
         Board b = new Board("schedule", "#111111", "#111111",
                 "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
-        ListOfCards l2 = new ListOfCards("List 1", b,new ArrayList<>());
+        ListOfCards l2 = new ListOfCards("List 2", b,new ArrayList<>());
         Card c = new Card("Card 1","F","#555555",l2,new ArrayList<>(),new HashSet<>());
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
         b.addList(l);

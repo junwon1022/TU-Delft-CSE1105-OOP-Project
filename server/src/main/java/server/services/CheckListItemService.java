@@ -61,8 +61,11 @@ public class CheckListItemService {
      * @return checkListItemRepository
      */
     public CheckListItem createCheckListItem(CheckListItem check, Card card) throws Exception {
-        check.card = card;
+        if(check.text == null || check.text.isEmpty()){
+            throw new Exception("Text can't be null!");
+        }
         card.checklist.add(check);
+        check.card = card;
         return checklistItemRepository.save(check);
     }
 
@@ -93,6 +96,9 @@ public class CheckListItemService {
      * @return the edited check
      */
     public CheckListItem editCheckText(Long id, String newText) throws Exception {
+        if(newText == null || newText.isEmpty()){
+            throw new Exception("Text can't be null!");
+        }
         CheckListItem check = getCheckById(id);
         check.text = newText;
         return checklistItemRepository.save(check);
