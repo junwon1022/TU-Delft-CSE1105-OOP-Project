@@ -209,6 +209,56 @@ public class CardController {
         }
     }
 
+   /**
+     * retrieves the Put messages sent to the specific path
+     * updates the description of the required card
+     * @param newDescription the new description
+     * @param boardId the boardId of the card
+     * @param listId the listId of the card
+     * @param cardId the id of the card
+     * @return returns the updated Card entity
+     */
+    @PutMapping(path = {"/{card_id}/description"})
+    public ResponseEntity<Card> updateCardDescription(@RequestBody String newDescription,
+                                                      @PathVariable("board_id") long boardId,
+                                                      @PathVariable("list_id") long listId,
+                                                      @PathVariable("card_id") long cardId) {
+
+        try {
+            if (!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            Card card = cardService.editCardDescription(cardId, newDescription);
+            return ResponseEntity.ok().body(card);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Gets the description of the specified card
+     * @param newDescription
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return the description
+     */
+    @GetMapping(path = {"/{card_id}/description"})
+    public ResponseEntity<String> getCardDescription(@RequestBody String newDescription,
+                                                      @PathVariable("board_id") long boardId,
+                                                      @PathVariable("list_id") long listId,
+                                                      @PathVariable("card_id") long cardId) {
+        try {
+            if (!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            String description = cardService.getCardDescription(cardId);
+            return ResponseEntity.ok().body(description);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Get all the tags of a card
      *
