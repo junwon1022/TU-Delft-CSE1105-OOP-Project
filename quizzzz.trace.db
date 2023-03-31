@@ -558,3 +558,6 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:D:/uni/2022-
 	at org.h2.mvstore.FileStore.open(FileStore.java:172)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
 	... 61 more
+2023-03-31 15:08:22 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SLISTS" not found; SQL statement:
+SELECT * FROM SLISTS [42102-200]

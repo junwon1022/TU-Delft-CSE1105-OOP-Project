@@ -165,7 +165,7 @@ public class MainScreenCtrl {
                 String password = controller.password;
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
-                System.out.println("The title is "+ title);
+                System.out.println("The title is " + title);
 
                 Board board = new Board(title, backgroundColor, fontColor,"#b6e9f3" ,
                         "" , password, new ArrayList<>(), new HashSet<>(), null);
