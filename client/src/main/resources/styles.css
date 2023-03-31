@@ -487,15 +487,6 @@
     -fx-background-radius: 10px;
 }
 
-#color-picker .color-picker-label {
-    -fx-text-fill: #231F20;
-}
-
-#color-picker .color-picker-label .label-text {
-    -fx-background-color: #CAF0F8;
-    -fx-text-fill: #231F20;
-}
-
 .recent-boards .list-cell {
     -fx-background-color: transparent;
     -fx-background-radius: 10px;

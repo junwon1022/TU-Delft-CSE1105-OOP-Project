@@ -636,19 +636,19 @@ public class ServerUtils {
     }
 
     /**
-     * Renaming a tag with a new name
-     * @param tag - the tag that needs renaming
-     * @param name - the new name of the tag
-     * @return the Card that was renamed
+     * Editing a tag
+     * @param tag - the tag that needs editing
+     * @param newTag - the new edited tag
+     * @return the Tag that was edited
      */
-    public Tag renameTag(Tag tag, String name) {
+    public Tag updateTag(Tag tag, Tag newTag) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/{board_id}/tags/{tag_id}/")
                 .resolveTemplate("board_id", tag.board.id)
                 .resolveTemplate("tag_id", tag.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(name, APPLICATION_JSON), Tag.class);
+                .put(Entity.entity(newTag, APPLICATION_JSON), Tag.class);
     }
 
     /**

@@ -368,7 +368,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "red",
                 cardData,
                 null,
-                new HashSet<>());
+                new HashSet<>(),
+                null);
         card.order = cardData.cards.size();
         return card;
     }

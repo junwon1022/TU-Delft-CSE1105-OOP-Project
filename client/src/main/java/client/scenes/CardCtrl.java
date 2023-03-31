@@ -6,8 +6,6 @@ import commons.Card;
 import commons.ListOfCards;
 import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +23,6 @@ import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CardCtrl extends ListCell<Card> {

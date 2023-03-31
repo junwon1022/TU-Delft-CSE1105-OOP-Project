@@ -80,7 +80,7 @@ public class TagControllerTest {
         Board b = new Board("My Schedule", "#111111", "#111111",
                 "#111111","#111111","pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
-        Tag t = new Tag("S", "#555555",b, new HashSet<>());
+        Tag t = new Tag("S", "#555555","#555555", b, new HashSet<>());
 
         b.addTag(t);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
@@ -96,7 +96,7 @@ public class TagControllerTest {
         Board b = new Board("My Schedule", "#111111","#111111",
                 "#111111","#111111", "pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
-        Tag t = new Tag("","#555555",b, new HashSet<>());
+        Tag t = new Tag("","#555555", "#555555", b, new HashSet<>());
 
         b.addTag(t);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
@@ -111,7 +111,7 @@ public class TagControllerTest {
         Board b = new Board("My Schedule", "#111111","#111111",
                 "#111111","#111111", "pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
-        Tag t = new Tag(null,"#555555",b, new HashSet<>());
+        Tag t = new Tag(null,"#555555", "#555555", b, new HashSet<>());
 
         b.addTag(t);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
@@ -128,7 +128,7 @@ public class TagControllerTest {
                 "#111111","#111111","pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
 
-        Tag t = new Tag(null,"#555555", b, new HashSet<>());
+        Tag t = new Tag(null,"#555555", "#555555", b, new HashSet<>());
 
         b.addTag(t);
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b2));
@@ -141,52 +141,17 @@ public class TagControllerTest {
         Board b = new Board("My Schedule", "#111111","#111111",
                 "#111111","#111111", "pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
-        Tag t = new Tag(null,"#555555",b,new HashSet<>());
+        Tag t = new Tag("Solve CG Questions","#555555","#555555", b, new HashSet<>());
         b.addTag(t);
 
         when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
 
         when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
-        var actual = controller.updateTag("Solve CG Questions"
-                ,1L,t.id);
+        var actual = controller.updateTag(new Tag("Solve CG Questions","#555555",
+                        "#555555", b, new HashSet<>()), 1L, t.id);
         assertEquals(HttpStatus.OK, actual.getStatusCode());
         assertEquals(t, actual.getBody());
-    }
-
-
-
-    @Test
-    public void editTagWrongNull() {
-        Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(),
-                new HashSet<>(), new HashSet<>());
-        Tag t = new Tag(null,"#555555",b, new HashSet<>());
-
-        b.addTag(t);
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(repo.findById(t.id)).thenReturn(Optional.of(t));
-
-        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
-
-        var actual = controller.updateTag(null,1L,t.id);
-        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
-    }
-    @Test
-    public void editTagWrongEmpty() {
-        Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(),
-                new HashSet<>(), new HashSet<>());
-        Tag t = new Tag("","#555555",b, new HashSet<>());
-
-        b.addTag(t);
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(repo.findById(t.id)).thenReturn(Optional.of(t));
-
-        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
-
-        var actual = controller.updateTag(null,1L,t.id);
-        assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
     }
 
     @Test
@@ -196,7 +161,7 @@ public class TagControllerTest {
                 new HashSet<>(), new HashSet<>());
         Set<Card> s = new HashSet<>();
 
-        Tag t = new Tag("Tag 2","#555555",b , s);
+        Tag t = new Tag("Tag 2","#555555", "#555555", b , s);
 
         b.addTag(t);
 
@@ -204,37 +169,18 @@ public class TagControllerTest {
         when(repo.findById(t.id)).thenReturn(Optional.of(t));
         when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
 
-        var actual = controller.updateTag("New tag", 1L, t.id);
+        var actual = controller.updateTag(new Tag("New tag",
+                "#555555", "#555555", b , s), 1L, t.id);
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
 
     }
-
-
-
-    @Test
-    public void editTagColorCorrect() {
-        Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(),
-                new HashSet<>(), new HashSet<>());
-        Tag t = new Tag("Solve Phong Shading Questions","#555555",b,new HashSet<>());
-
-        b.addTag(t);
-
-        when(boardRepo.findById(1L)).thenReturn(Optional.of(b));
-        when(repo.findById(t.id)).thenReturn(Optional.of(t));
-        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
-        var actual = controller.updateColor("#333333",1L,t.id);
-        assertEquals(HttpStatus.OK, actual.getStatusCode());
-        assertEquals(t, actual.getBody());
-    }
-
 
     @Test
     public void deleteTagByIdCorrect() {
         Board b = new Board("My Schedule", "#111111","#111111",
                 "#111111","#111111", "pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
-        Tag t = new Tag("Solve Phong Shading Questions","#555555",b,new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
 
         b.addTag(t);
 
@@ -243,7 +189,6 @@ public class TagControllerTest {
         var actual = controller.removeTagById(1L,t.id);
 
         assertEquals(OK, actual.getStatusCode());
-
     }
 
 }

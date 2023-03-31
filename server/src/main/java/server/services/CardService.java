@@ -75,8 +75,11 @@ public class CardService {
      * @param id
      */
     public void deleteCardById(Long id) {
-        cardRepository.getById(id).removeCardsFromTags();
-        cardRepository.deleteById(id);
+        Card card = cardRepository.getById(id);
+        if(card != null) {
+            cardRepository.getById(id).removeCardsFromTags();
+            cardRepository.deleteById(id);
+        }
     }
 
     /**

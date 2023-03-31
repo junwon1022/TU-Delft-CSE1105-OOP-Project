@@ -1,37 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddTagCtrl">
+<GridPane alignment="CENTER" prefHeight="268.0" prefWidth="504.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddTagCtrl">
+   <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="250.3333536783854" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="0.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="253.33333333333334" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="66.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="32.333343505859375" minHeight="0.0" prefHeight="0.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="231.33333333333337" minHeight="10.0" prefHeight="202.33333333333334" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <TextField fx:id="tagName" layoutX="36.0" layoutY="73.0" onKeyPressed="#handleKeyPressed" prefHeight="33.0" prefWidth="228.0" promptText="Enter a name . . ." stylesheets="@../../styles.css">
+      <VBox prefHeight="203.0" prefWidth="249.0" spacing="10.0" GridPane.rowIndex="2">
+         <children>
+            <Label text="Choose a name:">
+               <font>
+                  <Font name="Corbel" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tagName" onKeyPressed="#handleKeyPressed" prefHeight="25.0" prefWidth="204.0" promptText="Enter a name . . ." stylesheets="@../../styles.css">
+               <font>
+                  <Font name="Corbel" size="12.0" />
+               </font>
+            </TextField>
+            <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="39.0" prefWidth="210.0" textAlignment="CENTER" textFill="#8f2e30">
+               <font>
+                  <Font name="Corbel Italic" size="14.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="25.0" right="15.0" top="15.0" />
+         </padding>
+      </VBox>
+      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Create New Tag" textFill="#258cb5" GridPane.columnSpan="3">
          <font>
-            <Font name="Corbel" size="12.0" />
+            <Font name="Corbel Light" size="30.0" />
          </font>
-      </TextField>
-      <Button layoutX="247.0" layoutY="157.0" mnemonicParsing="false" onAction="#ok" styleClass="normal-button" stylesheets="@../../styles.css" text="OK" textFill="WHITE">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Button>
-      <Button layoutX="171.0" layoutY="157.0" mnemonicParsing="false" onAction="#cancel" prefHeight="31.0" prefWidth="60.0" styleClass="red-button" stylesheets="@../../styles.css" text="Cancel" textFill="WHITE">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Button>
-      <Label layoutX="113.0" layoutY="33.0" text="Add a Tag" textFill="#231f20">
-         <font>
-            <Font name="Corbel Bold" size="18.0" />
-         </font>
+         <padding>
+            <Insets bottom="10.0" top="20.0" />
+         </padding>
       </Label>
-      <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="17.0" layoutY="108.0" prefHeight="33.0" prefWidth="264.0" textAlignment="CENTER" textFill="#8f2e30">
-         <font>
-            <Font name="Corbel Italic" size="14.0" />
-         </font>
-      </Label>
+      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" GridPane.columnSpan="3" GridPane.rowIndex="1">
+         <children>
+            <Line endX="285.3333435058594" endY="-7.62939453125E-6" startX="-150.6666717529297" startY="-7.62939453125E-6" strokeLineCap="ROUND" strokeWidth="4.0">
+               <stroke>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.9702000021934509" green="0.9866999983787537" blue="0.9900000095367432" opacity="0.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.5033557046979865">
+                           <color>
+                              <Color green="0.7058823704719543" blue="0.8470588326454163" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.9702000021934509" green="0.9866999983787537" blue="0.9900000095367432" opacity="0.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </stroke>
+            </Line>
+         </children>
+      </HBox>
+      <VBox prefWidth="193.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <children>
+            <Label maxWidth="1.7976931348623157E308" text="Choose board color (optional):">
+               <font>
+                  <Font name="Corbel Italic" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Label>
+            <ColorPicker id="color-picker" fx:id="backgroundColorPicker" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="204.0" promptText="Choose a board color (optional)" stylesheets="@../../styles.css">
+               <value>
+                  <Color green="0.7058823704719543" blue="0.8470588326454163" />
+               </value>
+            </ColorPicker>
+            <Label maxWidth="1.7976931348623157E308" text="Choose font color (optional):">
+               <font>
+                  <Font name="Corbel Italic" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Label>
+            <ColorPicker id="color-picker" fx:id="fontColorPicker" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="204.0" promptText="Choose a board color (optional)" stylesheets="@../../styles.css">
+               <value>
+                  <Color />
+               </value>
+            </ColorPicker>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#cancel" prefHeight="31.0" prefWidth="70.0" styleClass="red-button" stylesheets="@../../styles.css" text="Cancel" textFill="WHITE">
+                     <font>
+                        <Font name="Corbel" size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#ok" prefHeight="31.0" prefWidth="70.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Create" textFill="WHITE">
+                     <font>
+                        <Font name="Corbel" size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="25.0" top="15.0" />
+         </padding>
+      </VBox>
+      <VBox alignment="TOP_CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Line endX="286.6666259765625" endY="-50.68582534790039" startX="286.6666564941406" startY="-250.67718505859375" strokeLineCap="ROUND" strokeWidth="4.0">
+               <stroke>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="0.7058823704719543" blue="0.8470588326454163" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.006711409395973154">
+                           <color>
+                              <Color green="0.7058823704719543" blue="0.8470588326454163" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.7785234899328859">
+                           <color>
+                              <Color red="0.9702000021934509" green="0.9866999983787537" blue="0.9900000095367432" opacity="0.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.9552572706935123">
+                           <color>
+                              <Color red="0.9702000021934509" green="0.9866999983787537" blue="0.9900000095367432" opacity="0.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.9702000021934509" green="0.9866999983787537" blue="0.9900000095367432" opacity="0.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </stroke>
+            </Line>
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</GridPane>

@@ -38,7 +38,6 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -133,7 +132,6 @@ public class BoardCtrl {
      * Initialize the scene.
      */
     public void initialize() {
-
         boolean haveBoard = false;
 
         try {
@@ -157,20 +155,17 @@ public class BoardCtrl {
         title.setStyle("-fx-text-fill: " + board.font);
 
         tags = FXCollections.observableArrayList();
-        tagList.setFixedCellSize(0);
         tagList.setItems(tags);
         tagList.setCellFactory(lv -> new TagCtrl(server, this));
-        tagList.setMaxHeight(400);
         tagList.getStylesheets().add("styles.css");
 
-        if (haveBoard)
+        if (haveBoard) {
             prefs.addBoard(server.getServerAddress(), board);
+        }
 
         recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
-        recentBoards.setFixedCellSize(0);
         recentBoards.setItems(recentBoardsData);
         recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-        recentBoards.setMaxHeight(600);
 
         AnchorPane.setBottomAnchor(addTag, 5.0);
         AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
@@ -203,6 +198,9 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoards.setFixedCellSize(0);
+        recentBoards.setMaxHeight(600);
+
         // set the VBox to always grow to fill the AnchorPane
         recentBoards.setPrefHeight(Region.USE_COMPUTED_SIZE);
         recentBoards.setPrefWidth(Region.USE_COMPUTED_SIZE);
@@ -221,6 +219,9 @@ public class BoardCtrl {
      * Loads the list to auto-fit its parent
      */
     public void loadTagList() {
+        tagList.setFixedCellSize(0);
+        tagList.setMaxHeight(400);
+
         // set the tagList to always grow to fill the AnchorPane
         tagList.setPrefHeight(Region.USE_COMPUTED_SIZE);
         tagList.setPrefWidth(Region.USE_COMPUTED_SIZE);
@@ -285,15 +286,17 @@ public class BoardCtrl {
             stage.setTitle("Add a new tag");
             Scene addTagScene = new Scene(root);
             addTagScene.getStylesheets().add("styles.css");
-            stage.setHeight(240);
-            stage.setWidth(320);
+            stage.setHeight(320);
+            stage.setWidth(510);
             stage.setScene(addTagScene);
             stage.showAndWait();
 
             if (controller.success) {
                 String name = controller.storedText;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
 
-                Tag tag = getTag(name);
+                Tag tag = getTag(name, backgroundColor, fontColor);
                 Tag addedTag = server.addTag(tag);
                 System.out.println(addedTag);
 
@@ -386,8 +389,8 @@ public class BoardCtrl {
         return new ListOfCards(title, board, new ArrayList<>());
     }
 
-    private Tag getTag(String name) {
-        return new Tag(name, "#00B4D8", board, new HashSet<>());
+    private Tag getTag(String name, String backgroundColor, String fontColor) {
+        return new Tag(name, backgroundColor, fontColor, board, new HashSet<>());
     }
 
     /**

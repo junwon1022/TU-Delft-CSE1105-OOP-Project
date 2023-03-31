@@ -17,7 +17,7 @@
             <ColorAdjust brightness="-0.42" />
          </effect>
       </Button>
-      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" />
+      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" HBox.hgrow="ALWAYS" />
       <Button id="delete-list" fx:id="deleteTag" mnemonicParsing="false" onAction="#remove" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
          <font>
             <Font name="Corbel Bold" size="13.0" />
@@ -28,6 +28,6 @@
       </Button>
    </children>
    <padding>
-      <Insets left="3.0" right="4.0" />
+      <Insets left="10.0" right="10.0" />
    </padding>
 </HBox>

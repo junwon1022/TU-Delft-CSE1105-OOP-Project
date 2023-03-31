@@ -164,23 +164,21 @@ public class CardServiceTest {
                 "#111111", "pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
 
-        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
 
         b.addList(l);
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+        Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),
                 new HashSet<>(), null);
 
         l.addCard(c);
 
         boardService.createBoard(b);
-        listService.createListOfCards(l,b);
-        cardService.createCard(c,l,b);
+        listService.createListOfCards(l, b);
+        cardService.createCard(c, l, b);
         cardService.deleteCardById(c.id);
 
         Mockito.verify(cardRepo).deleteById(c.id);
-
-
     }
 
     @Test
