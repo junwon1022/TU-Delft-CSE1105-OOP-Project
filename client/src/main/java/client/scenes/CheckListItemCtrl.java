@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import commons.CheckListItem;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
