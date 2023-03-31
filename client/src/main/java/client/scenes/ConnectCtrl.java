@@ -2,7 +2,6 @@ package client.scenes;
 
 
 import client.Main;
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -91,6 +90,7 @@ public class ConnectCtrl {
             mainCtrl.showMainScreen("http://localhost:8080");
         }
         catch(Exception e) {
+            mainCtrl.changeServer("http://localhost:8080");
             nullTitle.setText(e.getMessage());
         }
     }

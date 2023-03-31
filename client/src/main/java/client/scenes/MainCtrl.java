@@ -155,6 +155,7 @@ public class MainCtrl {
 
     /**
      * Show the board scene.
+     * @param server the server the main screen connects to
      */
     public void showMainScreen(String server) throws Exception {
 
@@ -185,18 +186,27 @@ public class MainCtrl {
 
 
     /**
+     * Changes the server
+     * @param server the server the admin connects to
+     */
+    public void changeServer(String server) throws Exception {
+
+        serverUtils.changeServer(server);
+    }
+    /**
      * Show the admin scene.
+     * @param server the server the admin connects to
      */
     public void showAdmin(String server) throws Exception {
 
-            main.startConnect(primaryStage);
-            serverUtils.changeServer(server);
-            primaryStage.setTitle("Admin Screen");
-            primaryStage.setScene(adminScreen);
-            primaryStage.setHeight(600);
-            primaryStage.setMaximized(false);
-            centerStage();
-            adminScreenCtrl.refresh();
+        main.startConnect(primaryStage);
+        serverUtils.changeServer(server);
+        primaryStage.setTitle("Admin Screen");
+        primaryStage.setScene(adminScreen);
+        primaryStage.setHeight(600);
+        primaryStage.setMaximized(false);
+        centerStage();
+        adminScreenCtrl.refresh();
 
     }
 
