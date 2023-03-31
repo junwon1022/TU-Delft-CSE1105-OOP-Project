@@ -89,8 +89,21 @@
     -fx-border-radius: 10px;
 }
 
-.normal-button:hover {
-    -fx-background-color: #E4F8FC;
+
+.green-button:hover {
+    -fx-background-color: #F8FDFE;
+    -fx-text-fill: #1fa401;
+    -fx-border-color: #1fa401;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.green-button {
+    -fx-background-color: #1fa401;
+    -fx-text-fill: #F8FDFE;
+    -fx-border-color: #1fa401;
+    -fx-border-width: 1.5;
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
 }

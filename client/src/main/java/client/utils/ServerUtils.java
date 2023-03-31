@@ -81,6 +81,7 @@ public class ServerUtils {
             throw new Exception("Please enter a valid server to connect" +
                     " or select one from the list with double click!");
         }
+
         if(server.charAt(server.length() - 1) != '/')  {
             server = server + "/";
         }
@@ -99,6 +100,7 @@ public class ServerUtils {
         catch(Exception e) {
             throw new Exception("This is not a valid server! Please try again!");
         }
+
         try {
             //checks if the server is valid,
             // that is if it is able to make a dummy request to the api
@@ -109,7 +111,6 @@ public class ServerUtils {
         catch(Exception e){
             throw new Exception("This is not a TimeWise server! Please try again!");
         }
-
     }
 
     /**

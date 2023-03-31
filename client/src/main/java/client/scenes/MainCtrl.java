@@ -38,7 +38,6 @@ public class MainCtrl {
     private Scene connect;
     private MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
-
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
 
@@ -79,6 +78,7 @@ public class MainCtrl {
 
         this.adminScreenCtrl = adminScreen.getKey();
         this.adminScreen = new Scene(adminScreen.getValue());
+        this.adminScreen.getStylesheets().add("styles.css");
 
         showConnect();
         primaryStage.show();
@@ -173,7 +173,8 @@ public class MainCtrl {
     public void showAdmin() {
         primaryStage.setTitle("Admin Screen");
         primaryStage.setScene(adminScreen);
-        primaryStage.setHeight(600);
+        primaryStage.setHeight(550);
+        primaryStage.setWidth(800);
         primaryStage.setMaximized(false);
         centerStage();
         adminScreenCtrl.refresh();

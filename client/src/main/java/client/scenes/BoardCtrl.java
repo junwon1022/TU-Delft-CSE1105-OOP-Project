@@ -140,16 +140,13 @@ public class BoardCtrl {
             list.setFixedCellSize(0);
             list.setItems(listOfCards);
             list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-            list.setMaxHeight(600);
             list.setStyle("-fx-background-color: " + board.colour);
             key.setText(board.key);
             title.setText(board.title);
             title.setStyle("-fx-text-fill: " + board.font);
 
             tags = FXCollections.observableArrayList();
-            tagList.setItems(tags);
-            tagList.setCellFactory(lv -> new TagCtrl(server, this));
-            tagList.getStylesheets().add("styles.css");
+            loadTagList();
 
             if (haveBoard) {
                 prefs.addBoard(server.getServerAddress(), board);
@@ -158,19 +155,15 @@ public class BoardCtrl {
             if(adminFlag == 0) recentBoardsData = FXCollections.observableList
                     (prefs.getBoards(server.getServerAddress()));
             else recentBoardsData = FXCollections.observableList
-                    (server.getBoards().stream()
-                            .map(x -> new PreferencesBoardInfo
-                                    (x.title, x.key, x.password, x.font, x.colour))
+                (server.getBoards().stream()
+                    .map(x -> new PreferencesBoardInfo
+                    (x.title, x.key, x.password, x.font, x.colour))
                             .collect(Collectors.toList()));
-            recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
-            recentBoards.setItems(recentBoardsData);
-            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+            loadRecentBoards();
 
             AnchorPane.setBottomAnchor(addTag, 5.0);
             AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
 
-            loadTagList();
-            loadRecentBoards();
             refresh();
 
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
@@ -200,6 +193,9 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
+        recentBoards.setItems(recentBoardsData);
+        recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
         recentBoards.setFixedCellSize(0);
         recentBoards.setMaxHeight(600);
 
@@ -221,6 +217,9 @@ public class BoardCtrl {
      * Loads the list to auto-fit its parent
      */
     public void loadTagList() {
+        tagList.setItems(tags);
+        tagList.setCellFactory(lv -> new TagCtrl(server, this));
+        tagList.getStylesheets().add("styles.css");
         tagList.setFixedCellSize(0);
         tagList.setMaxHeight(400);
 
