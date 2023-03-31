@@ -15,6 +15,9 @@
  */
 package client.scenes;
 
+import client.Main;
+import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,6 +28,9 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
+
+    private Main main;
+    private ServerUtils serverUtils;
 //
 //    private QuoteOverviewCtrl overviewCtrl;
 //    private Scene overview;
@@ -42,6 +48,29 @@ public class MainCtrl {
     private Scene adminScreen;
 
 
+
+
+    /**
+     * Create a new MainCtrl.
+     *
+     * @param primaryStage The primary stage to use.
+     * @param connect      The connect screen
+     */
+    public void initialize(Stage primaryStage,
+                           Pair<ConnectCtrl, Parent> connect) {
+        this.primaryStage = primaryStage;
+        this.connectCtrl = connect.getKey();
+        this.connectCtrl.initialize();
+        this.connect = new Scene(connect.getValue());
+        this.main = new Main();
+
+        showConnect();
+        primaryStage.show();
+
+    }
+
+
+
     /**
      * Create a new MainCtrl.
      *
@@ -57,6 +86,7 @@ public class MainCtrl {
                            Pair<AdminScreenCtrl, Parent> adminScreen) {
 //            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
+        this.serverUtils = new ServerUtils(new UserPreferences());
 //        this.overviewCtrl = overview.getKey();
 //        this.overview = new Scene(overview.getValue());
 //
@@ -78,6 +108,7 @@ public class MainCtrl {
 
         this.adminScreenCtrl = adminScreen.getKey();
         this.adminScreen = new Scene(adminScreen.getValue());
+        this.main = new Main();
 
         showConnect();
         primaryStage.show();
@@ -125,12 +156,16 @@ public class MainCtrl {
     /**
      * Show the board scene.
      */
-    public void showMainScreen() {
+    public void showMainScreen(String server) throws Exception {
+
+        main.startConnect(primaryStage);
+        serverUtils.changeServer(server);
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
         primaryStage.setMaximized(false);
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
+
 
         // Get the dimensions of the primary screen
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -152,13 +187,17 @@ public class MainCtrl {
     /**
      * Show the admin scene.
      */
-    public void showAdmin() {
-        primaryStage.setTitle("Admin Screen");
-        primaryStage.setScene(adminScreen);
-        primaryStage.setHeight(600);
-        primaryStage.setMaximized(false);
-        centerStage();
-        adminScreenCtrl.refresh();
+    public void showAdmin(String server) throws Exception {
+
+            main.startConnect(primaryStage);
+            serverUtils.changeServer(server);
+            primaryStage.setTitle("Admin Screen");
+            primaryStage.setScene(adminScreen);
+            primaryStage.setHeight(600);
+            primaryStage.setMaximized(false);
+            centerStage();
+            adminScreenCtrl.refresh();
+
     }
 
 
@@ -178,4 +217,5 @@ public class MainCtrl {
         primaryStage.setX(centerX - primaryStage.getWidth() / 2);
         primaryStage.setY(centerY - primaryStage.getHeight() / 2);
     }
+
 }

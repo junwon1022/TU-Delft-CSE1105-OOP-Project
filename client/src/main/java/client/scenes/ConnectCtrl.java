@@ -1,6 +1,7 @@
 package client.scenes;
 
 
+import client.Main;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import java.io.IOException;
 
 public class ConnectCtrl {
 
+    private Main main;
 
     @FXML
     private AnchorPane root;
@@ -43,19 +45,15 @@ public class ConnectCtrl {
     @FXML
     private Label nullTitle;
 
-    private ServerUtils server;
-
     private final MainCtrl mainCtrl;
 
     /**
      * Create a new ConnectCtrl
-     * @param server
      * @param mainCtrl
      */
     @Inject
-    public ConnectCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public ConnectCtrl( MainCtrl mainCtrl) {
 
-        this.server = server;
         this.mainCtrl = mainCtrl;
     }
 
@@ -90,17 +88,10 @@ public class ConnectCtrl {
      */
     public void connectToMainScreen(ActionEvent event) throws Exception {
         try {
-            server.changeServer(field.getText());
-            mainCtrl.showMainScreen();
+            mainCtrl.showMainScreen("http://localhost:8080");
         }
         catch(Exception e) {
-            try {
-                server.changeServer("http://localhost:8080");
-                nullTitle.setText(e.getMessage());
-            }
-            catch (IOException a) {
-                nullTitle.setText(e.getMessage());
-            }
+            nullTitle.setText(e.getMessage());
         }
     }
     /**
@@ -113,8 +104,7 @@ public class ConnectCtrl {
      */
     public void connectDefault(ActionEvent event) throws Exception {
 
-        server.changeServer("http://localhost:8080");
-        mainCtrl.showMainScreen();
+        mainCtrl.showMainScreen("http://localhost:8080");
     }
 
     /**
@@ -127,19 +117,17 @@ public class ConnectCtrl {
      */
     public void connectAdmin(ActionEvent event) throws Exception {
         if(adminField.getText().equals("admin")) {
-            if(field.getText().equals("")) mainCtrl.showAdmin();
+            if(field.getText().equals("")) mainCtrl.showAdmin("http://localhost:8080");
 
             else{
                 try {
-                    server.changeServer(field.getText());
-                    mainCtrl.showAdmin();
+                    mainCtrl.showAdmin("http://localhost:8080");
                 }
                 catch(Exception e){
                     FXMLLoader fxmlLoader =
                             new FXMLLoader(getClass().getResource("Exception.fxml"));
                     try {
                         Parent root = fxmlLoader.load();
-                        server.changeServer("http://localhost:8080");
                         Stage stage = new Stage();
                         stage.setTitle(e.getMessage());
                         stage.setScene(new Scene(root, 300, 200));
