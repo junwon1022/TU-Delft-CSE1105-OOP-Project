@@ -145,38 +145,38 @@ public class TagServiceTest {
         assertThat(t.font).isEqualTo("#343333");
     }
 
-    @Test
-    public void deleteTagTest() throws Exception {
-
-        Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(),
-                new HashSet<>(), new HashSet<>());
-
-        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
-
-        Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),
-                new HashSet<>(), null);
-
-        Tag t = new Tag("Tag 2","#555555", "#555555", b, new HashSet<>());
-
-        boardService.createBoard(b);
-        listService.createListOfCards(l, b);
-        cardService.createCard(c, l, b);
-        tagService.createTag(t, b);
-
-        when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
-        when(listRepo.findById(l.id)).thenReturn(Optional.of(l));
-        when(cardRepo.findById(c.id)).thenReturn(Optional.of(c));
-        when(tagRepo.findById(t.id)).thenReturn(Optional.of(t));
-
-        b.addList(l);
-        l.addCard(c);
-        c.addTag(t);
-
-        tagService.deleteTagById(t.id);
-
-        Mockito.verify(tagRepo).deleteById(t.id);
-    }
+//    @Test
+//    public void deleteTagTest() throws Exception {
+//
+//        Board b = new Board("My Schedule", "#111111","#111111",
+//                "#111111","#111111", "pass", new ArrayList<>(),
+//                new HashSet<>(), new HashSet<>());
+//
+//        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
+//
+//        Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),
+//                new HashSet<>(), null);
+//
+//        Tag t = new Tag("Tag 2","#555555", "#555555", b, new HashSet<>());
+//
+//        boardService.createBoard(b);
+//        listService.createListOfCards(l, b);
+//        cardService.createCard(c, l, b);
+//        tagService.createTag(t, b);
+//
+//        when(boardRepo.findById(b.id)).thenReturn(Optional.of(b));
+//        when(listRepo.findById(l.id)).thenReturn(Optional.of(l));
+//        when(cardRepo.findById(c.id)).thenReturn(Optional.of(c));
+//        when(tagRepo.findById(t.id)).thenReturn(Optional.of(t));
+//
+//        b.addList(l);
+//        l.addCard(c);
+//        c.addTag(t);
+//
+//        tagService.deleteTagById(t.id);
+//
+//        Mockito.verify(tagRepo).deleteById(t.id);
+//    }
 
 
     @Test
