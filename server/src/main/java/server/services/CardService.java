@@ -1,9 +1,6 @@
 package server.services;
 
-import commons.Board;
-import commons.ListOfCards;
-import commons.Card;
-import commons.Tag;
+import commons.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -147,4 +144,27 @@ public class CardService {
         card.tags.remove(tag);
         cardRepository.save(card);
     }
+
+    /**
+     * Method that adds a palette to the given card
+     * @param card
+     * @param palette
+     */
+    public void addPaletteToCard(Card card, Palette palette){
+        card.palette = palette;
+        cardRepository.save(card);
+    }
+
+    /**
+     * Method that removes the palette from the card
+     * @param card
+     * @param palette
+     */
+    public void removePaletteFromCard(Card card, Palette palette){
+
+        palette.cards.remove(card);
+        card.palette = null;
+        cardRepository.save(card);
+    }
+
 }

@@ -81,7 +81,8 @@ public class CheckListItemServiceTest {
     public void addCheckTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
         boardService.createBoard(b);
         Mockito.verify(boardRepo).save(b);
 
@@ -92,7 +93,8 @@ public class CheckListItemServiceTest {
         listService.createListOfCards(l,b);
 
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
         l.addCard(c);
 
@@ -129,13 +131,15 @@ public class CheckListItemServiceTest {
     public void editCheckTitleTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
 
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
 
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
@@ -178,13 +182,15 @@ public class CheckListItemServiceTest {
     public void deleteCheckTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
         b.addList(l);
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
         l.addCard(c);
 
@@ -208,11 +214,13 @@ public class CheckListItemServiceTest {
     public void getAllChecksTest() throws Exception {
 
         Board b = new Board("My Schedule", "#111111","#111111",
-                "#111111","#111111", "pass", new ArrayList<>(), new HashSet<>());
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
 
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
 
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),new HashSet<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
 
         CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
 

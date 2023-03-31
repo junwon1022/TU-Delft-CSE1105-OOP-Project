@@ -33,6 +33,11 @@ public class CardTest {
     Tag tag2;
     Tag tag3;
 
+    Palette palette1;
+    Palette palette2;
+
+    Set<Palette> palettes;
+
     /**
      * Set up all objects needed for testing
      */
@@ -52,9 +57,18 @@ public class CardTest {
         tags.add(tag1);
         tags.add(tag2);
 
+        palettes = new HashSet<>();
+        palette1 = new Palette("Basic", "#ffffff",
+                "#ffffff", true, board, new HashSet<Card>());
+        palette2 = new Palette("Important", "#222222",
+                "#222222", false, board, new HashSet<Card>());
+
+        palettes.add(palette1);
+        palettes.add(palette2);
+
         board = new Board("Algebra", "#ffffff", "#ffffff",
                 "#ffff22", "#ffff22",
-                "pass", listOfCards, tags);
+                "pass", listOfCards, tags, palettes);
         listOfCards = new ArrayList<>();
         list = new ListOfCards("Grasple",board, cards);
         list2 = new ListOfCards("Grasple", board, cards);
@@ -63,11 +77,11 @@ public class CardTest {
         listOfCards.add(list2);
 
         card = new Card("Homework", "Somewhat long description",
-                "#ffffff", list, checklist, tags);
+                "#ffffff", list, checklist, tags, palette1);
         card2 = new Card("Homework", "Somewhat long description",
-                "#ffffff", list, checklist, tags);
+                "#ffffff", list, checklist, tags, palette1);
         card3 = new Card("Project", "Somewhat long description",
-                "#ffffff", list, checklist, tags);
+                "#ffffff", list, checklist, tags, palette2);
         cards = new ArrayList<>();
         cards.add(card);
         cards.add(card2);

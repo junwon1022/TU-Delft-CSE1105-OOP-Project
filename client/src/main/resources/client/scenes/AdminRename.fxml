@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.RenameBoardCtrl">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AdminRenameCtrl">
    <children>
       <TextField fx:id="titleField" layoutX="30.0" layoutY="70.0" onKeyPressed="#handleKeyPressed" prefHeight="31.0" prefWidth="240.0" promptText="Enter a new title . . ." stylesheets="@../../styles.css">
          <font>
@@ -27,7 +27,7 @@
             <Font name="Corbel" size="13.0" />
          </font>
       </Button>
-      <Label layoutX="78.0" layoutY="30.0" text="Rename the board" textAlignment="CENTER" textFill="#231f20">
+      <Label layoutX="84.0" layoutY="31.0" text="Rename the board" textAlignment="CENTER" textFill="#231f20">
          <font>
             <Font name="Corbel Bold" size="18.0" />
          </font>

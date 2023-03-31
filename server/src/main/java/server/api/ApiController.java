@@ -27,13 +27,6 @@ public class ApiController {
      */
     @GetMapping(path = {"/"})
     private ResponseEntity<String> checkServer() {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body("This is a TimeWise Server");
-        }
-        catch (Exception e) {
-
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.status(HttpStatus.OK).body("This is a TimeWise Server");
     }
-
 }

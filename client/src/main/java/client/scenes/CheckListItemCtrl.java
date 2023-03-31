@@ -1,5 +1,6 @@
 package client.scenes;
 
+<<<<<<< client/src/main/java/client/scenes/CheckListItemCtrl.java
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.CheckListItem;
@@ -54,62 +55,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
-        setOnDragDetected(this::handleDragDetected);
-
-        setOnDragOver(this::handleDragOver);
-
-        setOnDragEntered(this::handleDragEntered);
-
-        setOnDragExited(this::handleDragExited);
-
-        setOnDragDropped(this::handleDragDropped);
-
-        setOnDragDone(Event::consume);
-    }
-
-
-    private void handleDragDropped(DragEvent dragEvent) {
-        Dragboard db = dragEvent.getDragboard();
-        boolean success = false;
-        if (db.hasString()) {
-            String draggedText = db.getString();
-            // Do something with the dragged text
-            success = true;
-        }
-        dragEvent.setDropCompleted(success);
-        dragEvent.consume();
-    }
-
-    private void handleDragExited(DragEvent dragEvent) {
-        // Set the background color back to its original color
-        root.setStyle("-fx-background-color: #f8f8f8;");
-    }
-
-    private void handleDragEntered(DragEvent dragEvent) {
-        if (dragEvent.getGestureSource() != root && dragEvent.getDragboard().hasString()) {
-            // Set the background color to indicate a valid drop target
-            root.setStyle("-fx-background-color: #e0f4fd;");
-        }
-        dragEvent.consume();
-    }
-
-    private void handleDragOver(DragEvent dragEvent) {
-        if (dragEvent.getGestureSource() != root && dragEvent.getDragboard().hasString()) {
-            // Accept the drag and drop transfer mode
-            dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-        }
-        dragEvent.consume();
-    }
-
-    private void handleDragDetected(MouseEvent mouseEvent) {
-        // Start a drag-and-drop gesture
-        Dragboard db = root.startDragAndDrop(TransferMode.ANY);
-        // Put the text to be dragged on the dragboard
-        ClipboardContent content = new ClipboardContent();
-        content.putString("Some text to be dragged");
-        db.setContent(content);
-        mouseEvent.consume();
+    
     }
 
     @Override
@@ -187,4 +133,21 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
         parent.removeChecklist(data);
         board.refresh();
     }
+=======
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+
+public class CheckListItemCtrl {
+    @FXML
+    CheckBox checkbox;
+
+    @FXML
+    Button removeChecklist;
+
+    @FXML
+    Button addChecklist;
+
+
+>>>>>>> client/src/main/java/client/scenes/CheckListItemCtrl.java
 }

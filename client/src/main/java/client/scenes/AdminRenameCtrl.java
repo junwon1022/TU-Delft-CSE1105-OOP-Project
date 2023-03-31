@@ -1,7 +1,7 @@
 package client.scenes;
 
-import client.utils.PreferencesBoardInfo;
 import com.google.inject.Inject;
+import commons.Board;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RenameBoardCtrl {
+public class AdminRenameCtrl {
     @FXML
     private TextField titleField;
 
@@ -30,7 +30,7 @@ public class RenameBoardCtrl {
      * Constructor for the Rename Card Controller
      */
     @Inject
-    public RenameBoardCtrl(){
+    public AdminRenameCtrl(){
         success = false;
         nullTitle = new Label("");
     }
@@ -38,10 +38,10 @@ public class RenameBoardCtrl {
     /**
      * Initialize method for the controller
      *
-     * @param board - the card for which we open the detailed view
+     * @param board - the board for which we open the detailed view
      */
-    public void initialize(PreferencesBoardInfo board){
-        String oldTitle = board.getTitle();
+    public void initialize(Board board){
+        String oldTitle = board.title;
         titleField.setText(oldTitle);
     }
 

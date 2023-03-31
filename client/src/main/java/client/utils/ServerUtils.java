@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import com.google.inject.Inject;
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -48,9 +49,27 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
+    private final UserPreferences prefs;
+
     private static String SERVER = "http://localhost:8080/";
 
     private static String SERVER_ADDRESS = "localhost:8080";
+
+    /**
+     * ServerUtils constructor
+     * @param prefs
+     */
+    @Inject
+    public ServerUtils(UserPreferences prefs) {
+        this.prefs = prefs;
+    }
+
+    /**
+     * @return the address of the server
+     */
+    public String getServerAddress() {
+        return SERVER_ADDRESS;
+    }
 
     /**
      * Changes the preset server adress from 8080 to the textbox input
@@ -58,28 +77,37 @@ public class ServerUtils {
      */
     public void changeServer(String server) throws Exception {
 
-        if(server.charAt(server.length() - 1) != '/')  server = server + "/";
+        if(server == null || server.equals("")) {
+            throw new Exception("Please enter a valid server to connect" +
+                    " or select one from the list with double click!");
+        }
+        if(server.charAt(server.length() - 1) != '/')  {
+            server = server + "/";
+        }
 
         this.SERVER = server;
         this.SERVER_ADDRESS = server;
+
         //removes the http so that websockets can be accessed
         if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
+
         System.out.println(SERVER);
         try {
             //check that the server is connectable to web sockets
             connect("ws://" + SERVER_ADDRESS + "websocket");
         }
         catch(Exception e) {
-            throw new Exception("Server Invalid");
+            throw new Exception("This is not a valid server! Please try again!");
         }
         try {
-            //checks if the server is valid , is able to make a dummy request to the api
+            //checks if the server is valid,
+            // that is if it is able to make a dummy request to the api
             String check = checkServer(SERVER);
             if (!check.contains("TimeWise Server"))
                 throw new Exception("Not a TimeWise Server");
         }
         catch(Exception e){
-            throw new Exception("Not a TimeWise Server");
+            throw new Exception("This is not a TimeWise server! Please try again!");
         }
 
     }
@@ -132,6 +160,7 @@ public class ServerUtils {
 
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
+
 
 
     /**
@@ -274,12 +303,12 @@ public class ServerUtils {
      */
     public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
         ClientBuilder.newClient(new ClientConfig())
-            .target(SERVER).path("api/boards/" + list.board.id
+                .target(SERVER).path("api/boards/" + list.board.id
                         + "/lists/" + list.id
                         + "/from/" + fromIdx
                         + "/to/" + toIdx)
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .put(Entity.json(""));
     }
 
@@ -355,6 +384,20 @@ public class ServerUtils {
         return boardData;
     }
 
+
+    /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<Board> getMyServerBoardTitles(){
+
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        boardData = getBoards();
+        return boardData;
+    }
     /**
      * Get boards from server
      *
@@ -662,8 +705,65 @@ public class ServerUtils {
         boardData.add(b);
 
         return b;
+    }
+
+    /**
+     * Method to rename a board
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public PreferencesBoardInfo renameBoard(PreferencesBoardInfo board, String newTitle) {
+        // Get board associated with this PreferencesBoardInfo
+        Board actualBoard = getBoardByKey(board.getKey());
+
+        //Puts the board with the new title into the database
+        long boardId = actualBoard.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+        // Update the board title in the preferences
+        return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
+    }
 
 
+
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameServerBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+
+        return b;
+    }
+
+
+    /**
+     * Removal of Board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removeBoard(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
     }
 
     /**

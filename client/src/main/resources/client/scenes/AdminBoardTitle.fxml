@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="529.0" style="-fx-background-color: rgb(0, 180, 216, 0.6);" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="title" layoutX="23.0" layoutY="11.0" style="-fx-font-weight: bold;" text="Title" />
+        <Button layoutX="335.0" layoutY="47.0" mnemonicParsing="false" onAction="#remove" text="🗑" />
+      <Button layoutX="428.0" layoutY="36.0" mnemonicParsing="false" onAction="#join" prefHeight="48.0" prefWidth="76.0" style="-fx-background-color: rgb(0, 180, 216, 0.6);" text="JOIN" />
+        <Button id="rename-card" fx:id="detailedView" layoutX="370.0" layoutY="46.0" mnemonicParsing="false" onAction="#rename" prefHeight="28.0" prefWidth="25.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
+            <font>
+                <Font size="19.0" />
+            </font>
+            <styleClass>
+                <String fx:value="image-button" />
+                <String fx:value="rename" />
+            </styleClass>
+            <effect>
+                <ColorAdjust brightness="-0.22" />
+            </effect>
+        </Button>
+      <Label fx:id="key" layoutX="3.0" layoutY="56.0" prefHeight="62.0" prefWidth="305.0" text="Key:" />
+    </children>
+</AnchorPane>

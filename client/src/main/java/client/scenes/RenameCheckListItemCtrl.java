@@ -108,6 +108,7 @@ public class RenameCheckListItemCtrl {
      * @param event the KeyEvent
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
+        success = true;
         storedText = text.getText();
         if (storedText == null || storedText.length() == 0) {
             nullText.setText(MESSAGE);
