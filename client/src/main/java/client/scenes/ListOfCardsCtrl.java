@@ -370,6 +370,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "red",
                 cardData,
                 new ArrayList<>(),
+                null,
                 null);
         card.order = cardData.cards.size();
         return card;
