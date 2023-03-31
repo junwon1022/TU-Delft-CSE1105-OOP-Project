@@ -53,7 +53,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
      * @param server         The server to use
      * @param mainScreenCtrl The mainscreen the title is part of
      * @param mainCtrl
-     * @param prefs
+     * @param prefs - user preferences
      */
     @Inject
     public BoardTitleCtrl(ServerUtils server,
@@ -130,7 +130,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
      */
     public void join(ActionEvent event){
         System.out.println("The key is " + data.getKey());
-        mainCtrl.showBoard(data.getKey());
+        mainCtrl.showBoard(data.getKey(),0);
     }
 
 

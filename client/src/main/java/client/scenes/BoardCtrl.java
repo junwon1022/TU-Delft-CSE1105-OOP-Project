@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class BoardCtrl {
     private final UserPreferences prefs;
@@ -52,6 +53,8 @@ public class BoardCtrl {
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
+
+    int adminFlag;
 
     private String boardKey;
 
@@ -107,24 +110,9 @@ public class BoardCtrl {
         this.prefs = prefs;
         this.server = server;
         this.boardKey = boardKey;
-
-        data = FXCollections.observableArrayList();
-
-
-        try {
-            board = this.server.getBoardByKey(boardKey);
-            if(board == null) System.out.println("BOARD IS NULL");
-
-        }
-        catch (Exception e) {
-            System.out.println("Sb");
-            board = getNewBoard();
-            Board addedBoard = server.addBoard(board);
-            board = server.getBoard(addedBoard.id);
-        }
-        refresh();
-
         this.mainCtrl = mainCtrl;
+        data = FXCollections.observableArrayList();
+        initialize();
     }
 
 
@@ -140,41 +128,46 @@ public class BoardCtrl {
             System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
             haveBoard = true;
+
+            data = FXCollections.observableArrayList();
+            list.setFixedCellSize(0);
+            list.setItems(data);
+            list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
+            list.setMaxHeight(600);
+            list.setStyle("-fx-background-color: " + board.colour);
+            key.setText(board.key);
+            title.setText(board.title);
+            title.setStyle("-fx-text-fill: " + board.font);
+
+            if (haveBoard)
+                prefs.addBoard(server.getServerAddress(), board);
+
+            if(adminFlag == 0) recentBoardsData = FXCollections.observableList
+                        (prefs.getBoards(server.getServerAddress()));
+            else recentBoardsData = FXCollections.observableList
+                        (server.getBoards().stream()
+                                .map(x -> new PreferencesBoardInfo
+                                (x.title, x.key, x.password, x.font, x.colour))
+                                .collect(Collectors.toList()));
+            recentBoards.setFixedCellSize(0);
+            recentBoards.setItems(recentBoardsData);
+            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+            recentBoards.setMaxHeight(600);
+            AnchorPane.setBottomAnchor(addTag, 5.0);
+            AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
+            loadVBox();
+            loadRecentBoards();
+            refresh();
+            server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+                for (var list : s.lists)
+                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
+                Platform.runLater(() -> data.setAll(s.lists));
+            });
         }
-        catch (Exception e) {
-            System.out.println("Sb");
+        catch(Exception e){
+            board = getBoard();
         }
 
-        data = FXCollections.observableArrayList();
-        list.setFixedCellSize(0);
-        list.setItems(data);
-        list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-        list.setMaxHeight(600);
-        list.setStyle("-fx-background-color: " + board.colour);
-        key.setText(board.key);
-        title.setText(board.title);
-        title.setStyle("-fx-text-fill: " + board.font);
-
-        if (haveBoard)
-            prefs.addBoard(server.getServerAddress(), board);
-
-        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
-        recentBoards.setFixedCellSize(0);
-        recentBoards.setItems(recentBoardsData);
-        recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-        recentBoards.setMaxHeight(600);
-
-        AnchorPane.setBottomAnchor(addTag, 5.0);
-        AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
-        loadVBox();
-        loadRecentBoards();
-        refresh();
-
-        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-            for (var list: s.lists)
-                list.cards.sort(Comparator.comparingLong(Card::getOrder));
-            Platform.runLater(() -> data.setAll(s.lists));
-        });
     }
 
     /**
@@ -220,6 +213,7 @@ public class BoardCtrl {
         AnchorPane.setLeftAnchor(vBox, 0.0);
         AnchorPane.setRightAnchor(vBox, 0.0);
     }
+
 
     /**
      * Opens a new window to add a new list of cards.
@@ -348,7 +342,9 @@ public class BoardCtrl {
      * @param event - Key event when the user clicks the mouse + /
      */
     public void goToOverview(ActionEvent event) {
-        mainCtrl.showMainScreen();
+
+        if(adminFlag == 0) mainCtrl.showMainScreen();
+        else mainCtrl.showAdmin();
     }
 
     /**
@@ -395,7 +391,7 @@ public class BoardCtrl {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
             if (server.getBoardByKey(joinField.getText()) != null) {
-                mainCtrl.showBoard(joinField.getText());
+                mainCtrl.showBoard(joinField.getText(),adminFlag);
                 joinField.clear();
                 nullTitle.setText("");
             } else throw new Exception("Doesnt Exist");
@@ -419,7 +415,7 @@ public class BoardCtrl {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
                 if(server.getBoardByKey(joinField.getText()) != null) {
-                    mainCtrl.showBoard(joinField.getText());
+                    mainCtrl.showBoard(joinField.getText(),adminFlag);
                     joinField.clear();
                     nullTitle.setText("");
                 }

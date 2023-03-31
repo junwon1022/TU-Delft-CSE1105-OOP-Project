@@ -162,6 +162,7 @@ public class ServerUtils {
     private List<Board> boardData = null;
 
 
+
     /**
      * Placeholder add card function.
      * @param card the card to add
@@ -383,6 +384,20 @@ public class ServerUtils {
         return boardData;
     }
 
+
+    /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<Board> getMyServerBoardTitles(){
+
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        boardData = getBoards();
+        return boardData;
+    }
     /**
      * Get boards from server
      *
@@ -609,6 +624,7 @@ public class ServerUtils {
     private StompSession session = connect("ws://" +  SERVER_ADDRESS + "/websocket");
 
 
+
     /**
      * Creates a StompSession to connect the client to the server from the specified url
      * @param url The url the session will connect to
@@ -713,4 +729,43 @@ public class ServerUtils {
         // Update the board title in the preferences
         return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
     }
+
+
+
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameServerBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+
+        return b;
+    }
+
+
+    /**
+     * Removal of Board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removeBoard(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
+    }
+
+
 }
