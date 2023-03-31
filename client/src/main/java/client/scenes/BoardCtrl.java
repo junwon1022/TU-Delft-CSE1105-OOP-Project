@@ -121,13 +121,10 @@ public class BoardCtrl {
      */
     public void initialize() {
 
-        boolean haveBoard = false;
-
         try {
             board = this.server.getBoardByKey(boardKey);
             System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
-            haveBoard = true;
 
             data = FXCollections.observableArrayList();
             list.setFixedCellSize(0);
@@ -138,9 +135,6 @@ public class BoardCtrl {
             key.setText(board.key);
             title.setText(board.title);
             title.setStyle("-fx-text-fill: " + board.font);
-
-            if (haveBoard)
-                prefs.addBoard(server.getServerAddress(), board);
 
             if(adminFlag == 0) recentBoardsData = FXCollections.observableList
                         (prefs.getBoards(server.getServerAddress()));
