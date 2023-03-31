@@ -87,7 +87,7 @@
       </HBox>
       <VBox prefWidth="193.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
          <children>
-            <Label maxWidth="1.7976931348623157E308" text="Choose board color (optional):">
+            <Label maxWidth="1.7976931348623157E308" text="Choose tag color (optional):">
                <font>
                   <Font name="Corbel Italic" size="14.0" />
                </font>

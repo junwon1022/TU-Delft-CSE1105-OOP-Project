@@ -38,6 +38,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -54,6 +55,12 @@ public class BoardCtrl {
     private final MainCtrl mainCtrl;
 
     private String boardKey;
+
+    @FXML
+    private Line line;
+
+    @FXML
+    private Line line2;
 
     @FXML
     private Label copied;
@@ -385,7 +392,7 @@ public class BoardCtrl {
      * @param title
      * @return the new list
      */
-    private ListOfCards getList(String title){
+    private ListOfCards getList(String title) {
         return new ListOfCards(title, board, new ArrayList<>());
     }
 
@@ -450,5 +457,21 @@ public class BoardCtrl {
                 nullTitle.setText("There is no board with this key!");
             }
         }
+    }
+
+    /**
+     * Getter for a line in the board design
+     * @return a ref to the line
+     */
+    public Line getLine() {
+        return line;
+    }
+
+    /**
+     * Getter for a line in the board design
+     * @return a ref to the line
+     */
+    public Line getLine2() {
+        return line2;
     }
 }

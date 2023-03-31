@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="170.0" spacing="5.0" styleClass="tag-hbox" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="170.0" spacing="5.0" styleClass="tag-hbox" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button id="rename-tag" fx:id="renameTag" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" minHeight="1.0" minWidth="1.0" mnemonicParsing="false" onAction="#renameTag" prefHeight="12.0" prefWidth="13.0" styleClass="rename" stylesheets="@../../styles.css">
          <opaqueInsets>
@@ -17,7 +17,7 @@
             <ColorAdjust brightness="-0.42" />
          </effect>
       </Button>
-      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" HBox.hgrow="ALWAYS" />
+      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" wrapText="true" HBox.hgrow="ALWAYS" />
       <Button id="delete-list" fx:id="deleteTag" mnemonicParsing="false" onAction="#remove" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
          <font>
             <Font name="Corbel Bold" size="13.0" />

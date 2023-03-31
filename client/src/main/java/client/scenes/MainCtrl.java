@@ -18,6 +18,7 @@ package client.scenes;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Line;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -83,6 +84,7 @@ public class MainCtrl {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setMaximized(true);
+
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
@@ -92,8 +94,27 @@ public class MainCtrl {
                 centerStage();
             }
         });
+
+        primaryStage.widthProperty().addListener((observable, oldWidth, newWidth) -> {
+            updateLineEnd(boardCtrl.getLine(), 530);
+            updateLineEnd(boardCtrl.getLine2(), 170);
+        });
+
         boardCtrl.setBoardKey(boardKey);
         boardCtrl.initialize();
+    }
+
+    /**
+     * As lines in java fx are not responsive since they are not resizable,
+     * this is a custom resizing method
+     * @param line - line to be resized
+     * @param offset - width relative to the width of the container
+     */
+    private void updateLineEnd(Line line, int offset) {
+        // update the line's end x coordinate to match the new width of the container
+        double containerWidth = line.getParent().getLayoutBounds().getWidth();
+        double newEndX = containerWidth - offset;
+        line.setEndX(newEndX);
     }
 
     /**
