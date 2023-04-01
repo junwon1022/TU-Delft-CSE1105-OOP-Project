@@ -372,6 +372,13 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
+    /**
+     * Sets the progress text to the checked checklist and total
+     * checklists. Also checks if total is 0 then it
+     * makes the progress text disappear
+     * @param completed the number of checked checklists
+     * @param total total number of checklists
+     */
     public void setProgressText(int completed, int total) {
         completedTasks = completed;
         totalTasks = total;
@@ -383,14 +390,27 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
+    /**
+     * gets the number of checked checklists
+     * @return the number of checked checklits
+     */
     public int getCompleted(){
         return this.completedTasks;
     }
 
+    /**
+     * gets the total number of checklists
+     * @return the number of cehcked checklists
+     */
     public int getTotal() {
         return this.totalTasks;
     }
 
+    /**
+     * Updates the progress text when the checklists are changed
+     * and broadcasted to the rest of the clients
+     * @param checklist the list of checklists
+     */
     public void updateProgressText(List<CheckListItem>  checklist){
         int total = 0;
         int completed = 0;

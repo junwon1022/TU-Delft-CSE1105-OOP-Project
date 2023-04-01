@@ -241,6 +241,10 @@ public class CardDetailsCtrl{
         cardCtrl.setProgressText(completed,total);
     }
 
+    /**
+     * Gets the card controller for this card details
+     * @return the card controller
+     */
     public CardCtrl getCardCtrl() {
         return this.cardCtrl;
     }
