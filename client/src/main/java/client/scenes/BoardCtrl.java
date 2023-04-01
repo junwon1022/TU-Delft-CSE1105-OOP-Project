@@ -311,6 +311,7 @@ public class BoardCtrl {
         }
     }
 
+
     /**
      * Copies the key to the clipboard and shows a notification to the user
      * @param event
@@ -336,6 +337,8 @@ public class BoardCtrl {
         content.putString(key);
         clipboard.setContent(content);
     }
+
+
 
     /**
      * Goes back to overview
