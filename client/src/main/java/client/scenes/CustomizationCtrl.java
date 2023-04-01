@@ -3,13 +3,19 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Palette;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.HashSet;
 
 
 public class CustomizationCtrl {
@@ -35,6 +41,11 @@ public class CustomizationCtrl {
     @FXML
     private Label boardName;
 
+    @FXML
+    private ListView<Palette> list;
+
+    private ObservableList<Palette> data;
+
     private Board board;
 
     /**
@@ -48,18 +59,30 @@ public class CustomizationCtrl {
         this.server = server;
         this.boardCtrl = boardCtrl;
         this.board = board;
+
     }
 
     /**
      * Method that initializes the controller
      */
     public void initialize(){
+        data = FXCollections.observableArrayList();
+
+        list.setItems(data);
+        list.setCellFactory(param -> new PaletteCtrl(server, this));
 
         boardName.setText(board.title);
         boardBackground.setValue(Color.web(board.colour));
         boardFont.setValue(Color.web(board.font));
         listBackground.setValue(Color.web(board.listColour));
         listFont.setValue(Color.web(board.listFont));
+
+        refresh();
+    }
+
+    public void refresh(){
+        var palettes = server.getAllPalettes(board.id);
+        data.setAll(palettes);
     }
 
     /**

@@ -88,7 +88,7 @@ public class MainCtrl {
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 primaryStage.setHeight(650);
-                primaryStage.setWidth(1100);
+                primaryStage.setWidth(1150);
                 centerStage();
             }
         });

@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -754,5 +755,22 @@ public class ServerUtils {
         // Update the board title in the preferences
         return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
     }
+
+    public Palette addPalette(long boardId, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(palette, APPLICATION_JSON), Palette.class);
+    }
+
+    public Set<Palette> getAllPalettes(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Set<Palette>>() {});
+    }
+
 }
 

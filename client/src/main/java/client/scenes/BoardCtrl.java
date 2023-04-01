@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -143,13 +144,16 @@ public class BoardCtrl {
         try {
             board = this.server.getBoardByKey(boardKey);
             System.out.println("This Board is " + board.toString());
-            if(board == null) System.out.println("BOARD IS NULL");
+            if (board == null) System.out.println("BOARD IS NULL");
             haveBoard = true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Sb");
         }
-
+        setLists();
+        setPalette();
+        setRecentBoards(haveBoard);
+    }
+    private void setLists(){
         data = FXCollections.observableArrayList();
         list.setFixedCellSize(0);
         list.setItems(data);
@@ -159,7 +163,9 @@ public class BoardCtrl {
         changeColours();
         key.setText(board.key);
         title.setText(board.title);
+    }
 
+    private void setRecentBoards(boolean haveBoard){
         if (haveBoard)
             prefs.addBoard(server.getServerAddress(), board);
 
@@ -181,6 +187,18 @@ public class BoardCtrl {
             Platform.runLater(() -> data.setAll(s.lists));
         });
     }
+
+    private void setPalette(){
+        Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
+                true, board, new HashSet<>());
+//        Palette palette = new Palette("morepalettes", "#00B4D8", "#000000",
+//                false, board, new HashSet<>());
+        defaultPalette.id = server.addPalette(board.id, defaultPalette).id;
+        refresh();
+//        server.addPalette(board.id, palette);
+    }
+
+
 
     /**
      * Method that changes the colours of the board, title and key
@@ -412,9 +430,6 @@ public class BoardCtrl {
         }
         board = server.getBoard(board.id);
         changeColours();
-
-
-//        refresh();
     }
 
 
