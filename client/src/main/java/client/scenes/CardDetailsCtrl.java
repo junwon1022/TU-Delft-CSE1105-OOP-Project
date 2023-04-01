@@ -111,6 +111,7 @@ public class CardDetailsCtrl{
             if (text.isEmpty()) {
                 text = " ";
                 descriptionText.setText(text);
+                text = descriptionText.getText();
             }
             server.updateDescription(card, text);
             board.refresh();
@@ -145,9 +146,9 @@ public class CardDetailsCtrl{
         if (text.isEmpty()) {
             text = " ";
             descriptionText.setText(text);
+            text = descriptionText.getText();
         }
         server.updateDescription(card, text);
-        cardCtrl.getDescription().setVisible(!server.getDescription(card).trim().equals(""));
         board.refresh();
     }
 
@@ -178,6 +179,9 @@ public class CardDetailsCtrl{
             CheckListItem addedCheckListItem = server.addChecklist(checkListItem);
             checkListItem.id = addedCheckListItem.id;
             data.add(addedCheckListItem);
+            int completed = cardCtrl.getCompleted();
+            int total = cardCtrl.getTotal();
+            cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
 
@@ -189,6 +193,14 @@ public class CardDetailsCtrl{
      */
     public void removeChecklist(CheckListItem checkListItem) {
         data.remove(checkListItem);
+        int completed = cardCtrl.getCompleted();
+        int total = cardCtrl.getTotal();
+        if(checkListItem.completed){
+            cardCtrl.setProgressText(completed-1,total-1);
+        }
+        else{
+            cardCtrl.setProgressText(completed,total-1);
+        }
     }
 
     /**
@@ -217,9 +229,20 @@ public class CardDetailsCtrl{
      * @param checklist
      */
     public void setChecklists(List<CheckListItem> checklist) {
+        int total = 0;
+        int completed = 0;
         for(int i = 0; i<checklist.size(); i++){
             data.add(checklist.get(i));
+            if(checklist.get(i).completed){
+                completed++;
+            }
+            total++;
         }
+        cardCtrl.setProgressText(completed,total);
+    }
+
+    public CardCtrl getCardCtrl() {
+        return this.cardCtrl;
     }
 
     /**

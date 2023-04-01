@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
+import commons.CheckListItem;
 import commons.ListOfCards;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
@@ -28,15 +29,22 @@ public class CardCtrl extends ListCell<Card> {
     private final BoardCtrl board;
     private final ListOfCardsCtrl parent;
 
-    public String storedDescChar;
 
     private Card data;
+
+    private int completedTasks;
+
+    private int totalTasks;
+
 
     @FXML
     private AnchorPane root;
 
     @FXML
     private Label title;
+
+    @FXML
+    private Label progressText;
 
     @FXML
     private Button delete;
@@ -106,6 +114,8 @@ public class CardCtrl extends ListCell<Card> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
+            description.setVisible(updateDescriptionIcon(item.description));
+            updateProgressText(item.checklist);
             data = item;
 
 
@@ -114,16 +124,13 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
-    /**
-     * Initializes the card for the description icon
-     */
-    public void initialize() {
-        description.setVisible(false);
-
-        if(!(storedDescChar == null|| !storedDescChar.isEmpty())){
-            description.setVisible(true);
+    private boolean updateDescriptionIcon(String description) {
+        if(!description.trim().equals("")) {
+            return true;
         }
+        return false;
     }
+
 
     /**
      * Method that removes the task from the list, visually
@@ -138,16 +145,10 @@ public class CardCtrl extends ListCell<Card> {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
-
         board.refresh();
     }
 
-    /**
-     * Method that removes the task from the list, visually
-     */
-    private void setTextOpacity() {
-        text.setOpacity(0.0);
-    }
+
 
     /**
      * Retrieves the title of the card
@@ -329,7 +330,6 @@ public class CardCtrl extends ListCell<Card> {
             if (controller.success) {
                 String newTitle = controller.storedText;
 
-                //method that actually renames the list in the database
                 server.renameCard(data, newTitle);
                 board.refresh();
             }
@@ -372,26 +372,35 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
-    /**
-     * Prompts the user with an alert stating if they want to add a description or not,
-     * if they agree the images for description will change and you
-     * will be able to add a description
-     * @param event - the add description button being clicked
-     */
-    public void addDescription(MouseEvent event) {
-        changeDescriptionVisibility(true);
+    public void setProgressText(int completed, int total) {
+        completedTasks = completed;
+        totalTasks = total;
+        if(total > 0){
+            progressText.setText(completed + "/" + total);
+        }
+        else{
+            progressText.setText("");
+        }
     }
 
-    /**
-     * Changes the visibility of description images
-     * @param t - the boolean that changes the visibility of the images
-     */
-    public void changeDescriptionVisibility(Boolean t) {
-        description.setVisible(t);
-        description.setDisable(!t);
-        addDescription.setVisible(!t);
-        addDescription.setDisable(t);
-        board.refresh();
+    public int getCompleted(){
+        return this.completedTasks;
+    }
+
+    public int getTotal() {
+        return this.totalTasks;
+    }
+
+    public void updateProgressText(List<CheckListItem>  checklist){
+        int total = 0;
+        int completed = 0;
+        for(int i = 0; i<checklist.size(); i++){
+            if(checklist.get(i).completed){
+                completed++;
+            }
+            total++;
+        }
+        setProgressText(completed,total);
     }
 
 }
