@@ -34,10 +34,6 @@ public class BoardController {
     }
 
 
-
-
-
-
     /**
      * Get the boards
      *

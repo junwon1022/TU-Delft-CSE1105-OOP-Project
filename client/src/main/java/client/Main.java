@@ -61,8 +61,11 @@ public class Main extends Application {
                 "client", "scenes", "ConnectToServer.fxml");
         var mainScreen = FXML.load(MainScreenCtrl.class,
                 "client", "scenes", "MainScreen.fxml");
+        var adminScreen = FXML.load(AdminScreenCtrl.class,
+                "client", "scenes", "AdminScreen.fxml");
+
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, board, connect, mainScreen);
+        mainCtrl.initialize(primaryStage, board, connect, mainScreen, adminScreen);
     }
 }

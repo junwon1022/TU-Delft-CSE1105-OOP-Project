@@ -38,6 +38,9 @@ public class MainCtrl {
     private MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
 
+    private AdminScreenCtrl adminScreenCtrl;
+    private Scene adminScreen;
+
 
     /**
      * Create a new MainCtrl.
@@ -46,10 +49,12 @@ public class MainCtrl {
      * @param board        The board screen to use.
      * @param connect      The connect screen
      * @param mainScreen   The main screen
+     * @param adminScreen The admin screen
      */
     public void initialize(Stage primaryStage, Pair<BoardCtrl, Parent> board,
                            Pair<ConnectCtrl, Parent> connect,
-                           Pair<MainScreenCtrl, Parent> mainScreen) {
+                           Pair<MainScreenCtrl, Parent> mainScreen,
+                           Pair<AdminScreenCtrl, Parent> adminScreen) {
 //            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
 //        this.overviewCtrl = overview.getKey();
@@ -71,6 +76,9 @@ public class MainCtrl {
         this.mainScreen = new Scene(mainScreen.getValue());
         this.mainScreen.getStylesheets().add("styles.css");
 
+        this.adminScreenCtrl = adminScreen.getKey();
+        this.adminScreen = new Scene(adminScreen.getValue());
+
         showConnect();
         primaryStage.show();
     }
@@ -78,20 +86,25 @@ public class MainCtrl {
     /**
      * Show the board scene.
      * @param boardKey the key of a board
+     * @param adminFlag can be either 1 (admin) or 0 (non admin)
      */
-    public void showBoard(String boardKey) {
+    public void showBoard(String boardKey, int adminFlag) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
+//        primaryStage.setHeight(690);
+//        primaryStage.setWidth(1040);
         primaryStage.setMaximized(true);
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                primaryStage.setHeight(650);
+                primaryStage.setHeight(690);
                 primaryStage.setWidth(1150);
                 centerStage();
             }
         });
+
+        boardCtrl.adminFlag = adminFlag;
         boardCtrl.setBoardKey(boardKey);
         boardCtrl.initialize();
     }
@@ -103,7 +116,8 @@ public class MainCtrl {
     public void showConnect() {
         primaryStage.setTitle("Connect");
         primaryStage.setScene(connect);
-        primaryStage.setHeight(400);
+        primaryStage.setHeight(450);
+
     }
 
 
@@ -112,10 +126,9 @@ public class MainCtrl {
      * Show the board scene.
      */
     public void showMainScreen() {
-
         primaryStage.setTitle("Main Screen");
-        primaryStage.setMaximized(false);
         primaryStage.setScene(mainScreen);
+        primaryStage.setMaximized(false);
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
 
@@ -134,6 +147,21 @@ public class MainCtrl {
         centerStage();
         mainScreenCtrl.refresh();
     }
+
+
+    /**
+     * Show the admin scene.
+     */
+    public void showAdmin() {
+        primaryStage.setTitle("Admin Screen");
+        primaryStage.setScene(adminScreen);
+        primaryStage.setHeight(600);
+        primaryStage.setMaximized(false);
+        centerStage();
+        adminScreenCtrl.refresh();
+    }
+
+
 
     /**
      * Centers the stage in the computer window

@@ -41,7 +41,7 @@ public class UserPreferences {
 
             boards.remove(currentBoard);
 
-            boards.add(0, currentBoard);
+            boards.add(boards.size(), currentBoard);
 
             PreferencesBoardList newBoardList = new PreferencesBoardList();
             newBoardList.setInfo(boards);
@@ -150,15 +150,18 @@ public class UserPreferences {
 
             List<PreferencesBoardInfo> boards = boardList.getInfo();
 
-            boards.remove(board);
-
             PreferencesBoardInfo newBoard = new PreferencesBoardInfo(newTitle,
                     board.getKey(),
                     board.getPassword(),
                     board.getFont(),
                     board.getBackgroundColor());
 
-            boards.add(newBoard);
+            for(int i=0; i<boards.size(); i++) {
+                PreferencesBoardInfo b = boards.get(i);
+                if(board.equals(b)) {
+                    boards.set(i, newBoard);
+                }
+            }
 
             PreferencesBoardList newBoardList = new PreferencesBoardList();
             newBoardList.setInfo(boards);
