@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 public class PaletteCtrl extends ListCell<Palette> {
 
@@ -39,7 +40,6 @@ public class PaletteCtrl extends ListCell<Palette> {
     @FXML
     private HBox root;
 
-
     @Inject
     public PaletteCtrl(ServerUtils server, CustomizationCtrl parent){
         this.server = server;
@@ -65,22 +65,36 @@ public class PaletteCtrl extends ListCell<Palette> {
             title.setText(item.title);
             data = item;
             board = item.board;
+
             background.setValue(Color.web(data.background));
             font.setValue(Color.web(data.font));
-            if(data.isDefault)
-                setDefault.setVisible(false);
+
+            setDefault.setVisible(!data.isDefault);
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
 
-
     public void removePalette(ActionEvent event){
-        if(board.palettes.size() > 1){
+        if(board.palettes.size() > 2){
             server.deletePalette(board.id, data);
-            parent.refresh();
+            if(data.isDefault)
+                setFirstAsDefault();
+
         }
+        else if(board.palettes.size() == 2){
+            server.deletePalette(board.id, data);
+            setFirstAsDefault();
+        }
+        parent.refresh();
     }
+
+    private void setFirstAsDefault(){
+        Iterator<Palette> it = server.getAllPalettes(board.id).iterator();
+        Palette p = it.next();
+        server.setDefault(board.id, p.id);
+    }
+
 
     private String hexCode(Color color){
         String hex = color.toString();
@@ -96,5 +110,10 @@ public class PaletteCtrl extends ListCell<Palette> {
     public void setFont(ActionEvent event){
         String colour = hexCode(font.getValue());
         server.setPaletteFont(board.id, data.id, colour);
+    }
+
+    public void setDefault(ActionEvent event){
+        server.setDefault(board.id, data.id);
+        parent.refresh();
     }
 }

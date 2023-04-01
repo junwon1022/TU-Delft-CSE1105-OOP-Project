@@ -849,5 +849,14 @@ public class ServerUtils {
                 .delete(Board.class);
     }
 
+    public Palette setDefault(long boardId, long paletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
+                        paletteId + "/default")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(true, APPLICATION_JSON), Palette.class);
+    }
+
 }
 

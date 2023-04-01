@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 
 import java.util.HashSet;
 
-
 public class CustomizationCtrl {
 
     public boolean success;
@@ -66,6 +65,7 @@ public class CustomizationCtrl {
     @FXML
     private ListView<Palette> list;
 
+
     private ObservableList<Palette> data;
 
     private Board board;
@@ -90,8 +90,10 @@ public class CustomizationCtrl {
         data = FXCollections.observableArrayList();
 
         list.setItems(data);
-        list.setStyle("-fx-background-color: #000000");
+        list.setStyle("-fx-background-color: #FFFFFF; " +
+                "-fx-background-radius: 8");
         list.setCellFactory(param -> new PaletteCtrl(server, this));
+        list.setFixedCellSize(38);
         addition.setVisible(false);
         nullTitle.setVisible(false);
         boardName.setText(board.title);
@@ -99,13 +101,15 @@ public class CustomizationCtrl {
         boardFont.setValue(Color.web(board.font));
         listBackground.setValue(Color.web(board.listColour));
         listFont.setValue(Color.web(board.listFont));
-
-        refresh();
+        clearFields();
+        var palettes = server.getAllPalettes(board.id);
+        data.setAll(palettes);
     }
 
     public void refresh(){
         var palettes = server.getAllPalettes(board.id);
         data.setAll(palettes);
+        list.refresh();
     }
 
     /**
@@ -187,15 +191,25 @@ public class CustomizationCtrl {
             nullTitle.setVisible(false);
             String background = hexCode(addBackground.getValue());
             String font = hexCode(addFont.getValue());
+
             Palette p = new Palette(addTitle.getText(), background, font,
-                    makeDefault.isSelected(),board, new HashSet<>());
+                    false,board, new HashSet<>());
             Palette addedP = server.addPalette(board.id, p);
             p.id = addedP.id;
-
+            if(makeDefault.isSelected()){
+                server.setDefault(board.id, p.id);
+            }
             addPalette.setVisible(true);
             addition.setVisible(false);
+            clearFields();
             refresh();
         }
     }
 
+    private void clearFields(){
+        addTitle.clear();
+        addBackground.setValue(Color.WHITE);
+        addFont.setValue(Color.BLACK);
+        makeDefault.setSelected(false);
+    }
 }

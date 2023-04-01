@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.Card;
 import commons.ListOfCards;
-import commons.Palette;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -158,7 +157,6 @@ public class BoardCtrl {
             AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
             loadVBox();
             loadRecentBoards();
-            setPalette();
             refresh();
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists)
@@ -171,18 +169,6 @@ public class BoardCtrl {
         }
 
     }
-
-    private void setPalette(){
-        Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
-                true, board, new HashSet<>());
-//        Palette palette = new Palette("morepalettes", "#00B4D8", "#000000",
-//                false, board, new HashSet<>());
-        defaultPalette.id = server.addPalette(board.id, defaultPalette).id;
-        refresh();
-//        server.addPalette(board.id, palette);
-    }
-
-
 
     /**
      * Method that changes the colours of the board, title and key

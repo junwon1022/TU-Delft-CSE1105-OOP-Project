@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -168,19 +169,24 @@ public class MainScreenCtrl {
                 System.out.println("The title is "+ title);
 
                 Board board = new Board(title,backgroundColor,fontColor,"#111111" ,
-                        "#111111" , password, new ArrayList<>(), new HashSet<>(), null);
-
+                        "#ffffff" , password, new ArrayList<>(), new HashSet<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);
                 prefs.addBoard(server.getServerAddress(), newBoard);
-
                 refresh();
+                setPalette(newBoard);
             }
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
 
+    }
+
+    private void setPalette(Board board){
+        Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
+                true, board, new HashSet<>());
+        defaultPalette.id = server.addPalette(board.id, defaultPalette).id;
     }
 
 

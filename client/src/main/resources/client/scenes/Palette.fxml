@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" blendMode="DARKEN" prefHeight="37.0" prefWidth="318.0" spacing="15.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root" blendMode="DARKEN" prefHeight="37.0" prefWidth="318.0" spacing="15.0" style="-fx-background-color: #000000; -fx-background-radius: 8;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="title" prefHeight="23.0" prefWidth="79.0" textFill="WHITE">
          <font>
@@ -16,7 +16,7 @@
       </Label>
       <ColorPicker fx:id="background" onAction="#setBackground" prefHeight="25.0" prefWidth="41.0" style="-fx-background-color: rgb(0,0,0,0);" />
       <ColorPicker fx:id="font" onAction="#setFont" prefHeight="25.0" prefWidth="41.0" style="-fx-background-color: rgb(0,0,0,0);" />
-      <Button fx:id="setDefault" mnemonicParsing="false" prefHeight="22.0" prefWidth="67.0" style="-fx-background-color: #FFFFFF;" text="set default">
+      <Button fx:id="setDefault" mnemonicParsing="false" onAction="#setDefault" prefHeight="22.0" prefWidth="67.0" style="-fx-background-color: #FFFFFF;" text="set default">
          <font>
             <Font name="Corbel Bold" size="11.0" />
          </font>
