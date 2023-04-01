@@ -75,7 +75,7 @@ public class CardCtrl extends ListCell<Card> {
 
         root.requestFocus();
 
-        setOnKeyTyped(this::handleKeyHighlight);
+
 
         setOnMouseEntered(this::handleHighlight);
 
@@ -156,10 +156,14 @@ public class CardCtrl extends ListCell<Card> {
      * @param event colours the selected card blue
      */
     public void handleHighlight(MouseEvent event){
-
+        if (getItem() == null) {
+            return;
+        }
         root.setStyle("-fx-background-color: blue;" +
                 " -fx-border-radius: 20;" +
                 " -fx-background-radius: 20;");
+
+        getItem().selected = true;
     }
 
     /**
@@ -167,21 +171,16 @@ public class CardCtrl extends ListCell<Card> {
      * @param event colours it back when the mouse is no longer over the key
      */
     public void handleLeaveHighlight(MouseEvent event){
-
+        if (getItem() == null) {
+            return;
+        }
         root.setStyle("-fx-background-color: #00B4D8;;" +
                 " -fx-border-radius: 20;" +
                 " -fx-background-radius: 20;");
+        getItem().selected = false;
     }
 
-    /**
-     * Handles key highlight
-     * @param event switches the colour
-     */
-    public void handleKeyHighlight(KeyEvent event) {
 
-        System.out.println(event.getCode().toString());
-
-    }
 
 
     /**

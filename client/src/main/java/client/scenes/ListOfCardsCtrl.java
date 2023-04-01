@@ -377,16 +377,56 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     // From here are the keyboard cases
 
+
+    /**
+     * Handle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleSwitchCardFront(javafx.scene.input.KeyEvent keyEvent) {
+
+        int count = 0;
+        for(Card c : cardData.cards){
+            count++;
+            if(c.selected){
+                c.selected = false;
+                break;
+            }
+        }
+
+        if(count < cardData.cards.size()){
+            Card thisCard = cardData.cards.get(count);
+            System.out.println("This card is " + thisCard.toString());
+            thisCard.selected = true;
+            thisCard.colour = "blue";
+        }
+
+    }
+
     /**
      * Handle the key pressed event.
      * @param keyEvent the KeyEvent
      */
     public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
+
+        System.out.println(keyEvent.getCode().toString());
+
         if (keyEvent.getCode().toString().equals("ENTER")) {
             addCardKeyboard(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("ESCAPE")){
             cancelKeyboard(keyEvent);
+        }
+        else if(keyEvent.getCode().toString().equals("W")){
+            handleSwitchCardFront(keyEvent);
+        }
+        else if(keyEvent.getCode().toString().equals("S")){
+
+        }
+        else if(keyEvent.getCode().toString().equals("D")){
+
+        }
+        else if(keyEvent.getCode().toString().equals("A")){
+
         }
     }
 

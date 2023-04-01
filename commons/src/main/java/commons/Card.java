@@ -35,8 +35,12 @@ public class Card {
     @Column(name = "description")
     public String description;
 
+
     @Column(name = "card_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
+
+    @Column(name = "selected")
+    public Boolean selected;
 
     @ManyToOne()
     @JoinColumn(name = "list_id")
@@ -55,6 +59,7 @@ public class Card {
     @ManyToOne
     @JoinColumn(name = "palette_id")
     public Palette palette;
+
 
     /**
      * Default constructor
@@ -76,7 +81,7 @@ public class Card {
     public Card(String title, String description,
                 String colour, ListOfCards list,
                 List<CheckListItem> checklist, Set<Tag> tags,
-                Palette palette) {
+                Palette palette){
         this.title = title;
         this.description = description;
         this.colour = colour;
@@ -84,7 +89,35 @@ public class Card {
         this.checklist = checklist;
         this.tags = tags;
         this.palette = palette;
+        this.selected = false;
     }
+
+    /**
+     * Constructor with parameters
+     * @param title
+     * @param description
+     * @param colour
+     * @param list
+     * @param checklist
+     * @param palette
+     * @param tags
+     * @param selected
+     */
+    public Card(String title, String description,
+                String colour, ListOfCards list,
+                List<CheckListItem> checklist, Set<Tag> tags,
+                Palette palette,Boolean selected){
+        this.title = title;
+        this.description = description;
+        this.colour = colour;
+        this.list = list;
+        this.checklist = checklist;
+        this.tags = tags;
+        this.palette = palette;
+        this.selected = selected;
+    }
+
+
 
     /*
         BASIC FUNCTIONALITY

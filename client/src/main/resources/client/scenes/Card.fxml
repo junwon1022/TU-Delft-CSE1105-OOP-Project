@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="120.0" onKeyTyped="#handleKeyHighlight" onMouseClicked="#openDetails" onMouseEntered="#handleHighlight" onMouseExited="#handleLeaveHighlight" prefHeight="72.0" prefWidth="173.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="120.0"  onMouseClicked="#openDetails" onMouseEntered="#handleHighlight" onMouseExited="#handleLeaveHighlight" prefHeight="72.0" prefWidth="173.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="29.0" layoutY="8.0" onKeyTyped="#handleKeyHighlight" prefHeight="43.0" prefWidth="113.0" text="Title" textAlignment="CENTER" wrapText="true">
+        <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="29.0" layoutY="8.0" prefHeight="43.0" prefWidth="113.0" text="Title" textAlignment="CENTER" wrapText="true">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></Label>
