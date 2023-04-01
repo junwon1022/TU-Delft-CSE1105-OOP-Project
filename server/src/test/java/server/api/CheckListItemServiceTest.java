@@ -202,9 +202,11 @@ public class CheckListItemServiceTest {
         listService.createListOfCards(l,b);
         cardService.createCard(c,l,b);
         checkService.createCheckListItem(ch,c);
+        when(checkRepo.findById(ch.id)).thenReturn(Optional.of(ch));
         checkService.deleteCheckListItemById(ch.id);
 
         Mockito.verify(checkRepo).deleteById(ch.id);
+
     }
 
 

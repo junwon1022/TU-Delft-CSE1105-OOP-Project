@@ -7,16 +7,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="150.0" prefWidth="250.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddCheckListItemCtrl">
+<AnchorPane prefHeight="150.0" prefWidth="250.0" style="-fx-background-color: #89CFF0;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddCheckListItemCtrl" stylesheets="@../../styles.css">
     <children>
-        <Button layoutX="200.0" layoutY="108.0" mnemonicParsing="false" onAction="#ok" style="-fx-background-color: #004792;" text="Add" textFill="WHITE" />
-        <Button layoutX="14.0" layoutY="108.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: crimson;" text="Cancel" textFill="WHITE" />
-        <TextField fx:id="checklistItemText" layoutX="10.0" layoutY="49.0" prefHeight="26.0" prefWidth="228.0" promptText="Enter the checkbox description" />
-        <Label layoutX="10.0" layoutY="14.0" prefHeight="26.0" prefWidth="228.0" text="Enter the CheckBox Description">
+        <Button fx:id="addChecklist" layoutX="200.0" layoutY="108.0" mnemonicParsing="false" onAction="#ok" text="Add" textFill="WHITE" stylesheets="@../../styles.css" />
+        <Button fx:id="cancelChecklist2" layoutX="14.0" layoutY="108.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" textFill="WHITE" stylesheets="@../../styles.css"/>
+        <TextField fx:id="checklistItemText" layoutX="10.0" layoutY="49.0" prefHeight="26.0" prefWidth="228.0" promptText="Enter the sub-task description" />
+        <Label layoutX="10.0" layoutY="14.0" prefHeight="26.0" prefWidth="228.0" text="Enter the sub-task Description">
          <font>
             <Font size="17.0" />
          </font></Label>
-        <Label fx:id="nullTitle" layoutX="85.0" layoutY="86.0" prefHeight="14.0" prefWidth="131.0">
+        <Label fx:id="nullText" alignment="CENTER" layoutX="8.0" layoutY="86.0" prefHeight="15.0" prefWidth="234.0" style="-fx-text-fill: red;">
             <font>
                 <Font name="Corbel" size="12.0" />
             </font>

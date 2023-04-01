@@ -10,14 +10,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="190.0"  onMouseClicked="#openDetails" minHeight="-Infinity" minWidth="120.0" prefHeight="72.0" prefWidth="173.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="card" fx:id="root" maxHeight="-Infinity" maxWidth="190.0" minHeight="-Infinity" minWidth="120.0" onMouseClicked="#openDetails" prefHeight="72.0" prefWidth="173.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label fx:id="title" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="29.0" layoutY="8.0" prefHeight="43.0" prefWidth="113.0" text="Title" textAlignment="CENTER" wrapText="true">
          <font>
             <Font name="Corbel" size="12.0" />
          </font></Label>
         <Button id="delete-card" layoutX="147.0" layoutY="7.0" mnemonicParsing="false" onAction="#remove" stylesheets="@../../styles.css" text="❌" />
-        <Button fx:id="description" layoutX="9.0" layoutY="54.0" prefHeight="18.0" prefWidth="14.0" styleClass="image" stylesheets="@../../styles.css" visible="false" />
       <Button id="rename-card" fx:id="detailedView" layoutX="12.0" layoutY="11.0" mnemonicParsing="false" onAction="#renameCard" prefHeight="0.0" prefWidth="12.0" style="-fx-padding: 0;" stylesheets="@../../styles.css">
          <font>
             <Font size="19.0" />
@@ -30,11 +29,12 @@
             <ColorAdjust brightness="-0.22" />
          </effect>
       </Button>
-            <ImageView fitHeight="33.0" fitWidth="14.0" layoutX="10.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="image">
+            <ImageView fx:id="description" fitHeight="33.0" fitWidth="14.0" layoutX="10.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="image">
                 <image>
                     <Image url="@../../description-icon.png" />
                 </image>
             </ImageView>
+      <Label fx:id="progressText" layoutX="70.0" layoutY="44.0" prefHeight="17.0" prefWidth="83.0" />
     </children>
    <cursor>
       <Cursor fx:constant="HAND" />

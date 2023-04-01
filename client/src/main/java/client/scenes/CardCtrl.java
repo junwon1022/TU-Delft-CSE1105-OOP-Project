@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -27,6 +28,8 @@ public class CardCtrl extends ListCell<Card> {
     private final BoardCtrl board;
     private final ListOfCardsCtrl parent;
 
+    public String storedDescChar;
+
     private Card data;
 
     @FXML
@@ -41,7 +44,7 @@ public class CardCtrl extends ListCell<Card> {
     private Text text;
 
     @FXML
-    private Button description;
+    private ImageView description;
 
     @FXML
     private Button renameButton;
@@ -112,6 +115,17 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
+     * Initializes the card for the description icon
+     */
+    public void initialize() {
+        description.setVisible(false);
+
+        if(!(storedDescChar == null|| !storedDescChar.isEmpty())){
+            description.setVisible(true);
+        }
+    }
+
+    /**
      * Method that removes the task from the list, visually
      * @param event - the remove button being clicked
      */
@@ -124,6 +138,7 @@ public class CardCtrl extends ListCell<Card> {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+
         board.refresh();
     }
 
@@ -140,6 +155,14 @@ public class CardCtrl extends ListCell<Card> {
      */
     public String getTitle() {
         return title.getText();
+    }
+
+    /**
+     * gets the description image reference of this card
+     * @return the reference
+     */
+    public ImageView getDescription(){
+        return description;
     }
 
     /**
@@ -337,11 +360,10 @@ public class CardCtrl extends ListCell<Card> {
             CardDetailsCtrl cardDetailsCtrl = loader.getController();
             cardDetailsCtrl.setCard(data);
             cardDetailsCtrl.setTitle(getTitle());
-            if(data.description.equals(" ")){
-                cardDetailsCtrl.setDescriptionText("");
-            }
-            else {
-                cardDetailsCtrl.setDescriptionText(data.description);
+            cardDetailsCtrl.setDescriptionText(data.description.equals(" ")
+                    ? "" : data.description);
+            if(!data.checklist.isEmpty()){
+                cardDetailsCtrl.setChecklists(data.checklist);
             }
 
             Scene scene = new Scene(root);
