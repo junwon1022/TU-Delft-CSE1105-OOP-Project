@@ -2,7 +2,9 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Board;
 import commons.Palette;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -16,6 +18,8 @@ public class PaletteCtrl extends ListCell<Palette> {
     private Palette data;
     private final ServerUtils server;
     private final CustomizationCtrl parent;
+
+    private Board board;
 
     @FXML
     private Label title;
@@ -35,8 +39,6 @@ public class PaletteCtrl extends ListCell<Palette> {
     @FXML
     private HBox root;
 
-    @FXML
-    private Button addPalette;
 
     @Inject
     public PaletteCtrl(ServerUtils server, CustomizationCtrl parent){
@@ -62,14 +64,37 @@ public class PaletteCtrl extends ListCell<Palette> {
         } else {
             title.setText(item.title);
             data = item;
+            board = item.board;
             background.setValue(Color.web(data.background));
             font.setValue(Color.web(data.font));
+            if(data.isDefault)
+                setDefault.setVisible(false);
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
 
 
+    public void removePalette(ActionEvent event){
+        if(board.palettes.size() > 1){
+            server.deletePalette(board.id, data);
+            parent.refresh();
+        }
+    }
 
+    private String hexCode(Color color){
+        String hex = color.toString();
+        hex = hex.substring(2, hex.length()-2);
+        hex = "#" + hex;
+        return  hex;
+    }
+    public void setBackground(ActionEvent event){
+        String colour = hexCode(background.getValue());
+        server.setPaletteBackground(board.id, data.id, colour);
+    }
 
+    public void setFont(ActionEvent event){
+        String colour = hexCode(font.getValue());
+        server.setPaletteFont(board.id, data.id, colour);
+    }
 }

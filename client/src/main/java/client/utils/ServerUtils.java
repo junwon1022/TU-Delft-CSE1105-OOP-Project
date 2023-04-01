@@ -772,5 +772,31 @@ public class ServerUtils {
                 .get(new GenericType<Set<Palette>>() {});
     }
 
+    public Palette deletePalette(long boardId, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes/"+ palette.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Palette.class);
+    }
+
+    public Palette setPaletteBackground(long boardId, long paletteId, String color){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
+                        paletteId + "/background")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Palette.class);
+    }
+
+    public Palette setPaletteFont(long boardId, long paletteId, String color){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
+                        paletteId + "/font")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Palette.class);
+    }
+
 }
 

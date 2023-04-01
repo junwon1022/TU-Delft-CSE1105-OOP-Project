@@ -9,9 +9,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -25,6 +24,26 @@ public class CustomizationCtrl {
     private final ServerUtils server;
 
     private final BoardCtrl boardCtrl;
+    @FXML
+    private AnchorPane addition;
+
+    @FXML
+    private Button addPalette;
+
+    @FXML
+    private TextField addTitle;
+
+    @FXML
+    private ColorPicker addBackground;
+
+    @FXML
+    private ColorPicker addFont;
+
+    @FXML
+    private CheckBox makeDefault;
+
+    @FXML
+    private Button add;
 
     @FXML
     private ColorPicker boardBackground;
@@ -40,6 +59,9 @@ public class CustomizationCtrl {
 
     @FXML
     private Label boardName;
+
+    @FXML
+    private Label nullTitle;
 
     @FXML
     private ListView<Palette> list;
@@ -59,7 +81,6 @@ public class CustomizationCtrl {
         this.server = server;
         this.boardCtrl = boardCtrl;
         this.board = board;
-
     }
 
     /**
@@ -69,8 +90,10 @@ public class CustomizationCtrl {
         data = FXCollections.observableArrayList();
 
         list.setItems(data);
+        list.setStyle("-fx-background-color: #000000");
         list.setCellFactory(param -> new PaletteCtrl(server, this));
-
+        addition.setVisible(false);
+        nullTitle.setVisible(false);
         boardName.setText(board.title);
         boardBackground.setValue(Color.web(board.colour));
         boardFont.setValue(Color.web(board.font));
@@ -150,6 +173,29 @@ public class CustomizationCtrl {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
+    }
+
+    public void setAddPalette(){
+        addPalette.setVisible(false);
+        addition.setVisible(true);
+    }
+
+    public void addPalette(){
+        if(addTitle.getText() == null || addTitle.getText().length() == 0)
+            nullTitle.setVisible(true);
+        else{
+            nullTitle.setVisible(false);
+            String background = hexCode(addBackground.getValue());
+            String font = hexCode(addFont.getValue());
+            Palette p = new Palette(addTitle.getText(), background, font,
+                    makeDefault.isSelected(),board, new HashSet<>());
+            Palette addedP = server.addPalette(board.id, p);
+            p.id = addedP.id;
+
+            addPalette.setVisible(true);
+            addition.setVisible(false);
+            refresh();
+        }
     }
 
 }
