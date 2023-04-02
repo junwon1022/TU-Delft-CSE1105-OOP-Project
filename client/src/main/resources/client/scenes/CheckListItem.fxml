@@ -6,11 +6,11 @@
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" onMouseClicked="#renameChecklist" prefHeight="30.0" prefWidth="547.0" style="-fx-background-color: transparent;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" onMouseClicked="#renameChecklist" prefHeight="30.0" prefWidth="524.0" style="-fx-background-color: transparent;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <CheckBox id="check-box" fx:id="checkBox" layoutX="14.0" layoutY="3.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" stylesheets="@../../styles.css" />
+      <CheckBox fx:id="checkBox" layoutX="14.0" layoutY="3.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" stylesheets="@../../styles.css" />
       <Label fx:id="checklistDescription" layoutX="36.0" layoutY="6.0" prefHeight="17.0" prefWidth="442.0" stylesheets="@../../styles.css" />
-      <Button fx:id="removeChecklist" layoutX="521.0" layoutY="1.0" mnemonicParsing="false" onAction="#removeChecklist" prefHeight="26.0" prefWidth="15.0" stylesheets="@../../styles.css" text="x">
+      <Button id="remove-checklist" fx:id="removeChecklist" layoutX="495.0" layoutY="1.0" mnemonicParsing="false" onAction="#removeChecklist" prefHeight="17.0" prefWidth="22.0" style="-fx-background-color: transparent;" stylesheets="@../../styles.css" text="x" textFill="#e43838">
          <effect>
             <Glow level="0.05" />
          </effect>
