@@ -313,6 +313,9 @@ public class CardCtrl extends ListCell<Card> {
             if (c.id == dbCardId)
                 draggedCard = c;
 
+        draggedCard.palette.cards.remove(this);
+        draggedCard.palette = null;
+
         server.removeCard(draggedCard);
 
         draggedCard.list = this.parent.cardData;

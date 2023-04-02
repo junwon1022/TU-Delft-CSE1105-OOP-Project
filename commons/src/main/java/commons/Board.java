@@ -16,7 +16,6 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
         scope = Board.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-@JsonIgnoreProperties(value = "defaultPalette")
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
