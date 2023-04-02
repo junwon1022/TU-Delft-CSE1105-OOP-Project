@@ -358,14 +358,6 @@ public class ServerUtils {
      * @return a list of cardlists.
      */
     public List<ListOfCards> getServerData(long boardId) {
-
-        // once the database references are solved
-        // -- as when the get method retrieves the list of all lists
-        //the reference to the board is null --
-        //this part can be uncommented
-        // -- the method signature will get as a parameter
-        //Board board --
-        //
         serverData = getLists(boardId);
         for (var list: serverData)
             list.cards.sort(Comparator.comparingLong(Card::getOrder));
@@ -709,6 +701,12 @@ public class ServerUtils {
         return b;
     }
 
+    /**
+     * Method that changes the board background in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
     public Board changeBoardBackground(Board board, String color){
         long boardId = board.id;
         Board b = ClientBuilder.newClient(new ClientConfig())
@@ -719,6 +717,12 @@ public class ServerUtils {
         return b;
     }
 
+    /**
+     * Method that changes the board's font color in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
     public Board changeBoardFont(Board board, String color){
         long boardId = board.id;
         Board b = ClientBuilder.newClient(new ClientConfig())
@@ -729,6 +733,12 @@ public class ServerUtils {
         return b;
     }
 
+    /**
+     * Method that changes the lists' background in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
     public Board changeListsBackground(Board board, String color){
         long boardId = board.id;
         Board b = ClientBuilder.newClient(new ClientConfig())
@@ -739,6 +749,12 @@ public class ServerUtils {
         return b;
     }
 
+    /**
+     * Method that changes the lists' font color in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
     public Board changeListsFont(Board board, String color){
         long boardId = board.id;
         Board b = ClientBuilder.newClient(new ClientConfig())
@@ -772,6 +788,12 @@ public class ServerUtils {
         return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
     }
 
+    /**
+     * Method that adds a palette in the database
+     * @param boardId
+     * @param palette
+     * @return the added palette
+     */
     public Palette addPalette(long boardId, Palette palette){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes")
@@ -780,6 +802,11 @@ public class ServerUtils {
                 .post(Entity.entity(palette, APPLICATION_JSON), Palette.class);
     }
 
+    /**
+     * Method that gets all palettes of one board in the database
+     * @param boardId
+     * @return a set containing all palettes
+     */
     public Set<Palette> getAllPalettes(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes")
@@ -788,6 +815,12 @@ public class ServerUtils {
                 .get(new GenericType<Set<Palette>>() {});
     }
 
+    /**
+     * Method that deletes the given palette from the database, if possible
+     * @param boardId
+     * @param palette
+     * @return the deleted palette
+     */
     public Palette deletePalette(long boardId, Palette palette){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes/"+ palette.id)
@@ -796,6 +829,13 @@ public class ServerUtils {
                 .delete(Palette.class);
     }
 
+    /**
+     * Method that sets the palette background in the database
+     * @param boardId
+     * @param paletteId
+     * @param color
+     * @return the edited palette
+     */
     public Palette setPaletteBackground(long boardId, long paletteId, String color){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
@@ -805,6 +845,13 @@ public class ServerUtils {
                 .put(Entity.entity(color, APPLICATION_JSON), Palette.class);
     }
 
+    /**
+     * Method that sets the palette's font color in the database
+     * @param boardId
+     * @param paletteId
+     * @param color
+     * @return the edited palette
+     */
     public Palette setPaletteFont(long boardId, long paletteId, String color){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
@@ -815,7 +862,7 @@ public class ServerUtils {
     }
 
     /**
-     *
+     *  Method that renames the board in the database
      * @param board
      * @param newTitle
      * @return The renamed board
@@ -849,6 +896,12 @@ public class ServerUtils {
                 .delete(Board.class);
     }
 
+    /**
+     * Method that sets a given palette as a default one
+     * @param boardId
+     * @param paletteId
+     * @return the edited palette
+     */
     public Palette setDefault(long boardId, long paletteId){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId + "/palettes/" +

@@ -100,6 +100,7 @@ public class BoardCtrl {
 
     private Board board;
 
+
     /**
      * Create a new BoardCtrl.
      * @param prefs the preferences of the user
@@ -128,10 +129,7 @@ public class BoardCtrl {
 
         try {
             board = this.server.getBoardByKey(boardKey);
-            System.out.println("This Board is " + board.toString());
-
             if(board == null) System.out.println("BOARD IS NULL");
-
             data = FXCollections.observableArrayList();
             list.setFixedCellSize(0);
             list.setItems(data);
@@ -170,6 +168,7 @@ public class BoardCtrl {
 
     }
 
+
     /**
      * Method that changes the colours of the board, title and key
      */
@@ -186,6 +185,7 @@ public class BoardCtrl {
         //the method call of getServerData will be with the board parameter
         var serverData = server.getServerData(board.id);
         data.setAll(serverData);
+
     }
 
     /**

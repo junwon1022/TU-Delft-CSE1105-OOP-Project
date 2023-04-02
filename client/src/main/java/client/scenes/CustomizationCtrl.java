@@ -106,10 +106,14 @@ public class CustomizationCtrl {
         data.setAll(palettes);
     }
 
+    /**
+     * Method that refreshes the customization scene and the board
+     */
     public void refresh(){
         var palettes = server.getAllPalettes(board.id);
         data.setAll(palettes);
         list.refresh();
+        boardCtrl.refresh();
     }
 
     /**
@@ -121,7 +125,6 @@ public class CustomizationCtrl {
         changeBoardFont();
         changeListsBackground();
         changeListsFont();
-
         closeWindow(event);
     }
 
@@ -179,11 +182,17 @@ public class CustomizationCtrl {
         stage.close();
     }
 
+    /**
+     * Method that shows the add a palette functionality
+     */
     public void setAddPalette(){
         addPalette.setVisible(false);
         addition.setVisible(true);
     }
 
+    /**
+     * Method that adds a palette on given user input
+     */
     public void addPalette(){
         if(addTitle.getText() == null || addTitle.getText().length() == 0)
             nullTitle.setVisible(true);

@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -69,10 +70,6 @@ public class CardCtrl extends ListCell<Card> {
             throw new RuntimeException(e);
         }
 
-        root.setStyle("-fx-background-color: #00B4D8;" +
-                " -fx-border-radius: 10;" +
-                " -fx-background-radius: 10;");
-
         setOnDragDetected(this::handleDragDetected);
 
         setOnDragOver(this::handleDragOver);
@@ -104,12 +101,27 @@ public class CardCtrl extends ListCell<Card> {
         } else {
             title.setText(item.title);
             data = item;
-
-
+            setPalette();
+            if(data.palette != null)
+                setColors(root, title);
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
+
+    private void setPalette(){
+        Palette p = data.list.board.getDefaultPalette();
+        if(p != null)
+            data.palette = p;
+    }
+
+    private void setColors(AnchorPane root, Label title){
+        root.setStyle("-fx-background-color: " + data.palette.background +
+                "; -fx-background-radius: 10");
+        title.setStyle("-fx-text-fill: " + data.palette.font);
+    }
+
+
 
     /**
      * Method that removes the task from the list, visually

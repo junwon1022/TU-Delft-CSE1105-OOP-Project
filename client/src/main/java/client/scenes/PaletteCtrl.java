@@ -40,6 +40,11 @@ public class PaletteCtrl extends ListCell<Palette> {
     @FXML
     private HBox root;
 
+    /**
+     * Constructor for a palette controller
+     * @param server
+     * @param parent
+     */
     @Inject
     public PaletteCtrl(ServerUtils server, CustomizationCtrl parent){
         this.server = server;
@@ -54,6 +59,13 @@ public class PaletteCtrl extends ListCell<Palette> {
         }
     }
 
+    /**
+     * Update item method
+     * @param item The new Palette item for the cell.
+     * @param empty whether this cell represents data from the list. If it
+     *        is empty, then it does not represent any domain data, but is a cell
+     *        being used to render an "empty" row.
+     */
     @Override
     public void updateItem(Palette item, boolean empty){
         super.updateItem(item, empty);
@@ -65,16 +77,18 @@ public class PaletteCtrl extends ListCell<Palette> {
             title.setText(item.title);
             data = item;
             board = item.board;
-
             background.setValue(Color.web(data.background));
             font.setValue(Color.web(data.font));
-
             setDefault.setVisible(!data.isDefault);
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
 
+    /**
+     * Method that removes a palette
+     * @param event
+     */
     public void removePalette(ActionEvent event){
         if(board.palettes.size() > 2){
             server.deletePalette(board.id, data);
@@ -95,23 +109,41 @@ public class PaletteCtrl extends ListCell<Palette> {
         server.setDefault(board.id, p.id);
     }
 
-
+    /**
+     * Method that changes a color object into
+     * a string containing the hex code
+     * @param color
+     * @return
+     */
     private String hexCode(Color color){
         String hex = color.toString();
         hex = hex.substring(2, hex.length()-2);
         hex = "#" + hex;
         return  hex;
     }
+
+    /**
+     * Method that sets the background color of a palette
+     * @param event
+     */
     public void setBackground(ActionEvent event){
         String colour = hexCode(background.getValue());
         server.setPaletteBackground(board.id, data.id, colour);
     }
 
+    /**
+     * Method that sets the font color of a palette
+     * @param event
+     */
     public void setFont(ActionEvent event){
         String colour = hexCode(font.getValue());
         server.setPaletteFont(board.id, data.id, colour);
     }
 
+    /**
+     * Method that sets the palette as the default one for the board
+     * @param event
+     */
     public void setDefault(ActionEvent event){
         server.setDefault(board.id, data.id);
         parent.refresh();

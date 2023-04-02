@@ -1,9 +1,6 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -20,7 +17,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
         scope = Palette.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(value = "default")
 public class Palette {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +34,6 @@ public class Palette {
     public String font;
 
     @Column(name = "isDefault")
-    @JsonProperty("isDefault")
     public boolean isDefault;
 
     @ManyToOne
@@ -46,6 +42,7 @@ public class Palette {
 
     @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = false)
     public Set<Card> cards = new HashSet<>();
+
 
     /**
      * Default constructor
