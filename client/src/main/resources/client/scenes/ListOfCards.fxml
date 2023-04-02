@@ -12,11 +12,11 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox id="list-background" fx:id="root" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="list-background" fx:id="root" alignment="CENTER" onKeyPressed="#handleKeyPressed"  maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane>
          <children>
-            <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="187.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
+            <Label fx:id="title" alignment="BOTTOM_CENTER" onKeyPressed="#handleKeyPressed"  contentDisplay="CENTER" prefHeight="47.0" prefWidth="187.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
                <font>
                   <Font name="Corbel Bold" size="17.0" />
                </font>

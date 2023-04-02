@@ -95,6 +95,17 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
+     * GetRoot
+     * @return the root of a scene
+     */
+
+    public AnchorPane getRoot() {
+        return root;
+    }
+
+
+
+    /**
      * Is called whenever the parent CardList is changed. Sets the data in this controller.
      *
      * @param item  The new item for the cell.
@@ -174,7 +185,7 @@ public class CardCtrl extends ListCell<Card> {
         if (getItem() == null) {
             return;
         }
-        root.setStyle("-fx-background-color: #00B4D8;;" +
+        root.setStyle("-fx-background-color: #00B4D8;" +
                 " -fx-border-radius: 20;" +
                 " -fx-background-radius: 20;");
         getItem().selected = false;

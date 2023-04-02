@@ -29,6 +29,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
     private final BoardCtrl board;
 
+
     public ListOfCards cardData;
 
     public String storedText;
@@ -62,8 +63,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     /**
      * Create a new CardListCtrl
-     * @param server The server to use
-     * @param board The board this CardList belongs to
+     *
+     * @param server   The server to use
+     * @param board    The board this CardList belongs to
      */
     public ListOfCardsCtrl(ServerUtils server, BoardCtrl board) {
         this.server = server;
@@ -395,10 +397,29 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
         if(count < cardData.cards.size()){
             Card thisCard = cardData.cards.get(count);
-            System.out.println("This card is " + thisCard.toString());
+            Card oldCard = cardData.cards.get(count-1);
+            System.out.println("This card is " + thisCard.title);
             thisCard.selected = true;
             thisCard.colour = "blue";
-        }
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
+            try {
+                CardCtrl c = fxmlLoader.getController();
+
+                c.updateItem(thisCard,false);
+                System.out.println("This root is " + c.getRoot());
+                c.getRoot().setStyle("-fx-background-color: blue;" +
+                    " -fx-border-radius: 20;" +
+                    " -fx-background-radius: 20;");
+                c.updateItem(oldCard,false);
+                c.getRoot().setStyle("-fx-background-color: #00B4D8;" +
+                    " -fx-border-radius: 20;" +
+                    " -fx-background-radius: 20;");
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            }
 
     }
 
@@ -417,10 +438,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             cancelKeyboard(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("W")){
-            handleSwitchCardFront(keyEvent);
+
         }
         else if(keyEvent.getCode().toString().equals("S")){
-
+            handleSwitchCardFront(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("D")){
 
