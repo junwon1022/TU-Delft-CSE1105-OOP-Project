@@ -24,6 +24,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
@@ -367,7 +368,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "",
                 "red",
                 cardData,
-                null,
+                new ArrayList<>(),
                 new HashSet<>(),
                 null);
         card.order = cardData.cards.size();

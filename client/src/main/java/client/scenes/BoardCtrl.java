@@ -129,7 +129,6 @@ public class BoardCtrl {
      */
     public void initialize() {
         boolean haveBoard = false;
-
         try {
             board = this.server.getBoardByKey(boardKey);
             System.out.println("This Board is " + board.toString());

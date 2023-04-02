@@ -230,6 +230,42 @@
     -fx-background-image: url("edit-custom.png");
 }
 
+#renameChecklist {
+    -fx-background-color: #004792;
+}
+
+#renameChecklist:hover {
+    -fx-background-color: #7CB9E8;
+    -fx-cursor: hand;
+}
+
+#addChecklist:hover {
+     -fx-color: #7CB9E8;
+     -fx-cursor: hand;
+}
+
+#addChecklist {
+    -fx-color: #004792;
+}
+
+#cancelChecklist {
+    -fx-background-color: crimson;
+}
+
+#cancelChecklist2 {
+    -fx-color: crimson;
+}
+
+#cancelChecklist2:hover {
+    -fx-color: #f8baba;
+    -fx-cursor: hand;
+}
+
+#cancelChecklist:hover {
+    -fx-background-color: #f8baba;
+    -fx-cursor: hand;
+}
+
 #description {
     -fx-background-image: url("description-icon.png");
     -fx-background-color: transparent;
@@ -255,11 +291,11 @@
 }
 
 #save-description {
-    -fx-background-color: #4FCAE2;
+    -fx-color: #89CFF0;
 }
 
 #save-description:hover {
-    -fx-background-color: #249ec7;
+    -fx-color: #249ec7;
 }
 
 #exitButton {
@@ -286,6 +322,18 @@
 
 #add-checklist:hover {
      -fx-background-image: url("add-checklist-hover.png");
+}
+
+#remove-checklist:hover {
+    -fx-text-fill: #000000;
+}
+
+#add-details-tag {
+    -fx-color: #89CFF0;
+}
+
+#add-details-tag:hover {
+    -fx-color: #249ec7;
 }
 
 .search {

@@ -97,6 +97,29 @@ public class CardService {
         return cardRepository.save(card);
     }
 
+   /**
+     * Updates the new description in the database
+     * @param id id of the card to update the description
+     * @param newDescription the new description
+     * @return the updated card
+     * @throws Exception the card with the required id is not found
+     */
+    public Card editCardDescription(Long id, String newDescription) throws Exception {
+        Card card = getCardById(id);
+        card.description = newDescription;
+        return cardRepository.save(card);
+    }
+    /**
+     * Gets the description of the card with the specified id
+     * @param id id of the card
+     * @return the description of the card
+     * @throws Exception if a card with the specified id is not found
+     */
+    public String getCardDescription(Long id) throws Exception {
+        Card card = getCardById(id);
+        return card.description;
+    }
+
     /**
      * Get all the tags of a given card
      * @param card
@@ -147,28 +170,5 @@ public class CardService {
         card.palette = null;
         cardRepository.save(card);
     }
-   /**
-     * Updates the new description in the database
-     * @param id id of the card to update the description
-     * @param newDescription the new description
-     * @return the updated card
-     * @throws Exception the card with the required id is not found
-     */
-    public Card editCardDescription(Long id, String newDescription) throws Exception {
-        Card card = getCardById(id);
-        card.description = newDescription;
-        return cardRepository.save(card);
-    }
-    /**
-     * Gets the description of the card with the specified id
-     * @param id id of the card
-     * @return the description of the card
-     * @throws Exception if a card with the specified id is not found
-     */
-    public String getCardDescription(Long id) throws Exception {
-        Card card = getCardById(id);
-        return card.description;
 
-    }
 }
-

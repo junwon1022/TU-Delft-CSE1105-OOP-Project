@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -31,6 +32,7 @@ public class CardCtrl extends ListCell<Card> {
     private final ListOfCardsCtrl list;
 
     private Card card;
+    public String storedDescChar;
 
     @FXML
     private AnchorPane root;
@@ -44,7 +46,7 @@ public class CardCtrl extends ListCell<Card> {
     private Text text;
 
     @FXML
-    private Button description;
+    private ImageView description;
 
     @FXML
     private Button renameButton;
@@ -109,12 +111,23 @@ public class CardCtrl extends ListCell<Card> {
             card = item;
             this.loadTags();
 
-            if(card.description == null || card.description.equals("")) {
-                description.setVisible(false);
-            }
+//            if(card.description == null || card.description.equals("")) {
+//                description.setVisible(false);
+//            }
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }
+    }
+
+    /**
+     * Initializes the card for the description icon
+     */
+    public void initialize() {
+        description.setVisible(false);
+
+        if(!(storedDescChar == null|| !storedDescChar.isEmpty())){
+            description.setVisible(true);
         }
     }
 
@@ -155,6 +168,7 @@ public class CardCtrl extends ListCell<Card> {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+
         board.refresh();
     }
 
@@ -171,6 +185,14 @@ public class CardCtrl extends ListCell<Card> {
      */
     public String getTitle() {
         return title.getText();
+    }
+
+    /**
+     * gets the description image reference of this card
+     * @return the reference
+     */
+    public ImageView getDescription(){
+        return description;
     }
 
     /**
@@ -368,11 +390,10 @@ public class CardCtrl extends ListCell<Card> {
             CardDetailsCtrl cardDetailsCtrl = loader.getController();
             cardDetailsCtrl.setCard(card);
             cardDetailsCtrl.setTitle(getTitle());
-            if(card.description.equals(" ")){
-                cardDetailsCtrl.setDescriptionText("");
-            }
-            else {
-                cardDetailsCtrl.setDescriptionText(card.description);
+            cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
+                    ? "" : card.description);
+            if(!card.checklist.isEmpty()){
+                cardDetailsCtrl.setChecklists(card.checklist);
             }
 
             Scene scene = new Scene(root);
