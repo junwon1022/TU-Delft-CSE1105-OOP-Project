@@ -84,6 +84,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setItems(data);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
+
         list.getStylesheets().add("styles.css");
 
         setOnDragOver(this::handleDragOver);
@@ -401,6 +402,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             System.out.println("This card is " + thisCard.title);
             thisCard.selected = true;
             thisCard.colour = "blue";
+
+
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
             try {
