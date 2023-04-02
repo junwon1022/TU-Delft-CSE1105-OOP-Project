@@ -45,7 +45,7 @@
                <font>
                   <Font name="Corbel Light" size="15.0" />
                </font></Label>
-            <ColorPicker fx:id="listFont" layoutX="148.0" layoutY="235.0" prefHeight="25.0" prefWidth="104.0" style="-fx-background-color: rgb(0,0,0,0.2);" />
+            <ColorPicker fx:id="listFont" layoutX="148.0" layoutY="235.0" onAction="#changeListFOnAction" prefHeight="25.0" prefWidth="104.0" style="-fx-background-color: rgb(0,0,0,0.2);" />
             <Button fx:id="resetBoard" layoutX="200.0" layoutY="14.0" mnemonicParsing="false" onAction="#resetBoardColors" style="-fx-background-color: #FFFFFF;" text="Reset">
                <font>
                   <Font name="Corbel" size="12.0" />
