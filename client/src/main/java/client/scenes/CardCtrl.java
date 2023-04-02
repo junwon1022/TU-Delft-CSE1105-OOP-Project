@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
-import commons.CheckListItem;
 import commons.ListOfCards;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
@@ -29,22 +28,15 @@ public class CardCtrl extends ListCell<Card> {
     private final BoardCtrl board;
     private final ListOfCardsCtrl parent;
 
+    public String storedDescChar;
 
     private Card data;
-
-    private int completedTasks;
-
-    private int totalTasks;
-
 
     @FXML
     private AnchorPane root;
 
     @FXML
     private Label title;
-
-    @FXML
-    private Label progressText;
 
     @FXML
     private Button delete;
@@ -114,8 +106,6 @@ public class CardCtrl extends ListCell<Card> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
-            description.setVisible(updateDescriptionIcon(item.description));
-            updateProgressText(item.checklist);
             data = item;
 
 
@@ -124,13 +114,16 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
-    private boolean updateDescriptionIcon(String description) {
-        if(!description.trim().equals("")) {
-            return true;
-        }
-        return false;
-    }
+    /**
+     * Initializes the card for the description icon
+     */
+    public void initialize() {
+        description.setVisible(false);
 
+        if(!(storedDescChar == null|| !storedDescChar.isEmpty())){
+            description.setVisible(true);
+        }
+    }
 
     /**
      * Method that removes the task from the list, visually
@@ -145,10 +138,16 @@ public class CardCtrl extends ListCell<Card> {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+
         board.refresh();
     }
 
-
+    /**
+     * Method that removes the task from the list, visually
+     */
+    private void setTextOpacity() {
+        text.setOpacity(0.0);
+    }
 
     /**
      * Retrieves the title of the card
@@ -330,6 +329,7 @@ public class CardCtrl extends ListCell<Card> {
             if (controller.success) {
                 String newTitle = controller.storedText;
 
+                //method that actually renames the list in the database
                 server.renameCard(data, newTitle);
                 board.refresh();
             }
@@ -373,54 +373,25 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
-     * Sets the progress text to the checked checklist and total
-     * checklists. Also checks if total is 0 then it
-     * makes the progress text disappear
-     * @param completed the number of checked checklists
-     * @param total total number of checklists
+     * Prompts the user with an alert stating if they want to add a description or not,
+     * if they agree the images for description will change and you
+     * will be able to add a description
+     * @param event - the add description button being clicked
      */
-    public void setProgressText(int completed, int total) {
-        completedTasks = completed;
-        totalTasks = total;
-        if(total > 0){
-            progressText.setText(completed + "/" + total);
-        }
-        else{
-            progressText.setText("");
-        }
+    public void addDescription(MouseEvent event) {
+        changeDescriptionVisibility(true);
     }
 
     /**
-     * gets the number of checked checklists
-     * @return the number of checked checklits
+     * Changes the visibility of description images
+     * @param t - the boolean that changes the visibility of the images
      */
-    public int getCompleted(){
-        return this.completedTasks;
-    }
-
-    /**
-     * gets the total number of checklists
-     * @return the number of cehcked checklists
-     */
-    public int getTotal() {
-        return this.totalTasks;
-    }
-
-    /**
-     * Updates the progress text when the checklists are changed
-     * and broadcasted to the rest of the clients
-     * @param checklist the list of checklists
-     */
-    public void updateProgressText(List<CheckListItem>  checklist){
-        int total = 0;
-        int completed = 0;
-        for(int i = 0; i<checklist.size(); i++){
-            if(checklist.get(i).completed){
-                completed++;
-            }
-            total++;
-        }
-        setProgressText(completed,total);
+    public void changeDescriptionVisibility(Boolean t) {
+        description.setVisible(t);
+        description.setDisable(!t);
+        addDescription.setVisible(!t);
+        addDescription.setDisable(t);
+        board.refresh();
     }
 
 }
