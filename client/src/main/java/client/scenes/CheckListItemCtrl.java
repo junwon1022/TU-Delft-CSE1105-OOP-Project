@@ -21,7 +21,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
 
     private final ServerUtils server;
 
-    private final CardDetailsCtrl parent;
+    private final CardDetailsCtrl cardDtlsCtrl;
 
     private final BoardCtrl board;
 
@@ -41,9 +41,9 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
 
 
     @Inject
-    CheckListItemCtrl(ServerUtils server, CardDetailsCtrl parent, BoardCtrl board) {
+    CheckListItemCtrl(ServerUtils server, CardDetailsCtrl cardDtlsCtrl, BoardCtrl board) {
         this.server = server;
-        this.parent = parent;
+        this.cardDtlsCtrl = cardDtlsCtrl;
         this.board = board;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CheckListItem.fxml"));
@@ -68,7 +68,14 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
             checkBox.setOnAction(event -> {
                 checkListItem.changeCompletion();
                 server.updateChecklistCheck(checkListItem, checkListItem.completed);
-                // do something else with the checked state
+                int completed = cardDtlsCtrl.getCardCtrl().getCompleted();
+                int total = cardDtlsCtrl.getCardCtrl().getTotal();
+                if (checkListItem.completed) {
+                    cardDtlsCtrl.getCardCtrl().setProgressText(completed+1,total);
+                }
+                else{
+                    cardDtlsCtrl.getCardCtrl().setProgressText(completed-1,total);
+                }
                 board.refresh();
             });
             data = checkListItem;
@@ -105,10 +112,9 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
 
             if (renameCheckListItemCtrl.success) {
                 String newDescription = renameCheckListItemCtrl.storedText;
+                server.renameChecklist(data, newDescription);
                 checklistDescription.setText(newDescription);
-
-                CheckListItem addedChecklist= server.renameChecklist(data, newDescription);
-                parent.changeChecklistDescription(addedChecklist);
+                data.text = newDescription;
                 board.refresh();
             }
         }
@@ -128,7 +134,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
-        parent.removeChecklist(data);
+        cardDtlsCtrl.removeChecklist(data);
         board.refresh();
     }
 }
