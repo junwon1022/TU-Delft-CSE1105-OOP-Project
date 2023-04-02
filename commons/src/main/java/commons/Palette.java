@@ -17,7 +17,6 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
         scope = Palette.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-@JsonIgnoreProperties(value = "default")
 public class Palette {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,30 +80,6 @@ public class Palette {
         }
     }
 
-    /**
-     * Method that returns the default palette in a board
-     * @return the default palette of a board
-     */
-    public Palette getDefault(){
-        Board board = this.board;
-
-        for(Palette p: board.palettes){
-            if(p.isDefault)
-                return p;
-        }
-
-        return null;
-    }
-    /**
-     * Remove this Card from a given palette
-     * @param card
-     */
-    public void removeCard(Card card) {
-        if (card != null && cards.contains(card)) {
-            cards.remove(card);
-            card.palette = getDefault();
-        }
-    }
 
     /**
      * Method that sets the background of a palette
@@ -122,20 +97,23 @@ public class Palette {
         this.font = font;
     }
 
+
     /**
      * Method that checks if the palette is default
      * @return a boolean
      */
-    public boolean isDefault(){
+    public boolean getIsDefault(){
         return this.isDefault;
     }
 
     /**
      * Method that sets the palette as default
      */
-    public void setDefault(){
+    public void setIsDefault(){
         this.isDefault = true;
     }
+
+
 
     /**
      *

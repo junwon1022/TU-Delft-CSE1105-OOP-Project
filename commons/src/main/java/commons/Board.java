@@ -245,9 +245,26 @@ public class Board {
     }
 
     /**
+     * Getter for palettes
+     * @return the set of all palettes of a board
+     */
+    public Set<Palette> getPalettes() {
+        return palettes;
+    }
+
+    /**
+     * Method that sets all palettes for a board
+     * @param palettes the palettes that need to be added
+     */
+    public void setPalettes(Set<Palette> palettes) {
+        this.palettes = palettes;
+    }
+
+    /**
      * Method that gets the default palette of a board
      * @return a palette
      */
+    @JsonIgnore
     public Palette getDefaultPalette(){
         for(Palette p: palettes)
             if(p.isDefault)

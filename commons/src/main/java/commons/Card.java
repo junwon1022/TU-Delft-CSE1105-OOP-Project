@@ -102,16 +102,6 @@ public class Card {
     }
 
     /**
-     * Method that removes a palette from a card
-     * @param palette
-     */
-    public void removePalette(Palette palette){
-        if (palette != null) {
-            palette.cards.remove(this);
-            palette = palette.getDefault();
-        }
-    }
-    /**
      * Add a tag to a card
      * @param tag
      */
