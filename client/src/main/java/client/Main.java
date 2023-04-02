@@ -52,20 +52,41 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-//        var overview = FXML.load(QuoteOverviewCtrl.class,
-//        "client", "scenes", "QuoteOverview.fxml");
-//        var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
+        var connect = FXML.load(ConnectCtrl.class,
+                "client", "scenes", "ConnectToServer.fxml");
+
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        mainCtrl.initialize(primaryStage,connect);
+
+    }
+
+
+    /**
+     * Start the application.
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws IOException If an I/O error occurs.
+     */
+
+    public void startConnect(Stage primaryStage) throws IOException {
+
         var board = FXML.load(BoardCtrl.class,
-                "client", "scenes", "Board.fxml");
+               "client", "scenes", "Board.fxml");
         var connect = FXML.load(ConnectCtrl.class,
                 "client", "scenes", "ConnectToServer.fxml");
         var mainScreen = FXML.load(MainScreenCtrl.class,
-                "client", "scenes", "MainScreen.fxml");
+              "client", "scenes", "MainScreen.fxml");
         var adminScreen = FXML.load(AdminScreenCtrl.class,
-                "client", "scenes", "AdminScreen.fxml");
+             "client", "scenes", "AdminScreen.fxml");
 
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        //mainCtrl.initialize(primaryStage,connect);
         mainCtrl.initialize(primaryStage, board, connect, mainScreen, adminScreen);
     }
+
+
 }

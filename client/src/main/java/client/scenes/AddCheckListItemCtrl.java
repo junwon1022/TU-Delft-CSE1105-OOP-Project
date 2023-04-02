@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -19,6 +20,12 @@ public class AddCheckListItemCtrl {
 
     @FXML
     private Label nullText;
+
+    @FXML
+    private Button addChecklist;
+
+    @FXML
+    private Button cancelChecklist2;
 
     /**
      * Create a new AddChecklistItemCtrl.
@@ -58,11 +65,11 @@ public class AddCheckListItemCtrl {
      * @param event the ActionEvent
      */
     public void ok(ActionEvent event) {
-        success = true;
         storedText = checklistItemText.getText();
         if (storedText == null || storedText.length() == 0) {
             nullText.setText("Please enter some Description!");
         } else {
+            success = true;
             clearFields();
             closeWindow(event);
         }

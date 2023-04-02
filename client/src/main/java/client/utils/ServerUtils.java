@@ -69,7 +69,7 @@ public class ServerUtils {
      * @return the address of the server
      */
     public String getServerAddress() {
-        return SERVER_ADDRESS;
+        return SERVER;
     }
 
     /**
@@ -617,7 +617,6 @@ public class ServerUtils {
     private StompSession session = connect("ws://" +  SERVER_ADDRESS + "/websocket");
 
 
-
     /**
      * Creates a StompSession to connect the client to the server from the specified url
      * @param url The url the session will connect to
@@ -902,7 +901,7 @@ public class ServerUtils {
      * @param paletteId
      * @return the edited palette
      */
-    public Palette setDefault(long boardId, long paletteId){
+    public Palette setDefault(long boardId, long paletteId) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
                         paletteId + "/default")
@@ -911,5 +910,80 @@ public class ServerUtils {
                 .put(Entity.entity(true, APPLICATION_JSON), Palette.class);
     }
 
+     /**
+     * Sends the request to add the checkListItem
+     * to the specific url,
+     * @param checkListItem - the checkListItem to be added
+     * @return added checkListItem
+     */
+    public CheckListItem addChecklist(CheckListItem checkListItem ){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(checkListItem, APPLICATION_JSON), CheckListItem.class);
+
+    }
+
+    /**
+     * Changes the description of the specified checkListItem
+     * @param checkListItem - checkListItem to be renamed
+     * @param description - new description
+     * @return the new checkListItem
+     */
+    public CheckListItem renameChecklist(CheckListItem checkListItem, String description){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists/{checklist_id}/text")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .resolveTemplate("checklist_id", checkListItem.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(description, APPLICATION_JSON), CheckListItem.class);
+    }
+
+
+    /**
+     * Removes the checkListItem
+     * @param checkListItem - checklistItem ot be removed
+     * @return the removed checkListItem
+     */
+    public CheckListItem removeChecklist(CheckListItem checkListItem){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists/{checklist_id}")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .resolveTemplate("checklist_id", checkListItem.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(CheckListItem.class);
+    }
+
+    /**
+     * Sends the request to change the checklistItem's completed field
+     * @param checkListItem - checklistItem to change
+     * @param completed - new value
+     * @return the new checklistItem
+     */
+    public CheckListItem updateChecklistCheck(CheckListItem checkListItem, boolean completed) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists/{checklist_id}/completion")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .resolveTemplate("checklist_id", checkListItem.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(completed, APPLICATION_JSON), CheckListItem.class);
+    }
 }
 

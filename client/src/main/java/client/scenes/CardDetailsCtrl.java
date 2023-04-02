@@ -3,6 +3,8 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CheckListItem;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +22,7 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.List;
 
 
 public class CardDetailsCtrl{
@@ -45,9 +48,14 @@ public class CardDetailsCtrl{
     private Button addChecklist;
 
     @FXML
+    private Button addTagButton;
+
+    @FXML
     private ListView<CheckListItem> checklistView;
 
     private Card card;
+
+    ObservableList<CheckListItem> data;
 
     /**
      * Creates a new CardDetailsCtrl
@@ -63,10 +71,12 @@ public class CardDetailsCtrl{
     }
 
     /**
-     * Initializes the CardDetailsCtrl for the checklists "Currently not implemented"
+     * Initializes the CardDetailsCtrl for the checklists
      */
     public void initialize() {
-
+        data = FXCollections.observableArrayList();
+        checklistView.setItems(data);
+        checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
     }
 
     /**
@@ -127,6 +137,7 @@ public class CardDetailsCtrl{
     /**
      * updates the description of the card in the database
      * if the description is empty it makes it a space which is then reconverted
+     * also updates the visibility of the description icon
      * @param event the click of the "Save Description" button
      */
     public void updateDescription(MouseEvent event) {
@@ -136,6 +147,7 @@ public class CardDetailsCtrl{
             descriptionText.setText(text);
         }
         server.updateDescription(card, text);
+        cardCtrl.getDescription().setVisible(!server.getDescription(card).trim().equals(""));
         board.refresh();
     }
 
@@ -154,7 +166,7 @@ public class CardDetailsCtrl{
         }
         AddCheckListItemCtrl controller = fxmlLoader.getController();
 
-        addCheckListStage.setTitle("Add a new CheckList");
+        addCheckListStage.setTitle("Add a new sub-task");
         Scene addListScene = new Scene(root);
         addCheckListStage.setScene(addListScene);
         addCheckListStage.showAndWait();
@@ -162,20 +174,64 @@ public class CardDetailsCtrl{
         if (controller.success) {
             String title = controller.storedText;
 
-            CheckListItem checkListItem = getCheckList(title);
-             //   CheckListItem addedCheckListItem = server.addCheckListItem(list);
-
-             //   this.refresh();
+            CheckListItem checkListItem = createCheckList(title);
+            CheckListItem addedCheckListItem = server.addChecklist(checkListItem);
+            checkListItem.id = addedCheckListItem.id;
+            data.add(addedCheckListItem);
+            board.refresh();
         }
 
     }
+
     /**
-     * Creates a checklist with the specific title
-     * @param title the title of the new checklist
+     * removes the checklistItem from data
+     * @param checkListItem checklist to be removed
+     */
+    public void removeChecklist(CheckListItem checkListItem) {
+        data.remove(checkListItem);
+    }
+
+    /**
+     * Creates a checklist with the specific description
+     * @param description the title of the new checklist
      * @return the new checklist
      */
-    private CheckListItem getCheckList(String title) {
-        CheckListItem checkListItem = new CheckListItem();
-        return  checkListItem;
+    private CheckListItem createCheckList(String description) {
+        CheckListItem checkListItem = new CheckListItem(
+                description,
+                false,
+                card);
+        return checkListItem;
+    }
+
+    /**
+     * adds a tag to the detailed view of the card
+     */
+    public void addTag() {
+
+    }
+
+    /**
+     * when the carddetails are opened, sets the data arraylist
+     * to contain the checklists of the card.
+     * @param checklist
+     */
+    public void setChecklists(List<CheckListItem> checklist) {
+        for(int i = 0; i<checklist.size(); i++){
+            data.add(checklist.get(i));
+        }
+    }
+
+    /**
+     * Changes the renamed description in the observable array
+     * so that it updates at the moment
+     * @param addedChecklist the checklist with the new name
+     */
+    public void changeChecklistDescription(CheckListItem addedChecklist) {
+        for(int i = 0; i<data.size(); i++){
+            if(data.get(i).id == (addedChecklist.id)){
+                data.get(i).text = addedChecklist.text;
+            }
+        }
     }
 }
