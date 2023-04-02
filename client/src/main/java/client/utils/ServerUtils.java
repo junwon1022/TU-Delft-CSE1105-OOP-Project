@@ -68,7 +68,7 @@ public class ServerUtils {
      * @return the address of the server
      */
     public String getServerAddress() {
-        return SERVER_ADDRESS;
+        return SERVER;
     }
 
     /**
