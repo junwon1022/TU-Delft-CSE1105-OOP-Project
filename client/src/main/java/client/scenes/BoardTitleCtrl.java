@@ -152,10 +152,7 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
 
             if (controller.success) {
                 String newTitle = controller.storedText;
-
-                //method that actually renames the list in the database
                 data = server.renameBoard(data, newTitle);
-                System.out.println("New title after calling the command: "+ data.getTitle());
                 mainScreenCtrl.refresh();
             }
         } catch (IOException e) {

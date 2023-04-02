@@ -39,7 +39,7 @@ public class Palette {
     @JoinColumn(name = "board_id")
     public Board board;
 
-    @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<Card> cards = new HashSet<>();
 
 

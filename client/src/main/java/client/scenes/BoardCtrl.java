@@ -396,7 +396,7 @@ public class BoardCtrl {
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("Customization of board");
-            stage.setScene(new Scene(root, 686, 502));
+            stage.setScene(new Scene(root, 686, 527));
             stage.showAndWait();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -63,8 +63,13 @@ public class CustomizationCtrl {
     private Label nullTitle;
 
     @FXML
-    private ListView<Palette> list;
+    private Button resetBoard;
 
+    @FXML
+    private Button resetLists;
+
+    @FXML
+    private ListView<Palette> list;
 
     private ObservableList<Palette> data;
 
@@ -114,18 +119,6 @@ public class CustomizationCtrl {
         data.setAll(palettes);
         list.refresh();
         boardCtrl.refresh();
-    }
-
-    /**
-     * Method for the button that applies the changes to the board
-     * @param event
-     */
-    public void applyChanges(ActionEvent event){
-        changeBoardBackground();
-        changeBoardFont();
-        changeListsBackground();
-        changeListsFont();
-        closeWindow(event);
     }
 
     /**
@@ -215,10 +208,77 @@ public class CustomizationCtrl {
         }
     }
 
+    /**
+     * Method that clears the fields for adding a palette
+     */
     private void clearFields(){
         addTitle.clear();
         addBackground.setValue(Color.WHITE);
         addFont.setValue(Color.BLACK);
         makeDefault.setSelected(false);
+    }
+
+    /**
+     * Method that resets the board colors
+     * @param event
+     */
+    public void resetBoardColors(ActionEvent event){
+        server.changeBoardBackground(board,  "#A2E4F1");
+        server.changeBoardFont(board, "#000000");
+
+        boardBackground.setValue(Color.web("#A2E4F1"));
+        boardFont.setValue(Color.web("#000000"));
+
+        boardCtrl.refresh();
+    }
+
+    /**
+     * Method that resets the list colors
+     * @param event
+     */
+    public void resetListColors(ActionEvent event){
+        server.changeListsBackground(board,  "#CAF0F8");
+        server.changeListsFont(board, "#000000");
+
+        listBackground.setValue(Color.web("#CAF0F8"));
+        listFont.setValue(Color.web("#000000"));
+
+        boardCtrl.refresh();
+    }
+
+    /**
+     * Method that changes the board background when the color is changes
+     * @param event
+     */
+    public void changeBoardBOnAction(ActionEvent event){
+        changeBoardBackground();
+        boardCtrl.refresh();
+    }
+
+    /**
+     * Method that changes the board font when the color is changes
+     * @param event
+     */
+    public void changeBoardFOnAction(ActionEvent event){
+        changeBoardFont();
+        boardCtrl.refresh();
+    }
+
+    /**
+     * Method that changes the lists' background when the color is changes
+     * @param event
+     */
+    public void changeListBOnAction(ActionEvent event){
+        changeListsBackground();
+        boardCtrl.refresh();
+    }
+
+    /**
+     * Method that changes the lists' font when the color is changes
+     * @param event
+     */
+    public void changeListFOnAction(ActionEvent event){
+        changeListsFont();
+        boardCtrl.refresh();
     }
 }
