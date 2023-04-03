@@ -151,4 +151,22 @@ public class TagTest {
         tag.removeCard(null);
         assertEquals(cards, tag.cards);
     }
+
+
+    /**
+     * Test getColour method
+     */
+    @Test
+    public void testGetColour() {
+        assertEquals("#ff00ff", tag.getColour());
+    }
+
+    /**
+     * Test setColour method
+     */
+    @Test
+    public void testSetColour() {
+        tag.setColour("#00ff00");
+        assertEquals("#00ff00", tag.getColour());
+    }
 }

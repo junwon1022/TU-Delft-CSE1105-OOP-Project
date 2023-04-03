@@ -226,11 +226,24 @@ public class CardTest {
         assertTrue(card.palette == palette1);
     }
 
-//    /**
-//     * Test removePalette method
-//     */
-//    @Test
-//    public void testRemovePalette() {
-//
-//    }
+    /**
+     * Test removePalette method
+     */
+    @Test
+    public void testRemovePalette() {
+        Palette p = new Palette("Name", "#ffffff",
+                "#ffffff", true, board, new HashSet<Card>());
+        card.addPalette(p);
+        assertTrue(card.palette.background.equals("#ffffff"));
+        card.removePalette(p);
+        assertTrue(card.palette.background.equals("#ffffff"));
+    }
+
+    /**
+     * Test getOrder method
+     */
+    @Test
+    public void testGetOrder() {
+        assertEquals(0, card.getOrder());
+    }
 }
