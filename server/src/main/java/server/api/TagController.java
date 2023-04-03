@@ -75,8 +75,8 @@ public class TagController {
     @GetMapping(path = {"/cards/{card_id}", "/cards/{card_id}/"})
     ResponseEntity<Set<Tag>> getTagsByCardId
     (@PathVariable("board_id") long boardId,
-     @PathVariable("list_id") long listId,
-     @PathVariable("card_id") long cardId) {
+        @PathVariable("list_id") long listId,
+        @PathVariable("card_id") long cardId) {
         try {
             // Get the card
             Card card = cardService.getCardById(cardId);
@@ -222,6 +222,7 @@ public class TagController {
      *
      * @param s - The new color to set
      * @param id - The ID of the tag
+     * @return The new color
      * @throws Exception
      */
     public String updateTagColor(String s, long id) throws Exception {

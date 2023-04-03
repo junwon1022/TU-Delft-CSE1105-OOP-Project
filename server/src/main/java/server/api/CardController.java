@@ -63,7 +63,7 @@ public class CardController {
     @GetMapping(path = {"", "/"})
     ResponseEntity<List<Card>> getCards
     (@PathVariable("board_id") long boardId,
-     @PathVariable("list_id") long listId) {
+        @PathVariable("list_id") long listId) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);

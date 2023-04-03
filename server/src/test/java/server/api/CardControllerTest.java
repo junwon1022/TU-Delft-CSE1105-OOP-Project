@@ -22,7 +22,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.test.context.TestExecutionListeners;
 import server.database.*;
 import server.services.*;
 
@@ -300,7 +299,7 @@ public class  CardControllerTest {
      */
     @Test
     public void getCardByIdTest() {
-Board b = new Board("My Board", "#111111", "#111111",
+        Board b = new Board("My Board", "#111111", "#111111",
                 "#111111","#111111","pass", new ArrayList<>(),
                 new HashSet<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());

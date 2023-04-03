@@ -235,8 +235,10 @@ public class ListOfCardsControllerTest {
                 new HashSet<>(), new HashSet<>());
         ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
         b.addList(l);
-        Card c = new Card("My Card", "My Description", "color",l, new ArrayList<>(),new HashSet<>(), new Palette());
-        Card c1 = new Card("My Card 2", "My Description 2", "color",l, new ArrayList<>(),new HashSet<>(), new Palette());
+        Card c = new Card("My Card", "My Description",
+                "color",l, new ArrayList<>(),new HashSet<>(), new Palette());
+        Card c1 = new Card("My Card 2", "My Description 2",
+                "color",l, new ArrayList<>(),new HashSet<>(), new Palette());
         l.addCard(c);
         l.addCard(c1);
         when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
