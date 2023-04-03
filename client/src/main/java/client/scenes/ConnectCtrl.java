@@ -10,8 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
-
 public class ConnectCtrl {
 
     private Main main;
@@ -111,8 +109,8 @@ public class ConnectCtrl {
      */
     public void connectAdmin(ActionEvent event) throws Exception {
         if(adminField.getText().equals("admin")) {
-            if(field.getText().equals("")) mainCtrl.showAdmin(field.getText());
-
+            if(field.getText().equals(""))
+                nullTitle.setText("Please enter a server.");
             else {
                 try {
                     mainCtrl.showAdmin(field.getText());
@@ -121,7 +119,6 @@ public class ConnectCtrl {
                     nullTitle.setText(e.getMessage());
                 }
             }
-
         }
         else nullTitle.setText("You have entered incorrect password. Please try again!");
     }

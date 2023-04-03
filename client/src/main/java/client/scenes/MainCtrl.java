@@ -62,6 +62,7 @@ public class MainCtrl {
         this.connectCtrl = connect.getKey();
         this.connectCtrl.initialize();
         this.connect = new Scene(connect.getValue());
+        this.connect.getStylesheets().add("styles.css");
         this.main = new Main();
 
         showConnect();

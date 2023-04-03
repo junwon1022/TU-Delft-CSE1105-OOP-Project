@@ -72,7 +72,7 @@ public class ServerUtils {
     }
 
     /**
-     * Changes the preset server adress from 8080 to the textbox input
+     * Changes the preset server address from 8080 to the textbox input
      * @param server
      */
     public void changeServer(String server) throws Exception {
