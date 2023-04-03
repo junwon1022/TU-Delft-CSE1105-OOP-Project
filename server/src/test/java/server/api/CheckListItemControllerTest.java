@@ -330,6 +330,80 @@ public class CheckListItemControllerTest {
 
     }
 
+    /**
+     * Test getChecks method
+     */
+    @Test
+    public void getChecksTest() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+        b.addList(l);
+        l.addCard(c);
+        c.addCheckListItem(ch);
 
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(listRepo.findById(2L)).thenReturn((Optional.of(l)));
+        when(cardRepo.findById(3L)).thenReturn((Optional.of(c)));
+        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
+        var actual = controller.getChecks(1L,2L,3L);
+
+        assertEquals(OK, actual.getStatusCode());
+
+    }
+
+    /**
+     * Test getCheckById method
+     */
+    @Test
+    public void getCheckByIdTest() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+        b.addList(l);
+        l.addCard(c);
+        c.addCheckListItem(ch);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(listRepo.findById(2L)).thenReturn((Optional.of(l)));
+        when(cardRepo.findById(3L)).thenReturn((Optional.of(c)));
+        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
+        var actual = controller.getCheckById(1L,2L,3L,ch.id);
+
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    /**
+     * Test editCheckCompletion method
+     */
+    @Test
+    public void editCheckCompletionTest() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        CheckListItem ch = new CheckListItem("Solve Phong Shading Questions",true,c);
+        b.addList(l);
+        l.addCard(c);
+        c.addCheckListItem(ch);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(listRepo.findById(2L)).thenReturn((Optional.of(l)));
+        when(cardRepo.findById(3L)).thenReturn((Optional.of(c)));
+        when(repo.findById(ch.id)).thenReturn(Optional.of(ch));
+        var actual = controller.editCheckCompletion(true, 1L,2L,3L,ch.id);
+
+        assertEquals(OK, actual.getStatusCode());
+    }
 
 }

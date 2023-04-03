@@ -20,6 +20,8 @@ public class BoardTest {
     ListOfCards list2;
     ListOfCards list3;
 
+    Palette palette;
+
     /**
      * Set up all objects needed for testing
      */
@@ -40,6 +42,7 @@ public class BoardTest {
         board3 = new Board("Algebra", "#ffffff", "#000000",
                 "#ffffff", "#000000",
                 "pass2", listsOfCards, new HashSet<>(), new HashSet<>());
+        palette = new Palette("Palette", "#ffffff", "#000000", true, board, new HashSet<>());
 
     }
 
@@ -171,4 +174,97 @@ public class BoardTest {
         board.generateInviteKey();
         assertNotNull(board.key);
     }
+
+    /**
+     * Tests the getRandomString method
+     */
+    @Test
+    public void testGetRandomString() {
+        String key = board.getRandomString(3);
+        assertEquals(3, key.length());
+        assertNotNull(key);
+    }
+
+    /**
+     * Tests the addPalette method
+     */
+    @Test
+    public void testAddPalette() {
+        Palette p = new Palette("Palette", "#ffffff", "#000000", true, board, new HashSet<>());
+        assertFalse(board.palettes.contains(p));
+        board.addPalette(p);
+        assertEquals(p.title, "Palette");
+    }
+
+    /**
+     * Tests the removePalette method
+     */
+    @Test
+    public void testRemovePalette() {
+        board.addPalette(palette);
+        board.removePalette(palette);
+        assertFalse(board.palettes.contains(palette));
+    }
+
+
+    /**
+     * Tests the removeTag method
+     */
+    @Test
+    public void testRemoveTag() {
+        Tag tag = new Tag("Tag", "color","font", board, new HashSet<>());
+        board.addTag(tag);
+        board.removeTag(tag);
+        assertFalse(board.tags.contains(tag));
+    }
+
+    /**
+     * Tests the addTag method
+     */
+    @Test
+    public void testAddTag() {
+        Tag tag = new Tag("Tag", "color", "font",  board, new HashSet<>());
+        board.addTag(tag);
+        assertTrue(board.tags.contains(tag));
+    }
+
+    /**
+     * Tests the getTagByName method
+     */
+    @Test
+    public void testGetTagByName() {
+        Tag tag = new Tag("Tag", "color", "font", board, new HashSet<>());
+        board.addTag(tag);
+        assertEquals(tag, board.getTagByName("Tag"));
+    }
+
+    /**
+     * Test getPalettes method
+     */
+    @Test
+    public void testGetPalette() {
+        board.addPalette(palette);
+        assertEquals(palette.title, board.getPalettes().iterator().next().title);
+    }
+
+    /**
+     * Test setPalettes method
+     */
+    @Test
+    public void testSetPalette() {
+        board.addPalette(palette);
+        board.setPalettes(new HashSet<>());
+        assertEquals(new HashSet<>(), board.getPalettes());
+    }
+
+    /**
+     * Test getDefaultPalette method
+     */
+    @Test
+    public void testGetDefaultPalette() {
+        board.addPalette(palette);
+        assertEquals(palette, board.getDefaultPalette());
+    }
+
+
 }

@@ -96,16 +96,16 @@ public class ListOfCardsService {
      * @param toIdx the index of the second card
      * @return the updated list
      */
-    public ListOfCards moveCardsInListOfCards(long listId, int fromIdx, int toIdx) {
+    public ListOfCards moveCardsInListOfCards(long listId, long fromIdx, long toIdx) {
         ListOfCards list = listOfCardsRepository.getById(listId);
         if (fromIdx < toIdx) {
-            list.cards.get(fromIdx).order = toIdx;
-            for (int i = fromIdx + 1; i <= toIdx; i++)
+            list.cards.get((int) fromIdx).order = toIdx;
+            for (int i = (int) (fromIdx + 1); i <= toIdx; i++)
                 list.cards.get(i).order = i - 1;
         }
         else {
-            list.cards.get(fromIdx).order = toIdx;
-            for (int i = toIdx; i < fromIdx; i++)
+            list.cards.get((int) fromIdx).order = toIdx;
+            for (int i = (int) toIdx; i < fromIdx; i++)
                 list.cards.get(i).order = i + 1;
         }
         return listOfCardsRepository.save(list);
