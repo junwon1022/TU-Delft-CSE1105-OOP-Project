@@ -108,7 +108,7 @@ public class Card {
     public void removePalette(Palette palette){
         if (palette != null) {
             palette.cards.remove(this);
-            palette = palette.getDefault();
+            this.palette = palette.getDefault();
         }
     }
     /**
