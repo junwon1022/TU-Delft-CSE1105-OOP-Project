@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.Circle?>
+
+
+<Circle fx:id="circle" fill="#00b4d8" radius="15.0" stroke="BLACK" strokeType="INSIDE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" />

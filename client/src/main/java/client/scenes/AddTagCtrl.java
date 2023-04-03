@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -14,11 +15,20 @@ public class AddTagCtrl {
 
     public String storedText;
 
+    public String fontColor;
+    public String backgroundColor;
+
     @FXML
     private TextField tagName;
 
     @FXML
     private Label nullTitle;
+
+    @FXML
+    private ColorPicker fontColorPicker;
+    @FXML
+    private ColorPicker backgroundColorPicker;
+
 
     private String MESSAGE = "Please enter a name for the tag!";
 
@@ -61,12 +71,21 @@ public class AddTagCtrl {
      * @param event the ActionEvent
      */
     public void ok(ActionEvent event) {
-        success = true;
         storedText = tagName.getText();
+        backgroundColor = String.format("#%02x%02x%02x",
+                (int)(backgroundColorPicker.getValue().getRed() * 255),
+                (int)(backgroundColorPicker.getValue().getGreen() * 255),
+                (int)(backgroundColorPicker.getValue().getBlue() * 255));
+        fontColor = String.format("#%02x%02x%02x",
+                (int)(fontColorPicker.getValue().getRed() * 255),
+                (int)(fontColorPicker.getValue().getGreen() * 255),
+                (int)(fontColorPicker.getValue().getBlue() * 255));
+
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
+            success = true;
             clearFields();
             closeWindow(event);
         }
@@ -94,12 +113,21 @@ public class AddTagCtrl {
      * @param event the KeyEvent
      */
     public void okKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = tagName.getText();
+        backgroundColor = String.format("#%02x%02x%02x",
+                (int)(backgroundColorPicker.getValue().getRed() * 255),
+                (int)(backgroundColorPicker.getValue().getGreen() * 255),
+                (int)(backgroundColorPicker.getValue().getBlue() * 255));
+        fontColor = String.format("#%02x%02x%02x",
+                (int)(fontColorPicker.getValue().getRed() * 255),
+                (int)(fontColorPicker.getValue().getGreen() * 255),
+                (int)(fontColorPicker.getValue().getBlue() * 255));
+
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
+            success = true;
             clearFields();
             closeWindowKeyboard(event);
         }

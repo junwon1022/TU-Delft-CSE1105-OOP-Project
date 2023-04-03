@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -22,20 +23,19 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Tooltip?>
 <GridPane fx:id="root" alignment="CENTER" onKeyTyped="#openHelpScreen" prefHeight="625.0" prefWidth="1101.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1016.0000305175781" minWidth="35.99994786580402" prefWidth="270.0" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="1132.0" minWidth="10.0" prefWidth="830.000040690104" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" prefWidth="270.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="828.6666666666665" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="678.0" prefWidth="183.0" spacing="10.0" GridPane.rowIndex="1">
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" spacing="10.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <children>
-            <Line endX="127.33333587646484" endY="1.71661376953125E-5" startX="-100.0" strokeLineCap="ROUND" strokeWidth="4.0">
+            <Line fx:id="line2" endX="127.33333587646484" startX="-100.0" strokeLineCap="ROUND" strokeWidth="4.0">
                <stroke>
                   <LinearGradient endX="0.7981072314530141" endY="0.7350157728706626">
                      <stops>
@@ -58,14 +58,14 @@
                   </LinearGradient>
                </stroke>
             </Line>
-            <VBox spacing="8.0">
+            <VBox maxWidth="1.7976931348623157E308" spacing="8.0">
                <children>
-                  <Label text="Join another board:" textFill="#00b4d8">
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Join another board:" textFill="#00b4d8" wrapText="true">
                      <font>
                         <Font name="Corbel" size="20.0" />
                      </font>
                   </Label>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="29.0" prefWidth="245.0" spacing="7.0">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="29.0" spacing="7.0">
                      <children>
                         <TextField fx:id="joinField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#connectToBoardKey" promptText="Enter a key . . ." style="-fx-background-radius: 15;" stylesheets="@../../styles.css" HBox.hgrow="ALWAYS">
                            <effect>
@@ -85,21 +85,21 @@
                   </HBox>
                </children>
             </VBox>
-            <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="13.0" prefWidth="232.0" textAlignment="CENTER" textFill="#8f2e30">
+            <Label fx:id="nullTitle" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="13.0" textAlignment="CENTER" textFill="#8f2e30">
                <font>
                   <Font name="Corbel Italic" size="14.0" />
                </font>
             </Label>
-            <Accordion>
+            <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
               <panes>
-                <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="My Boards">
+                <TitledPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../styles.css" text="My Boards" wrapText="true">
                      <font>
                         <Font name="Corbel" size="19.0" />
                      </font>
                      <content>
-                      <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
+                      <AnchorPane fx:id="anchorPane2" minHeight="0.0" minWidth="0.0" styleClass="anchor" stylesheets="@../../styles.css">
                          <children>
-                            <ListView fx:id="recentBoards" prefHeight="91.0" prefWidth="231.0" styleClass="recent-boards" stylesheets="@../../styles.css">
+                            <ListView fx:id="recentBoards" styleClass="recent-boards" stylesheets="@../../styles.css">
                                  <padding>
                                     <Insets left="7.0" right="7.0" />
                                  </padding></ListView>
@@ -109,18 +109,18 @@
                 </TitledPane>
               </panes>
             </Accordion>
-            <Accordion>
+            <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                <panes>
-                  <TitledPane alignment="CENTER" stylesheets="@../../styles.css" text="Manage Tags">
+                  <TitledPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../styles.css" text="Manage Tags" wrapText="true">
                      <content>
-                        <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="anchor" stylesheets="@../../styles.css">
+                        <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" styleClass="anchor" stylesheets="@../../styles.css">
                            <children>
+                              <ListView fx:id="tagList" styleClass="tag-list" stylesheets="@../../styles.css" />
                               <Button id="add" fx:id="addTag" alignment="CENTER" contentDisplay="BOTTOM" layoutX="119.0" layoutY="85.0" mnemonicParsing="false" onAction="#addTag" prefHeight="23.0" prefWidth="35.0" styleClass="normal-button" text="➕">
                                  <font>
                                     <Font name="Corbel" size="12.0" />
                                  </font>
                               </Button>
-                              <VBox fx:id="vBox" layoutX="-7.0" layoutY="-13.0" prefHeight="93.0" prefWidth="193.0" styleClass="menu-vbox" stylesheets="@../../styles.css" />
                            </children>
                         </AnchorPane>
                      </content>
@@ -130,17 +130,17 @@
                   </TitledPane>
                </panes>
             </Accordion>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization" wrapText="true">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button fx:id="leave" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" styleClass="red-button" stylesheets="@../../styles.css" text="Exit board">
+            <Button fx:id="leave" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToOverview" prefHeight="45.0" styleClass="red-button" stylesheets="@../../styles.css" text="Exit board" wrapText="true">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect" wrapText="true">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
@@ -154,7 +154,7 @@
          <children>
             <HBox maxHeight="0.0" prefHeight="0.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Line endX="443.3385314941406" endY="-2.3332927227020264" startX="-341.9947814941406" startY="-2.3333051204681396" strokeLineCap="ROUND" strokeWidth="4.0">
+                  <Line fx:id="line" endX="443.3385314941406" endY="-2.3332927227020264" startX="-341.9947814941406" startY="-2.3333051204681396" strokeLineCap="ROUND" strokeWidth="4.0" HBox.hgrow="ALWAYS">
                      <stroke>
                         <LinearGradient endX="1.0" endY="1.0">
                            <stops>
@@ -225,7 +225,7 @@
             <Insets bottom="10.0" left="15.0" right="30.0" />
          </GridPane.margin>
       </VBox>
-      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="TimeWise" textFill="#00b4d8">
+      <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="TimeWise" textFill="#00b4d8" wrapText="true" GridPane.hgrow="ALWAYS">
          <font>
             <Font name="Corbel Light" size="53.0" />
          </font>
@@ -236,7 +236,7 @@
             <Insets />
          </opaqueInsets>
          <padding>
-            <Insets left="25.0" />
+            <Insets left="15.0" />
          </padding>
       </Label>
       <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="815.0" spacing="10.0" GridPane.columnIndex="1">

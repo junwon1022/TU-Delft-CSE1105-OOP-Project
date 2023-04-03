@@ -21,6 +21,7 @@ import client.utils.UserPreferences;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Line;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -43,7 +44,6 @@ public class MainCtrl {
     private Scene connect;
     private MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
-
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
 
@@ -62,6 +62,7 @@ public class MainCtrl {
         this.connectCtrl = connect.getKey();
         this.connectCtrl.initialize();
         this.connect = new Scene(connect.getValue());
+        this.connect.getStylesheets().add("styles.css");
         this.main = new Main();
 
         showConnect();
@@ -108,6 +109,7 @@ public class MainCtrl {
 
         this.adminScreenCtrl = adminScreen.getKey();
         this.adminScreen = new Scene(adminScreen.getValue());
+        this.adminScreen.getStylesheets().add("styles.css");
         this.main = new Main();
 
         showConnect();
@@ -122,9 +124,8 @@ public class MainCtrl {
     public void showBoard(String boardKey, int adminFlag) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
-//        primaryStage.setHeight(690);
-//        primaryStage.setWidth(1040);
         primaryStage.setMaximized(true);
+
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
@@ -136,8 +137,27 @@ public class MainCtrl {
         });
 
         boardCtrl.adminFlag = adminFlag;
+
+        primaryStage.widthProperty().addListener((observable, oldWidth, newWidth) -> {
+            updateLineEnd(boardCtrl.getLine(), 530);
+            updateLineEnd(boardCtrl.getLine2(), 170);
+        });
+
         boardCtrl.setBoardKey(boardKey);
         boardCtrl.initialize();
+    }
+
+    /**
+     * As lines in java fx are not responsive since they are not resizable,
+     * this is a custom resizing method
+     * @param line - line to be resized
+     * @param offset - width relative to the width of the container
+     */
+    private void updateLineEnd(Line line, int offset) {
+        // update the line's end x coordinate to match the new width of the container
+        double containerWidth = line.getParent().getLayoutBounds().getWidth();
+        double newEndX = containerWidth - offset;
+        line.setEndX(newEndX);
     }
 
     /**
@@ -167,7 +187,6 @@ public class MainCtrl {
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
 
-
         // Get the dimensions of the primary screen
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -184,7 +203,6 @@ public class MainCtrl {
         mainScreenCtrl.refresh();
     }
 
-
     /**
      * Changes the server
      * @param server the server the admin connects to
@@ -193,24 +211,22 @@ public class MainCtrl {
 
         serverUtils.changeServer(server);
     }
+
     /**
      * Show the admin scene.
      * @param server the server the admin connects to
      */
     public void showAdmin(String server) throws Exception {
-
         main.startConnect(primaryStage);
         serverUtils.changeServer(server);
         primaryStage.setTitle("Admin Screen");
         primaryStage.setScene(adminScreen);
-        primaryStage.setHeight(600);
+        primaryStage.setHeight(550);
+        primaryStage.setWidth(800);
         primaryStage.setMaximized(false);
         centerStage();
         adminScreenCtrl.refresh();
-
     }
-
-
 
     /**
      * Centers the stage in the computer window
@@ -227,5 +243,4 @@ public class MainCtrl {
         primaryStage.setX(centerX - primaryStage.getWidth() / 2);
         primaryStage.setY(centerY - primaryStage.getHeight() / 2);
     }
-
 }

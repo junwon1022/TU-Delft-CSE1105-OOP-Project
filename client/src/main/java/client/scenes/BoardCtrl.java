@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Tag;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -37,7 +38,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -57,6 +58,12 @@ public class BoardCtrl {
     int adminFlag;
 
     private String boardKey;
+
+    @FXML
+    private Line line;
+
+    @FXML
+    private Line line2;
 
     @FXML
     private Label copied;
@@ -81,8 +88,7 @@ public class BoardCtrl {
     private Button addTag;
 
     @FXML
-    private VBox vBox;
-
+    private ListView tagList;
     @FXML
     private AnchorPane anchorPane;
 
@@ -91,7 +97,8 @@ public class BoardCtrl {
 
     ObservableList<PreferencesBoardInfo> recentBoardsData;
 
-    ObservableList<ListOfCards> data;
+    ObservableList<ListOfCards> listOfCards;
+    ObservableList<Tag> tags;
 
     private Board board;
 
@@ -111,72 +118,86 @@ public class BoardCtrl {
         this.server = server;
         this.boardKey = boardKey;
         this.mainCtrl = mainCtrl;
-        data = FXCollections.observableArrayList();
+
+        listOfCards = FXCollections.observableArrayList();
+        tags = FXCollections.observableArrayList();
         initialize();
     }
-
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
-
+        boolean haveBoard = false;
         try {
             board = this.server.getBoardByKey(boardKey);
             System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
+            haveBoard = true;
 
-            data = FXCollections.observableArrayList();
+            listOfCards = FXCollections.observableArrayList();
             list.setFixedCellSize(0);
-            list.setItems(data);
+            list.setItems(listOfCards);
             list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-            list.setMaxHeight(600);
             list.setStyle("-fx-background-color: " + board.colour);
             key.setText(board.key);
             title.setText(board.title);
             title.setStyle("-fx-text-fill: " + board.font);
 
+            tags = FXCollections.observableArrayList();
+            loadTagList();
+
+            if (haveBoard) {
+                prefs.addBoard(server.getServerAddress(), board);
+            }
+
             if(adminFlag == 0) recentBoardsData = FXCollections.observableList
-                        (prefs.getBoards(server.getServerAddress()));
+                    (prefs.getBoards(server.getServerAddress()));
             else recentBoardsData = FXCollections.observableList
-                        (server.getBoards().stream()
-                                .map(x -> new PreferencesBoardInfo
-                                (x.title, x.key, x.password, x.font, x.colour))
-                                .collect(Collectors.toList()));
-            recentBoards.setFixedCellSize(0);
-            recentBoards.setItems(recentBoardsData);
-            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-            recentBoards.setMaxHeight(600);
+                (server.getBoards().stream()
+                    .map(x -> new PreferencesBoardInfo
+                    (x.title, x.key, x.password, x.font, x.colour))
+                            .collect(Collectors.toList()));
+            loadRecentBoards();
+
             AnchorPane.setBottomAnchor(addTag, 5.0);
             AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
-            loadVBox();
-            loadRecentBoards();
+
             refresh();
+
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-                for (var list : s.lists)
+                for (var list: s.lists)
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
-                Platform.runLater(() -> data.setAll(s.lists));
+                Platform.runLater(() -> listOfCards.setAll(s.lists));
+                Platform.runLater(() -> tags.setAll(s.tags));
             });
-        }
-        catch(Exception e){
+        } catch(Exception e) {
             board = getBoard();
         }
-
     }
 
     /**
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
-        //the method call of getServerData will be with the board parameter
-        var serverData = server.getServerData(board.id);
-        data.setAll(serverData);
+        //the method call of getListsInBoard will be with the board parameter
+        var serverData = server.getListsInBoard(board.id);
+        listOfCards.setAll(serverData);
+        //the method call of getTagsInBoard will be with the board parameter
+        var serverDataTags = server.getTagsInBoard(board.id);
+        tags.setAll(serverDataTags);
     }
 
     /**
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
+        recentBoards.setItems(recentBoardsData);
+        recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+        recentBoards.setFixedCellSize(0);
+        recentBoards.setMaxHeight(600);
+
         // set the VBox to always grow to fill the AnchorPane
         recentBoards.setPrefHeight(Region.USE_COMPUTED_SIZE);
         recentBoards.setPrefWidth(Region.USE_COMPUTED_SIZE);
@@ -192,22 +213,27 @@ public class BoardCtrl {
 
 
     /**
-     * Loads the vbox to auto-fit its parent
+     * Loads the list to auto-fit its parent
      */
-    public void loadVBox() {
-        // set the VBox to always grow to fill the AnchorPane
-        vBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        vBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        vBox.setMaxHeight(Double.MAX_VALUE);
-        vBox.setMaxWidth(Double.MAX_VALUE);
+    public void loadTagList() {
+        tagList.setItems(tags);
+        tagList.setCellFactory(lv -> new TagCtrl(server, this));
+        tagList.getStylesheets().add("styles.css");
+        tagList.setFixedCellSize(0);
+        tagList.setMaxHeight(400);
 
-        // set the constraints for the VBox to fill the AnchorPane
-        AnchorPane.setTopAnchor(vBox, 0.0);
-        AnchorPane.setBottomAnchor(vBox, 35.0);
-        AnchorPane.setLeftAnchor(vBox, 0.0);
-        AnchorPane.setRightAnchor(vBox, 0.0);
+        // set the tagList to always grow to fill the AnchorPane
+        tagList.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        tagList.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        tagList.setMaxHeight(Double.MAX_VALUE);
+        tagList.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the tagList to fill the AnchorPane
+        AnchorPane.setTopAnchor(tagList, 0.0);
+        AnchorPane.setBottomAnchor(tagList, 35.0);
+        AnchorPane.setLeftAnchor(tagList, 0.0);
+        AnchorPane.setRightAnchor(tagList, 0.0);
     }
-
 
     /**
      * Opens a new window to add a new list of cards.
@@ -260,22 +286,22 @@ public class BoardCtrl {
             stage.setTitle("Add a new tag");
             Scene addTagScene = new Scene(root);
             addTagScene.getStylesheets().add("styles.css");
-            stage.setHeight(240);
-            stage.setWidth(320);
+            stage.setHeight(320);
+            stage.setWidth(510);
             stage.setScene(addTagScene);
             stage.showAndWait();
 
             if (controller.success) {
                 String name = controller.storedText;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
 
-                //TODO add getTag in Server Utils
-                //Tag tag = getTag(name);
-                //TODO add addTag in Server Utils
-                //Tag addedTag = server.addTag(tag);
-                //System.out.println(addedTag);
+                Tag tag = getTag(name, backgroundColor, fontColor);
+                Tag addedTag = server.addTag(tag);
+                System.out.println(addedTag);
 
-                //change the id of the board locally
-                //tag.id = addedTag.id;
+                //change the id of the tag locally
+                tag.id = addedTag.id;
 
                 this.refresh();
             }
@@ -314,9 +340,6 @@ public class BoardCtrl {
         copied.setVisible(true);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> copied.setVisible(false));
-//        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
-//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
-//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
@@ -336,7 +359,6 @@ public class BoardCtrl {
      * @param event - Key event when the user clicks the mouse + /
      */
     public void goToOverview(ActionEvent event) throws Exception {
-
         if(adminFlag == 0) mainCtrl.showMainScreen(server.getServerAddress());
         else mainCtrl.showAdmin(server.getServerAddress());
     }
@@ -359,8 +381,24 @@ public class BoardCtrl {
     }
 
 
-    private ListOfCards getList(String title){
+    /**
+     * Method that creates a new list of cards in the board
+     * @param title
+     * @return the new list
+     */
+    private ListOfCards getList(String title) {
         return new ListOfCards(title, board, new ArrayList<>());
+    }
+
+    /**
+     * Creates a new tag
+     * @param name
+     * @param backgroundColor
+     * @param fontColor
+     * @return
+     */
+    private Tag getTag(String name, String backgroundColor, String fontColor) {
+        return new Tag(name, backgroundColor, fontColor, board, new HashSet<>());
     }
 
     /**
@@ -420,5 +458,21 @@ public class BoardCtrl {
                 nullTitle.setText("There is no board with this key!");
             }
         }
+    }
+
+    /**
+     * Getter for a line in the board design
+     * @return a ref to the line
+     */
+    public Line getLine() {
+        return line;
+    }
+
+    /**
+     * Getter for a line in the board design
+     * @return a ref to the line
+     */
+    public Line getLine2() {
+        return line2;
     }
 }

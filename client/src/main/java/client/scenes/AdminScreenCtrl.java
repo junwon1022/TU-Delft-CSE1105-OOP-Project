@@ -83,8 +83,6 @@ public class AdminScreenCtrl {
         list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
-
-
     /**
      * Adds a Board
      *
@@ -104,9 +102,12 @@ public class AdminScreenCtrl {
 
             if (controller.success) {
                 String title = controller.storedText;
+                String password = controller.password;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,"","","" ,
-                        "" , "", new ArrayList<>(), new HashSet<>(),new HashSet<>());
+                Board board = new Board(title,backgroundColor,fontColor,"" ,
+                        "" , password, new ArrayList<>(), new HashSet<>(),new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);
@@ -114,14 +115,9 @@ public class AdminScreenCtrl {
                 refresh();
             }
         } catch (IOException e) {
-
-
+            System.out.println(e.getStackTrace());
         }
-
     }
-
-
-
 }
 
 
