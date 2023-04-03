@@ -106,8 +106,8 @@ public class AdminScreenCtrl {
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
                 System.out.println("The title is "+ title);
-                Board board = new Board(title,backgroundColor,fontColor,"" ,
-                        "" , password, new ArrayList<>(), new HashSet<>(),new HashSet<>());
+                Board board = new Board(title,backgroundColor,fontColor,"#CAF0F8",
+                        "#000000", password, new ArrayList<>(), new HashSet<>(),new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 server.addBoardTitle(board);

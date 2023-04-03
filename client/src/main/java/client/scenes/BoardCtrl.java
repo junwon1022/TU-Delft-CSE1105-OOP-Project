@@ -412,7 +412,6 @@ public class BoardCtrl {
     }
 
     /**
-<<<<<<< HEAD
      * Method that opens the customization window
      * @param event
      */
