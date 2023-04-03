@@ -1,8 +1,6 @@
 package server.api;
 
-import commons.Board;
-import commons.Card;
-import commons.ListOfCards;
+import commons.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -157,30 +155,6 @@ public class CardServiceTest {
 
     }
 
-//    @Test
-//    public void deleteCardTest() throws Exception {
-//
-//        Board b = new Board("My Schedule", "#111111","#111111","#111111",
-//                "#111111", "pass", new ArrayList<>(),
-//                new HashSet<>(), new HashSet<>());
-//
-//        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
-//
-//        b.addList(l);
-//
-//        Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),
-//                new HashSet<>(), null);
-//
-//        l.addCard(c);
-//
-//        boardService.createBoard(b);
-//        listService.createListOfCards(l, b);
-//        cardService.createCard(c, l, b);
-//        cardService.deleteCardById(c.id);
-//
-//        Mockito.verify(cardRepo).deleteById(c.id);
-//    }
-
     @Test
     public void getAllCardsTest() throws Exception {
 
@@ -208,8 +182,88 @@ public class CardServiceTest {
         k.add(c2);
 
         assertThat(cardService.getCards(l)).isEqualTo(k);
+    }
 
+    /**
+     * Test addTagToCard method.
+     */
+    @Test
+    public void addTagToCardTest() throws Exception {
 
+        Board b = new Board("My Schedule", "#111111","#111111","#111111",
+                "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
+
+        b.addList(l);
+        l.addCard(c);
+
+        cardService.addTagToCard(c ,t);
+
+        assertThat(c.tags.contains(t)).isTrue();
+    }
+
+    /**
+     * Test removeTagFromCard method.
+     */
+    @Test
+    public void removeTagFromCardTest() throws Exception {
+
+        Board b = new Board("My Schedule", "#111111","#111111","#111111",
+                "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
+
+        b.addList(l);
+        l.addCard(c);
+
+        cardService.addTagToCard(c ,t);
+
+        assertThat(c.tags.contains(t)).isTrue();
+
+        cardService.removeTagFromCard(c,t);
+
+        assertThat(c.tags.contains(t)).isFalse();
+    }
+
+    /**
+     * Test removePaletteFromCard method.
+     */
+    @Test
+    public void removePaletteFromCardTest() throws Exception {
+
+        Board b = new Board("My Schedule", "#111111","#111111","#111111",
+                "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+
+        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        Palette p = new Palette("default", "#0000000", "#0000000",
+                true, b, new HashSet<>());
+
+        b.addList(l);
+        l.addCard(c);
+        b.addPalette(p);
+
+        cardService.addPaletteToCard(c,p);
+
+        assertThat(c.palette).isEqualTo(p);
+
+        cardService.removePaletteFromCard(c, p);
+
+        assertThat(c.palette).isNull();
     }
 
 

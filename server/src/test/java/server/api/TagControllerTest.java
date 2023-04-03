@@ -15,6 +15,7 @@
  */
 package server.api;
 
+import antlr.collections.List;
 import commons.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,9 @@ public class TagControllerTest {
 
     private ListOfCardsService listOfCardsService;
 
+    private ListOfCardsRepository listRepo;
+
+    private CardRepository cardRepo;
     private CardService cardService;
 
     private TagService service;
@@ -55,11 +59,12 @@ public class TagControllerTest {
 
     @BeforeEach
     public void setup() {
-
         repo = Mockito.mock(TagRepository.class);
         boardRepo = Mockito.mock(BoardRepository.class);
-
-
+        listRepo = Mockito.mock(ListOfCardsRepository.class);
+        cardRepo = Mockito.mock(CardRepository.class);
+        cardService = new CardService(cardRepo);
+        listOfCardsService = new ListOfCardsService(listRepo);
 
         service = new TagService(repo);
         boardService = new BoardService(boardRepo);
@@ -190,4 +195,88 @@ public class TagControllerTest {
         assertEquals(OK, actual.getStatusCode());
     }
 
+    /**
+     * Test getTags method.
+     */
+    @Test
+    public void getTags() {
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
+
+        b.addTag(t);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.getTags(1L);
+
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    /**
+     * Test getTagsByCardId method
+     */
+    @Test
+    public void getTagsByCardId() {
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("List 1",b,new ArrayList<>());
+        Card c = new Card(null,"Finish CG Study","#555555",l,new ArrayList<>(),
+                new HashSet<>(), null);
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
+
+        b.addList(l);
+        b.addTag(t);
+        l.addCard(c);
+        c.addTag(t);
+
+        when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
+        when(listRepo.findById(l.id)).thenReturn(Optional.of(l));
+        when(cardRepo.findById(c.id)).thenReturn(Optional.of(c));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+
+        var actual = controller.getTagsByCardId(b.id, l.id, c.id);
+
+        assertEquals(OK, actual.getStatusCode());
+    }
+    /**
+     * Test getTagById method.
+     */
+    @Test
+    public void getTagByIdTest() {
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
+
+        b.addTag(t);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        var actual = controller.getTagById(1L, t.id);
+
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    /**
+     * Test updateTagColor method.
+     */
+    @Test
+    public void updateTagColorTest() throws Exception {
+        Board b = new Board("My Schedule", "#111111","#111111",
+                "#111111","#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Tag t = new Tag("Solve Phong Shading Questions","#555555", "#555555", b,new HashSet<>());
+
+        b.addTag(t);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(t.id)).thenReturn(Optional.of(t));
+        when(repo.save(Mockito.any(Tag.class))).thenAnswer(I -> I.getArguments()[0]);
+        var actual = controller.updateTagColor("#142857", t.id);
+
+        assertEquals("#142857", t.colour);
+    }
 }

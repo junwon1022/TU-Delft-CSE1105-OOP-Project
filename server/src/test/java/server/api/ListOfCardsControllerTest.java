@@ -16,7 +16,9 @@
 package server.api;
 
 import commons.Board;
+import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import server.database.BoardRepository;
+import server.database.CardRepository;
 import server.database.ListOfCardsRepository;
 import server.services.BoardService;
 import server.services.ListOfCardsService;
@@ -34,6 +37,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings({"MissingJavadocMethod","JavadocMethod"})
@@ -48,6 +52,8 @@ public class ListOfCardsControllerTest {
 
     private BoardRepository boardRepo;
 
+    private CardRepository cardRepo;
+
     private BoardService boardService;
 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -60,6 +66,7 @@ public class ListOfCardsControllerTest {
         service = new ListOfCardsService(repo);
         boardService = new BoardService(boardRepo);
         simpMessagingTemplate = Mockito.mock(SimpMessagingTemplate.class);
+        cardRepo = Mockito.mock(CardRepository.class);
         controller = new ListOfCardsController(service,boardService, simpMessagingTemplate);
     }
 
@@ -182,5 +189,63 @@ public class ListOfCardsControllerTest {
     }
 
 
+    /**
+     * Test getListOfCards method
+     */
+    @Test
+    public void getListOfCardsCorrect() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        b.addList(l);
+        when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
+        when(repo.findById(l.id)).thenReturn((Optional.of(l)));
+        var actual = controller.getListsOfCards(b.id);
 
+        assertEquals(OK, actual.getStatusCode());
+
+    }
+
+    /**
+     * Test getListOfCardsById method
+     */
+    @Test
+    public void getListOfCardsByIdCorrect() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        b.addList(l);
+        when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
+        when(repo.findById(l.id)).thenReturn((Optional.of(l)));
+        var actual = controller.getListOfCardsById(b.id,l.id);
+
+        assertEquals(OK, actual.getStatusCode());
+
+    }
+
+    /**
+     * Test moveCards method
+     */
+    @Test
+    public void moveCardsTest() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
+        b.addList(l);
+        Card c = new Card("My Card", "My Description", "color",l, new ArrayList<>(),new HashSet<>(), new Palette());
+        Card c1 = new Card("My Card 2", "My Description 2", "color",l, new ArrayList<>(),new HashSet<>(), new Palette());
+        l.addCard(c);
+        l.addCard(c1);
+        when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
+        when(repo.findById(l.id)).thenReturn((Optional.of(l)));
+        when(cardRepo.findById(c.id)).thenReturn((Optional.of(c)));
+        when(cardRepo.findById(c1.id)).thenReturn((Optional.of(c1)));
+        var actual = controller.moveCards(b.id,l.id,0,1);
+
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+
+    }
 }

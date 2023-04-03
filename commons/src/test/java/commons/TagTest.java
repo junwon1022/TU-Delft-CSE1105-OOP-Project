@@ -169,4 +169,14 @@ public class TagTest {
         tag.setColour("#00ff00");
         assertEquals("#00ff00", tag.getColour());
     }
+
+    /**
+     * Test removeTagsFromCards method
+     */
+    @Test
+    public void testRemoveTagsFromCards() {
+        tag.removeTagsFromCards();
+        assertEquals(0, card1.tags.size());
+        assertEquals(0, card2.tags.size());
+    }
 }

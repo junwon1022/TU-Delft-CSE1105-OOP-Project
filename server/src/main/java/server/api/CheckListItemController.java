@@ -61,7 +61,7 @@ public class CheckListItemController {
      * @return the checklist
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<List<CheckListItem>> getChecks(
+    ResponseEntity<List<CheckListItem>> getChecks(
             @PathVariable("board_id") long boardId,
             @PathVariable("list_id") long listId,
             @PathVariable("card_id") long cardId
@@ -98,11 +98,11 @@ public class CheckListItemController {
      * @return the checklist item
      */
     @GetMapping(path = {"/{checklist_id}/","/{checklist_id}"})
-    private ResponseEntity<CheckListItem> getCheckById(@PathVariable("board_id") long boardId,
-                                                       @PathVariable("list_id") long listId,
-                                                       @PathVariable("card_id") long cardId,
-                                                       @PathVariable("checklist_id")
-                                                           long checklistId) {
+    ResponseEntity<CheckListItem> getCheckById(@PathVariable("board_id") long boardId,
+                                               @PathVariable("list_id") long listId,
+                                               @PathVariable("card_id") long cardId,
+                                               @PathVariable("checklist_id")
+                                               long checklistId) {
         try {
             if(!validPath(boardId, listId, cardId, checklistId)) {
                 return ResponseEntity.badRequest().build();

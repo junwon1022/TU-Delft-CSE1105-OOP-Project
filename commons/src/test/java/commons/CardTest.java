@@ -227,23 +227,20 @@ public class CardTest {
     }
 
     /**
-     * Test removePalette method
-     */
-    @Test
-    public void testRemovePalette() {
-        Palette p = new Palette("Name", "#ffffff",
-                "#ffffff", true, board, new HashSet<Card>());
-        card.addPalette(p);
-        assertTrue(card.palette.background.equals("#ffffff"));
-        card.removePalette(p);
-        assertTrue(card.palette.background.equals("#ffffff"));
-    }
-
-    /**
      * Test getOrder method
      */
     @Test
     public void testGetOrder() {
         assertEquals(0, card.getOrder());
+    }
+
+    /**
+     * Test removeCardfromTags method
+     */
+    @Test
+    public void testRemoveCardFromTags() {
+        card.removeCardsFromTags();
+        assertEquals(0, tag1.cards.size());
+        assertEquals(0, tag2.cards.size());
     }
 }

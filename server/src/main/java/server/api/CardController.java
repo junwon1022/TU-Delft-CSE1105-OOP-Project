@@ -61,9 +61,9 @@ public class CardController {
      * @return the list of lists
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<List<Card>> getCards
+    ResponseEntity<List<Card>> getCards
     (@PathVariable("board_id") long boardId,
-        @PathVariable("list_id") long listId) {
+     @PathVariable("list_id") long listId) {
         try {
             // Get the board
             Board board = boardService.getBoardById(boardId);
@@ -91,9 +91,9 @@ public class CardController {
      * @return the list
      */
     @GetMapping(path = {"/{card_id}/","/{card_id}"})
-    private ResponseEntity<Card> getCardById(@PathVariable("board_id") long boardId,
-                                                           @PathVariable("list_id") long listId,
-                                                           @PathVariable("card_id") long cardId) {
+    ResponseEntity<Card> getCardById(@PathVariable("board_id") long boardId,
+                                     @PathVariable("list_id") long listId,
+                                     @PathVariable("card_id") long cardId) {
         try {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
@@ -269,9 +269,9 @@ public class CardController {
      * @return the tags
      */
     @GetMapping(path = {"/{card_id}/tags","/{card_id}/tags/"})
-    private ResponseEntity<Set<Tag>> getCardTags(@PathVariable("board_id") long boardId,
-                                                  @PathVariable("list_id") long listId,
-                                                  @PathVariable("card_id") long cardId) {
+    ResponseEntity<Set<Tag>> getCardTags(@PathVariable("board_id") long boardId,
+                                         @PathVariable("list_id") long listId,
+                                         @PathVariable("card_id") long cardId) {
         try {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
@@ -298,10 +298,10 @@ public class CardController {
      * @return the card
      */
     @PostMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
-    private ResponseEntity<Card> addTagToCard(@PathVariable("board_id") long boardId,
-                                              @PathVariable("list_id") long listId,
-                                              @PathVariable("card_id") long cardId,
-                                              @PathVariable("tag_id") long tagId) {
+    ResponseEntity<Card> addTagToCard(@PathVariable("board_id") long boardId,
+                                      @PathVariable("list_id") long listId,
+                                      @PathVariable("card_id") long cardId,
+                                      @PathVariable("tag_id") long tagId) {
         try {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
@@ -334,10 +334,10 @@ public class CardController {
      * @return the card
      */
     @DeleteMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
-    private ResponseEntity<Card> removeTagFromCard(@PathVariable("board_id") long boardId,
-                                                   @PathVariable("list_id") long listId,
-                                                   @PathVariable("card_id") long cardId,
-                                                   @PathVariable("tag_id") long tagId) {
+    ResponseEntity<Card> removeTagFromCard(@PathVariable("board_id") long boardId,
+                                           @PathVariable("list_id") long listId,
+                                           @PathVariable("card_id") long cardId,
+                                           @PathVariable("tag_id") long tagId) {
         try {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
@@ -398,10 +398,10 @@ public class CardController {
      * @return the card with the palette
      */
     @PostMapping(path = {"/{card_id}/palette/", "/{card_id}/palette"})
-    private ResponseEntity<Card> addPaletteToCard(@PathVariable("board_id") long boardId,
-                                              @PathVariable("list_id") long listId,
-                                              @PathVariable("card_id") long cardId,
-                                              @RequestBody() Palette palette) {
+    ResponseEntity<Card> addPaletteToCard(@PathVariable("board_id") long boardId,
+                                          @PathVariable("list_id") long listId,
+                                          @PathVariable("card_id") long cardId,
+                                          @RequestBody() Palette palette) {
         try {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();
@@ -431,10 +431,10 @@ public class CardController {
      * @return the card with the palette
      */
     @DeleteMapping(path = {"/{card_id}/palette/{palette_id}", "/{card_id}/palette/{palette_id}/"})
-    private ResponseEntity<Card> deletePaletteFromCard(@PathVariable("board_id") long boardId,
-                                                  @PathVariable("list_id") long listId,
-                                                  @PathVariable("card_id") long cardId,
-                                                  @PathVariable("palette_id") long paletteId) {
+    ResponseEntity<Card> deletePaletteFromCard(@PathVariable("board_id") long boardId,
+                                               @PathVariable("list_id") long listId,
+                                               @PathVariable("card_id") long cardId,
+                                               @PathVariable("palette_id") long paletteId) {
         try {
             if(!validPath(boardId, listId, cardId)) {
                 return ResponseEntity.badRequest().build();

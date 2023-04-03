@@ -212,7 +212,7 @@ public class BoardTest {
      */
     @Test
     public void testRemoveTag() {
-        Tag tag = new Tag("Tag", "color", board, new HashSet<>());
+        Tag tag = new Tag("Tag", "color","font", board, new HashSet<>());
         board.addTag(tag);
         board.removeTag(tag);
         assertFalse(board.tags.contains(tag));
@@ -223,7 +223,7 @@ public class BoardTest {
      */
     @Test
     public void testAddTag() {
-        Tag tag = new Tag("Tag", "color", board, new HashSet<>());
+        Tag tag = new Tag("Tag", "color", "font",  board, new HashSet<>());
         board.addTag(tag);
         assertTrue(board.tags.contains(tag));
     }
@@ -233,9 +233,37 @@ public class BoardTest {
      */
     @Test
     public void testGetTagByName() {
-        Tag tag = new Tag("Tag", "color", board, new HashSet<>());
+        Tag tag = new Tag("Tag", "color", "font", board, new HashSet<>());
         board.addTag(tag);
         assertEquals(tag, board.getTagByName("Tag"));
+    }
+
+    /**
+     * Test getPalettes method
+     */
+    @Test
+    public void testGetPalette() {
+        board.addPalette(palette);
+        assertEquals(palette.title, board.getPalettes().iterator().next().title);
+    }
+
+    /**
+     * Test setPalettes method
+     */
+    @Test
+    public void testSetPalette() {
+        board.addPalette(palette);
+        board.setPalettes(new HashSet<>());
+        assertEquals(new HashSet<>(), board.getPalettes());
+    }
+
+    /**
+     * Test getDefaultPalette method
+     */
+    @Test
+    public void testGetDefaultPalette() {
+        board.addPalette(palette);
+        assertEquals(palette, board.getDefaultPalette());
     }
 
 

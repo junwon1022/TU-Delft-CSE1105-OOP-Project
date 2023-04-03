@@ -50,7 +50,7 @@ public class TagController {
      * @throws Exception
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<Set<Tag>> getTags
+    ResponseEntity<Set<Tag>> getTags
     (@PathVariable("board_id") long boardId) {
         try {
             // Get the board
@@ -73,10 +73,10 @@ public class TagController {
      * @return the list of tags
      */
     @GetMapping(path = {"/cards/{card_id}", "/cards/{card_id}/"})
-    private ResponseEntity<Set<Tag>> getTagsByCardId
+    ResponseEntity<Set<Tag>> getTagsByCardId
     (@PathVariable("board_id") long boardId,
-        @PathVariable("list_id") long listId,
-        @PathVariable("card_id") long cardId) {
+     @PathVariable("list_id") long listId,
+     @PathVariable("card_id") long cardId) {
         try {
             // Get the card
             Card card = cardService.getCardById(cardId);
@@ -96,8 +96,8 @@ public class TagController {
      * @param tagId
      */
     @GetMapping(path = {"/{tag_id}", "/{tag_id}/"})
-    private ResponseEntity<Tag> getTagById(@PathVariable("board_id") long boardId,
-                                           @PathVariable("tag_id") long tagId) {
+    ResponseEntity<Tag> getTagById(@PathVariable("board_id") long boardId,
+                                   @PathVariable("tag_id") long tagId) {
         try {
             // Get the tag
             Tag tag = tagService.getTagById(tagId);
@@ -224,10 +224,11 @@ public class TagController {
      * @param id - The ID of the tag
      * @throws Exception
      */
-    public void updateTagColor(String s, long id) throws Exception {
+    public String updateTagColor(String s, long id) throws Exception {
         Tag tag = tagService.getTagById(id);
         tag.setColour(s);
         tagService.saveTag(tag);
+        return s;
     }
 
 

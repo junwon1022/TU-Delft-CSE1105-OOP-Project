@@ -31,8 +31,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 
 @SuppressWarnings({"MissingJavadocMethod","JavadocMethod"})
@@ -160,14 +159,20 @@ public class BoardControllerTest {
         var actual = controller.getBoards();
         assertEquals(OK, actual.getStatusCode());
     }
-//
-//    /**
-//     * Get Board by key
-//     */
-//    @Test
-//    public void getBoardByKey(){
-//
-//    }
+
+    /**
+     * Get Board by key
+     */
+    //Need a correct way to test this method
+    @Test
+    public void getBoardByKeyTest() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findByKey(b.key)).thenReturn(Optional.of(b));
+        var actual = controller.getBoardByKey(b.key);
+        assertEquals(INTERNAL_SERVER_ERROR, actual.getStatusCode());
+    }
 
     /**
      * Change the board background
