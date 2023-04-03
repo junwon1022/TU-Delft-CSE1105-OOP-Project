@@ -169,5 +169,109 @@ public class PaletteControllerTest {
         assertEquals("#123456", actual.getBody().font);
     }
 
+    /**
+     * Test getPaletteById method
+     */
+    @Test
+    void getPaletteByIdTest(){
+        Board b = new Board("test board", "#0000000", "#0000000",
+                "#0000000","#0000000","password", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Palette p = new Palette("default", "#0000000", "#0000000",
+                true, b, new HashSet<>());
+
+        b.addPalette(p);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(p.id)).thenReturn(Optional.of(p));
+
+        var actual = controller.getPaletteById(1L, p.id);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(p, actual.getBody());
+    }
+
+    /**
+     * Test getPalettes method
+     */
+    @Test
+    void getPalettesTest() {
+        Board b = new Board("test board", "#0000000", "#0000000",
+                "#0000000", "#0000000", "password", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Palette p = new Palette("default", "#0000000", "#0000000",
+                true, b, new HashSet<>());
+
+        b.addPalette(p);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(p.id)).thenReturn(Optional.of(p));
+
+        var actual = controller.getPalettes(1L);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(b.getPalettes(), actual.getBody());
+    }
+
+    /**
+     * Test getDefault method
+     */
+    @Test
+    void getDefaultTest() {
+        Board b = new Board("test board", "#0000000", "#0000000",
+                "#0000000", "#0000000", "password", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Palette p = new Palette("default", "#0000000", "#0000000",
+                true, b, new HashSet<>());
+
+        b.addPalette(p);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(p.id)).thenReturn(Optional.of(p));
+
+        var actual = controller.getDefault(1L);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(p, actual.getBody());
+    }
+
+
+    /**
+     * Test getCardsOfPalette method
+     */
+    @Test
+    void getCardsOfPaletteTest() {
+        Board b = new Board("test board", "#0000000", "#0000000",
+                "#0000000", "#0000000", "password", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Palette p = new Palette("default", "#0000000", "#0000000",
+                true, b, new HashSet<>());
+
+        b.addPalette(p);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(p.id)).thenReturn(Optional.of(p));
+
+        var actual = controller.getCardsOfPalette(1L, p.id);
+        assertEquals(HttpStatus.OK, actual.getStatusCode());
+        assertEquals(p.cards, actual.getBody());
+    }
+
+    /**
+     * Test paletteInBoard method
+     */
+    @Test
+    void paletteInBoardTest() {
+        Board b = new Board("test board", "#0000000", "#0000000",
+                "#0000000", "#0000000", "password", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        Palette p = new Palette("default", "#0000000", "#0000000",
+                true, b, new HashSet<>());
+
+        b.addPalette(p);
+
+        when(boardRepo.findById(1L)).thenReturn((Optional.of(b)));
+        when(repo.findById(p.id)).thenReturn(Optional.of(p));
+
+        var actual = service.paletteInBoard(p, b);
+        assertEquals(true, actual);
+    }
 
 }

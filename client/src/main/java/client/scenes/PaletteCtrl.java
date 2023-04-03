@@ -80,6 +80,11 @@ public class PaletteCtrl extends ListCell<Palette> {
             background.setValue(Color.web(data.background));
             font.setValue(Color.web(data.font));
             setDefault.setVisible(!data.isDefault);
+            if(board.palettes.size() < 2) {
+                remove.setVisible(false);
+            } else {
+                remove.setVisible(true);
+            }
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

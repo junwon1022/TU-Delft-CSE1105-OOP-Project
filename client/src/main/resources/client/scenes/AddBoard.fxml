@@ -77,7 +77,7 @@
       </PasswordField>
       <ColorPicker id="color-picker" fx:id="backgroundColorPicker" layoutX="302.0" layoutY="187.0" prefHeight="25.0" prefWidth="204.0" promptText="Choose a board color (optional)" stylesheets="@../../styles.css">
          <value>
-            <Color red="0.7921568751335144" green="0.9411764740943909" blue="0.9725490212440491" />
+            <Color red="0.6352941393852234" green="0.8941176533699036" blue="0.9450980424880981" />
          </value>
       </ColorPicker>
       <Label layoutX="302.0" layoutY="162.0" text="Choose board color (optional):">

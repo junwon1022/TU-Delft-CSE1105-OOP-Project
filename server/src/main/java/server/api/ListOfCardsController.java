@@ -49,7 +49,7 @@ public class ListOfCardsController {
      * @return the list of lists
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<List<ListOfCards>> getListsOfCards
+    ResponseEntity<List<ListOfCards>> getListsOfCards
     (@PathVariable("board_id") long boardId) {
         try {
             // Get the board
@@ -71,8 +71,8 @@ public class ListOfCardsController {
      * @return the list
      */
     @GetMapping(path = {"/{list_id}/","/{list_id}"})
-    private ResponseEntity<ListOfCards> getListOfCardsById(@PathVariable("board_id") long boardId,
-                                                           @PathVariable("list_id") long listId) {
+    ResponseEntity<ListOfCards> getListOfCardsById(@PathVariable("board_id") long boardId,
+                                                   @PathVariable("list_id") long listId) {
         try {
             if(!validPath(boardId, listId)) {
                 return ResponseEntity.badRequest().build();
@@ -155,8 +155,8 @@ public class ListOfCardsController {
     @PutMapping(path = {"/{list_id}/from/{from}/to/{to}/","/{list_id}/from/{from}/to/{to}"})
     public ResponseEntity<ListOfCards> moveCards(@PathVariable("board_id") long boardId,
                                                  @PathVariable("list_id") long listId,
-                                                 @PathVariable("from") int fromId,
-                                                 @PathVariable("to") int toId) {
+                                                 @PathVariable("from") long fromId,
+                                                 @PathVariable("to") long toId) {
 
         try {
             if(!validPath(boardId, listId)

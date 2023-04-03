@@ -116,7 +116,6 @@ public class Palette {
 
 
     /**
-     *
      * @param obj
      * @return
      */

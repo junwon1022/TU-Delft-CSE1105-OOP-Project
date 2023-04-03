@@ -1,3 +1,8 @@
 #list .list-cell {
     -fx-background-color: transparent;
 }
+
+#list {
+     -fx-background-color: #A2E4F1;
+     -fx-background-radius: 10px;
+ }
