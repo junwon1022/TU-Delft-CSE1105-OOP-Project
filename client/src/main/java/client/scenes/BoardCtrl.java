@@ -461,6 +461,14 @@ public class BoardCtrl {
     }
 
     /**
+     * Redirects to connect to server screen
+     * @param event - on click of button disconnect
+     */
+    public void disconnect(ActionEvent event) {
+        mainCtrl.showConnect();
+    }
+
+    /**
      * Getter for a line in the board design
      * @return a ref to the line
      */

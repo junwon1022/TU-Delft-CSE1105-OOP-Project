@@ -85,14 +85,8 @@ public class MainCtrl {
                            Pair<ConnectCtrl, Parent> connect,
                            Pair<MainScreenCtrl, Parent> mainScreen,
                            Pair<AdminScreenCtrl, Parent> adminScreen) {
-//            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
         this.serverUtils = new ServerUtils(new UserPreferences());
-//        this.overviewCtrl = overview.getKey();
-//        this.overview = new Scene(overview.getValue());
-//
-//        this.addCtrl = add.getKey();
-//        this.add = new Scene(add.getValue());
 
         this.boardCtrl = board.getKey();
         this.boardOverview = new Scene(board.getValue());
@@ -165,10 +159,12 @@ public class MainCtrl {
      */
 
     public void showConnect() {
+        primaryStage.setHeight(450);
+        primaryStage.setWidth(600);
         primaryStage.setTitle("Connect");
         primaryStage.setScene(connect);
-        primaryStage.setHeight(450);
-
+        primaryStage.setMaximized(false);
+        centerStage();
     }
 
 
@@ -186,19 +182,6 @@ public class MainCtrl {
         primaryStage.setMaximized(false);
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
-
-        // Get the dimensions of the primary screen
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-        // Calculate the x and y coordinates to center the new scene on the primary stage
-        double centerX = primaryStage.getX()
-                + primaryStage.getWidth() / 2 - mainScreen.getWidth() / 2;
-        double centerY = primaryStage.getY()
-                + primaryStage.getHeight() / 2 - mainScreen.getHeight() / 2;
-
-        // Set the new scene's position to the calculated coordinates
-        mainScreen.getWindow().setX(centerX);
-        mainScreen.getWindow().setY(centerY);
         centerStage();
         mainScreenCtrl.refresh();
     }
@@ -208,7 +191,6 @@ public class MainCtrl {
      * @param server the server the admin connects to
      */
     public void changeServer(String server) throws Exception {
-
         serverUtils.changeServer(server);
     }
 
