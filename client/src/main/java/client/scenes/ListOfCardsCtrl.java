@@ -369,7 +369,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     public Card getCard(String title){
         Card card =  new Card(title,
                 "",
-                "red",
+                "#00B4D8",
                 cardData,
                 null,
                 null,null);
@@ -400,15 +400,20 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             Card thisCard = cardData.cards.get(count);
             Card oldCard = cardData.cards.get(count-1);
             System.out.println("This card is " + thisCard.title);
+
+            for(ListOfCards l : board.data){
+
+                for(Card card: l.cards){
+                    if(card.selected) card.selected = false;
+                    if(card.colour.equals("blue")) card.colour = "#00B4D8";
+                }
+            }
+
             thisCard.selected = true;
             thisCard.colour = "blue";
 
 
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
-            try {
-                CardCtrl c = fxmlLoader.getController();
-
+            CardCtrl c = new CardCtrl(server,board,this);
                 c.updateItem(thisCard,false);
                 System.out.println("This root is " + c.getRoot());
                 c.getRoot().setStyle("-fx-background-color: blue;" +
@@ -418,11 +423,24 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 c.getRoot().setStyle("-fx-background-color: #00B4D8;" +
                     " -fx-border-radius: 20;" +
                     " -fx-background-radius: 20;");
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ListOfCards.fxml"));
+            try {
+                fxmlLoader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-            }
+
+            data = FXCollections.observableArrayList();
+
+            list.setItems(data);
+            list.setCellFactory(param -> new CardCtrl(server, board, this));
+
+
+
+
+
+        }
 
     }
 

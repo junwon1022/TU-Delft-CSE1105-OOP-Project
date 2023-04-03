@@ -124,6 +124,7 @@ public class CardCtrl extends ListCell<Card> {
             title.setText(item.title);
             data = item;
 
+            root.setStyle("-fx-background-color: " + item.colour);
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
