@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="410.0" prefWidth="800.0" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainScreenCtrl">
+<GridPane prefHeight="410.0" prefWidth="800.0" onKeyPressed="#openHelpScreen" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainScreenCtrl">
    <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS" maxWidth="900.0" minWidth="10.0" prefWidth="400.0" />
       <ColumnConstraints hgrow="NEVER" maxWidth="800.0" minWidth="10.0" prefWidth="350.0" />
