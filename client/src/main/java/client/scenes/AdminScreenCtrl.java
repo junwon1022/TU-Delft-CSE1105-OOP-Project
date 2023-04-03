@@ -118,6 +118,14 @@ public class AdminScreenCtrl {
             System.out.println(e.getStackTrace());
         }
     }
+
+    /**
+     * Redirects to connect to server screen
+     * @param event - on click of button disconnect
+     */
+    public void disconnect(ActionEvent event) {
+        mainCtrl.showConnect();
+    }
 }
 
 

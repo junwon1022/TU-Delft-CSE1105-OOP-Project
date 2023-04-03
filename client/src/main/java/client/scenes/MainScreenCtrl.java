@@ -25,7 +25,6 @@ import java.util.HashSet;
 
 public class MainScreenCtrl {
 
-
     @FXML
     private AnchorPane root;
 
@@ -181,17 +180,25 @@ public class MainScreenCtrl {
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
-
     }
 
+    /**
+     * Method that sets a palette
+     * @param board
+     */
     private void setPalette(Board board){
         Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
                 true, board, new HashSet<>());
         defaultPalette.id = server.addPalette(board.id, defaultPalette).id;
     }
 
-
-
+    /**
+     * Redirects to connect to server screen
+     * @param event - on click of button disconnect
+     */
+    public void disconnect(ActionEvent event) {
+        mainCtrl.showConnect();
+    }
 }
 
 

@@ -142,7 +142,7 @@
                   <Font name="Corbel" size="19.0" />
                </font>
             </Button>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect" wrapText="true">
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#disconnect" prefHeight="45.0" prefWidth="200.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect">
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>
