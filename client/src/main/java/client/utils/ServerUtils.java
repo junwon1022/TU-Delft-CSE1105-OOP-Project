@@ -73,7 +73,7 @@ public class ServerUtils {
     }
 
     /**
-     * Changes the preset server adress from 8080 to the textbox input
+     * Changes the preset server address from 8080 to the textbox input
      * @param server
      */
     public void changeServer(String server) throws Exception {
@@ -82,6 +82,7 @@ public class ServerUtils {
             throw new Exception("Please enter a valid server to connect" +
                     " or select one from the list with double click!");
         }
+
         if(server.charAt(server.length() - 1) != '/')  {
             server = server + "/";
         }
@@ -100,6 +101,7 @@ public class ServerUtils {
         catch(Exception e) {
             throw new Exception("This is not a valid server! Please try again!");
         }
+
         try {
             //checks if the server is valid,
             // that is if it is able to make a dummy request to the api
@@ -110,7 +112,6 @@ public class ServerUtils {
         catch(Exception e){
             throw new Exception("This is not a TimeWise server! Please try again!");
         }
-
     }
 
     /**
@@ -157,12 +158,12 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    private List<ListOfCards> serverData = null;
+    List<ListOfCards> serverData = null;
+    List<Tag> serverDataTags = null;
+    List<Tag> serverDataTagsInCard = null;
 
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
-
-
 
     /**
      * Placeholder add card function.
@@ -188,7 +189,6 @@ public class ServerUtils {
         //Gets the id from the last board added
         boardTitle = getBoards().get(getBoards().size()-1);
         boardData.add(boardTitle);
-
     }
 
     /**
@@ -239,14 +239,7 @@ public class ServerUtils {
         }
         if(found == true)
             boardData.remove(number);
-
     }
-
-
-
-
-
-
 
     /**
      * Placeholder method to get data from server
@@ -313,8 +306,6 @@ public class ServerUtils {
                 .put(Entity.json(""));
     }
 
-
-
     /**
      * Method that returns the lists from the database
      * @param boardId - the id of the board of the lists
@@ -327,7 +318,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<ListOfCards>>(){});
     }
-
 
     /**
      * Method that returns the lists from the database
@@ -355,7 +345,7 @@ public class ServerUtils {
     /**
      * Placeholder method to get data from server
      * @param boardId the id of the board
-     * @return a list of cardlists.
+     * @return a list of lists of cards.
      */
     public List<ListOfCards> getServerData(long boardId) {
         serverData = getLists(boardId);
@@ -366,17 +356,35 @@ public class ServerUtils {
 
     /**
      * Placeholder method to get data from server
+     * @param boardId the id of the board
+     * @return a list of tags.
+     */
+    public List<Tag> getTagsInBoard(long boardId) {
+        serverDataTags = getTags(boardId);
+        return serverDataTags;
+    }
+
+    /**
+     * Placeholder method to get data from server
+     * @param cardId the id of the board
+     * @return a list of tags.
+     */
+    public List<Tag> getTagsInCard(long cardId) {
+        serverDataTagsInCard = getTagsCard(cardId);
+        return serverDataTagsInCard;
+    }
+
+    /**
+     * Placeholder method to get data from server
      * @return a list of board title objects.
      */
 
-    public List<Board> getMyBoardTitles(){
-
+    public List<Board> getMyBoardTitles() {
         if(boardData == null) {
             boardData = new ArrayList<>();
         }
         return boardData;
     }
-
 
     /**
      * Placeholder method to get data from server
@@ -419,7 +427,6 @@ public class ServerUtils {
                 .get(new GenericType<Board>() {});
     }
 
-
     /**
      * Add a new board to the server
      * @param board - board to be added to server
@@ -436,8 +443,8 @@ public class ServerUtils {
     /**
      * Get all lists from the server
      *
-     * @return - the lists from the server
      * @param boardId
+     * @return - the lists from the server
      */
     public ListOfCards getList(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
@@ -459,6 +466,33 @@ public class ServerUtils {
                 .get(new GenericType<List<Board>>(){});
     }
 
+    /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<Tag> getTags(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId + "/tags")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Tag>>(){});
+    }
+
+    /**
+     * Method that returns the lists from the database
+     * @param cardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<Tag> getTagsCard(long cardId){
+        return ClientBuilder.newClient(new ClientConfig())//
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards"
+                        + cardId + "/tags") //
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Tag>>(){});
+    }
+
 
     /**
      * Add a new list to the server
@@ -471,6 +505,19 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(list, APPLICATION_JSON), ListOfCards.class);
+    }
+
+    /**
+     * Add a new tag to the server
+     * @param tag - the tag that needs to be added to the server
+     * @return the tag added to the server
+     */
+    public Tag addTag(Tag tag){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + tag.board.id + "/tags")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
     }
 
     /**
@@ -494,7 +541,7 @@ public class ServerUtils {
         long boardId = card.list.board.id;
         long listId = card.list.id;
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists/"+ listId + "/cards")
+                .target(SERVER).path("/api/boards/" + boardId + "/lists/"+ listId + "/cards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(card, APPLICATION_JSON), Card.class);
@@ -516,6 +563,20 @@ public class ServerUtils {
                 .delete(Card.class);
     }
 
+    /**
+     * Removes a tag from the server
+     * @param tag the tag that needs to be removed
+     * @return - the removed tag
+     */
+    public Tag removeTag(Tag tag){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/tags/{tag_id}/")
+                .resolveTemplate("board_id", tag.board.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Tag.class);
+    }
 
     /**
      * Removal of List from server
@@ -578,6 +639,22 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(title, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Editing a tag
+     * @param tag - the tag that needs editing
+     * @param newTag - the new edited tag
+     * @return the Tag that was edited
+     */
+    public Tag updateTag(Tag tag, Tag newTag) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/tags/{tag_id}/")
+                .resolveTemplate("board_id", tag.board.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTag, APPLICATION_JSON), Tag.class);
     }
 
     /**
@@ -680,6 +757,7 @@ public class ServerUtils {
         }
         session.send(dest, o);
     }
+
     /**
      *
      * @param board
@@ -688,7 +766,7 @@ public class ServerUtils {
      */
     public Board renameBoard(Board board, String newTitle) {
         long boardId = board.id;
-        //Puts the board into the databse
+        //Puts the board into the database
         Board b = ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId)
                 .request(APPLICATION_JSON)
@@ -878,7 +956,6 @@ public class ServerUtils {
 
         return b;
     }
-
 
     /**
      * Removal of Board from server

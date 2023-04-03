@@ -142,16 +142,16 @@ public class TagController {
 
 
     /**
-     * Update a tag's name
+     * Update a tag
      *
-     * @param newName
+     * @param newTag
      * @param boardId
      * @param tagId
      *
      * @return the updated tag
      */
     @PutMapping(path = {"/{tag_id}", "/{tag_id}/"})
-    public ResponseEntity<Tag> updateTag(@RequestBody String newName,
+    public ResponseEntity<Tag> updateTag(@RequestBody Tag newTag,
                                          @PathVariable("board_id") long boardId,
                                          @PathVariable("tag_id") long tagId) {
         try {
@@ -161,7 +161,7 @@ public class TagController {
             // Get the board to which the tag will be edited
             Board board = boardService.getBoardById(boardId);
             // Edit the tag and save it in the database
-            Tag tag = tagService.editTagName(tagId, newName);
+            Tag tag = tagService.editTag(tagId, newTag);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the edited list with an HTTP 200 OK status
@@ -171,38 +171,6 @@ public class TagController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-
-    /**
-     * Update the color of the tag
-     *
-     * @param newColor
-     * @param boardId
-     * @param tagId
-     * @return the updated tag
-     */
-    @PutMapping(path = {"/{tag_id}/color", "/{tag_id}/color/"})
-    public ResponseEntity<Tag> updateColor(@RequestBody String newColor,
-                                           @PathVariable("board_id") long boardId,
-                                           @PathVariable("tag_id") long tagId) {
-        try {
-            if(!validPath(boardId, tagId)) {
-                return ResponseEntity.badRequest().build();
-            }
-            // Get the board to which the tag will be edited
-            Board board = boardService.getBoardById(boardId);
-            // Edit the tag and save it in the database
-            Tag tag = tagService.editTagColour(tagId, newColor);
-            // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-            // Return the edited list with an HTTP 200 OK status
-            return ResponseEntity.ok().body(tag);
-        }
-        catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
 
     /**
      * Delete a tag

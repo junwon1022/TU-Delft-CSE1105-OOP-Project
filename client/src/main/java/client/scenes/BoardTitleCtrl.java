@@ -36,16 +36,8 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
     private Label title;
     @FXML
     private Label copied;
-
     @FXML
     private Label key;
-    @FXML
-    private Label description;
-
-    @FXML
-    private Button delete;
-    @FXML
-    private Button copyButton;
 
     /**
      * Create a new Board title control
@@ -159,7 +151,6 @@ public class BoardTitleCtrl extends ListCell<PreferencesBoardInfo> {
             throw new RuntimeException(e);
         }
     }
-
 
         /**
          * Copies the key to the clipboard and shows a notification to the user

@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="390.0" prefWidth="531.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
+<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="390.0" prefWidth="531.0" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
    <children>
       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="78.0" prefWidth="431.0" text="Connect to a TimeWise Server" textAlignment="CENTER" textFill="#258cb5" wrapText="true">
          <font>
@@ -97,22 +107,32 @@
                   </TextField>
                   <HBox maxWidth="1.7976931348623157E308" spacing="20.0">
                      <children>
-                          <Button id="connect" fx:id="connect" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectToMainScreen" prefHeight="29.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect" HBox.hgrow="ALWAYS" />
-                          <Button id="connect_default" fx:id="connect_default" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectDefault" prefHeight="29.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect to Default" textAlignment="CENTER" wrapText="true" HBox.hgrow="ALWAYS" />
+                          <Button id="connect" fx:id="connect" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectToMainScreen" prefHeight="29.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="Corbel" size="13.0" />
+                           </font></Button>
+                          <Button id="connect_default" fx:id="connect_default" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectDefault" prefHeight="29.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect to Default" textAlignment="CENTER" wrapText="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="Corbel" size="13.0" />
+                           </font></Button>
                      </children>
                   </HBox>
-                  <Label layoutX="12.0" layoutY="25.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Join as Admin">
+                  <Label layoutX="12.0" layoutY="25.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Want to join as admin?">
                      <font>
-                        <Font name="Corbel" size="14.0" />
+                        <Font name="Corbel" size="20.0" />
                      </font>
                   </Label>
-                  <TextField id="default" fx:id="adminField" layoutX="10.0" layoutY="58.0" maxWidth="1.7976931348623157E308" prefHeight="37.0" prefWidth="267.0" promptText="http://server:port" stylesheets="@../../styles.css">
-                     <font>
-                        <Font name="Corbel Italic" size="13.0" />
-                     </font>
-                  </TextField>
-                  <Button id="connect" fx:id="connectAdmin" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectAdmin" prefHeight="29.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Connect" />
-                  <Label fx:id="nullTitle" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" prefHeight="23.0" prefWidth="238.0" text="" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
+                  <PasswordField fx:id="adminField" promptText="Enter password to gain access . . ." stylesheets="@../../styles.css" />
+                  <HBox alignment="TOP_RIGHT">
+                     <children>
+                        <Button id="connect" fx:id="connectAdmin" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectAdmin" prefHeight="29.0" prefWidth="149.0" styleClass="green-button" stylesheets="@../../styles.css" text="Enter server as admin">
+                           <font>
+                              <Font name="Corbel" size="13.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <Label fx:id="nullTitle" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" prefHeight="38.0" prefWidth="238.0" text="" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
                      <font>
                         <Font name="Corbel" size="13.0" />
                      </font>

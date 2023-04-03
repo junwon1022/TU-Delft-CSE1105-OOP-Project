@@ -5,14 +5,20 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="recent-board-small" style="-fx-background-radius: 15px;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox id="recent-board-small" fx:id="root" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" spacing="10.0" stylesheets="@../../styles.css">
+      <HBox id="recent-board-small" fx:id="root" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="107.0" spacing="10.0" stylesheets="@../../styles.css">
          <children>
-            <Label fx:id="title" maxWidth="1.7976931348623157E308" text="Label" HBox.hgrow="ALWAYS" />
-            <Button fx:id="sw" mnemonicParsing="false" onAction="#switchBoard" styleClass="normal-button" stylesheets="@../../styles.css" text="Switch" HBox.hgrow="NEVER" />
+            <Label fx:id="title" maxWidth="1.7976931348623157E308" text="Label" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Corbel" size="12.0" />
+               </font></Label>
+            <Button fx:id="sw" mnemonicParsing="false" onAction="#switchBoard" styleClass="normal-button" stylesheets="@../../styles.css" text="Switch" HBox.hgrow="NEVER">
+               <font>
+                  <Font name="Corbel" size="12.0" />
+               </font></Button>
          </children>
          <padding>
             <Insets bottom="5.0" left="12.0" right="5.0" top="5.0" />
