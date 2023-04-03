@@ -95,8 +95,8 @@ public class CustomizationCtrl {
         data = FXCollections.observableArrayList();
 
         list.setItems(data);
-        list.setStyle("-fx-background-color: #FFFFFF; " +
-                "-fx-background-radius: 8");
+        list.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
         list.setCellFactory(param -> new PaletteCtrl(server, this));
         list.setFixedCellSize(38);
         addition.setVisible(false);

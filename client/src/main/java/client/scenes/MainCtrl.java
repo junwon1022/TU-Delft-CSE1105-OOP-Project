@@ -159,12 +159,19 @@ public class MainCtrl {
      */
 
     public void showConnect() {
-        primaryStage.setHeight(450);
-        primaryStage.setWidth(600);
-        primaryStage.setTitle("Connect");
-        primaryStage.setScene(connect);
         primaryStage.setMaximized(false);
+        primaryStage.setHeight(434);
+        primaryStage.setWidth(609);
         centerStage();
+        primaryStage.setScene(connect);
+        primaryStage.sizeToScene();
+        primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                primaryStage.sizeToScene();
+                centerStage();
+            }
+        });
+        primaryStage.setTitle("Connect");
     }
 
 
