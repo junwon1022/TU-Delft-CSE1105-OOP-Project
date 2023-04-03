@@ -4,15 +4,19 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import jakarta.ws.rs.WebApplicationException;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -24,18 +28,13 @@ public class AdminTitleCtrl extends ListCell<Board> {
     private Board data;
 
     @FXML
-    private AnchorPane root;
-
+    private VBox root;
     @FXML
     private Label title;
-
     @FXML
     private Label key;
     @FXML
-    private Label description;
-
-    @FXML
-    private Button delete;
+    private Label copied;
 
     /**
      * Create a new Board title control
@@ -77,8 +76,11 @@ public class AdminTitleCtrl extends ListCell<Board> {
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
-            key.setText("Key: " + item.key);
+            key.setText(item.key);
             data = item;
+            root.setStyle("-fx-background-color: " + data.colour);
+            title.setStyle("-fx-text-fill: " + data.font);
+            key.setStyle("-fx-text-fill: " + data.font);
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -136,7 +138,7 @@ public class AdminTitleCtrl extends ListCell<Board> {
                 String newTitle = controller.storedText;
 
                 //method that actually renames the list in the database
-                data = server.renameServerBoard(data, newTitle);
+                data = server.renameBoard(data, newTitle);
                 System.out.println("New title after calling the command: "+ data.title);
                 adminScreenCtrl.refresh();
             }
@@ -145,5 +147,26 @@ public class AdminTitleCtrl extends ListCell<Board> {
         }
     }
 
+    /**
+     * Copies the key to the clipboard and shows a notification to the user
+     * @param event
+     */
+    public void copyKeyToClipboard(ActionEvent event) {
+        copyToClipboard(data.key);
+        copied.setVisible(true);
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        delay.setOnFinished(e -> copied.setVisible(false));
+        delay.play();
+    }
 
+    /**
+     * Copies a given key to the clipboard.
+     * @param key
+     */
+    private void copyToClipboard(String key) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(key);
+        clipboard.setContent(content);
+    }
 }

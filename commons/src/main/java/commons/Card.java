@@ -123,6 +123,17 @@ public class Card {
         BASIC FUNCTIONALITY
      */
 
+
+    /**
+     * Removes the tag to be removed from all cards
+     */
+    @PreRemove
+    public void removeCardsFromTags() {
+        for (Tag t : tags) {
+            t.cards.remove(this);
+        }
+    }
+
     /**
      * Method that adds a palette to a card
      * @param palette
@@ -134,16 +145,6 @@ public class Card {
         }
     }
 
-    /**
-     * Method that removes a palette from a card
-     * @param palette
-     */
-    public void removePalette(Palette palette){
-        if (palette != null) {
-            palette.cards.remove(this);
-            palette = palette.getDefault();
-        }
-    }
     /**
      * Add a tag to a card
      * @param tag

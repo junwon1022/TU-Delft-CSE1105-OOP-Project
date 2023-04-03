@@ -132,7 +132,7 @@ public class PaletteService {
             if(p.isDefault)
                 return p;
         }
-        throw new Exception("Default is not found");
+        return null;
     }
 
     /**
@@ -148,8 +148,10 @@ public class PaletteService {
         palette.isDefault = true;
         paletteRepository.save(palette);
 
-        oldDefault.isDefault = false;
-        paletteRepository.save(oldDefault);
+        if(oldDefault != null  && !oldDefault.equals(palette)){
+            oldDefault.isDefault = false;
+            paletteRepository.save(oldDefault);
+        }
 
         return palette;
     }

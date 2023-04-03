@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -57,14 +58,17 @@
             <Insets bottom="25.0" left="25.0" right="30.0" top="20.0" />
          </padding>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="359.0" prefWidth="270.0" spacing="20.0" GridPane.columnIndex="1">
+      <VBox alignment="BOTTOM_LEFT" prefHeight="359.0" prefWidth="270.0" spacing="20.0" GridPane.columnIndex="1">
          <children>
-            <Label maxWidth="1.7976931348623157E308" text="Connect to Board" textFill="#258cb5" wrapText="true">
+            <Label alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Connect to Board" textFill="#258cb5" wrapText="true" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="Corbel Light" size="40.0" />
                </font>
             </Label>
-            <Label text="Enter an invitation key to join a new board:" wrapText="true" />
+            <Label text="Enter an invitation key to join a new board:" wrapText="true">
+               <font>
+                  <Font name="Corbel" size="13.0" />
+               </font></Label>
               <TextField id="joinField" fx:id="joinField" maxWidth="500.0" onKeyPressed="#connectToBoardKey" prefHeight="31.0" prefWidth="305.0" promptText="word-word-word-x1Y2Z3 . . ." stylesheets="@../../styles.css">
                <font>
                   <Font name="Corbel" size="12.0" />
@@ -75,11 +79,20 @@
                   <Font name="Corbel Bold" size="15.0" />
                </font>
             </Button>
-            <Label fx:id="nullTitle" alignment="CENTER" prefHeight="56.0" prefWidth="297.0" textAlignment="CENTER" textFill="#8f2e30" wrapText="true">
+            <Label fx:id="nullTitle" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="297.0" textAlignment="CENTER" textFill="#8f2e30" wrapText="true" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="Corbel" size="12.0" />
                </font>
             </Label>
+            <HBox alignment="BOTTOM_RIGHT">
+               <children>
+                  <Button fx:id="disconnect" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#disconnect" prefHeight="17.0" prefWidth="121.0" styleClass="red-button" stylesheets="@../../styles.css" text="Disconnect">
+                     <font>
+                        <Font name="Corbel" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
          </children>
          <padding>
             <Insets bottom="15.0" left="25.0" right="15.0" />

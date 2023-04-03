@@ -6,14 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class RenameTagCtrl {
 
     @FXML
-    private TextField textField;
+    private TextField tagName;
 
     @FXML
     private Button rename;
@@ -23,8 +25,14 @@ public class RenameTagCtrl {
 
     @FXML
     private Label nullTitle;
+    @FXML
+    private ColorPicker fontColorPicker;
+    @FXML
+    private ColorPicker backgroundColorPicker;
 
     public String storedText;
+    public String fontColor;
+    public String backgroundColor;
 
     public boolean success;
 
@@ -47,7 +55,9 @@ public class RenameTagCtrl {
      */
     public void initialize(Tag tag){
         String oldName = tag.name;
-        textField.setText(oldName);
+        tagName.setText(oldName);
+        backgroundColorPicker.setValue(Color.web(tag.colour));
+        fontColorPicker.setValue(Color.web(tag.font));
     }
 
     /**
@@ -76,7 +86,16 @@ public class RenameTagCtrl {
      * @param event - the rename button being pressed
      */
     public void rename(ActionEvent event){
-        storedText = textField.getText();
+        storedText = tagName.getText();
+        backgroundColor = String.format("#%02x%02x%02x",
+                (int)(backgroundColorPicker.getValue().getRed() * 255),
+                (int)(backgroundColorPicker.getValue().getGreen() * 255),
+                (int)(backgroundColorPicker.getValue().getBlue() * 255));
+        fontColor = String.format("#%02x%02x%02x",
+                (int)(fontColorPicker.getValue().getRed() * 255),
+                (int)(fontColorPicker.getValue().getGreen() * 255),
+                (int)(fontColorPicker.getValue().getBlue() * 255));
+
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
@@ -109,7 +128,16 @@ public class RenameTagCtrl {
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
         success = true;
-        storedText = textField.getText();
+        storedText = tagName.getText();
+        backgroundColor = String.format("#%02x%02x%02x",
+                (int)(backgroundColorPicker.getValue().getRed() * 255),
+                (int)(backgroundColorPicker.getValue().getGreen() * 255),
+                (int)(backgroundColorPicker.getValue().getBlue() * 255));
+        fontColor = String.format("#%02x%02x%02x",
+                (int)(fontColorPicker.getValue().getRed() * 255),
+                (int)(fontColorPicker.getValue().getGreen() * 255),
+                (int)(fontColorPicker.getValue().getBlue() * 255));
+
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }

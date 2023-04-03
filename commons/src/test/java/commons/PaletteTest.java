@@ -106,24 +106,7 @@ class PaletteTest {
         palette1.addCard(card);
         assertEquals(0, palette1.cards.size());
     }
-    /**
-     * Test getting the default palette
-     */
-    @Test
-    void getDefaultTest() {
-        Palette defaultPalette = palette2.getDefault();
-        assertEquals(defaultPalette, palette1);
-    }
 
-    /**
-     * Test removing the card
-     */
-    @Test
-    void removeCardTest() {
-        palette1.cards = cards;
-        palette1.removeCard(card1);
-        assertEquals(Set.of(card2), palette1.cards);
-    }
 
     /**
      * Test setting the background a specific colour
@@ -148,7 +131,7 @@ class PaletteTest {
      */
     @Test
     void isDefault() {
-        assertTrue(palette1.isDefault());
+        assertTrue(palette1.getIsDefault());
     }
 
     /**
@@ -156,7 +139,7 @@ class PaletteTest {
      */
     @Test
     void setDefault() {
-        palette2.setDefault();
+        palette2.setIsDefault();
         assertTrue(palette2.isDefault);
     }
 

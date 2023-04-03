@@ -1,7 +1,6 @@
 package commons;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -40,8 +39,9 @@ public class Palette {
     @JoinColumn(name = "board_id")
     public Board board;
 
-    @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<Card> cards = new HashSet<>();
+
 
     /**
      * Default constructor
@@ -80,30 +80,6 @@ public class Palette {
         }
     }
 
-    /**
-     * Method that returns the default palette in a board
-     * @return the default palette of a board
-     */
-    public Palette getDefault(){
-        Board board = this.board;
-
-        for(Palette p: board.palettes){
-            if(p.isDefault)
-                return p;
-        }
-
-        return null;
-    }
-    /**
-     * Remove this Card from a given palette
-     * @param card
-     */
-    public void removeCard(Card card) {
-        if (card != null && cards.contains(card)) {
-            cards.remove(card);
-            card.palette = getDefault();
-        }
-    }
 
     /**
      * Method that sets the background of a palette
@@ -121,20 +97,23 @@ public class Palette {
         this.font = font;
     }
 
+
     /**
      * Method that checks if the palette is default
      * @return a boolean
      */
-    public boolean isDefault(){
+    public boolean getIsDefault(){
         return this.isDefault;
     }
 
     /**
      * Method that sets the palette as default
      */
-    public void setDefault(){
+    public void setIsDefault(){
         this.isDefault = true;
     }
+
+
 
     /**
      *

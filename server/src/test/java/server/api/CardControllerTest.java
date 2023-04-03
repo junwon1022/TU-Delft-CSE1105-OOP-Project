@@ -264,7 +264,7 @@ public class  CardControllerTest {
         when(boardRepo.findById(b.id)).thenReturn((Optional.of(b)));
         when(listRepo.findById(l.id)).thenReturn((Optional.of(l)));
         when(repo.findById(c.id)).thenReturn((Optional.of(c)));
-        var actual = controller.removeCardById(b.id,l.id,c.id);
+        var actual = controller.removeCardById(b.id, l.id, c.id);
 
         assertEquals(OK, actual.getStatusCode());
 
