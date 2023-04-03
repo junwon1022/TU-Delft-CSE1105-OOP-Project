@@ -17,13 +17,14 @@ import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
@@ -35,7 +36,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     public String storedText;
 
     @FXML
-    private AnchorPane root;
+    private VBox root;
 
     @FXML
     private Label title;
@@ -48,6 +49,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     @FXML
     private Button rename;
+
     @FXML
     private Button deleteList;
 
@@ -66,8 +68,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private Label renameListDisabled;
     @FXML
     private Label deleteListDisabled;
-
-    private ObservableList<Card> data;
 
     private ObservableList<Card> cards;
 
@@ -146,7 +146,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     private void handleDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
-        if (db.hasString()) {
+        if (db.hasString() && this.cardData != null) {
             String[] strings = db.getString().split("X");
             long dbCardId = Long.decode(strings[0]);
             long dbListId = Long.decode(strings[1]);
@@ -176,7 +176,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
      * @param item The new item for the cell.
-     * @param empty whether this cell represents data from the list. If it
+     * @param empty whether or not this cell represents data from the list. If it
      *        is empty, then it does not represent any domain data, but is a cell
      *        being used to render an "empty" row.
      */
@@ -261,14 +261,24 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(false);
         // Shorten the list
         Timeline timelineList = new Timeline(
-                new KeyFrame(Duration.seconds(0.4), new KeyValue(list.prefHeightProperty(), 288))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 288))
         );
         Timeline timelineName = new Timeline(
-                new KeyFrame(Duration.seconds(0.4), new KeyValue(name.visibleProperty(), true))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(name.visibleProperty(), true))
         );
         timelineList.play();
         timelineName.play();
         name.requestFocus();
+        // Requests focus for the text field
+        name.visibleProperty().addListener((observable, oldValue, isVisible) -> {
+
+            if (isVisible) {
+
+                name.requestFocus();
+
+            }
+
+        });
     }
 
     /**
@@ -283,7 +293,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 338))
         );
         timeline.play();
     }
@@ -300,7 +310,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(list.prefHeightProperty(), 318))
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(list.prefHeightProperty(), 350))
         );
         timeline.play();
     }
@@ -399,11 +409,12 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public Card getCard(String title){
         Card card =  new Card(title,
-                "description",
+                "",
                 "red",
                 cardData,
-                null,
-                new HashSet<>());
+                new ArrayList<>(),
+                new HashSet<>(),
+                null);
         card.order = cardData.cards.size();
         return card;
     }

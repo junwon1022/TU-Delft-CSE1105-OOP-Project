@@ -22,11 +22,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import com.google.inject.Inject;
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -45,7 +49,68 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private final UserPreferences prefs;
+
+    private static String SERVER = "http://localhost:8080/";
+
+    private static String SERVER_ADDRESS = "localhost:8080";
+
+    /**
+     * ServerUtils constructor
+     * @param prefs
+     */
+    @Inject
+    public ServerUtils(UserPreferences prefs) {
+        this.prefs = prefs;
+    }
+
+    /**
+     * @return the address of the server
+     */
+    public String getServerAddress() {
+        return SERVER_ADDRESS;
+    }
+
+    /**
+     * Changes the preset server adress from 8080 to the textbox input
+     * @param server
+     */
+    public void changeServer(String server) throws Exception {
+
+        if(server == null || server.equals("")) {
+            throw new Exception("Please enter a valid server to connect" +
+                    " or select one from the list with double click!");
+        }
+        if(server.charAt(server.length() - 1) != '/')  {
+            server = server + "/";
+        }
+
+        this.SERVER = server;
+        this.SERVER_ADDRESS = server;
+
+        //removes the http so that websockets can be accessed
+        if(server.contains("http")) SERVER_ADDRESS = server.substring(7);
+
+        System.out.println(SERVER);
+        try {
+            //check that the server is connectable to web sockets
+            connect("ws://" + SERVER_ADDRESS + "websocket");
+        }
+        catch(Exception e) {
+            throw new Exception("This is not a valid server! Please try again!");
+        }
+        try {
+            //checks if the server is valid,
+            // that is if it is able to make a dummy request to the api
+            String check = checkServer(SERVER);
+            if (!check.contains("TimeWise Server"))
+                throw new Exception("Not a TimeWise Server");
+        }
+        catch(Exception e){
+            throw new Exception("This is not a TimeWise server! Please try again!");
+        }
+
+    }
 
     /**
      * Get all quotes from the server.
@@ -91,9 +156,14 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    List<ListOfCards> serverData = null;
-    List<Tag> serverDataTags = null;
-    List<Tag> serverDataTagsInCard = null;
+    private List<ListOfCards> serverData = null;
+    private List<Tag> serverDataTags = null;
+    private List<Tag> serverDataTagsInCard = null;
+
+    //Data related to board titles (How the boards are displayed on the main screen)
+    private List<Board> boardData = null;
+
+
 
     /**
      * Placeholder add card function.
@@ -103,6 +173,23 @@ public class ServerUtils {
         for (ListOfCards list: serverData)
             if (card.list.equals(list))
                 list.cards.add(card);
+    }
+
+
+    /**
+     * Placeholder add card function.
+     * @param boardTitle the board title to add
+     */
+    public void addBoardTitle(Board boardTitle) {
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        Board b = boardTitle;
+        addBoard(b);
+        //Gets the id from the last board added
+        boardTitle = getBoards().get(getBoards().size()-1);
+        boardData.add(boardTitle);
+
     }
 
     /**
@@ -133,6 +220,34 @@ public class ServerUtils {
         }
 
     }
+
+    /**
+     * Placeholder/ method for the delete board function,
+     * the actual method should follow the logic behind this
+     * @param board - board to be deleted
+     */
+    public void deleteBoard(Board board){
+        int number = 0;
+        boolean found = false;
+        if(boardData != null){
+            for(Board b: boardData){
+                if(b.equals(board)) {
+                    found = true;
+                    break;
+                }
+                number++;
+            }
+        }
+        if(found == true)
+            boardData.remove(number);
+
+    }
+
+
+
+
+
+
 
     /**
      * Placeholder method to get data from server
@@ -190,13 +305,52 @@ public class ServerUtils {
      */
     public void moveCard(ListOfCards list, int fromIdx, int toIdx) {
         ClientBuilder.newClient(new ClientConfig())
-            .target(SERVER).path("api/boards/" + list.board.id
+                .target(SERVER).path("api/boards/" + list.board.id
                         + "/lists/" + list.id
                         + "/from/" + fromIdx
                         + "/to/" + toIdx)
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .put(Entity.json(""));
+    }
+
+
+
+    /**
+     * Method that returns the lists from the database
+     * @param boardId - the id of the board of the lists
+     * @return a list containing all lists of cards
+     */
+    public List<ListOfCards> getLists(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<ListOfCards>>(){});
+    }
+
+
+    /**
+     * Method that returns the lists from the database
+     * @param serverUrl - the url of th server
+     * @return a list containing all lists of cards
+     */
+    public String checkServer(String serverUrl){
+        System.out.println("The Url is " + URLEncoder.encode(SERVER,StandardCharsets.UTF_8));
+
+
+        try {
+            return ClientBuilder.newClient(new ClientConfig())
+                    .target(SERVER).path("/api/checkServer/")
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(new GenericType<String>() {
+                    });
+        }
+        catch(Exception e){
+            System.out.println("The exception is " + e);
+            throw new RuntimeException();
+        }
     }
 
     /**
@@ -214,6 +368,8 @@ public class ServerUtils {
         //Board board --
         //
         serverData = getLists(boardId);
+        for (var list: serverData)
+            list.cards.sort(Comparator.comparingLong(Card::getOrder));
         return serverData;
     }
 
@@ -238,6 +394,33 @@ public class ServerUtils {
     }
 
     /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<Board> getMyBoardTitles(){
+
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        return boardData;
+    }
+
+
+    /**
+     * Placeholder method to get data from server
+     * @return a list of board title objects.
+     */
+
+    public List<Board> getMyServerBoardTitles(){
+
+        if(boardData == null) {
+            boardData = new ArrayList<>();
+        }
+        boardData = getBoards();
+        return boardData;
+    }
+    /**
      * Get boards from server
      *
      * @param boardId
@@ -250,6 +433,21 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<Board>() {});
     }
+
+    /**
+     * Get boards from server based on key
+     * @param key
+     * @return boards
+     */
+    public Board getBoardByKey(String key){
+
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/boards/getByKey/" + key) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<Board>() {});
+    }
+
 
     /**
      * Add a new board to the server
@@ -267,8 +465,8 @@ public class ServerUtils {
     /**
      * Get all lists from the server
      *
-     * @param boardId
      * @return - the lists from the server
+     * @param boardId
      */
     public ListOfCards getList(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
@@ -279,16 +477,15 @@ public class ServerUtils {
     }
 
     /**
-     * Method that returns the lists from the database
-     * @param boardId - the id of the board of the lists
-     * @return a list containing all lists of cards
+     * Get all lists from the server
+     * @return - the lists from the server
      */
-    public List<ListOfCards> getLists(long boardId){
+    public List<Board> getBoards(){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/" + boardId +"/lists")
+                .target(SERVER).path("/api/boards")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<ListOfCards>>(){});
+                .get(new GenericType<List<Board>>(){});
     }
 
     /**
@@ -420,6 +617,23 @@ public class ServerUtils {
     }
 
     /**
+     * gets the description of a card from the database
+     * @param card the card to get the description from
+     * @return the description
+     */
+    public String getDescription(Card card) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}" +
+                      "/lists/{list_id}/cards/{card_id}/description")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<String>() {});
+    }
+
+    /**
      * Get a card from the server
      * @return the card we need
      */
@@ -511,7 +725,26 @@ public class ServerUtils {
                 .delete(Board.class);
     }
 
-    private StompSession session = connect("ws://localhost:8080/websocket");
+    /**
+     * Sends the request to update the description to the specific url,
+     * @param card the card that the description is to be updated
+     * @param description the new description
+     * @return the updated card
+     */
+    public Card updateDescription(Card card, String description){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/description")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(description, APPLICATION_JSON), Card.class);
+    }
+
+    private StompSession session = connect("ws://" +  SERVER_ADDRESS + "/websocket");
+
 
     /**
      * Creates a StompSession to connect the client to the server from the specified url
@@ -575,5 +808,157 @@ public class ServerUtils {
             throw new IllegalArgumentException("Destination cannot be null");
         }
         session.send(dest, o);
+    }
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+        boardData.remove(board);
+        boardData.add(b);
+
+        return b;
+    }
+
+    /**
+     * Method to rename a board
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public PreferencesBoardInfo renameBoard(PreferencesBoardInfo board, String newTitle) {
+        // Get board associated with this PreferencesBoardInfo
+        Board actualBoard = getBoardByKey(board.getKey());
+
+        //Puts the board with the new title into the database
+        long boardId = actualBoard.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+        // Update the board title in the preferences
+        return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
+    }
+
+
+
+    /**
+     *
+     * @param board
+     * @param newTitle
+     * @return The renamed board
+     */
+    public Board renameServerBoard(Board board, String newTitle) {
+        long boardId = board.id;
+        //Puts the board into the databse
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
+
+
+        return b;
+    }
+
+
+    /**
+     * Removal of Board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removeBoard(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
+    }
+
+    /**
+     * Sends the request to add the checkListItem
+     * to the specific url,
+     * @param checkListItem - the checkListItem to be added
+     * @return added checkListItem
+     */
+    public CheckListItem addChecklist(CheckListItem checkListItem ){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(checkListItem, APPLICATION_JSON), CheckListItem.class);
+    }
+
+    /**
+     * Changes the description of the specified checkListItem
+     * @param checkListItem - checkListItem to be renamed
+     * @param description - new description
+     * @return the new checkListItem
+     */
+    public CheckListItem renameChecklist(CheckListItem checkListItem, String description){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists/{checklist_id}/text")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .resolveTemplate("checklist_id", checkListItem.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(description, APPLICATION_JSON), CheckListItem.class);
+    }
+
+    /**
+     * Removes the checkListItem
+     * @param checkListItem - checklistItem ot be removed
+     * @return the removed checkListItem
+     */
+    public CheckListItem removeChecklist(CheckListItem checkListItem){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists/{checklist_id}")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .resolveTemplate("checklist_id", checkListItem.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(CheckListItem.class);
+    }
+
+    /**
+     * Sends the request to change the checklistItem's completed field
+     * @param checkListItem - checklistItem to change
+     * @param completed - new value
+     * @return the new checklistItem
+     */
+    public CheckListItem updateChecklistCheck(CheckListItem checkListItem, boolean completed) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/checklists/{checklist_id}/completion")
+                .resolveTemplate("board_id", checkListItem.card.list.board.id)
+                .resolveTemplate("list_id", checkListItem.card.list.id)
+                .resolveTemplate("card_id", checkListItem.card.id)
+                .resolveTemplate("checklist_id", checkListItem.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(completed, APPLICATION_JSON), CheckListItem.class);
     }
 }

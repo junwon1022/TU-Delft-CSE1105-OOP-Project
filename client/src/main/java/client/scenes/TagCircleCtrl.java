@@ -23,9 +23,11 @@ public class TagCircleCtrl extends ListCell<Tag> {
 
 
     /**
-     * Create a new CardListCtrl
+     * Create a new TagCtrl
      * @param server The server to use
-     * @param card The board this CardList belongs to
+     * @param board The board this Tag belongs to
+     * @param list The list this Tag belongs to
+     * @param card The board this Tag belongs to
      */
     public TagCircleCtrl(ServerUtils server, BoardCtrl board, ListOfCardsCtrl list, CardCtrl card) {
         this.server = server;

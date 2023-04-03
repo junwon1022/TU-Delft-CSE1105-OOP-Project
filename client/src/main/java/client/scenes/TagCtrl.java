@@ -26,7 +26,6 @@ public class TagCtrl extends ListCell<Tag> {
 
     @FXML
     private Button removeTag;
-
     @FXML
     private Label nameLabel;
 
@@ -39,6 +38,7 @@ public class TagCtrl extends ListCell<Tag> {
     @FXML
     private Label deleteTagDisabled;
 
+    private TextField name;
 
 
     /**

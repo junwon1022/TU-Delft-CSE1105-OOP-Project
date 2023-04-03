@@ -15,9 +15,12 @@
  */
 package client.scenes;
 
+import client.utils.PreferencesBoardInfo;
 import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Card;
 import commons.ListOfCards;
 import javafx.animation.*;
 import commons.Tag;
@@ -40,16 +43,27 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class BoardCtrl {
+    private final UserPreferences prefs;
 
     private final ServerUtils server;
+
+    private final MainCtrl mainCtrl;
+
+    int adminFlag;
+
+    private String boardKey;
+
+    @FXML
+    private Label copied;
 
     @FXML
     private ListView<ListOfCards> list;
@@ -58,24 +72,32 @@ public class BoardCtrl {
     private Label key;
     @FXML
     private Label title;
-    @FXML
-    private Button copyButton;
 
     @FXML
     private Button addTag;
+
+    @FXML
+    private AnchorPane addTagPane;
+
     @FXML
     private Button addList;
+
+    @FXML
+    private Label nullTitle;
+
+    @FXML
+    private TextField joinField;
+
+    @FXML
+    private ListView tagList;
 
     @FXML
     private AnchorPane anchorPane;
 
     @FXML
-    private ListView tagList;
-    @FXML
-    private AnchorPane anchorPane2;
+    private ListView<PreferencesBoardInfo> recentBoards;
 
-    @FXML
-    private VBox vBox2;
+    ObservableList<PreferencesBoardInfo> recentBoardsData;
     @FXML
     private Button lock;
     @FXML
@@ -85,10 +107,9 @@ public class BoardCtrl {
     private HBox readOnlyMessage;
 
     @FXML
-    private Button closeReadOnly;
-
-    @FXML
     private Label addListDisabled;
+    @FXML
+    private Label addTagDisabled;
 
     ObservableList<ListOfCards> listOfCards;
     ObservableList<Tag> tags;
@@ -97,103 +118,129 @@ public class BoardCtrl {
 
     private boolean isUnlocked;
 
+    private PreferencesBoardInfo prefBoard;
+
     /**
      * Create a new BoardCtrl.
-     * @param server The server to use.
+     * @param prefs the preferences of the user
+     * @param server    The server to use.
+     * @param mainCtrl The main control
+     * @param boardKey The key of a specific board
      */
     @Inject
-    public BoardCtrl(ServerUtils server) {
+    public BoardCtrl(UserPreferences prefs,
+                     ServerUtils server,
+                     MainCtrl mainCtrl,
+                     String boardKey) {
+        this.prefs = prefs;
         this.server = server;
-
-        listOfCards = FXCollections.observableArrayList();
-        tags = FXCollections.observableArrayList();
-
-        // Placeholder for when Dave's branch is merged
-        // so there are actually multiple boards
-        try {
-            board = this.server.getBoard(1);
-        } catch (Exception e) {
-            board = new Board("My Board", "#CAF0F8",
-                    "#000000", "#A2E4F1", "#000000",
-                    null, new ArrayList<ListOfCards>(), new HashSet<>());
-            Board addedBoard = server.addBoard(board);
-            board = server.getBoard(addedBoard.id);
-        }
-        refresh();
-        /*
-        board = getBoard();
-
-        //add the board to the database
-        Board addedBoard =  server.addBoard(board);
-
-        //change the id of the board locally
-        board.id = server.getBoard(addedBoard.id).id;
-        System.out.println(board.id);
-        */
+        this.boardKey = boardKey;
+        this.mainCtrl = mainCtrl;
+        initialize();
     }
+
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
-        listOfCards = FXCollections.observableArrayList();
-        list.setFixedCellSize(0);
-        list.setItems(listOfCards);
-        list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-        list.setMaxHeight(600);
-        list.getStylesheets().add("styles.css");
+        try {
+            board = this.server.getBoardByKey(boardKey);
+            System.out.println("This Board is " + board.toString());
+            if(board == null) System.out.println("BOARD IS NULL");
 
-        tags = FXCollections.observableArrayList();
-        tagList.setFixedCellSize(0);
-        tagList.setItems(tags);
-        tagList.setCellFactory(lv -> new TagCtrl(server, this));
-        tagList.setMaxHeight(400);
-        tagList.getStylesheets().add("styles.css");
+            listOfCards = FXCollections.observableArrayList();
+            tags = FXCollections.observableArrayList();
+            list.setFixedCellSize(0);
+            list.setItems(listOfCards);
+            list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
+            list.setMaxHeight(600);
+            list.setStyle("-fx-background-color: " + board.colour);
+            key.setText(board.key);
+            title.setText(board.title);
+            title.setStyle("-fx-text-fill: " + board.font);
 
-        key.setText(board.key);
-        title.setText(board.title);
-        AnchorPane.setBottomAnchor(addTag, 5.0);
-        loadTagList();
-        loadVBox2();
-        refresh();
-        if (board.password == null) {
-            isUnlocked = true;
-            lock.setVisible(false);
-            unlock.setVisible(true);
+            if(adminFlag == 0) {
+                recentBoardsData = FXCollections.observableList
+                        (prefs.getBoards(server.getServerAddress()));
+            } else {
+                recentBoardsData = FXCollections.observableList
+                    (server.getBoards().stream()
+                        .map(x -> new PreferencesBoardInfo
+                        (x.title, x.key, x.password, x.font, x.colour))
+                        .collect(Collectors.toList()));
+            }
+            recentBoards.setFixedCellSize(0);
+            recentBoards.setItems(recentBoardsData);
+            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+            recentBoards.setMaxHeight(600);
+            AnchorPane.setBottomAnchor(addTagPane, 5.0);
+            AnchorPane.setRightAnchor(addTagPane,
+                    (anchorPane.getWidth() - addTagPane.getWidth()) / 2);
+            loadRecentBoards();
+            refresh();
+            handleSecurityLevel();
+            server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+                for (var list : s.lists)
+                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
+                Platform.runLater(() -> listOfCards.setAll(s.lists));
+            });
+        }
+        catch(Exception e){
+            board = getNewBoard();
+        }
+    }
+
+    /**
+     * Handles whether read only view or write access should be given to user
+     */
+    private void handleSecurityLevel() {
+        if (board.password == null || board.password.equals("") || adminFlag == 1) {
+            this.writeAccess();
         } else {
             //TODO check whether user has saved the password
-            isUnlocked = false;
-            lock.setVisible(true);
-            unlock.setVisible(false);
-            this.readOnly();
+            prefBoard = recentBoardsData
+                    .stream()
+                    .filter(x -> x.getKey().equals(boardKey))
+                    .collect(Collectors.toList())
+                    .get(0);
+            if(prefBoard.getPassword().equals(board.password)) {
+                this.writeAccess();
+            } else {
+                this.readOnly();
+            }
         }
-
-        server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-            Platform.runLater(() -> listOfCards.setAll(s.lists));
-            Platform.runLater(() -> tags.setAll(s.tags));
-        });
     }
 
     /**
      * Makes the board read only
      */
     private void readOnly() {
+        isUnlocked = false;
+        lock.setVisible(true);
+        unlock.setVisible(false);
         addTag.setDisable(true);
         addList.setDisable(true);
-        closeReadOnly.setVisible(true);
+        readOnlyMessage.setManaged(true);
         readOnlyMessage.setVisible(true);
+        readOnlyMessage.setOpacity(0.9);
         addListDisabled.setVisible(true);
+        addTagDisabled.setVisible(true);
     }
 
     /**
      * Gives write access
      */
     private void writeAccess() {
+        isUnlocked = true;
+        lock.setVisible(false);
+        unlock.setVisible(true);
         addTag.setDisable(false);
         addList.setDisable(false);
-        closeReadOnly.setVisible(false);
+        readOnlyMessage.setManaged(false);
         readOnlyMessage.setVisible(false);
         addListDisabled.setVisible(false);
+        addTagDisabled.setVisible(false);
     }
 
     /**
@@ -207,6 +254,7 @@ public class BoardCtrl {
 
         fadeOutMessage.setOnFinished(e -> {
             // Hide the message when the transition is finished
+            readOnlyMessage.setManaged(false);
             readOnlyMessage.setVisible(false);
         });
         fadeOutMessage.play();
@@ -217,13 +265,15 @@ public class BoardCtrl {
      * @param event
      */
     public void showReadOnlyMessage(Event event) {
+        readOnlyMessage.setManaged(true);
         readOnlyMessage.setVisible(true);
-        FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.3), readOnlyMessage);
-        fadeOutMessage.setFromValue(0.0);
-        fadeOutMessage.setToValue(0.9);
-        fadeOutMessage.play();
+        FadeTransition fadeInTransition = new FadeTransition(
+                Duration.seconds(0.3), readOnlyMessage);
+        fadeInTransition.setFromValue(0.0);
+        fadeInTransition.setToValue(0.9);
+        fadeInTransition.play();
         Alert alert = new Alert(Alert.AlertType.WARNING,
-                "Cannot edit in read-only mode. " +
+                "Cannot edit in read-only mode. \n" +
                         "To gain write access, click on the lock icon and enter the password.",
                 ButtonType.OK);// Load your custom icon image
 
@@ -249,9 +299,33 @@ public class BoardCtrl {
     }
 
     /**
+     * Loads the listview to auto-fit its parent
+     */
+    public void loadRecentBoards() {
+        // set the VBox to always grow to fill the AnchorPane
+        recentBoards.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        recentBoards.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        recentBoards.setMaxHeight(Double.MAX_VALUE);
+        recentBoards.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the VBox to fill the AnchorPane
+        AnchorPane.setTopAnchor(recentBoards, 0.0);
+        AnchorPane.setBottomAnchor(recentBoards, 0.0);
+        AnchorPane.setLeftAnchor(recentBoards, 0.0);
+        AnchorPane.setRightAnchor(recentBoards, 0.0);
+    }
+
+
+    /**
      * Loads the list to auto-fit its parent
      */
     public void loadTagList() {
+        tagList.setFixedCellSize(0);
+        tagList.setItems(tags);
+        tagList.setCellFactory(lv -> new TagCtrl(server, this));
+        tagList.setMaxHeight(400);
+        tagList.getStylesheets().add("styles.css");
+
         // set the tagList to always grow to fill the AnchorPane
         tagList.setPrefHeight(Region.USE_COMPUTED_SIZE);
         tagList.setPrefWidth(Region.USE_COMPUTED_SIZE);
@@ -263,23 +337,6 @@ public class BoardCtrl {
         AnchorPane.setBottomAnchor(tagList, 35.0);
         AnchorPane.setLeftAnchor(tagList, 0.0);
         AnchorPane.setRightAnchor(tagList, 0.0);
-    }
-
-    /**
-     * Loads the second vbox to auto-fit its parent
-     */
-    public void loadVBox2() {
-        // set the VBox to always grow to fill the AnchorPane
-        vBox2.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        vBox2.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        vBox2.setMaxHeight(Double.MAX_VALUE);
-        vBox2.setMaxWidth(Double.MAX_VALUE);
-
-        // set the constraints for the VBox to fill the AnchorPane
-        AnchorPane.setTopAnchor(vBox2, 0.0);
-        AnchorPane.setBottomAnchor(vBox2, 0.0);
-        AnchorPane.setLeftAnchor(vBox2, 0.0);
-        AnchorPane.setRightAnchor(vBox2, 0.0);
     }
 
 
@@ -382,10 +439,12 @@ public class BoardCtrl {
      */
     public void copyKeyToClipboard(ActionEvent event) {
         copyToClipboard(board.key);
-        Tooltip tooltip = new Tooltip("Key copied to clipboard!");
+        copied.setVisible(true);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
-        delay.setOnFinished(e -> tooltip.hide());
-        tooltip.show(copyButton, copyButton.getLayoutX() + 45, copyButton.getLayoutY() + 68);
+        delay.setOnFinished(e -> copied.setVisible(false));
+//        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
+//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
+//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
@@ -401,13 +460,31 @@ public class BoardCtrl {
     }
 
     /**
-     * Method that creates a new board that is shown in case of an exception
+     * Goes back to overview
+     * @param event - Key event when the user clicks the mouse + /
+     */
+    public void goToOverview(ActionEvent event) {
+
+        if(adminFlag == 0) mainCtrl.showMainScreen();
+        else mainCtrl.showAdmin();
+    }
+
+    /**
+     * Method that creates a new board
      * @return the new board
      */
-//    private Board getBoard(){
-//        return new Board("My Board", null, null,
-//                null, null, null, new ArrayList<>(), new HashSet<>());
-//    }
+    private Board getNewBoard(){
+        return new Board("My Board", null, null,
+                null, null, null, new ArrayList<>(), new HashSet<>(), new HashSet<>());
+    }
+
+    /**
+     * Method that returns this board
+     * @return the board
+     */
+    public Board getBoard(){
+        return board;
+    }
 
     /**
      * Method that creates a new list of cards in the board
@@ -419,15 +496,80 @@ public class BoardCtrl {
     }
 
     /**
+     * Setter for the board key of the board displayed
+     * @param boardKey
+     * @return
+     */
+    public void setBoardKey(String boardKey) {
+        this.boardKey = boardKey;
+    }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoard(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+            if (server.getBoardByKey(joinField.getText()) != null) {
+                mainCtrl.showBoard(joinField.getText(), adminFlag);
+                joinField.clear();
+                nullTitle.setText("");
+            } else throw new Exception("Doesn't Exist");
+        } catch (Exception e) {
+            if (joinField.getText() == null || joinField.getText().length() == 0) {
+                nullTitle.setText("Please enter a key!");
+            } else {
+                nullTitle.setText("There is no board with this key!");
+            }
+            joinField.clear();
+        }
+    }
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void connectToBoardKey(KeyEvent event) {
+        if(event.getCode().toString().equals("ENTER")) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
+
+                if (server.getBoardByKey(joinField.getText()) != null) {
+                    mainCtrl.showBoard(joinField.getText(), adminFlag);
+                    joinField.clear();
+                    nullTitle.setText("");
+                } else throw new Exception("Doesn't Exist");
+            } catch (Exception e) {
+                if (joinField.getText() == null || joinField.getText().length() == 0) {
+                    nullTitle.setText("Please enter a key!");
+                } else {
+                    nullTitle.setText("There is no board with this key!");
+                }
+                joinField.clear();
+            }
+        }
+    }
+
+    /**
      * Handles whether a new password should be added or
      * it should open manage password pop-up
      * @param event
      */
     public void unlockButtonClicked(ActionEvent event) {
-        if(board.password != null) {
-            changePassword(event);
-        } else {
+        if(board.password == null || board.password.length() == 0) {
             addPassword(event);
+        } else {
+            changePassword(event);
         }
     }
 
@@ -457,15 +599,10 @@ public class BoardCtrl {
                 board = server.changeBoardPassword(board, password);
                 System.out.println(board);
 
-                lock.setVisible(true);
-                unlock.setVisible(false);
-                //TODO decide whether addition of password
-                // should lock the board for the user who added it
-                isUnlocked = false;
-                readOnly();
-                //TODO add password in user file
-
+                prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
                 this.refresh();
+                writeAccess();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -494,13 +631,10 @@ public class BoardCtrl {
 
             if (controller.success) {
 
-                //TODO store password locally in user data, so that it can be remembered
-                lock.setVisible(false);
-                unlock.setVisible(true);
-                isUnlocked = true;
-                this.writeAccess();
-
+                prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, controller.enteredPassword);
                 this.refresh();
+                writeAccess();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -536,23 +670,15 @@ public class BoardCtrl {
                 }
                 System.out.println(board);
 
-                //TODO change password in user file
-
+                prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
                 this.refresh();
+                writeAccess();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-    /**
-     * Getter for the board displayed
-     * @return the board entity
-     */
-    public Board getBoard() {
-        return this.board;
-    }
-
 
     /**
      * Whether the board has been unlocked (or has no protection)

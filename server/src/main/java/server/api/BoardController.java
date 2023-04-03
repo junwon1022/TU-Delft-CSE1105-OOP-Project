@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import commons.Board;
 import server.services.BoardService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/boards")
@@ -31,6 +33,25 @@ public class BoardController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
+
+    /**
+     * Get the boards
+     *
+     * @return the list of lists
+     */
+    @GetMapping(path = {"", "/"})
+    private ResponseEntity<List<Board>> getBoards() {
+        try {
+            List<Board> boards = boardService.getBoards();
+            return ResponseEntity.status(HttpStatus.OK).body(boards);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+
     /**
      * Get a board given its id
      *
@@ -50,6 +71,31 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * Get a board given its key
+     *
+     * @param key
+     * @return the board
+     */
+    @GetMapping(path = {"/getByKey/{key}/","/getByKey/{key}"})
+    public ResponseEntity<Board> getBoardByKey(@PathVariable("key") String key){
+        try {
+            // Get the board
+            Board board = boardService.getBoardByKey(key);
+            System.out.println("The board , as we get it would be " + board);
+            if(board == null) return ResponseEntity.internalServerError().build();
+            // Return the board with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(board);
+        }
+        catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
+
 
     /**
      * Create a new board
@@ -73,6 +119,7 @@ public class BoardController {
         }
     }
 
+
     /**
      * Edit a board's title
      *
@@ -82,7 +129,7 @@ public class BoardController {
      */
     @PutMapping(path = {"/{board_id}/","/{board_id}"})
     public ResponseEntity<Board> editBoardTitleById(@RequestBody String newTitle,
-                                                  @PathVariable("board_id") long boardId) {
+                                                    @PathVariable("board_id") long boardId) {
         try {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
@@ -169,6 +216,9 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+
 
     /**
      * Method that changes the board's background color
