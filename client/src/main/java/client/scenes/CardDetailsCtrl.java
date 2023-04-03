@@ -212,7 +212,6 @@ public class CardDetailsCtrl{
     private CheckListItem createCheckList(String description) {
         CheckListItem checkListItem = new CheckListItem(
                 description,
-                data.size(),
                 false,
                 card);
         return checkListItem;
