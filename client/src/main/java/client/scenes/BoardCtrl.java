@@ -170,12 +170,9 @@ public class BoardCtrl {
                     (x.title, x.key, x.password, x.font, x.colour))
                             .collect(Collectors.toList()));
             loadRecentBoards();
-
             AnchorPane.setBottomAnchor(addTag, 5.0);
             AnchorPane.setRightAnchor(addTag, (anchorPane.getWidth() - addTag.getWidth()) / 2);
-
             refresh();
-
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists) {
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
