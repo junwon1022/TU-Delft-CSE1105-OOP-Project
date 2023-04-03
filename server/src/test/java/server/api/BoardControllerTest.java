@@ -135,4 +135,80 @@ public class BoardControllerTest {
         assertEquals(OK, actual.getStatusCode());
     }
 
+    /**
+     * Get board by id
+     */
+    @Test
+    public void getBoardByIdTest(){
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.getBoardById(b.id);
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    /**
+     * Get the list of boards
+     */
+    @Test
+    public void getBoards(){
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findAll()).thenReturn(new ArrayList<>());
+        var actual = controller.getBoards();
+        assertEquals(OK, actual.getStatusCode());
+    }
+//
+//    /**
+//     * Get Board by key
+//     */
+//    @Test
+//    public void getBoardByKey(){
+//
+//    }
+
+    /**
+     * Change the board font
+     */
+    @Test
+    public void changeBoardFontTest(){
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.changeBoardFont(b.id, "Arial");
+        assertEquals(OK, actual.getStatusCode());
+        assertEquals("Arial", b.font);
+    }
+
+    /**
+     * Change Lists Background
+     */
+    @Test
+    public void changeListsBackgroundTest(){
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.changeListsBackground(b.id, "#111111");
+        assertEquals(OK, actual.getStatusCode());
+        assertEquals("#111111", b.listColour);
+    }
+
+    /**
+     * Change lists font
+     */
+    @Test
+    public void changeListsFontTest() {
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111", "#111111", "pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.changeListsFont(b.id, "Arial");
+        assertEquals(OK, actual.getStatusCode());
+        assertEquals("Arial", b.listFont);
+    }
+
 }

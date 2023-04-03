@@ -40,7 +40,7 @@ public class BoardController {
      * @return the list of lists
      */
     @GetMapping(path = {"", "/"})
-    private ResponseEntity<List<Board>> getBoards() {
+    ResponseEntity<List<Board>> getBoards() {
         try {
             List<Board> boards = boardService.getBoards();
             return ResponseEntity.status(HttpStatus.OK).body(boards);
