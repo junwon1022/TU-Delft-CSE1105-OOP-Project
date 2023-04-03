@@ -81,7 +81,7 @@ public class ConnectCtrl {
      */
     public void connectToMainScreen(ActionEvent event) throws Exception {
         try {
-            mainCtrl.showMainScreen("http://localhost:8080");
+            mainCtrl.showMainScreen(field.getText());
         }
         catch(Exception e) {
             mainCtrl.changeServer("http://localhost:8080");
@@ -111,7 +111,7 @@ public class ConnectCtrl {
      */
     public void connectAdmin(ActionEvent event) throws Exception {
         if(adminField.getText().equals("admin")) {
-            if(field.getText().equals("")) mainCtrl.showAdmin("http://localhost:8080");
+            if(field.getText().equals("")) mainCtrl.showAdmin(field.getText());
 
             else {
                 try {
