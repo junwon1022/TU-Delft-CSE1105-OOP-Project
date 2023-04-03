@@ -358,9 +358,9 @@ public class BoardCtrl {
      * Goes back to overview
      * @param event - Key event when the user clicks the mouse + /
      */
-    public void goToOverview(ActionEvent event) {
-        if(adminFlag == 0) mainCtrl.showMainScreen();
-        else mainCtrl.showAdmin();
+    public void goToOverview(ActionEvent event) throws Exception {
+        if(adminFlag == 0) mainCtrl.showMainScreen(server.getServerAddress());
+        else mainCtrl.showAdmin(server.getServerAddress());
     }
 
     /**

@@ -1,7 +1,7 @@
 package client.scenes;
 
 
-import client.utils.ServerUtils;
+import client.Main;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class ConnectCtrl {
 
+    private Main main;
 
     @FXML
     private AnchorPane root;
@@ -38,18 +39,14 @@ public class ConnectCtrl {
     @FXML
     private Label nullTitle;
 
-    private ServerUtils server;
-
     private final MainCtrl mainCtrl;
 
     /**
      * Create a new ConnectCtrl
-     * @param server
      * @param mainCtrl
      */
     @Inject
-    public ConnectCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public ConnectCtrl( MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 
@@ -84,17 +81,11 @@ public class ConnectCtrl {
      */
     public void connectToMainScreen(ActionEvent event) throws Exception {
         try {
-            server.changeServer(field.getText());
-            mainCtrl.showMainScreen();
+            mainCtrl.showMainScreen("http://localhost:8080");
         }
         catch(Exception e) {
-            try {
-                server.changeServer("http://localhost:8080");
-                nullTitle.setText(e.getMessage());
-            }
-            catch (IOException a) {
-                nullTitle.setText(e.getMessage());
-            }
+            mainCtrl.changeServer("http://localhost:8080");
+            nullTitle.setText(e.getMessage());
         }
     }
 
@@ -107,9 +98,7 @@ public class ConnectCtrl {
      * @return
      */
     public void connectDefault(ActionEvent event) throws Exception {
-
-        server.changeServer("http://localhost:8080");
-        mainCtrl.showMainScreen();
+        mainCtrl.showMainScreen("http://localhost:8080");
     }
 
     /**
@@ -122,13 +111,13 @@ public class ConnectCtrl {
      */
     public void connectAdmin(ActionEvent event) throws Exception {
         if(adminField.getText().equals("admin")) {
-            if(field.getText().equals("")) mainCtrl.showAdmin();
+            if(field.getText().equals("")) mainCtrl.showAdmin("http://localhost:8080");
 
             else {
                 try {
-                    server.changeServer(field.getText());
-                    mainCtrl.showAdmin();
-                } catch(Exception e) {
+                    mainCtrl.showAdmin("http://localhost:8080");
+                }
+                catch(Exception e) {
                     nullTitle.setText(e.getMessage());
                 }
             }

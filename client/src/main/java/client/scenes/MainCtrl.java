@@ -15,6 +15,9 @@
  */
 package client.scenes;
 
+import client.Main;
+import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +29,9 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
+
+    private Main main;
+    private ServerUtils serverUtils;
 //
 //    private QuoteOverviewCtrl overviewCtrl;
 //    private Scene overview;
@@ -40,6 +46,29 @@ public class MainCtrl {
     private Scene mainScreen;
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
+
+
+
+
+    /**
+     * Create a new MainCtrl.
+     *
+     * @param primaryStage The primary stage to use.
+     * @param connect      The connect screen
+     */
+    public void initialize(Stage primaryStage,
+                           Pair<ConnectCtrl, Parent> connect) {
+        this.primaryStage = primaryStage;
+        this.connectCtrl = connect.getKey();
+        this.connectCtrl.initialize();
+        this.connect = new Scene(connect.getValue());
+        this.main = new Main();
+
+        showConnect();
+        primaryStage.show();
+
+    }
+
 
 
     /**
@@ -57,6 +86,7 @@ public class MainCtrl {
                            Pair<AdminScreenCtrl, Parent> adminScreen) {
 //            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
+        this.serverUtils = new ServerUtils(new UserPreferences());
 //        this.overviewCtrl = overview.getKey();
 //        this.overview = new Scene(overview.getValue());
 //
@@ -79,6 +109,7 @@ public class MainCtrl {
         this.adminScreenCtrl = adminScreen.getKey();
         this.adminScreen = new Scene(adminScreen.getValue());
         this.adminScreen.getStylesheets().add("styles.css");
+        this.main = new Main();
 
         showConnect();
         primaryStage.show();
@@ -143,8 +174,12 @@ public class MainCtrl {
 
     /**
      * Show the board scene.
+     * @param server the server the main screen connects to
      */
-    public void showMainScreen() {
+    public void showMainScreen(String server) throws Exception {
+
+        main.startConnect(primaryStage);
+        serverUtils.changeServer(server);
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
         primaryStage.setMaximized(false);
@@ -168,9 +203,21 @@ public class MainCtrl {
     }
 
     /**
-     * Show the admin scene.
+     * Changes the server
+     * @param server the server the admin connects to
      */
-    public void showAdmin() {
+    public void changeServer(String server) throws Exception {
+
+        serverUtils.changeServer(server);
+    }
+
+    /**
+     * Show the admin scene.
+     * @param server the server the admin connects to
+     */
+    public void showAdmin(String server) throws Exception {
+        main.startConnect(primaryStage);
+        serverUtils.changeServer(server);
         primaryStage.setTitle("Admin Screen");
         primaryStage.setScene(adminScreen);
         primaryStage.setHeight(550);
