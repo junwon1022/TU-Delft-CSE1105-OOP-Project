@@ -181,6 +181,7 @@ public class BoardController {
     @PutMapping(path =  "{board_id}/background")
     public ResponseEntity<Board> changeBoardBackground(@PathVariable("board_id") long boardId,
                                                        @RequestBody String colour){
+        if(colour == null) return ResponseEntity.badRequest().build();
         try{
             // Get the initial board
             Board board = boardService.getBoardById(boardId);

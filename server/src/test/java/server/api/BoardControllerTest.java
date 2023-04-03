@@ -170,6 +170,33 @@ public class BoardControllerTest {
 //    }
 
     /**
+     * Change the board background
+     */
+    @Test
+    public void changeBoardBackgroundTest(){
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.changeBoardBackground(b.id, "#111111");
+        assertEquals(OK, actual.getStatusCode());
+        assertEquals("#111111", b.colour);
+    }
+
+    /**
+     * Change the board background with null value
+     */
+    @Test
+    public void changeBoardBackgroundNullTest(){
+        Board b = new Board("My Board", "#111111", "#111111",
+                "#111111","#111111","pass", new ArrayList<>(),
+                new HashSet<>(), new HashSet<>());
+        when(repo.findById(b.id)).thenReturn(Optional.of(b));
+        var actual = controller.changeBoardBackground(b.id, null);
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+
+    /**
      * Change the board font
      */
     @Test
