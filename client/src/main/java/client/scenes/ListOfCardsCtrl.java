@@ -122,6 +122,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 if (c.id == dbCardId)
                     draggedCard = c;
 
+            draggedCard.palette.cards.remove(this);
+            draggedCard.palette = null;
             server.removeCard(draggedCard);
 
             draggedCard.list = this.cardData;
@@ -137,14 +139,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
      * @param item The new item for the cell.
-     * @param empty whether or not this cell represents data from the list. If it
+     * @param empty whether this cell represents data from the list. If it
      *        is empty, then it does not represent any domain data, but is a cell
      *        being used to render an "empty" row.
      */
     @Override
     protected void updateItem(ListOfCards item, boolean empty) {
         super.updateItem(item, empty);
-
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
@@ -153,9 +154,20 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             cards.setAll(item.cards);
             cardData = item;
 
+            changeColours();
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+    }
+
+    /**
+     * Method that changes the lists according to the customizations of the user
+     */
+    private void changeColours(){
+        root.setStyle("-fx-background-color: " + cardData.board.listColour);
+        title.setStyle("-fx-text-fill: " + cardData.board.listFont);
+        list.setStyle("-fx-background-color: derive(" + cardData.board.listColour +", +60%)" +
+                      ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
     /**
@@ -421,4 +433,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
         hideButtonKeyboard(event);
     }
+
+
 }

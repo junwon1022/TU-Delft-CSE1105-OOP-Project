@@ -23,6 +23,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
+
 <GridPane fx:id="root" alignment="CENTER" onKeyTyped="#openHelpScreen" prefHeight="625.0" prefWidth="1101.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" prefWidth="270.0" />
@@ -130,7 +131,8 @@
                   </TitledPane>
                </panes>
             </Accordion>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization" wrapText="true">
+            <Button fx:id="customization" maxHeight="1.7976931348623157E308" onAction="#openCustomization" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Customization">
+
                <font>
                   <Font name="Corbel" size="19.0" />
                </font>

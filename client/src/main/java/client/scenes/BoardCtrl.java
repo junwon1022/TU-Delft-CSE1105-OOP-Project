@@ -39,6 +39,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
+
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -97,10 +98,19 @@ public class BoardCtrl {
 
     ObservableList<PreferencesBoardInfo> recentBoardsData;
 
+    @FXML
+    private Button customization;
+
+    @FXML
+    private AnchorPane boardAnchor;
+
+
     ObservableList<ListOfCards> listOfCards;
     ObservableList<Tag> tags;
 
+
     private Board board;
+
 
     /**
      * Create a new BoardCtrl.
@@ -131,11 +141,11 @@ public class BoardCtrl {
         boolean haveBoard = false;
         try {
             board = this.server.getBoardByKey(boardKey);
-            System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
             haveBoard = true;
 
             listOfCards = FXCollections.observableArrayList();
+
             list.setFixedCellSize(0);
             list.setItems(listOfCards);
             list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
@@ -176,12 +186,23 @@ public class BoardCtrl {
         }
     }
 
+
+    /**
+     * Method that changes the colours of the board, title and key
+     */
+    private void changeColours(){
+        list.setStyle("-fx-background-color: " + board.colour);
+        title.setStyle("-fx-text-fill: " + board.font);
+        key.setStyle("-fx-text-fill: " + board.font);
+    }
+
     /**
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
+
         //the method call of getListsInBoard will be with the board parameter
-        var serverData = server.getListsInBoard(board.id);
+        var serverData = server.getLists(board.id);
         listOfCards.setAll(serverData);
         //the method call of getTagsInBoard will be with the board parameter
         var serverDataTags = server.getTagsInBoard(board.id);
@@ -382,15 +403,39 @@ public class BoardCtrl {
 
 
     /**
-     * Method that creates a new list of cards in the board
+     * Method that returns a list
      * @param title
-     * @return the new list
+     * @return a new list
      */
     private ListOfCards getList(String title) {
         return new ListOfCards(title, board, new ArrayList<>());
     }
 
     /**
+<<<<<<< HEAD
+     * Method that opens the customization window
+     * @param event
+     */
+    public void openCustomization(ActionEvent event){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Customization.fxml"));
+        try {
+
+            CustomizationCtrl customizationCtrl = new CustomizationCtrl(server,this, board);
+            fxmlLoader.setController(customizationCtrl);
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Customization of board");
+            stage.setScene(new Scene(root, 686, 527));
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        board = server.getBoard(board.id);
+        changeColours();
+    }
+
+
+     /**
      * Creates a new tag
      * @param name
      * @param backgroundColor
@@ -400,6 +445,7 @@ public class BoardCtrl {
     private Tag getTag(String name, String backgroundColor, String fontColor) {
         return new Tag(name, backgroundColor, fontColor, board, new HashSet<>());
     }
+
 
     /**
      * Setter for the board key of the board displayed

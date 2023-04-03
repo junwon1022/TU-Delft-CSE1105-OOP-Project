@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
@@ -109,6 +110,9 @@ public class CardCtrl extends ListCell<Card> {
         } else {
             title.setText(item.title);
             card = item;
+            setPalette();
+            if(card.palette != null)
+                setColors(root, title);
             this.loadTags();
 
 //            if(card.description == null || card.description.equals("")) {
@@ -119,6 +123,20 @@ public class CardCtrl extends ListCell<Card> {
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
+
+    private void setPalette(){
+        Palette p = card.list.board.getDefaultPalette();
+        if(p != null)
+            card.palette = p;
+    }
+
+    private void setColors(AnchorPane root, Label title){
+        root.setStyle("-fx-background-color: " + card.palette.background +
+                "; -fx-background-radius: 10");
+        title.setStyle("-fx-text-fill: " + card.palette.font);
+    }
+
+
 
     /**
      * Initializes the card for the description icon
@@ -330,6 +348,9 @@ public class CardCtrl extends ListCell<Card> {
         for (Card c : draggedList)
             if (c.id == dbCardId)
                 draggedCard = c;
+
+        draggedCard.palette.cards.remove(this);
+        draggedCard.palette = null;
 
         server.removeCard(draggedCard);
 
