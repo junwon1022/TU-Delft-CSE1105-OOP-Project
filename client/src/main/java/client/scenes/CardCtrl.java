@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
@@ -108,7 +109,6 @@ public class CardCtrl extends ListCell<Card> {
         board.showReadOnlyMessage(event);
     }
 
-
     /**
      * Gives write access
      */
@@ -135,8 +135,6 @@ public class CardCtrl extends ListCell<Card> {
      * Is called whenever the parent CardList is changed. Sets the data in this controller.
      *
      * @param item  The new item for the cell.
-     * Is called whenever the parent ListOfCards is changed. Sets the data in this controller.
-     * @param item The new item for the cell.
      * @param empty whether this cell represents data from the list or not. If it
      *              is empty, then it does not represent any domain data, but is a cell
      *              being used to render an "empty" row.
@@ -152,23 +150,42 @@ public class CardCtrl extends ListCell<Card> {
             title.setText(item.title);
 
             card = item;
+
+            setPalette();
+            if(card.palette != null)
+                setColors(root, title);
             this.loadTags();
+
             if(!board.isUnlocked()) { //TODO and user doesn't have it stored
                 this.readOnly();
             } else {
                 this.writeAccess();
             }
 
-            if(card.description == null || card.description.equals("")) {
-                description.setVisible(false);
-            } else {
-                description.setVisible(true);
-            }
+//            if(card.description == null || card.description.equals("")) {
+//                description.setVisible(false);
+//            } else {
+//                description.setVisible(true);
+//            }
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
+
+    private void setPalette(){
+        Palette p = card.list.board.getDefaultPalette();
+        if(p != null)
+            card.palette = p;
+    }
+
+    private void setColors(AnchorPane root, Label title){
+        root.setStyle("-fx-background-color: " + card.palette.background +
+                "; -fx-background-radius: 10");
+        title.setStyle("-fx-text-fill: " + card.palette.font);
+    }
+
+
 
     /**
      * Initializes the card for the description icon
@@ -380,6 +397,9 @@ public class CardCtrl extends ListCell<Card> {
         for (Card c : draggedList)
             if (c.id == dbCardId)
                 draggedCard = c;
+
+        draggedCard.palette.cards.remove(this);
+        draggedCard.palette = null;
 
         server.removeCard(draggedCard);
 

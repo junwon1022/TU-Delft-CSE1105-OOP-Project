@@ -29,6 +29,9 @@ public class Tag {
     @Column(name = "tag_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
 
+    @Column(name = "tag_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String font;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id")
     public Board board;
@@ -47,12 +50,14 @@ public class Tag {
      * Constructor with parameters
      * @param name
      * @param colour
+     * @param font
      * @param board
      * @param cards
      */
-    public Tag(String name, String colour, Board board, Set<Card> cards) {
+    public Tag(String name, String colour, String font, Board board, Set<Card> cards) {
         this.name = name;
         this.colour = colour;
+        this.font = font;
         this.board = board;
         this.cards = cards;
     }
@@ -66,8 +71,10 @@ public class Tag {
      */
     @PreRemove
     public void removeTagsFromCards() {
-        for (Card c : cards) {
-            c.tags.remove(this);
+        if(cards != null || cards.size() != 0) {
+            for (Card c : cards) {
+                c.tags.remove(this);
+            }
         }
     }
 

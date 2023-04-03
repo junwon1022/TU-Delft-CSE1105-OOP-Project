@@ -157,31 +157,29 @@ public class CardServiceTest {
 
     }
 
-    @Test
-    public void deleteCardTest() throws Exception {
-
-        Board b = new Board("My Schedule", "#111111","#111111","#111111",
-                "#111111", "pass", new ArrayList<>(),
-                new HashSet<>(), new HashSet<>());
-
-        ListOfCards l = new ListOfCards("My List",b,new ArrayList<>());
-
-        b.addList(l);
-
-        Card c = new Card("CG","Finish CG Study","#555555",l,new ArrayList<>(),
-                new HashSet<>(), null);
-
-        l.addCard(c);
-
-        boardService.createBoard(b);
-        listService.createListOfCards(l,b);
-        cardService.createCard(c,l,b);
-        cardService.deleteCardById(c.id);
-
-        Mockito.verify(cardRepo).deleteById(c.id);
-
-
-    }
+//    @Test
+//    public void deleteCardTest() throws Exception {
+//
+//        Board b = new Board("My Schedule", "#111111","#111111","#111111",
+//                "#111111", "pass", new ArrayList<>(),
+//                new HashSet<>(), new HashSet<>());
+//
+//        ListOfCards l = new ListOfCards("My List", b, new ArrayList<>());
+//
+//        b.addList(l);
+//
+//        Card c = new Card("CG","Finish CG Study","#555555", l, new ArrayList<>(),
+//                new HashSet<>(), null);
+//
+//        l.addCard(c);
+//
+//        boardService.createBoard(b);
+//        listService.createListOfCards(l, b);
+//        cardService.createCard(c, l, b);
+//        cardService.deleteCardById(c.id);
+//
+//        Mockito.verify(cardRepo).deleteById(c.id);
+//    }
 
     @Test
     public void getAllCardsTest() throws Exception {

@@ -86,37 +86,24 @@ public class TagService {
      * @param id
      */
     public void deleteTagById(Long id) {
-        tagRepository.getById(id).removeTagsFromCards();
-        tagRepository.deleteById(id);
+        Tag tag = tagRepository.getById(id);
+        if(tag != null) {
+            tag.removeTagsFromCards();
+            tagRepository.deleteById(id);
+        }
     }
 
     /**
      * Edit the name of a tag and store the edited tag in the database
      * @param id
-     * @param newName
+     * @param newTag
      * @return the edited tag
      */
-    public Tag editTagName(Long id, String newName) throws Exception {
-        if(newName == null || newName.isEmpty()) {
-            throw new Exception("Name should not be null or empty.");
-        }
+    public Tag editTag(Long id, Tag newTag) throws Exception {
         Tag tag = getTagById(id);
-        tag.name = newName;
-        return tagRepository.save(tag);
-    }
-
-    /**
-     * Edit the colour of a tag and store the edited tag in the database
-     * @param id
-     * @param newColour
-     * @return the edited tag
-     */
-    public Tag editTagColour(Long id, String newColour) throws Exception {
-        if(newColour == null || newColour.isEmpty()) {
-            throw new Exception("Colour should not be null or empty.");
-        }
-        Tag tag = getTagById(id);
-        tag.colour = newColour;
+        tag.name = newTag.name;
+        tag.colour = newTag.colour;
+        tag.font = newTag.font;
         return tagRepository.save(tag);
     }
 

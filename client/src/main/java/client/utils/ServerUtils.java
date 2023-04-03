@@ -17,16 +17,13 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -68,11 +65,11 @@ public class ServerUtils {
      * @return the address of the server
      */
     public String getServerAddress() {
-        return SERVER_ADDRESS;
+        return SERVER;
     }
 
     /**
-     * Changes the preset server adress from 8080 to the textbox input
+     * Changes the preset server address from 8080 to the textbox input
      * @param server
      */
     public void changeServer(String server) throws Exception {
@@ -81,6 +78,7 @@ public class ServerUtils {
             throw new Exception("Please enter a valid server to connect" +
                     " or select one from the list with double click!");
         }
+
         if(server.charAt(server.length() - 1) != '/')  {
             server = server + "/";
         }
@@ -99,6 +97,7 @@ public class ServerUtils {
         catch(Exception e) {
             throw new Exception("This is not a valid server! Please try again!");
         }
+
         try {
             //checks if the server is valid,
             // that is if it is able to make a dummy request to the api
@@ -109,48 +108,6 @@ public class ServerUtils {
         catch(Exception e){
             throw new Exception("This is not a TimeWise server! Please try again!");
         }
-
-    }
-
-    /**
-     * Get all quotes from the server.
-     */
-    public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
-
-    /**
-     * Get all quotes from the server.
-     *
-     * @return The quotes.
-     */
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
-    }
-
-    /**
-     * Add a quote to the server.
-     *
-     * @param quote The quote to add.
-     *
-     * @return The quote that was added.
-     */
-    public Quote addQuote(Quote quote) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
 
     /**
@@ -162,8 +119,6 @@ public class ServerUtils {
 
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
-
-
 
     /**
      * Placeholder add card function.
@@ -189,7 +144,6 @@ public class ServerUtils {
         //Gets the id from the last board added
         boardTitle = getBoards().get(getBoards().size()-1);
         boardData.add(boardTitle);
-
     }
 
     /**
@@ -240,14 +194,7 @@ public class ServerUtils {
         }
         if(found == true)
             boardData.remove(number);
-
     }
-
-
-
-
-
-
 
     /**
      * Placeholder method to get data from server
@@ -314,8 +261,6 @@ public class ServerUtils {
                 .put(Entity.json(""));
     }
 
-
-
     /**
      * Method that returns the lists from the database
      * @param boardId - the id of the board of the lists
@@ -328,7 +273,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<ListOfCards>>(){});
     }
-
 
     /**
      * Method that returns the lists from the database
@@ -358,15 +302,7 @@ public class ServerUtils {
      * @param boardId the id of the board
      * @return a list of lists of cards.
      */
-    public List<ListOfCards> getListsInBoard(long boardId) {
-
-        // once the database references are solved
-        // -- as when the get method retrieves the list of all lists
-        //the reference to the board is null --
-        //this part can be uncommented
-        // -- the method signature will get as a parameter
-        //Board board --
-        //
+    public List<ListOfCards> getServerData(long boardId) {
         serverData = getLists(boardId);
         for (var list: serverData)
             list.cards.sort(Comparator.comparingLong(Card::getOrder));
@@ -398,14 +334,12 @@ public class ServerUtils {
      * @return a list of board title objects.
      */
 
-    public List<Board> getMyBoardTitles(){
-
+    public List<Board> getMyBoardTitles() {
         if(boardData == null) {
             boardData = new ArrayList<>();
         }
         return boardData;
     }
-
 
     /**
      * Placeholder method to get data from server
@@ -448,7 +382,6 @@ public class ServerUtils {
                 .get(new GenericType<Board>() {});
     }
 
-
     /**
      * Add a new board to the server
      * @param board - board to be added to server
@@ -465,8 +398,8 @@ public class ServerUtils {
     /**
      * Get all lists from the server
      *
-     * @return - the lists from the server
      * @param boardId
+     * @return - the lists from the server
      */
     public ListOfCards getList(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
@@ -664,19 +597,19 @@ public class ServerUtils {
     }
 
     /**
-     * Renaming a tag with a new name
-     * @param tag - the tag that needs renaming
-     * @param name - the new name of the tag
-     * @return the Card that was renamed
+     * Editing a tag
+     * @param tag - the tag that needs editing
+     * @param newTag - the new edited tag
+     * @return the Tag that was edited
      */
-    public Tag renameTag(Tag tag, String name) {
+    public Tag updateTag(Tag tag, Tag newTag) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/{board_id}/tags/{tag_id}/")
                 .resolveTemplate("board_id", tag.board.id)
                 .resolveTemplate("tag_id", tag.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(name, APPLICATION_JSON), Tag.class);
+                .put(Entity.entity(newTag, APPLICATION_JSON), Tag.class);
     }
 
     /**
@@ -809,6 +742,7 @@ public class ServerUtils {
         }
         session.send(dest, o);
     }
+
     /**
      *
      * @param board
@@ -817,7 +751,7 @@ public class ServerUtils {
      */
     public Board renameBoard(Board board, String newTitle) {
         long boardId = board.id;
-        //Puts the board into the databse
+        //Puts the board into the database
         Board b = ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/boards/" + boardId)
                 .request(APPLICATION_JSON)
@@ -828,6 +762,71 @@ public class ServerUtils {
 
         return b;
     }
+
+    /**
+     * Method that changes the board background in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
+    public Board changeBoardBackground(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/background")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
+    /**
+     * Method that changes the board's font color in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
+    public Board changeBoardFont(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/font")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
+    /**
+     * Method that changes the lists' background in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
+    public Board changeListsBackground(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/listsCol")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
+    /**
+     * Method that changes the lists' font color in the database
+     * @param board
+     * @param color
+     * @return the edited board
+     */
+    public Board changeListsFont(Board board, String color){
+        long boardId = board.id;
+        Board b = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/listsFontCol")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Board.class);
+        return b;
+    }
+
 
     /**
      * Method to rename a board
@@ -851,10 +850,81 @@ public class ServerUtils {
         return prefs.updateBoardTitle(getServerAddress(), board, newTitle);
     }
 
-
+    /**
+     * Method that adds a palette in the database
+     * @param boardId
+     * @param palette
+     * @return the added palette
+     */
+    public Palette addPalette(long boardId, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(palette, APPLICATION_JSON), Palette.class);
+    }
 
     /**
-     *
+     * Method that gets all palettes of one board in the database
+     * @param boardId
+     * @return a set containing all palettes
+     */
+    public Set<Palette> getAllPalettes(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Set<Palette>>() {});
+    }
+
+    /**
+     * Method that deletes the given palette from the database, if possible
+     * @param boardId
+     * @param palette
+     * @return the deleted palette
+     */
+    public Palette deletePalette(long boardId, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes/"+ palette.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Palette.class);
+    }
+
+    /**
+     * Method that sets the palette background in the database
+     * @param boardId
+     * @param paletteId
+     * @param color
+     * @return the edited palette
+     */
+    public Palette setPaletteBackground(long boardId, long paletteId, String color){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
+                        paletteId + "/background")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Palette.class);
+    }
+
+    /**
+     * Method that sets the palette's font color in the database
+     * @param boardId
+     * @param paletteId
+     * @param color
+     * @return the edited palette
+     */
+    public Palette setPaletteFont(long boardId, long paletteId, String color){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
+                        paletteId + "/font")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(color, APPLICATION_JSON), Palette.class);
+    }
+
+    /**
+     * Method that renames the board in the database
      * @param board
      * @param newTitle
      * @return The renamed board
@@ -872,7 +942,6 @@ public class ServerUtils {
         return b;
     }
 
-
     /**
      * Removal of Board from server
      *
@@ -889,6 +958,21 @@ public class ServerUtils {
     }
 
     /**
+     * Method that sets a given palette as a default one
+     * @param boardId
+     * @param paletteId
+     * @return the edited palette
+     */
+    public Palette setDefault(long boardId, long paletteId) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/palettes/" +
+                        paletteId + "/default")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(true, APPLICATION_JSON), Palette.class);
+    }
+
+     /**
      * Sends the request to add the checkListItem
      * to the specific url,
      * @param checkListItem - the checkListItem to be added

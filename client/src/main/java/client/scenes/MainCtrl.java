@@ -15,9 +15,13 @@
  */
 package client.scenes;
 
+import client.Main;
+import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Line;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -25,6 +29,9 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
+
+    private Main main;
+    private ServerUtils serverUtils;
 //
 //    private QuoteOverviewCtrl overviewCtrl;
 //    private Scene overview;
@@ -37,9 +44,32 @@ public class MainCtrl {
     private Scene connect;
     private MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
-
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
+
+
+
+
+    /**
+     * Create a new MainCtrl.
+     *
+     * @param primaryStage The primary stage to use.
+     * @param connect      The connect screen
+     */
+    public void initialize(Stage primaryStage,
+                           Pair<ConnectCtrl, Parent> connect) {
+        this.primaryStage = primaryStage;
+        this.connectCtrl = connect.getKey();
+        this.connectCtrl.initialize();
+        this.connect = new Scene(connect.getValue());
+        this.connect.getStylesheets().add("styles.css");
+        this.main = new Main();
+
+        showConnect();
+        primaryStage.show();
+
+    }
+
 
 
     /**
@@ -55,13 +85,8 @@ public class MainCtrl {
                            Pair<ConnectCtrl, Parent> connect,
                            Pair<MainScreenCtrl, Parent> mainScreen,
                            Pair<AdminScreenCtrl, Parent> adminScreen) {
-//            Pair<AddQuoteCtrl, Parent> add, Pair<QuoteOverviewCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
-//        this.overviewCtrl = overview.getKey();
-//        this.overview = new Scene(overview.getValue());
-//
-//        this.addCtrl = add.getKey();
-//        this.add = new Scene(add.getValue());
+        this.serverUtils = new ServerUtils(new UserPreferences());
 
         this.boardCtrl = board.getKey();
         this.boardOverview = new Scene(board.getValue());
@@ -78,6 +103,8 @@ public class MainCtrl {
 
         this.adminScreenCtrl = adminScreen.getKey();
         this.adminScreen = new Scene(adminScreen.getValue());
+        this.adminScreen.getStylesheets().add("styles.css");
+        this.main = new Main();
 
         showConnect();
         primaryStage.show();
@@ -91,9 +118,8 @@ public class MainCtrl {
     public void showBoard(String boardKey, int adminFlag) {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
-//        primaryStage.setHeight(690);
-//        primaryStage.setWidth(1040);
         primaryStage.setMaximized(true);
+
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
@@ -105,8 +131,27 @@ public class MainCtrl {
         });
 
         boardCtrl.adminFlag = adminFlag;
+
+        primaryStage.widthProperty().addListener((observable, oldWidth, newWidth) -> {
+            updateLineEnd(boardCtrl.getLine(), 530);
+            updateLineEnd(boardCtrl.getLine2(), 170);
+        });
+
         boardCtrl.setBoardKey(boardKey);
         boardCtrl.initialize();
+    }
+
+    /**
+     * As lines in java fx are not responsive since they are not resizable,
+     * this is a custom resizing method
+     * @param line - line to be resized
+     * @param offset - width relative to the width of the container
+     */
+    private void updateLineEnd(Line line, int offset) {
+        // update the line's end x coordinate to match the new width of the container
+        double containerWidth = line.getParent().getLayoutBounds().getWidth();
+        double newEndX = containerWidth - offset;
+        line.setEndX(newEndX);
     }
 
     /**
@@ -114,54 +159,56 @@ public class MainCtrl {
      */
 
     public void showConnect() {
+        primaryStage.setHeight(450);
+        primaryStage.setWidth(600);
         primaryStage.setTitle("Connect");
         primaryStage.setScene(connect);
-        primaryStage.setHeight(450);
-
+        primaryStage.setMaximized(false);
+        centerStage();
     }
 
 
 
     /**
      * Show the board scene.
+     * @param server the server the main screen connects to
      */
-    public void showMainScreen() {
+    public void showMainScreen(String server) throws Exception {
+
+        main.startConnect(primaryStage);
+        serverUtils.changeServer(server);
         primaryStage.setTitle("Main Screen");
         primaryStage.setScene(mainScreen);
         primaryStage.setMaximized(false);
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
-
-        // Get the dimensions of the primary screen
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-        // Calculate the x and y coordinates to center the new scene on the primary stage
-        double centerX = primaryStage.getX()
-                + primaryStage.getWidth() / 2 - mainScreen.getWidth() / 2;
-        double centerY = primaryStage.getY()
-                + primaryStage.getHeight() / 2 - mainScreen.getHeight() / 2;
-
-        // Set the new scene's position to the calculated coordinates
-        mainScreen.getWindow().setX(centerX);
-        mainScreen.getWindow().setY(centerY);
         centerStage();
         mainScreenCtrl.refresh();
     }
 
+    /**
+     * Changes the server
+     * @param server the server the admin connects to
+     */
+    public void changeServer(String server) throws Exception {
+        serverUtils.changeServer(server);
+    }
 
     /**
      * Show the admin scene.
+     * @param server the server the admin connects to
      */
-    public void showAdmin() {
+    public void showAdmin(String server) throws Exception {
+        main.startConnect(primaryStage);
+        serverUtils.changeServer(server);
         primaryStage.setTitle("Admin Screen");
         primaryStage.setScene(adminScreen);
-        primaryStage.setHeight(600);
+        primaryStage.setHeight(550);
+        primaryStage.setWidth(800);
         primaryStage.setMaximized(false);
         centerStage();
         adminScreenCtrl.refresh();
     }
-
-
 
     /**
      * Centers the stage in the computer window

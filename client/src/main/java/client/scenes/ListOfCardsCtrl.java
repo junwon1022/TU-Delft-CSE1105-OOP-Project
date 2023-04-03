@@ -152,7 +152,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             long dbListId = Long.decode(strings[1]);
 
             List<Card> draggedList = null;
-            for (ListOfCards loc: this.board.listOfCards)
+            for (ListOfCards loc : this.board.listOfCards)
                 if (loc.id == dbListId)
                     draggedList = loc.cards;
 
@@ -161,6 +161,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 if (c.id == dbCardId)
                     draggedCard = c;
 
+            draggedCard.palette.cards.remove(this);
+            draggedCard.palette = null;
             server.removeCard(draggedCard);
 
             draggedCard.list = this.cardData;
@@ -183,7 +185,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     @Override
     protected void updateItem(ListOfCards item, boolean empty) {
         super.updateItem(item, empty);
-
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
@@ -197,9 +198,20 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 this.writeAccess();
             }
 
+            changeColours();
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+    }
+
+    /**
+     * Method that changes the lists according to the customizations of the user
+     */
+    private void changeColours(){
+        root.setStyle("-fx-background-color: " + cardData.board.listColour);
+        title.setStyle("-fx-text-fill: " + cardData.board.listFont);
+        list.setStyle("-fx-background-color: derive(" + cardData.board.listColour +", +60%)" +
+                      ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
 //    /**

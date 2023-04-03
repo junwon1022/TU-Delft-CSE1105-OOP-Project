@@ -26,6 +26,7 @@ public class TagCtrl extends ListCell<Tag> {
 
     @FXML
     private Button removeTag;
+
     @FXML
     private Label nameLabel;
 
@@ -33,8 +34,10 @@ public class TagCtrl extends ListCell<Tag> {
 
     @FXML
     private HBox root;
+
     @FXML
     private Label renameTagDisabled;
+
     @FXML
     private Label deleteTagDisabled;
 
@@ -83,6 +86,7 @@ public class TagCtrl extends ListCell<Tag> {
             nameLabel.setText(item.name);
             tag = item;
             root.setStyle("-fx-background-color: " + tag.colour + ";");
+            nameLabel.setStyle("-fx-text-fill: " + tag.font + ";");
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
@@ -153,15 +157,17 @@ public class TagCtrl extends ListCell<Tag> {
             controller.initialize(tag);
 
             Stage stage = new Stage();
-            stage.setTitle("Rename a tag");
-            stage.setScene(new Scene(root, 300, 200));
+            stage.setTitle("Edit Tag");
+            stage.setScene(new Scene(root, 500, 270));
             stage.showAndWait();
 
             if (controller.success) {
                 String newName = controller.storedText;
-
-                //method that actually renames the list in the database
-                server.renameTag(tag, newName);
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
+                Tag newTag = new Tag(newName, backgroundColor, fontColor, tag.board, tag.cards);
+                // method that actually edits the tag in the database
+                server.updateTag(tag, newTag);
                 board.refresh();
             }
         } catch (IOException e) {

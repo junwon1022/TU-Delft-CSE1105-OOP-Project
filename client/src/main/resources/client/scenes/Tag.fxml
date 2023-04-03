@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="170.0" spacing="5.0" styleClass="tag-hbox" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="170.0" spacing="5.0" styleClass="tag-hbox" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane>
          <children>
             <Label fx:id="renameTagDisabled" onMouseClicked="#showReadOnlyMessage" prefHeight="28.0" prefWidth="31.0" visible="false" />
-            <Button id="rename-tag" fx:id="renameTag" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="10.0" layoutY="9.0" minHeight="1.0" minWidth="1.0" mnemonicParsing="false" onAction="#renameTag" prefHeight="12.0" prefWidth="13.0" styleClass="rename" stylesheets="@../../styles.css">
+            <Button id="rename-tag" fx:id="renameTag" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" minHeight="1.0" minWidth="1.0" mnemonicParsing="false" onAction="#renameTag" prefHeight="12.0" prefWidth="13.0" styleClass="rename" stylesheets="@../../styles.css">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -23,11 +23,11 @@
             </Button>
          </children>
       </AnchorPane>
-      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="110.0" text="Tag" />
+      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" wrapText="true" HBox.hgrow="ALWAYS" />
       <AnchorPane prefHeight="35.0" prefWidth="19.0">
          <children>
             <Label fx:id="deleteTagDisabled" layoutX="9.0" onMouseClicked="#showReadOnlyMessage" prefHeight="35.0" prefWidth="21.0" visible="false" />
-            <Button id="delete-list" fx:id="removeTag" layoutX="11.0" layoutY="9.0" mnemonicParsing="false" onAction="#remove" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+            <Button id="delete-list" fx:id="deleteTag" mnemonicParsing="false" onAction="#remove" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
                <font>
                   <Font name="Corbel Bold" size="13.0" />
                </font>
@@ -39,6 +39,6 @@
       </AnchorPane>
    </children>
    <padding>
-      <Insets left="3.0" right="4.0" />
+      <Insets left="10.0" right="10.0" />
    </padding>
 </HBox>

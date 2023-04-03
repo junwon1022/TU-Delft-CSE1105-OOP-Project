@@ -1,23 +1,17 @@
 package client.scenes;
 
-
-import client.utils.ServerUtils;
+import client.Main;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class ConnectCtrl {
 
+    private Main main;
 
     @FXML
     private AnchorPane root;
@@ -28,9 +22,8 @@ public class ConnectCtrl {
     @FXML
     private TextField field;
 
-
     @FXML
-    private TextField adminField;
+    private PasswordField adminField;
 
     @FXML
     private Button connect;
@@ -43,19 +36,14 @@ public class ConnectCtrl {
     @FXML
     private Label nullTitle;
 
-    private ServerUtils server;
-
     private final MainCtrl mainCtrl;
 
     /**
      * Create a new ConnectCtrl
-     * @param server
      * @param mainCtrl
      */
     @Inject
-    public ConnectCtrl(ServerUtils server, MainCtrl mainCtrl) {
-
-        this.server = server;
+    public ConnectCtrl( MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 
@@ -90,19 +78,15 @@ public class ConnectCtrl {
      */
     public void connectToMainScreen(ActionEvent event) throws Exception {
         try {
-            server.changeServer(field.getText());
-            mainCtrl.showMainScreen();
+            mainCtrl.showMainScreen(field.getText());
+            field.setText("");
         }
         catch(Exception e) {
-            try {
-                server.changeServer("http://localhost:8080");
-                nullTitle.setText(e.getMessage());
-            }
-            catch (IOException a) {
-                nullTitle.setText(e.getMessage());
-            }
+            mainCtrl.changeServer("http://localhost:8080");
+            nullTitle.setText(e.getMessage());
         }
     }
+
     /**
      * Enters the standard server (8080) and shows the MainScreen
      * Creates a new window (MainScreen)
@@ -112,9 +96,7 @@ public class ConnectCtrl {
      * @return
      */
     public void connectDefault(ActionEvent event) throws Exception {
-
-        server.changeServer("http://localhost:8080");
-        mainCtrl.showMainScreen();
+        mainCtrl.showMainScreen("http://localhost:8080");
     }
 
     /**
@@ -127,36 +109,18 @@ public class ConnectCtrl {
      */
     public void connectAdmin(ActionEvent event) throws Exception {
         if(adminField.getText().equals("admin")) {
-            if(field.getText().equals("")) mainCtrl.showAdmin();
-
-            else{
+            if(field.getText().equals(""))
+                nullTitle.setText("Please enter a server.");
+            else {
                 try {
-                    server.changeServer(field.getText());
-                    mainCtrl.showAdmin();
+                    mainCtrl.showAdmin(field.getText());
                 }
-                catch(Exception e){
-                    FXMLLoader fxmlLoader =
-                            new FXMLLoader(getClass().getResource("Exception.fxml"));
-                    try {
-                        Parent root = fxmlLoader.load();
-                        server.changeServer("http://localhost:8080");
-                        Stage stage = new Stage();
-                        stage.setTitle(e.getMessage());
-                        stage.setScene(new Scene(root, 300, 200));
-                        stage.showAndWait();
-
-                    } catch (IOException a) {
-                        nullTitle.setText(a.getMessage());
-                    }
+                catch(Exception e) {
+                    nullTitle.setText(e.getMessage());
                 }
-
-
-
-
             }
-
         }
-        else nullTitle.setText("Admin Password Wrong");
+        else nullTitle.setText("You have entered incorrect password. Please try again!");
     }
 }
 

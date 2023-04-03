@@ -44,8 +44,8 @@ public class ListOfCardsTest {
         checkListItem2 = new CheckListItem("Do Y", false, card1);
         checklist = List.of(checkListItem1, checkListItem2);
 
-        tag1 = new Tag("urgent", "#ff00ff", board, new HashSet<Card>());
-        tag2 = new Tag("math", "#ffff00", board, new HashSet<Card>());
+        tag1 = new Tag("urgent", "#ff00ff",  "#ffff00", board, new HashSet<Card>());
+        tag2 = new Tag("math", "#ffff00",  "#ffff00", board, new HashSet<Card>());
         tags = Set.of(tag1, tag2);
 
         palettes = new HashSet<>();

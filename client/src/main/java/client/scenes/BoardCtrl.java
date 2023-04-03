@@ -43,6 +43,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Line;
+
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
@@ -61,6 +63,12 @@ public class BoardCtrl {
     int adminFlag;
 
     private String boardKey;
+
+    @FXML
+    private Line line;
+
+    @FXML
+    private Line line2;
 
     @FXML
     private Label copied;
@@ -89,6 +97,9 @@ public class BoardCtrl {
     private TextField joinField;
 
     @FXML
+    private Button addTag;
+
+    @FXML
     private ListView tagList;
 
     @FXML
@@ -111,7 +122,14 @@ public class BoardCtrl {
     @FXML
     private Label addTagDisabled;
 
+    @FXML
+    private Button customization;
+
+    @FXML
+    private AnchorPane boardAnchor;
+
     ObservableList<ListOfCards> listOfCards;
+
     ObservableList<Tag> tags;
 
     private Board board;
@@ -136,31 +154,39 @@ public class BoardCtrl {
         this.server = server;
         this.boardKey = boardKey;
         this.mainCtrl = mainCtrl;
+
+        listOfCards = FXCollections.observableArrayList();
+        tags = FXCollections.observableArrayList();
         initialize();
     }
-
 
     /**
      * Initialize the scene.
      */
     public void initialize() {
+        boolean haveBoard = false;
         try {
             board = this.server.getBoardByKey(boardKey);
-            System.out.println("This Board is " + board.toString());
             if(board == null) System.out.println("BOARD IS NULL");
+            haveBoard = true;
 
             listOfCards = FXCollections.observableArrayList();
-            tags = FXCollections.observableArrayList();
             list.setFixedCellSize(0);
             list.setItems(listOfCards);
             list.setCellFactory(lv -> new ListOfCardsCtrl(server, this));
-            list.setMaxHeight(600);
             list.setStyle("-fx-background-color: " + board.colour);
             key.setText(board.key);
             title.setText(board.title);
             title.setStyle("-fx-text-fill: " + board.font);
 
-            if(adminFlag == 0) {
+            tags = FXCollections.observableArrayList();
+            loadTagList();
+
+            if (haveBoard) {
+                prefs.addBoard(server.getServerAddress(), board);
+            }
+
+            if(adminFlag == 0)  {
                 recentBoardsData = FXCollections.observableList
                         (prefs.getBoards(server.getServerAddress()));
             } else {
@@ -170,25 +196,33 @@ public class BoardCtrl {
                         (x.title, x.key, x.password, x.font, x.colour))
                         .collect(Collectors.toList()));
             }
-            recentBoards.setFixedCellSize(0);
-            recentBoards.setItems(recentBoardsData);
-            recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
-            recentBoards.setMaxHeight(600);
+            loadRecentBoards();
             AnchorPane.setBottomAnchor(addTagPane, 5.0);
             AnchorPane.setRightAnchor(addTagPane,
                     (anchorPane.getWidth() - addTagPane.getWidth()) / 2);
-            loadRecentBoards();
+
             refresh();
             handleSecurityLevel();
+
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists)
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
                 Platform.runLater(() -> listOfCards.setAll(s.lists));
+                Platform.runLater(() -> tags.setAll(s.tags));
             });
-        }
-        catch(Exception e){
+        } catch(Exception e) {
             board = getNewBoard();
         }
+    }
+
+
+    /**
+     * Method that changes the colours of the board, title and key
+     */
+    private void changeColours() {
+        list.setStyle("-fx-background-color: " + board.colour);
+        title.setStyle("-fx-text-fill: " + board.font);
+        key.setStyle("-fx-text-fill: " + board.font);
     }
 
     /**
@@ -291,7 +325,7 @@ public class BoardCtrl {
      */
     public void refresh() {
         //the method call of getListsInBoard will be with the board parameter
-        var serverData = server.getListsInBoard(board.id);
+        var serverData = server.getLists(board.id);
         listOfCards.setAll(serverData);
         //the method call of getTagsInBoard will be with the board parameter
         var serverDataTags = server.getTagsInBoard(board.id);
@@ -302,6 +336,12 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
+        recentBoards.setItems(recentBoardsData);
+        recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
+        recentBoards.setFixedCellSize(0);
+        recentBoards.setMaxHeight(600);
+
         // set the VBox to always grow to fill the AnchorPane
         recentBoards.setPrefHeight(Region.USE_COMPUTED_SIZE);
         recentBoards.setPrefWidth(Region.USE_COMPUTED_SIZE);
@@ -320,11 +360,11 @@ public class BoardCtrl {
      * Loads the list to auto-fit its parent
      */
     public void loadTagList() {
-        tagList.setFixedCellSize(0);
         tagList.setItems(tags);
         tagList.setCellFactory(lv -> new TagCtrl(server, this));
-        tagList.setMaxHeight(400);
         tagList.getStylesheets().add("styles.css");
+        tagList.setFixedCellSize(0);
+        tagList.setMaxHeight(400);
 
         // set the tagList to always grow to fill the AnchorPane
         tagList.setPrefHeight(Region.USE_COMPUTED_SIZE);
@@ -338,7 +378,6 @@ public class BoardCtrl {
         AnchorPane.setLeftAnchor(tagList, 0.0);
         AnchorPane.setRightAnchor(tagList, 0.0);
     }
-
 
     /**
      * Opens a new window to add a new list of cards.
@@ -390,15 +429,17 @@ public class BoardCtrl {
             stage.setTitle("Add a new tag");
             Scene addTagScene = new Scene(root);
             addTagScene.getStylesheets().add("styles.css");
-            stage.setHeight(240);
-            stage.setWidth(320);
+            stage.setHeight(320);
+            stage.setWidth(510);
             stage.setScene(addTagScene);
             stage.showAndWait();
 
             if (controller.success) {
                 String name = controller.storedText;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
 
-                Tag tag = getTag(name);
+                Tag tag = getTag(name, backgroundColor, fontColor);
                 Tag addedTag = server.addTag(tag);
                 System.out.println(addedTag);
 
@@ -442,9 +483,6 @@ public class BoardCtrl {
         copied.setVisible(true);
         PauseTransition delay = new PauseTransition(Duration.seconds(4));
         delay.setOnFinished(e -> copied.setVisible(false));
-//        tooltip.show(copyButton, copyButton.getLayoutX() + 200, copyButton.getLayoutY() + 80);
-//        tooltip.setAnchorX(Window.getWindows().get(0).getWidth() * 0.97);
-//        tooltip.setAnchorY(Window.getWindows().get(0).getHeight() * 0.15);
         delay.play();
     }
 
@@ -463,10 +501,9 @@ public class BoardCtrl {
      * Goes back to overview
      * @param event - Key event when the user clicks the mouse + /
      */
-    public void goToOverview(ActionEvent event) {
-
-        if(adminFlag == 0) mainCtrl.showMainScreen();
-        else mainCtrl.showAdmin();
+    public void goToOverview(ActionEvent event) throws Exception {
+        if(adminFlag == 0) mainCtrl.showMainScreen(server.getServerAddress());
+        else mainCtrl.showAdmin(server.getServerAddress());
     }
 
     /**
@@ -487,12 +524,34 @@ public class BoardCtrl {
     }
 
     /**
-     * Method that creates a new list of cards in the board
+     * Method that returns a list
      * @param title
-     * @return the new list
+     * @return a new list
      */
-    private ListOfCards getList(String title){
+    private ListOfCards getList(String title) {
         return new ListOfCards(title, board, new ArrayList<>());
+    }
+
+    /**
+     * Method that opens the customization window
+     * @param event
+     */
+    public void openCustomization(ActionEvent event){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Customization.fxml"));
+        try {
+
+            CustomizationCtrl customizationCtrl = new CustomizationCtrl(server,this, board);
+            fxmlLoader.setController(customizationCtrl);
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Customization of board");
+            stage.setScene(new Scene(root, 686, 527));
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        board = server.getBoard(board.id);
+        changeColours();
     }
 
     /**
@@ -548,6 +607,40 @@ public class BoardCtrl {
                     mainCtrl.showBoard(joinField.getText(), adminFlag);
                     joinField.clear();
                     nullTitle.setText("");
+                } else throw new Exception("Doesn't Exist");
+            } catch(Exception e) {
+                if (joinField.getText() == null || joinField.getText().length() == 0) {
+                    nullTitle.setText("Please enter a key!");
+                } else {
+                    nullTitle.setText("There is no board with this key!");
+                }
+                joinField.clear();
+            }
+        }
+    }
+
+    /**
+     * Redirects to connect to server screen
+     * @param event - on click of button disconnect
+     */
+    public void disconnect(ActionEvent event) {
+        mainCtrl.showConnect();
+    }
+
+    /**
+     * Getter for a line in the board design
+     * @return a ref to the line
+     */
+    public Line getLine() {
+        return line;
+    }
+
+    /**
+     * Getter for a line in the board design
+     * @return a ref to the line
+     */
+    public Line getLine2() {
+        return line2;
                 } else throw new Exception("Doesn't Exist");
             } catch (Exception e) {
                 if (joinField.getText() == null || joinField.getText().length() == 0) {
@@ -688,12 +781,15 @@ public class BoardCtrl {
         return isUnlocked;
     }
 
+
     /**
-     * Makes a new tag
+     * Creates a new tag
      * @param name
+     * @param backgroundColor
+     * @param fontColor
      * @return
      */
-    private Tag getTag(String name) {
-        return new Tag(name, "#00B4D8", board, new HashSet<>());
+    private Tag getTag(String name, String backgroundColor, String fontColor) {
+            return new Tag(name, backgroundColor, fontColor, board, new HashSet<>());
     }
 }
