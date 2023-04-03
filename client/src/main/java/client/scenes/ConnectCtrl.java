@@ -115,7 +115,7 @@ public class ConnectCtrl {
 
             else {
                 try {
-                    mainCtrl.showAdmin("http://localhost:8080");
+                    mainCtrl.showAdmin(field.getText());
                 }
                 catch(Exception e) {
                     nullTitle.setText(e.getMessage());
