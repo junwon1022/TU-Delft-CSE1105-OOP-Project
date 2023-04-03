@@ -415,7 +415,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             Card oldCard = cardData.cards.get(count-1);
             System.out.println("This card is " + thisCard.title);
 
-            for(ListOfCards l : board.data){
+            for(ListOfCards l : board.listOfCards){
 
                 for(Card card: l.cards){
                     if(card.selected) card.selected = false;
@@ -437,20 +437,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 c.getRoot().setStyle("-fx-background-color: #00B4D8;" +
                     " -fx-border-radius: 20;" +
                     " -fx-background-radius: 20;");
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ListOfCards.fxml"));
-            try {
-                fxmlLoader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            data = FXCollections.observableArrayList();
-
-            list.setItems(data);
-            list.setCellFactory(param -> new CardCtrl(server, board, this));
-
-
 
 
 
