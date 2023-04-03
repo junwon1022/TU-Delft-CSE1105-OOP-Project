@@ -24,7 +24,6 @@ import java.util.HashSet;
 
 public class MainScreenCtrl {
 
-
     @FXML
     private AnchorPane root;
 
@@ -180,11 +179,15 @@ public class MainScreenCtrl {
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
-
     }
 
-
-
+    /**
+     * Redirects to connect to server screen
+     * @param event - on click of button disconnect
+     */
+    public void disconnect(ActionEvent event) {
+        mainCtrl.showConnect();
+    }
 }
 
 

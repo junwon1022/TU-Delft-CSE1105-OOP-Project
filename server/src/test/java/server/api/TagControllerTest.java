@@ -68,7 +68,6 @@ public class TagControllerTest {
         controller = new TagController(
                 service,
                 cardService,
-                listOfCardsService,
                 boardService,
                 simpMessagingTemplate);
 

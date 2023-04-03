@@ -1,6 +1,5 @@
 package client.scenes;
 
-
 import client.Main;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
@@ -80,6 +79,7 @@ public class ConnectCtrl {
     public void connectToMainScreen(ActionEvent event) throws Exception {
         try {
             mainCtrl.showMainScreen(field.getText());
+            field.setText("");
         }
         catch(Exception e) {
             mainCtrl.changeServer("http://localhost:8080");

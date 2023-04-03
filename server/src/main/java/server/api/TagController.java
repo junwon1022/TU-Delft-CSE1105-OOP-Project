@@ -20,8 +20,6 @@ public class TagController {
 
     private final CardService cardService;
 
-    private final ListOfCardsService listOfCardsService;
-
     private final BoardService boardService;
 
     @Autowired
@@ -32,17 +30,14 @@ public class TagController {
      *
      * @param tagService
      * @param cardService
-     * @param listOfCardsService
      * @param boardService
      * @param simpMessagingTemplate
      */
     @Autowired
-    public TagController(TagService tagService, CardService cardService,
-                         ListOfCardsService listOfCardsService, BoardService boardService,
+    public TagController(TagService tagService, CardService cardService, BoardService boardService,
                          SimpMessagingTemplate simpMessagingTemplate) {
         this.tagService = tagService;
         this.cardService = cardService;
-        this.listOfCardsService = listOfCardsService;
         this.boardService = boardService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
