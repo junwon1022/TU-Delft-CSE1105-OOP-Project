@@ -41,7 +41,9 @@ public class Card {
     @ManyToOne()
     @JoinColumn(name = "list_id")
     public ListOfCards list;
+
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("order asc")
     public List<CheckListItem> checklist = new ArrayList<>();
 
     @ManyToMany

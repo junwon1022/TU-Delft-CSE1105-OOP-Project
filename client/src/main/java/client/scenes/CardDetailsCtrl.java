@@ -111,6 +111,7 @@ public class CardDetailsCtrl{
             if (text.isEmpty()) {
                 text = " ";
                 descriptionText.setText(text);
+                text = descriptionText.getText();
             }
             server.updateDescription(card, text);
             board.refresh();
@@ -123,6 +124,7 @@ public class CardDetailsCtrl{
      */
     public void exitDetails(ActionEvent event){
         Stage stage = (Stage) scenePane.getScene().getWindow();
+        cardCtrl.setOpen(false);
         stage.close();
     }
 
@@ -145,9 +147,9 @@ public class CardDetailsCtrl{
         if (text.isEmpty()) {
             text = " ";
             descriptionText.setText(text);
+            text = descriptionText.getText();
         }
         server.updateDescription(card, text);
-        cardCtrl.getDescription().setVisible(!server.getDescription(card).trim().equals(""));
         board.refresh();
     }
 
@@ -178,6 +180,9 @@ public class CardDetailsCtrl{
             CheckListItem addedCheckListItem = server.addChecklist(checkListItem);
             checkListItem.id = addedCheckListItem.id;
             data.add(addedCheckListItem);
+            int completed = cardCtrl.getCompleted();
+            int total = cardCtrl.getTotal();
+            cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
 
@@ -189,6 +194,14 @@ public class CardDetailsCtrl{
      */
     public void removeChecklist(CheckListItem checkListItem) {
         data.remove(checkListItem);
+        int completed = cardCtrl.getCompleted();
+        int total = cardCtrl.getTotal();
+        if(checkListItem.completed){
+            cardCtrl.setProgressText(completed-1,total-1);
+        }
+        else{
+            cardCtrl.setProgressText(completed,total-1);
+        }
     }
 
     /**
@@ -199,6 +212,7 @@ public class CardDetailsCtrl{
     private CheckListItem createCheckList(String description) {
         CheckListItem checkListItem = new CheckListItem(
                 description,
+                data.size(),
                 false,
                 card);
         return checkListItem;
@@ -217,9 +231,24 @@ public class CardDetailsCtrl{
      * @param checklist
      */
     public void setChecklists(List<CheckListItem> checklist) {
+        int total = 0;
+        int completed = 0;
         for(int i = 0; i<checklist.size(); i++){
             data.add(checklist.get(i));
+            if(checklist.get(i).completed){
+                completed++;
+            }
+            total++;
         }
+        cardCtrl.setProgressText(completed,total);
+    }
+
+    /**
+     * Gets the card controller for this card details
+     * @return the card controller
+     */
+    public CardCtrl getCardCtrl() {
+        return this.cardCtrl;
     }
 
     /**
@@ -233,5 +262,28 @@ public class CardDetailsCtrl{
                 data.get(i).text = addedChecklist.text;
             }
         }
+    }
+
+    /**
+     * returns the reference to the list of checklists
+     * of this card
+     * @return the reference of the list
+     */
+    public ObservableList<CheckListItem> getCheckListArray() {
+        return this.data;
+    }
+
+    /**
+     * swaps the checklists on the two provided indexes
+     * @param oldIdx index of the dragged checklist
+     * @param newIdx index of the dragged onto checklist
+     */
+    public void swapChecklists(int oldIdx, int newIdx){
+        server.updateChecklists(card, oldIdx, newIdx);
+        CheckListItem temp = data.get(oldIdx);
+        data.set(oldIdx, data.get(newIdx));
+        data.set(newIdx, temp);
+
+        board.refresh();
     }
 }

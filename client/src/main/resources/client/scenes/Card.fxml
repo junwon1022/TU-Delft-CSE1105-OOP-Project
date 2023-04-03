@@ -36,7 +36,7 @@
             <ColorAdjust brightness="-0.22" />
          </effect>
       </Button>
-            <ImageView fx:id="description" fitHeight="33.0" fitWidth="14.0" layoutX="10.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="image">
+            <ImageView fx:id="description" fitHeight="24.0" fitWidth="14.0" layoutX="10.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="image">
                 <image>
                     <Image url="@../../description-icon.png" />
                 </image>
@@ -53,7 +53,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Label fx:id="progressText" layoutX="70.0" layoutY="44.0" prefHeight="17.0" prefWidth="83.0" />
+      <Label fx:id="progressText" alignment="CENTER" layoutX="27.0" layoutY="44.0" prefHeight="17.0" prefWidth="27.0" style="-fx-font-family: bold;" />
     </children>
    <cursor>
       <Cursor fx:constant="HAND" />
