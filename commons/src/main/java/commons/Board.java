@@ -3,8 +3,7 @@ import javax.persistence.*;
 import java.security.SecureRandom;
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -52,7 +51,6 @@ public class Board {
 
     @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<Tag> tags;
-
 
 
     /**
@@ -244,6 +242,35 @@ public class Board {
         return null;
 
     }
+
+    /**
+     * Getter for palettes
+     * @return the set of all palettes of a board
+     */
+    public Set<Palette> getPalettes() {
+        return palettes;
+    }
+
+    /**
+     * Method that sets all palettes for a board
+     * @param palettes the palettes that need to be added
+     */
+    public void setPalettes(Set<Palette> palettes) {
+        this.palettes = palettes;
+    }
+
+    /**
+     * Method that gets the default palette of a board
+     * @return a palette
+     */
+    @JsonIgnore
+    public Palette getDefaultPalette(){
+        for(Palette p: palettes)
+            if(p.isDefault)
+                return p;
+        return null;
+    }
+
 
     /**
      * Check if two boards are equal

@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,11 +59,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     @FXML
     private Button hideCard;
 
-    private ObservableList<Card> data;
+    private ObservableList<Card> cards;
 
 
     /**
-     * Create a new CardListCtrl
+     * Create a new ListOfCardsCtrl
      * @param server The server to use
      * @param board The board this CardList belongs to
      */
@@ -78,12 +79,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             throw new RuntimeException(e);
         }
 
-        data = FXCollections.observableArrayList();
+        cards = FXCollections.observableArrayList();
 
-        list.setItems(data);
+        list.setItems(cards);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
-
-        list.getStylesheets().add("styles.css");
 
         setOnDragOver(this::handleDragOver);
         setOnDragDropped(this::handleDragDropped);
@@ -114,7 +113,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             long dbListId = Long.decode(strings[1]);
 
             List<Card> draggedList = null;
-            for (ListOfCards loc: this.board.data)
+            for (ListOfCards loc : this.board.listOfCards)
                 if (loc.id == dbListId)
                     draggedList = loc.cards;
 
@@ -123,6 +122,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 if (c.id == dbCardId)
                     draggedCard = c;
 
+            draggedCard.palette.cards.remove(this);
+            draggedCard.palette = null;
             server.removeCard(draggedCard);
 
             draggedCard.list = this.cardData;
@@ -138,25 +139,35 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
      * @param item The new item for the cell.
-     * @param empty whether or not this cell represents data from the list. If it
+     * @param empty whether this cell represents data from the list. If it
      *        is empty, then it does not represent any domain data, but is a cell
      *        being used to render an "empty" row.
      */
     @Override
     protected void updateItem(ListOfCards item, boolean empty) {
         super.updateItem(item, empty);
-
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
             title.setText(item.title);
-            data.setAll(item.cards);
+            cards.setAll(item.cards);
             cardData = item;
 
+            changeColours();
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+    }
+
+    /**
+     * Method that changes the lists according to the customizations of the user
+     */
+    private void changeColours(){
+        root.setStyle("-fx-background-color: " + cardData.board.listColour);
+        title.setStyle("-fx-text-fill: " + cardData.board.listFont);
+        list.setStyle("-fx-background-color: derive(" + cardData.board.listColour +", +60%)" +
+                      ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
     /**
@@ -370,7 +381,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 "red",
                 cardData,
                 new ArrayList<>(),
-                null,
+                new HashSet<>(),
                 null);
         card.order = cardData.cards.size();
         return card;
@@ -422,4 +433,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
         hideButtonKeyboard(event);
     }
+
+
 }

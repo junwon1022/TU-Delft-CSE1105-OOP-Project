@@ -61,9 +61,9 @@ public class TagTest {
         cards.add(card1);
         cards.add(card2);
 
-        tag = new Tag("urgent", "#ff00ff", board, cards);
-        tag2 = new Tag("urgent", "#ff00ff",board, cards);
-        tag3 = new Tag("oopp", "#00ff00",board, cards);
+        tag = new Tag("urgent", "#ff00ff",  "#ffff00", board, cards);
+        tag2 = new Tag("urgent", "#ff00ff", "#ffff00", board, cards);
+        tag3 = new Tag("oopp", "#00ff00", "#ffff00", board, cards);
     }
 
     /**

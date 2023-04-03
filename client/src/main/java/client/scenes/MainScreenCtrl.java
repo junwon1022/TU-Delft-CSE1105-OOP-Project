@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class MainScreenCtrl {
-
 
     @FXML
     private AnchorPane root;
@@ -165,26 +165,40 @@ public class MainScreenCtrl {
                 String password = controller.password;
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
-                System.out.println("The title is "+ title);
+                System.out.println("The title is " + title);
 
-                Board board = new Board(title,backgroundColor,fontColor,"" ,
-                        "" , password, new ArrayList<>(), new HashSet<>(), null);
+                Board board = new Board(title,backgroundColor,fontColor,"#111111" ,
+                        "#ffffff" , password, new ArrayList<>(), new HashSet<>(), new HashSet<>());
 
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);
                 prefs.addBoard(server.getServerAddress(), newBoard);
-
                 refresh();
+                setPalette(newBoard);
             }
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
-
     }
 
+    /**
+     * Method that sets a palette
+     * @param board
+     */
+    private void setPalette(Board board){
+        Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
+                true, board, new HashSet<>());
+        defaultPalette.id = server.addPalette(board.id, defaultPalette).id;
+    }
 
-
+    /**
+     * Redirects to connect to server screen
+     * @param event - on click of button disconnect
+     */
+    public void disconnect(ActionEvent event) {
+        mainCtrl.showConnect();
+    }
 }
 
 

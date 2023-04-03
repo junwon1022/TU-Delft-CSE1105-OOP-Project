@@ -82,11 +82,8 @@ public class Main extends Application {
         var adminScreen = FXML.load(AdminScreenCtrl.class,
              "client", "scenes", "AdminScreen.fxml");
 
-
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        //mainCtrl.initialize(primaryStage,connect);
+
         mainCtrl.initialize(primaryStage, board, connect, mainScreen, adminScreen);
     }
-
-
 }
