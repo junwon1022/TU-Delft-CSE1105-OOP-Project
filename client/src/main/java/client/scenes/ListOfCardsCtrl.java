@@ -400,7 +400,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param keyEvent the KeyEvent
      */
     public void handleSwitchCardFront(javafx.scene.input.KeyEvent keyEvent) {
-
         int count = 0;
         for(Card c : cardData.cards){
             count++;
@@ -409,39 +408,19 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 break;
             }
         }
-
         if(count < cardData.cards.size()){
             Card thisCard = cardData.cards.get(count);
             Card oldCard = cardData.cards.get(count-1);
             System.out.println("This card is " + thisCard.title);
-
             for(ListOfCards l : board.listOfCards){
-
                 for(Card card: l.cards){
                     if(card.selected) card.selected = false;
                     if(card.colour.equals("blue")) card.colour = "#00B4D8";
                 }
             }
-
             thisCard.selected = true;
             thisCard.colour = "blue";
-
-
-            CardCtrl c = new CardCtrl(server,board,this);
-                c.updateItem(thisCard,false);
-                System.out.println("This root is " + c.getRoot());
-                c.getRoot().setStyle("-fx-background-color: blue;" +
-                    " -fx-border-radius: 20;" +
-                    " -fx-background-radius: 20;");
-                c.updateItem(oldCard,false);
-                c.getRoot().setStyle("-fx-background-color: #00B4D8;" +
-                    " -fx-border-radius: 20;" +
-                    " -fx-background-radius: 20;");
-
-
-
         }
-
     }
 
     /**
