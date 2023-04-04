@@ -117,6 +117,8 @@ public class ServerUtils {
     List<Tag> serverDataTags = null;
     List<Tag> serverDataTagsInCard = null;
 
+    private List<Card> cardData = null;
+
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
 
@@ -304,8 +306,13 @@ public class ServerUtils {
      */
     public List<ListOfCards> getServerData(long boardId) {
         serverData = getLists(boardId);
-        for (var list: serverData)
+        for (var list: serverData) {
             list.cards.sort(Comparator.comparingLong(Card::getOrder));
+            cardData = getCards(list.id, boardId);
+            for(var card: cardData){
+                card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+            }
+        }
         return serverData;
     }
 
@@ -477,11 +484,15 @@ public class ServerUtils {
 
     /**
      * Method that gets the cards from the server from a certain list
+     * @param listId the id of the list
+     * @param boardId id of the board the list belongs to
      * @return a list of the cards
      */
-    public List<Card> getCards(){
+    public List<Card> getCards(long listId, long boardId){
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards") //
+                .resolveTemplate("list_id", listId) //
+                .resolveTemplate("board_id", boardId) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Card>>() {});
@@ -1016,6 +1027,27 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(completed, APPLICATION_JSON), CheckListItem.class);
+    }
+
+    /**
+     * Updates the checklist for a specific card and changes order
+     * values
+     * @param card the card to change the checklist on
+     * @param oldIdx index of the dragged checkListItem
+     * @param newIdx index of the dragged onto checkListItem
+     */
+    public void updateChecklists(Card card, int oldIdx, int newIdx) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/swap_checklist/old/{old_idx}/new/{new_idx}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .resolveTemplate("old_idx", oldIdx)
+                .resolveTemplate("new_idx", newIdx)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.json(""));
     }
 }
 
