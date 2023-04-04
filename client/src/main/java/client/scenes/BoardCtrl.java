@@ -179,7 +179,6 @@ public class BoardCtrl {
         try {
             board = this.server.getBoardByKey(boardKey);
             if(board == null) System.out.println("BOARD IS NULL");
-
             listOfCards = FXCollections.observableArrayList();
             list.setFixedCellSize(0);
             list.setItems(listOfCards);
@@ -208,12 +207,10 @@ public class BoardCtrl {
                     .filter(x -> x.getKey().equals(boardKey))
                     .collect(Collectors.toList())
                     .get(0);
-
             loadRecentBoards();
             loadTagList();
             refresh();
             handleSecurityLevel();
-
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists) {
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
