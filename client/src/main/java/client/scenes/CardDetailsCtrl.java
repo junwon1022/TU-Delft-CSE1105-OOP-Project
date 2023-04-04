@@ -214,6 +214,7 @@ public class CardDetailsCtrl{
                 description,
                 false,
                 card);
+        checkListItem.order = data.size();
         return checkListItem;
     }
 
