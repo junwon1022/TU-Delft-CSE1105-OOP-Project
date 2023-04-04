@@ -79,6 +79,10 @@ public class BoardCtrl {
 
     @FXML
     private Label key;
+
+    @FXML
+    private Accordion accordion;
+
     @FXML
     private Label title;
 
@@ -131,6 +135,9 @@ public class BoardCtrl {
 
     @FXML
     private AnchorPane boardAnchor;
+
+    @FXML
+    private TitledPane myBoards;
 
     ObservableList<ListOfCards> listOfCards;
 
@@ -186,12 +193,14 @@ public class BoardCtrl {
                 var boardList = prefs.getBoards(server.getServerAddress());
                 recentBoardsData = FXCollections.observableList(boardList);
                 addBoardToPrefs(boardList);
+                styleMyBoards();
             } else {
                 recentBoardsData = FXCollections.observableList
                     (server.getBoards().stream()
                         .map(x -> new PreferencesBoardInfo
                         (x.title, x.key, x.password, x.font, x.colour))
                         .collect(Collectors.toList()));
+                styleMyBoardsAdmin();
             }
             prefBoard = recentBoardsData
                     .stream()
@@ -213,6 +222,86 @@ public class BoardCtrl {
         } catch(Exception e) {
             board = getNewBoard();
         }
+    }
+
+    /**
+     * Style my boards for admin view
+     */
+    private void styleMyBoardsAdmin() {
+        myBoards.setText("All boards");
+        myBoards.lookup(".title").setStyle("-fx-background-color: #1fa401;" +
+                "-fx-border-color: #1fa401");
+        myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf6da;");
+        accordion.setOnMouseEntered(event -> {
+            accordion.lookup(" .titled-pane .title").setStyle(
+                "-fx-background-color: #E4F8FC;" +
+                "-fx-border-color: #1fa401;" +
+                "-fx-border-width: 1.5;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-border-radius: 10px;"
+            );
+            accordion.lookup(".titled-pane").setStyle(
+                    "-fx-text-fill: #1fa401"
+            );
+            accordion.lookup(".arrow").setStyle(
+                    "-fx-background-color: #1fa401;"
+            );
+        });
+        accordion.setOnMouseExited(event -> {
+            accordion.lookup(" .titled-pane .title").setStyle(
+                "-fx-background-color: #1fa401;" +
+                "-fx-border-color: #1fa401;" +
+                "-fx-border-width: 1.5;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-border-radius: 10px;"
+            );
+            accordion.lookup(".titled-pane").setStyle(
+                    "-fx-text-fill: #E4F8FC"
+            );
+            accordion.lookup(".arrow").setStyle(
+                    "-fx-background-color: #E4F8FC;"
+            );
+        });
+    }
+
+    /**
+     * Style my boards for user view
+     */
+    private void styleMyBoards() {
+        myBoards.setText("My boards");
+        myBoards.lookup(".title").setStyle("-fx-background-color: #00B4D8;" +
+                "-fx-border-color: #00B4D8");
+        myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf1f6;");
+        accordion.setOnMouseEntered(event -> {
+            accordion.lookup(" .titled-pane .title").setStyle(
+                "-fx-background-color: #E4F8FC;" +
+                "-fx-border-color: #00B4D8;" +
+                "-fx-border-width: 1.5;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-border-radius: 10px;"
+            );
+            accordion.lookup(".titled-pane").setStyle(
+                    "-fx-text-fill: #00B4D8"
+            );
+            accordion.lookup(".arrow").setStyle(
+                    "-fx-background-color: #00B4D8;"
+            );
+        });
+        accordion.setOnMouseExited(event -> {
+            accordion.lookup(" .titled-pane .title").setStyle(
+                "-fx-background-color: #00B4D8;" +
+                "-fx-border-color: #00B4D8;" +
+                "-fx-border-width: 1.5;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-border-radius: 10px;"
+            );
+            accordion.lookup(".titled-pane").setStyle(
+                    "-fx-text-fill: #E4F8FC"
+            );
+            accordion.lookup(".arrow").setStyle(
+                    "-fx-background-color: #E4F8FC;"
+            );
+        });
     }
 
 
@@ -350,7 +439,6 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
-        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
         recentBoards.setItems(recentBoardsData);
         recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
         recentBoards.setFixedCellSize(0);

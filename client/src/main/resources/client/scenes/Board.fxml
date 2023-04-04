@@ -136,9 +136,9 @@
                   <Font name="Corbel Italic" size="14.0" />
                </font>
             </Label>
-            <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
               <panes>
-                <TitledPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../styles.css" text="My Boards" wrapText="true">
+                <TitledPane fx:id="myBoards" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../styles.css" text="My Boards" wrapText="true">
                      <font>
                         <Font name="Corbel" size="19.0" />
                      </font>

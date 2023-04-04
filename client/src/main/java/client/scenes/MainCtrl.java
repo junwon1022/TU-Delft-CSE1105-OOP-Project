@@ -109,7 +109,7 @@ public class MainCtrl {
         primaryStage.setScene(boardOverview);
         primaryStage.setMaximized(true);
         updateLineEnd(boardCtrl.getLine(), 520);
-        updateLineEnd(boardCtrl.getLine2(), 140);
+        updateLineEnd(boardCtrl.getLine2(), 150);
 
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
