@@ -113,7 +113,7 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    List<ListOfCards> serverData = null;
+    public List<ListOfCards> serverData = null;
     List<Tag> serverDataTags = null;
     List<Tag> serverDataTagsInCard = null;
 
