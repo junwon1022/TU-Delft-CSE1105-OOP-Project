@@ -99,8 +99,9 @@ public class MainScreenCtrl {
     public void connectToBoard(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
-
-            if(server.getBoardByKey(joinField.getText()) != null) {
+            Board board = server.getBoardByKey(joinField.getText());
+            if(board != null) {
+                prefs.addBoard(server.getServerAddress(), board);
                 mainCtrl.showBoard(joinField.getText(),0);
                 joinField.clear();
                 nullTitle.setText("");
@@ -126,8 +127,9 @@ public class MainScreenCtrl {
         if(event.getCode().toString().equals("ENTER")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
-
-                if(server.getBoardByKey(joinField.getText()) != null) {
+                Board board = server.getBoardByKey(joinField.getText());
+                if(board != null) {
+                    prefs.addBoard(server.getServerAddress(), board);
                     mainCtrl.showBoard(joinField.getText(),0);
                     joinField.clear();
                     nullTitle.setText("");
