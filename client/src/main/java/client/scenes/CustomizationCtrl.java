@@ -101,6 +101,8 @@ public class CustomizationCtrl {
         this.server = server;
         this.boardCtrl = boardCtrl;
         this.board = board;
+        backgroundColor = board.colour;
+        fontColor = board.font;
     }
 
     /**
