@@ -84,7 +84,7 @@ public class CardCtrl extends ListCell<Card> {
         }
         board.refresh();
 
-        if(!board.isUnlocked()) { //TODO and user doesn't have it stored
+        if(!board.isUnlocked()) {
             this.readOnly();
         } else {
             this.writeAccess();
@@ -156,7 +156,7 @@ public class CardCtrl extends ListCell<Card> {
                 setColors(root, title);
             this.loadTags();
 
-            if(!board.isUnlocked()) { //TODO and user doesn't have it stored
+            if(!board.isUnlocked()) {
                 this.readOnly();
             } else {
                 this.writeAccess();

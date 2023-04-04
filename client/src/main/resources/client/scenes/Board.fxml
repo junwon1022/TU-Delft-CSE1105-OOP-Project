@@ -35,8 +35,7 @@
       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" spacing="10.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
-      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="815.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="54.0" prefWidth="815.0" spacing="10.0" GridPane.columnIndex="1">
          <children>
             <Label fx:id="title" maxHeight="1.7976931348623157E308" text="My Board" textFill="#231f20" HBox.hgrow="ALWAYS">
                <font>
@@ -45,8 +44,10 @@
             </Label>
             <AnchorPane>
                <children>
-                  <Button id="lock" fx:id="lock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#enterPassword" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" visible="false" />
-                  <Button id="unlock" fx:id="unlock" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" onAction="#unlockButtonClicked" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" visible="false" />
+                  <Button id="unlock" fx:id="unlock" layoutX="27.0" layoutY="19.0" mnemonicParsing="false" onAction="#unlockButtonClicked" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" visible="false" />
+                  <Button id="lock" fx:id="lock" layoutX="27.0" layoutY="19.0" mnemonicParsing="false" onAction="#enterPassword" prefHeight="34.0" prefWidth="23.0" styleClass="image-button" stylesheets="@../../styles.css" visible="false" />
+                  <Button fx:id="rename" layoutY="25.0" mnemonicParsing="false" onAction="#renameBoard" prefHeight="2.0" prefWidth="19.0" styleClass="rename" stylesheets="@../../styles.css" textFill="WHITE" />
+                  <Label fx:id="renameBoardDisabled" layoutX="-5.0" layoutY="17.0" onMouseClicked="#showReadOnlyMessage" prefHeight="34.0" prefWidth="23.0" visible="false" />
                </children>
             </AnchorPane>
             <Label fx:id="key" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="38.0" text="invite key" textAlignment="CENTER" textFill="#018198" HBox.hgrow="ALWAYS">
@@ -78,7 +79,7 @@
             <Insets />
          </opaqueInsets>
       </HBox>
-      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" spacing="10.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <VBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" spacing="10.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
          <children>
             <Line fx:id="line2" endX="127.33333587646484" startX="-100.0" strokeLineCap="ROUND" strokeWidth="4.0">
                <stroke>

@@ -173,7 +173,9 @@ public class MainScreenCtrl {
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);
-                prefs.addBoard(server.getServerAddress(), newBoard);
+                PreferencesBoardInfo prefBoard = prefs.addBoard
+                        (server.getServerAddress(), newBoard);
+                prefs.updateBoardPassword(server.getServerAddress(), prefBoard, newBoard.password);
                 refresh();
                 setPalette(newBoard);
             }

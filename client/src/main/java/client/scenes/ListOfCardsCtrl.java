@@ -207,7 +207,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Method that changes the lists according to the customizations of the user
      */
-    private void changeColours(){
+    private void changeColours() {
         root.setStyle("-fx-background-color: " + cardData.board.listColour);
         title.setStyle("-fx-text-fill: " + cardData.board.listFont);
         list.setStyle("-fx-background-color: derive(" + cardData.board.listColour +", +60%)" +

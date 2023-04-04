@@ -20,11 +20,12 @@ public class UserPreferences {
     }
 
     /**
-     * Adds a board
+     * Adds a board without its password
      * @param serverAddress the address of the server
      * @param board the board
+     * @return the board
      */
-    public void addBoard(String serverAddress, Board board) {
+    public PreferencesBoardInfo addBoard(String serverAddress, Board board) {
         String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
 
         try {
@@ -35,7 +36,7 @@ public class UserPreferences {
 
             PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title,
                     board.key,
-                    board.password,
+                    "",
                     board.font,
                     board.colour);
 
@@ -48,6 +49,7 @@ public class UserPreferences {
 
             String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
             prefs.put(serverAddress, newBoardListJson);
+            return currentBoard;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -155,6 +157,51 @@ public class UserPreferences {
                     board.getPassword(),
                     board.getFont(),
                     board.getBackgroundColor());
+
+            for(int i=0; i<boards.size(); i++) {
+                PreferencesBoardInfo b = boards.get(i);
+                if(board.equals(b)) {
+                    boards.set(i, newBoard);
+                }
+            }
+
+            PreferencesBoardList newBoardList = new PreferencesBoardList();
+            newBoardList.setInfo(boards);
+
+            String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
+            prefs.put(serverAddress, newBoardListJson);
+
+            return newBoard;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Method for updating the colors of a board
+     * @param serverAddress
+     * @param board
+     * @param backgroundColor
+     * @param fontColor
+     * @return the updated PreferencesBoardInfo
+     */
+    public PreferencesBoardInfo updateBoardColors(String serverAddress,
+                                                 PreferencesBoardInfo board,
+                                                 String backgroundColor,
+                                                  String fontColor) {
+        String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
+
+        try {
+            PreferencesBoardList boardList = objectMapper.readValue(boardListJson,
+                    PreferencesBoardList.class);
+
+            List<PreferencesBoardInfo> boards = boardList.getInfo();
+
+            PreferencesBoardInfo newBoard = new PreferencesBoardInfo(board.getTitle(),
+                    board.getKey(),
+                    board.getPassword(),
+                    fontColor,
+                    backgroundColor);
 
             for(int i=0; i<boards.size(); i++) {
                 PreferencesBoardInfo b = boards.get(i);

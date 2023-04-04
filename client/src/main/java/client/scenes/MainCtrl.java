@@ -32,12 +32,6 @@ public class MainCtrl {
 
     private Main main;
     private ServerUtils serverUtils;
-//
-//    private QuoteOverviewCtrl overviewCtrl;
-//    private Scene overview;
-//
-//    private AddQuoteCtrl addCtrl;
-//    private Scene add;
     private BoardCtrl boardCtrl;
     private Scene boardOverview;
     private ConnectCtrl connectCtrl;
@@ -46,9 +40,6 @@ public class MainCtrl {
     private Scene mainScreen;
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
-
-
-
 
     /**
      * Create a new MainCtrl.
@@ -69,8 +60,6 @@ public class MainCtrl {
         primaryStage.show();
 
     }
-
-
 
     /**
      * Create a new MainCtrl.
@@ -119,6 +108,8 @@ public class MainCtrl {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setMaximized(true);
+        updateLineEnd(boardCtrl.getLine(), 520);
+        updateLineEnd(boardCtrl.getLine2(), 140);
 
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage

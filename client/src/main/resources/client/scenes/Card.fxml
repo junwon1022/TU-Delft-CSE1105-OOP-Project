@@ -56,7 +56,4 @@
    <cursor>
       <Cursor fx:constant="HAND" />
    </cursor>
-   <padding>
-      <Insets bottom="5.0" />
-   </padding>
 </AnchorPane>
