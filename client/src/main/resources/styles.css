@@ -316,7 +316,12 @@
      -fx-background-image: url("add-checklist-hover.png");
 }
 
-#remove-checklist:hover {
+#removeChecklist {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e43838;
+}
+
+#removeChecklist:hover {
     -fx-text-fill: #000000;
 }
 
@@ -326,6 +331,16 @@
 
 #add-details-tag:hover {
     -fx-color: #249ec7;
+}
+
+#check-box {
+    -fx-color: #ADD8E6;
+}
+
+#check-box:hover {
+    -fx-color: #E0FFFF;
+    -fx-background-repeat: no-repeat;
+    -fx-cursor: hand;
 }
 
 .search {

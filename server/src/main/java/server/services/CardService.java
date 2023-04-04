@@ -171,4 +171,29 @@ public class CardService {
         cardRepository.save(card);
     }
 
+    /**
+     * Changes the order of the checklists in the database
+     * with respect to the oldIdx and newIdx that represent
+     * the checklist that was dragged and the checklist
+     * that was dragged onto respectively.
+     * @param cardId id of the card
+     * @param oldIdx old index
+     * @param newIdx new index
+     * @return the new card
+     * @throws Exception if getCardById returns null
+     */
+    public Card editCardChecklists(long cardId, int oldIdx, int newIdx) throws Exception {
+        Card card = getCardById(cardId);
+        if (oldIdx < newIdx) {
+            card.checklist.get(oldIdx).order = newIdx;
+            for (int i = oldIdx + 1; i <= newIdx; i++)
+                card.checklist.get(i).order = i - 1;
+        }
+        else {
+            card.checklist.get(oldIdx).order = newIdx;
+            for (int i = newIdx; i < oldIdx; i++)
+                card.checklist.get(i).order = i + 1;
+        }
+        return cardRepository.save(card);
+    }
 }

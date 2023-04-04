@@ -360,6 +360,29 @@ public class CardController {
         }
     }
 
+    @PutMapping(path = {"{card_id}/swap_checklist/old/{old_idx}/new/{new_idx}"})
+    private ResponseEntity<Card> updateChecklist(@PathVariable("board_id") long boardId,
+                                              @PathVariable("list_id") long listId,
+                                              @PathVariable("card_id") long cardId,
+                                                @PathVariable("old_idx") int oldIdx,
+                                                @PathVariable("new_idx") int newIdx){
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Card card = cardService.editCardChecklists(cardId, oldIdx, newIdx);
+            Board board = boardService.getBoardById(boardId);
+
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+
+            return ResponseEntity.ok().body(card);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Checks whether the path to a card is valid
      *

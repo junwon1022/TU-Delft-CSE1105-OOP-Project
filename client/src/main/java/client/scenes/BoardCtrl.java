@@ -21,6 +21,7 @@ import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.Card;
+import commons.CheckListItem;
 import commons.ListOfCards;
 import javafx.animation.*;
 import commons.Tag;
@@ -214,8 +215,12 @@ public class BoardCtrl {
             handleSecurityLevel();
 
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-                for (var list : s.lists)
+                for (var list : s.lists) {
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
+                    for(var card : list.cards) {
+                        card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+                    }
+                }
                 Platform.runLater(() -> listOfCards.setAll(s.lists));
                 Platform.runLater(() -> tags.setAll(s.tags));
             });
