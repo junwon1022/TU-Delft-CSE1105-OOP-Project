@@ -763,7 +763,7 @@ public class BoardCtrl {
             if (controller.success) {
                 String newTitle = controller.storedText;
                 title.setText(newTitle);
-                prefBoard = prefs.updateBoardTitle(server.getServerAddress(), prefBoard, newTitle);
+                server.renameBoard(board, newTitle);
                 System.out.println("New title after calling the command: "+ board.title);
                 refresh();
             }
