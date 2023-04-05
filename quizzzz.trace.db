@@ -674,3 +674,24 @@ Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection wa
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SLISTS" not found; SQL statement:
 SELECT * FROM SLISTS [42102-200]
 >>>>>>> ca572ab6e8c581beda475be28fe956bdd766fefc
+2023-04-04 21:48:24 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "CARD_TITLE VARCHAR(255)": "'{""id"":4,""title"":""werwer"",""background"":""#008080"",""font"":""#000000"",""isDefault"":false,""board"":{""id"":3,""title"":""234"",""colour"":""#ff0... (1035)"; SQL statement:
+update cards set card_colour=?, description=?, list_id=?, card_order=?, palette_id=?, card_title=? where card_id=? [22001-200]
+2023-04-04 21:49:36 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "CARD_TITLE VARCHAR(255)": "'{""id"":4,""title"":""werwer"",""background"":""#008080"",""font"":""#000000"",""isDefault"":false,""board"":{""id"":3,""title"":""234"",""colour"":""#ff0... (1035)"; SQL statement:
+update cards set card_colour=?, description=?, list_id=?, card_order=?, palette_id=?, card_title=? where card_id=? [22001-200]
+2023-04-04 21:57:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "CARD_TITLE VARCHAR(255)": "'{""id"":2,""title"":""default"",""background"":""#00B4D8"",""font"":""#000000"",""isDefault"":false,""board"":{""id"":2,""title"":""234"",""colour"":""#a2... (696)"; SQL statement:
+update cards set card_colour=?, description=?, list_id=?, card_order=?, palette_id=?, card_title=? where card_id=? [22001-200]
+2023-04-04 22:00:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "CARD_TITLE VARCHAR(255)": "'{""id"":3,""title"":""werwer"",""background"":""#e6ccff"",""font"":""#000000"",""isDefault"":false,""board"":{""id"":1,""title"":""3454"",""colour"":""#a2... (656)"; SQL statement:
+update cards set card_colour=?, description=?, list_id=?, card_order=?, palette_id=?, card_title=? where card_id=? [22001-200]
+2023-04-04 22:01:26 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "CARD_TITLE VARCHAR(255)": "'{""id"":3,""title"":""werwer"",""background"":""#e6ccff"",""font"":""#000000"",""isDefault"":false,""board"":{""id"":1,""title"":""3454"",""colour"":""#a2... (656)"; SQL statement:
+update cards set card_colour=?, description=?, list_id=?, card_order=?, palette_id=?, card_title=? where card_id=? [22001-200]
+2023-04-04 22:03:02 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "CARD_TITLE VARCHAR(255)": "'{""id"":1,""title"":""default"",""background"":""#00B4D8"",""font"":""#000000"",""isDefault"":false,""board"":{""id"":1,""title"":""3454"",""colour"":""#a... (659)"; SQL statement:
+update cards set card_colour=?, description=?, list_id=?, card_order=?, palette_id=?, card_title=? where card_id=? [22001-200]
+2023-04-05 09:03:24 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARD" not found; SQL statement:
+SELECT * FROM CARD [42102-200]

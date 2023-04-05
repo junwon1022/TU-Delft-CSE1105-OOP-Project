@@ -282,9 +282,6 @@ public class ServerUtils {
      * @return a list containing all lists of cards
      */
     public String checkServer(String serverUrl){
-        System.out.println("The Url is " + URLEncoder.encode(SERVER,StandardCharsets.UTF_8));
-
-
         try {
             return ClientBuilder.newClient(new ClientConfig())
                     .target(SERVER).path("/api/checkServer/")
@@ -579,11 +576,14 @@ public class ServerUtils {
 
     /**
      * Get a card from the server
+     * @param card
      * @return the card we need
      */
-    public Card getCard(){
+    public Card getCard(Card card){
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}") //
+                .target(SERVER).path("/api/boards/"+ card.list.board.id
+                        + "/lists/"+ card.list.id
+                        + "/cards/" + card.id)
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Card>() {});
@@ -1049,5 +1049,47 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.json(""));
     }
+
+    public Palette addCardToPalette(Card card, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/palettes/{palette_id}/addCard")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("palette_id", palette.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(card, APPLICATION_JSON), Palette.class);
+    }
+
+    public Palette getPalette(long boardId, long paletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes/" + paletteId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Palette>() {});
+    }
+
+    public Card addPaletteToCard(Card card, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/palette")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(palette, APPLICATION_JSON), Card.class);
+    }
+
+
+    public Palette changePaletteCards(Palette palette, long oldPaletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/palettes/{palette_id}/cards/")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("palette_id", palette.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(oldPaletteId, APPLICATION_JSON), Palette.class);
+    }
+
 }
 

@@ -283,7 +283,6 @@ public class BoardCtrl {
                 ListOfCards list = getList(title);
                 //server.addList(list);
                 ListOfCards addedList = server.addListOfCards(list);
-                System.out.println(addedList);
 
                 //change the id of the board locally
                 list.id = addedList.id;

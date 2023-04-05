@@ -154,7 +154,7 @@ public class CardService {
      * @param card
      * @param palette
      */
-    public void addPaletteToCard(Card card, Palette palette){
+    public void addPaletteToCard(Card card, Palette palette) throws Exception{
         card.palette = palette;
         cardRepository.save(card);
     }

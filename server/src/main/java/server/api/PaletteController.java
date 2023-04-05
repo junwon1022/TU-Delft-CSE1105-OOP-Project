@@ -284,4 +284,30 @@ public class PaletteController {
         }
     }
 
+    /**
+     * Method that gets the cards of a palette
+     * @param boardId
+     * @param paletteId
+     * @param oldPaletteId
+     * @return - the cards
+     */
+    @PutMapping(path = {"/{palette_id}/cards", "/{palette_id}/cards/"})
+    public ResponseEntity<Set<Card>> changeCardsOfPalette(@PathVariable("board_id") long boardId,
+                                                       @PathVariable("palette_id") long paletteId,
+                                                          @RequestBody long oldPaletteId){
+        try {
+            // Get the board
+            Board board = boardService.getBoardById(boardId);
+            if(board == null) return ResponseEntity.badRequest().build();
+            paletteService.changeOfPalette(paletteId, oldPaletteId);
+
+            Set<Card> cards = paletteService.getCardsOfPalette(paletteId);
+            // Return the board with an HTTP 200 OK status
+            return ResponseEntity.status(HttpStatus.OK).body(cards);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

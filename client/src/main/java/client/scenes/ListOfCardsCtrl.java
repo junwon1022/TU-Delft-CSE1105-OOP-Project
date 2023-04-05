@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
@@ -186,7 +187,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
-
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
             name.clear();
             name.setOpacity(0);
             addCardButton.setOpacity(0);
@@ -209,9 +211,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
-
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
             hideButton(event);
-
             board.refresh();
         } else {
             errorStyle();

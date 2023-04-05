@@ -126,24 +126,12 @@ public class CardCtrl extends ListCell<Card> {
             description.setVisible(updateDescriptionIcon(item.description));
             updateProgressText(item.checklist);
             card = item;
-            setPalette();
             if(card.palette != null)
                 setColors(root, title);
             this.loadTags();
-
-//            if(card.description == null || card.description.equals("")) {
-//                description.setVisible(false);
-//            }
-
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
-    }
-
-    private void setPalette(){
-        Palette p = card.list.board.getDefaultPalette();
-        if(p != null)
-            card.palette = p;
     }
 
     private void setColors(AnchorPane root, Label title){
@@ -428,6 +416,7 @@ public class CardCtrl extends ListCell<Card> {
             if(!card.checklist.isEmpty()){
                 cardDetailsCtrl.setChecklists(card.checklist);
             }
+            cardDetailsCtrl.setPreset();
             storeDetailsStage = detailsStage;
 
             Scene scene = new Scene(root);

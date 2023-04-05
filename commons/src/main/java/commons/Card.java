@@ -1,5 +1,4 @@
 package commons;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -54,7 +53,7 @@ public class Card {
     )
     public Set<Tag> tags = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "palette_id")
     public Palette palette;
 
@@ -112,6 +111,14 @@ public class Card {
             this.palette = palette;
             palette.cards.add(this);
         }
+    }
+
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    public void setPalette(Palette palette){
+        this.palette = palette;
     }
 
     /**
