@@ -153,7 +153,7 @@ public class BoardController {
             // Edit the board and save it in the database
             Board newBoard = boardService.editBoardTitle(boardId, newTitle);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out title update for board " + board.title + " to " + newTitle);
@@ -181,7 +181,7 @@ public class BoardController {
             // Edit the board and save it in the database
             Board newBoard = boardService.editBoardPassword(boardId, password);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out password update for board " + board.title);
@@ -207,7 +207,7 @@ public class BoardController {
             // Edit the board and save it in the database
             Board newBoard = boardService.removeBoardPassword(boardId);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out password removed updates for board " + board.title);
@@ -266,7 +266,7 @@ public class BoardController {
 
             Board newBoard = boardService.editBoardBackground(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out board background change for board " + board.title + " to " + colour);
@@ -293,7 +293,7 @@ public class BoardController {
 
             Board newBoard = boardService.editBoardFont(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out board color update for board " + board.title + " to " + colour);
@@ -317,9 +317,9 @@ public class BoardController {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
 
-            boardService.editListsBackground(boardId, colour);
+            Board newBoard = boardService.editListsBackground(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
 
             return ResponseEntity.ok(board);
         }
@@ -342,9 +342,9 @@ public class BoardController {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
 
-            boardService.editListsFont(boardId, colour);
+            Board newBoard = boardService.editListsFont(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
 
             return ResponseEntity.ok(board);
         }

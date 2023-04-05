@@ -218,21 +218,16 @@ public class BoardCtrl {
                         card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
                     }
                 }
+                Platform.runLater(() -> {
+                    board = s;
+                    this.title.setText(s.title);
+                    changeColours();
+                    handleSecurityLevel();
+                });
                 Platform.runLater(() -> listOfCards.setAll(s.lists));
                 Platform.runLater(() -> tags.setAll(s.tags));
             });
 
-            // listen for board removals
-            server.registerForMessages("/boards/removals", Board.class, s -> {
-                for (var list : s.lists) {
-                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
-                    for(var card : list.cards) {
-                        card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
-                    }
-                }
-                Platform.runLater(() -> listOfCards.setAll(s.lists));
-                Platform.runLater(() -> tags.setAll(s.tags));
-            });
         } catch(Exception e) {
             board = getNewBoard();
         }
@@ -668,7 +663,7 @@ public class BoardCtrl {
             stage.setTitle("Customization of board");
             stage.setScene(new Scene(root, 686, 527));
             stage.showAndWait();
-            prefs.updateBoardColors(server.getServerAddress(), prefBoard,
+            prefBoard = prefs.updateBoardColors(server.getServerAddress(), prefBoard,
                     customizationCtrl.backgroundColor, customizationCtrl.fontColor);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -765,7 +760,7 @@ public class BoardCtrl {
                 title.setText(newTitle);
                 //method that actually renames the list in the database
                 board = server.renameBoard(board, newTitle);
-                prefs.updateBoardTitle(server.getServerAddress(), prefBoard, newTitle);
+                prefBoard = prefs.updateBoardTitle(server.getServerAddress(), prefBoard, newTitle);
                 System.out.println("New title after calling the command: "+ board.title);
                 refresh();
             }
@@ -837,7 +832,7 @@ public class BoardCtrl {
                 board = server.changeBoardPassword(board, password);
                 System.out.println(board);
 
-                prefs.updateBoardPassword(server.getServerAddress(),
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
                         prefBoard, password);
                 this.refresh();
                 writeAccess();
@@ -869,7 +864,7 @@ public class BoardCtrl {
 
             if (controller.success) {
 
-                prefs.updateBoardPassword(server.getServerAddress(),
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
                         prefBoard, controller.enteredPassword);
                 this.refresh();
                 writeAccess();
@@ -908,7 +903,7 @@ public class BoardCtrl {
                 }
                 System.out.println(board);
 
-                prefs.updateBoardPassword(server.getServerAddress(),
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
                         prefBoard, password);
                 this.refresh();
                 writeAccess();
