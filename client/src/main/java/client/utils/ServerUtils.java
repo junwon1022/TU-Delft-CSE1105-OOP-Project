@@ -113,9 +113,9 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    List<ListOfCards> serverData = null;
-    List<Tag> serverDataTags = null;
-    List<Tag> serverDataTagsInCard = null;
+    private List<ListOfCards> serverData = null;
+    private List<Tag> serverDataTags = null;
+    private List<Tag> serverDataTagsInCard = null;
 
     private List<Card> cardData = null;
 
@@ -640,6 +640,36 @@ public class ServerUtils {
     }
 
     /**
+     * Change a board with a new password
+     * @param board - the board that needs to have its password changed
+     * @param password - the password of the new board
+     * @return the board with the new password
+     */
+    public Board changeBoardPassword(Board board, String password){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(password, APPLICATION_JSON), Board.class);
+    }
+
+    /**
+     * Removal of password of a board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removePassword(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password/")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
+    }
+
+    /**
      * Sends the request to update the description to the specific url,
      * @param card the card that the description is to be updated
      * @param description the new description
@@ -738,8 +768,11 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-        boardData.remove(board);
-        boardData.add(b);
+
+        if(boardData != null) {
+            boardData.remove(board);
+            boardData.add(b);
+        }
 
         return b;
     }
@@ -905,7 +938,7 @@ public class ServerUtils {
     }
 
     /**
-     *  Method that renames the board in the database
+     * Method that renames the board in the database
      * @param board
      * @param newTitle
      * @return The renamed board
@@ -969,7 +1002,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(checkListItem, APPLICATION_JSON), CheckListItem.class);
-
     }
 
     /**
@@ -990,7 +1022,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(description, APPLICATION_JSON), CheckListItem.class);
     }
-
 
     /**
      * Removes the checkListItem
@@ -1050,4 +1081,3 @@ public class ServerUtils {
                 .put(Entity.json(""));
     }
 }
-

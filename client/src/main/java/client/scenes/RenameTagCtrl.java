@@ -36,7 +36,7 @@ public class RenameTagCtrl {
 
     public boolean success;
 
-    private String MESSAGE = "Please enter a name for the tag!";
+    private String MESSAGE;
 
     /**
      * Constructor for the Rename Tag Controller
@@ -45,6 +45,7 @@ public class RenameTagCtrl {
     public RenameTagCtrl(){
         success = false;
         nullTitle = new Label("");
+        MESSAGE = "Please enter a name for the tag!";
     }
 
     /**
@@ -127,7 +128,6 @@ public class RenameTagCtrl {
      * @param event the KeyEvent
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = tagName.getText();
         backgroundColor = String.format("#%02x%02x%02x",
                 (int)(backgroundColorPicker.getValue().getRed() * 255),

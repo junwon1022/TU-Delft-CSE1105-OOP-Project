@@ -146,6 +146,54 @@ public class BoardController {
     }
 
     /**
+     * Edit a board's password
+     *
+     * @param password
+     * @param boardId
+     * @return the edited board
+     */
+    @PutMapping(path = {"/{board_id}/password/","/{board_id}/password"})
+    public ResponseEntity<Board> editBoardPasswordById(@RequestBody String password,
+                                                    @PathVariable("board_id") long boardId) {
+        try {
+            // Get the initial board
+            Board board = boardService.getBoardById(boardId);
+            // Edit the board and save it in the database
+            Board newBoard = boardService.editBoardPassword(boardId, password);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the edited board with an HTTP 200 OK status
+            return ResponseEntity.ok().body(newBoard);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Delete a board's password
+     *
+     * @param boardId
+     * @return the edited board
+     */
+    @DeleteMapping(path = {"/{board_id}/password/","/{board_id}/password"})
+    public ResponseEntity<Board> editBoardPasswordById(@PathVariable("board_id") long boardId) {
+        try {
+            // Get the initial board
+            Board board = boardService.getBoardById(boardId);
+            // Edit the board and save it in the database
+            Board newBoard = boardService.removeBoardPassword(boardId);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the edited board with an HTTP 200 OK status
+            return ResponseEntity.ok().body(newBoard);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Delete a board given its id
      *
      * @param boardId
