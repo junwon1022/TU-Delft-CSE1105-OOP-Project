@@ -693,7 +693,12 @@ public class BoardCtrl {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-            if (server.getBoardByKey(joinField.getText()) != null) {
+            Board newBoard = server.getBoardByKey(joinField.getText());
+            if (newBoard != null) {
+                var newPrefs = prefs.addBoard(server.getServerAddress(), newBoard);
+                newPrefs = prefs.updateBoardPassword(server.getServerAddress(), newPrefs, newBoard.password);
+                mainCtrl.mainScreenCtrl.addToData(newPrefs);
+                mainCtrl.mainScreenCtrl.setPalette(newBoard);
                 mainCtrl.showBoard(joinField.getText(), adminFlag);
                 joinField.clear();
                 nullTitle.setText("");
@@ -758,8 +763,6 @@ public class BoardCtrl {
             if (controller.success) {
                 String newTitle = controller.storedText;
                 title.setText(newTitle);
-                //method that actually renames the list in the database
-                board = server.renameBoard(board, newTitle);
                 prefBoard = prefs.updateBoardTitle(server.getServerAddress(), prefBoard, newTitle);
                 System.out.println("New title after calling the command: "+ board.title);
                 refresh();
