@@ -188,28 +188,23 @@ public class BoardCtrl {
             key.setText(board.key);
             title.setText(board.title);
             title.setStyle("-fx-text-fill: " + board.font);
-
             if(adminFlag == 0)  {
                 recentBoardsData = mainCtrl.mainScreenCtrl.data;
                 styleMyBoards();
             } else {
                 recentBoardsData = FXCollections.observableList
                     (server.getBoards().stream()
-                        .map(x -> new PreferencesBoardInfo
-                        (x.title, x.key, x.password, x.font, x.colour))
+                        .map(x -> new PreferencesBoardInfo(x.title, x.key, x.password,
+                                x.font, x.colour))
                         .collect(Collectors.toList()));
                 styleMyBoardsAdmin();
             }
-            prefBoard = recentBoardsData
-                    .stream()
-                    .filter(x -> x.getKey().equals(boardKey))
-                    .collect(Collectors.toList())
-                    .get(0);
+            prefBoard = recentBoardsData.stream().filter(x -> x.getKey().equals(boardKey))
+                    .collect(Collectors.toList()).get(0);
             loadRecentBoards();
             loadTagList();
             refresh();
             handleSecurityLevel();
-
             // listen for card updates
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists) {
@@ -222,12 +217,10 @@ public class BoardCtrl {
                     board = s;
                     this.title.setText(s.title);
                     changeColours();
-                    handleSecurityLevel();
-                });
+                    handleSecurityLevel();});
                 Platform.runLater(() -> listOfCards.setAll(s.lists));
                 Platform.runLater(() -> tags.setAll(s.tags));
             });
-
         } catch(Exception e) {
             board = getNewBoard();
         }

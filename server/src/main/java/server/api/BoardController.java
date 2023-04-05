@@ -39,6 +39,9 @@ public class BoardController {
 
     private Map<Object, Consumer<Board>> listeners = new HashMap<>();
 
+    /**
+     * @return the updates
+     */
     @GetMapping(path = {"/updates", "/updates/"})
     public DeferredResult<ResponseEntity<Board>> getUpdates() {
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -156,7 +159,6 @@ public class BoardController {
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
-            System.out.println("Sent out title update for board " + board.title + " to " + newTitle);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
         }
@@ -269,7 +271,6 @@ public class BoardController {
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
-            System.out.println("Sent out board background change for board " + board.title + " to " + colour);
             return ResponseEntity.ok(board);
         }
         catch(Exception e){
@@ -296,7 +297,6 @@ public class BoardController {
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
             listeners.forEach((k, l) -> l.accept(newBoard));
-            System.out.println("Sent out board color update for board " + board.title + " to " + colour);
             return ResponseEntity.ok(board);
         }
         catch(Exception e){

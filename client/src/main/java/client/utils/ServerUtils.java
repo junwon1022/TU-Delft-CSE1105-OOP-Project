@@ -1084,6 +1084,11 @@ public class ServerUtils {
 
     private final Map<String, ExecutorService> execs = new HashMap<>();
 
+    /**
+     * Method for register for board updates
+     * @param key the board key
+     * @param consumer the consumer
+     */
     public void registerForUpdates(String key, Consumer<Board> consumer) {
         if (!execs.containsKey(key))
             execs.put(key, Executors.newSingleThreadExecutor());
@@ -1105,6 +1110,10 @@ public class ServerUtils {
         });
     }
 
+    /**
+     * Method for unregister for board updates
+     * @param key the board key
+     */
     public void unregisterForUpdates(String key) {
         if (execs.containsKey(key)) {
             execs.get(key).shutdownNow();
@@ -1112,6 +1121,9 @@ public class ServerUtils {
         }
     }
 
+    /**
+     * Method to stop long polling
+     */
     public void stop() {
         execs.forEach((c, e) -> {
             e.shutdownNow();

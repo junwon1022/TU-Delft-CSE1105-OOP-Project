@@ -77,6 +77,9 @@ public class MainScreenCtrl {
     }
 
 
+    /**
+     * Initialize mainScreenCtrl
+     */
     public void initialize() {
         var boardData = prefs.getBoards(server.getServerAddress());
         data.setAll(boardData);
@@ -86,7 +89,6 @@ public class MainScreenCtrl {
 
         for (PreferencesBoardInfo b: boardData)
             server.registerForUpdates(b.getKey(), c -> {
-                System.out.println("Received update for board " + b.getTitle() + " to title " + c.title);
                 if (c.key.equals("REMOVED"))
                     prefs.leaveBoard(server.getServerAddress(), b);
                 else
@@ -98,7 +100,6 @@ public class MainScreenCtrl {
     private void addToData(PreferencesBoardInfo newPrefs) {
         data.add(newPrefs);
         server.registerForUpdates(newPrefs.getKey(), c -> {
-            System.out.println("Received update for board " + newPrefs.getTitle() + " to title " + c.title);
             if (c.key.equals("REMOVED")) {
                 server.unregisterForUpdates(newPrefs.getKey());
                 prefs.leaveBoard(server.getServerAddress(), newPrefs);
@@ -208,7 +209,9 @@ public class MainScreenCtrl {
                 Board newBoard = server.addBoard(board);
                 PreferencesBoardInfo prefBoard = prefs.addBoard
                         (server.getServerAddress(), newBoard);
-                var newPrefs = prefs.updateBoardPassword(server.getServerAddress(), prefBoard, newBoard.password);
+                var newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard,
+                        newBoard.password);
                 addToData(newPrefs);
                 setPalette(newBoard);
             }

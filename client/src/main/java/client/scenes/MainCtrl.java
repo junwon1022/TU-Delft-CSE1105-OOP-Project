@@ -225,6 +225,9 @@ public class MainCtrl {
         primaryStage.setY(centerY - primaryStage.getHeight() / 2);
     }
 
+    /**
+     * Method for stopping long polling
+     */
     public void stop() {
         if (serverUtils != null)
             serverUtils.stop();

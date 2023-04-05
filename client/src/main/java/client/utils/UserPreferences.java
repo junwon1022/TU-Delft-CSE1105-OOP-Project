@@ -265,7 +265,15 @@ public class UserPreferences {
         }
     }
 
-    public void updateBoard(String serverAddress, PreferencesBoardInfo oldBoard, Board updatedBoard) {
+    /**
+     * Method for updating board
+     * @param serverAddress the address of the server
+     * @param oldBoard the old board
+     * @param updatedBoard the new board
+     */
+    public void updateBoard(String serverAddress,
+                            PreferencesBoardInfo oldBoard,
+                            Board updatedBoard) {
         String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
 
         try {
