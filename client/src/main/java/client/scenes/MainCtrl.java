@@ -18,6 +18,7 @@ package client.scenes;
 import client.Main;
 import client.utils.ServerUtils;
 import client.utils.UserPreferences;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,7 +37,7 @@ public class MainCtrl {
     private Scene boardOverview;
     private ConnectCtrl connectCtrl;
     private Scene connect;
-    private MainScreenCtrl mainScreenCtrl;
+    protected MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
@@ -181,7 +182,7 @@ public class MainCtrl {
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
         centerStage();
-        mainScreenCtrl.refresh();
+        mainScreenCtrl.initialize();
     }
 
     /**
@@ -222,5 +223,12 @@ public class MainCtrl {
         // Set the position of the stage to the center of the screen
         primaryStage.setX(centerX - primaryStage.getWidth() / 2);
         primaryStage.setY(centerY - primaryStage.getHeight() / 2);
+    }
+
+    public void stop() {
+        if (serverUtils != null)
+            serverUtils.stop();
+        Platform.exit();
+        System.exit(0);
     }
 }

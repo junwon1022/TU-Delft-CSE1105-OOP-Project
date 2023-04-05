@@ -190,9 +190,7 @@ public class BoardCtrl {
             title.setStyle("-fx-text-fill: " + board.font);
 
             if(adminFlag == 0)  {
-                var boardList = prefs.getBoards(server.getServerAddress());
-                recentBoardsData = FXCollections.observableList(boardList);
-                addBoardToPrefs(boardList);
+                recentBoardsData = mainCtrl.mainScreenCtrl.data;
                 styleMyBoards();
             } else {
                 recentBoardsData = FXCollections.observableList
@@ -211,7 +209,21 @@ public class BoardCtrl {
             loadTagList();
             refresh();
             handleSecurityLevel();
+
+            // listen for card updates
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
+                for (var list : s.lists) {
+                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
+                    for(var card : list.cards) {
+                        card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+                    }
+                }
+                Platform.runLater(() -> listOfCards.setAll(s.lists));
+                Platform.runLater(() -> tags.setAll(s.tags));
+            });
+
+            // listen for board removals
+            server.registerForMessages("/boards/removals", Board.class, s -> {
                 for (var list : s.lists) {
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
                     for(var card : list.cards) {

@@ -7,6 +7,7 @@ import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.Palette;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -75,15 +76,45 @@ public class MainScreenCtrl {
 
     }
 
+
+    public void initialize() {
+        var boardData = prefs.getBoards(server.getServerAddress());
+        data.setAll(boardData);
+        list.setItems(data);
+        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl, prefs));
+        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
+
+        for (PreferencesBoardInfo b: boardData)
+            server.registerForUpdates(b.getKey(), c -> {
+                System.out.println("Received update for board " + b.getTitle() + " to title " + c.title);
+                if (c.key.equals("REMOVED"))
+                    prefs.leaveBoard(server.getServerAddress(), b);
+                else
+                    prefs.updateBoard(server.getServerAddress(), b, c);
+                Platform.runLater(this::refresh);
+            });
+    }
+
+    private void addToData(PreferencesBoardInfo newPrefs) {
+        data.add(newPrefs);
+        server.registerForUpdates(newPrefs.getKey(), c -> {
+            System.out.println("Received update for board " + newPrefs.getTitle() + " to title " + c.title);
+            if (c.key.equals("REMOVED")) {
+                server.unregisterForUpdates(newPrefs.getKey());
+                prefs.leaveBoard(server.getServerAddress(), newPrefs);
+            }
+            else
+                prefs.updateBoard(server.getServerAddress(), newPrefs, c);
+            Platform.runLater(this::refresh);
+        });
+    }
+
     /**
      * Gets the board title from the database
      */
     public void refresh() {
         var boardData = prefs.getBoards(server.getServerAddress());
         data.setAll(boardData);
-        list.setItems(data);
-        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl, prefs));
-        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
 
@@ -177,14 +208,15 @@ public class MainScreenCtrl {
                 Board newBoard = server.addBoard(board);
                 PreferencesBoardInfo prefBoard = prefs.addBoard
                         (server.getServerAddress(), newBoard);
-                prefs.updateBoardPassword(server.getServerAddress(), prefBoard, newBoard.password);
-                refresh();
+                var newPrefs = prefs.updateBoardPassword(server.getServerAddress(), prefBoard, newBoard.password);
+                addToData(newPrefs);
                 setPalette(newBoard);
             }
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
     }
+
 
     /**
      * Method that sets a palette

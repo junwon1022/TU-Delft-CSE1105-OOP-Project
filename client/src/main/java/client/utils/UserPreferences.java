@@ -264,4 +264,37 @@ public class UserPreferences {
             throw new RuntimeException(e);
         }
     }
+
+    public void updateBoard(String serverAddress, PreferencesBoardInfo oldBoard, Board updatedBoard) {
+        String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
+
+        try {
+            PreferencesBoardList boardList = objectMapper.readValue(boardListJson,
+                    PreferencesBoardList.class);
+
+            List<PreferencesBoardInfo> boards = boardList.getInfo();
+
+            PreferencesBoardInfo newBoard = new PreferencesBoardInfo(updatedBoard.title,
+                    updatedBoard.key,
+                    updatedBoard.password,
+                    updatedBoard.font,
+                    updatedBoard.colour);
+
+            for (int i = 0; i < boards.size(); i++) {
+                PreferencesBoardInfo b = boards.get(i);
+                if (newBoard.getKey().equals(updatedBoard.key)) {
+                    boards.set(i, newBoard);
+                }
+            }
+
+            PreferencesBoardList newBoardList = new PreferencesBoardList();
+            newBoardList.setInfo(boards);
+
+            String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
+            prefs.put(serverAddress, newBoardListJson);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
