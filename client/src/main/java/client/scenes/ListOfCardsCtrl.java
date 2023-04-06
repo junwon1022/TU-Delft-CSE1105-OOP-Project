@@ -124,13 +124,15 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                     draggedCard = c;
 
             Palette p = draggedCard.palette;
+
             server.removeCard(draggedCard);
+
             p = server.getPalette(p.board.id, p.id);
             draggedCard.palette = null;
             draggedCard.list = this.cardData;
             draggedCard.order = this.cardData.cards.size();
             draggedCard = server.addCard2(draggedCard);
-            server.addPaletteToCard(draggedCard, p);
+            draggedCard = server.addPaletteToCard(draggedCard, p);
             board.refresh();
         }
         event.setDropCompleted(true);

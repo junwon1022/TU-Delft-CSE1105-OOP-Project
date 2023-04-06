@@ -130,7 +130,7 @@ public class CardController {
                 return ResponseEntity.badRequest().build();
             }
             // Save the new card to the database
-            cardService.createCard(card, list, board);
+            card = cardService.createCard(card, list, board);
 
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
@@ -425,10 +425,8 @@ public class CardController {
                                           @PathVariable("list_id") long listId,
                                           @PathVariable("card_id") long cardId,
                                           @RequestBody Palette palette) {
+
         try {
-            if(!validPath(boardId, listId, cardId)) {
-                return ResponseEntity.badRequest().build();
-            }
             Board board = boardService.getBoardById(boardId);
             Card card = cardService.getCardById(cardId);
             Palette palette1 = paletteService.getPaletteById(palette.id);

@@ -351,8 +351,8 @@ public class CardCtrl extends ListCell<Card> {
         draggedCard.palette = null;
         draggedCard.list = this.list.cardData;
         draggedCard.order = this.list.cardData.cards.size();
-        draggedCard = server.addCard2(draggedCard);
-        server.addPaletteToCard(draggedCard, p);
+        draggedCard=  server.addCard2(draggedCard);
+        draggedCard = server.addPaletteToCard(draggedCard, p);
         return draggedCard;
     }
 
