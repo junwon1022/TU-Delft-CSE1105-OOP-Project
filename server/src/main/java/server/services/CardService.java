@@ -78,6 +78,8 @@ public class CardService {
         Card card = cardRepository.getById(id);
         if(card != null) {
             cardRepository.getById(id).removeCardsFromTags();
+            if(card.palette != null)
+                removePaletteFromCard(card, card.palette);
             cardRepository.deleteById(id);
         }
     }

@@ -97,7 +97,8 @@ public class PaletteCtrl extends ListCell<Palette> {
     public void removePalette(ActionEvent event){
         Palette newDefault = setNewDefault();
         if(board.palettes.size() >= 2){
-            server.changePaletteCards(newDefault, data.id);
+            data = server.changePaletteCards(newDefault, data.id);
+            newDefault = server.getPalette(board.id, newDefault.id);
             server.deletePalette(board.id, data);
         }
         parent.refresh();

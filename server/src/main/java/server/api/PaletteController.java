@@ -292,7 +292,7 @@ public class PaletteController {
      * @return - the cards
      */
     @PutMapping(path = {"/{palette_id}/cards", "/{palette_id}/cards/"})
-    public ResponseEntity<Set<Card>> changeCardsOfPalette(@PathVariable("board_id") long boardId,
+    public ResponseEntity<Palette> changeCardsOfPalette(@PathVariable("board_id") long boardId,
                                                        @PathVariable("palette_id") long paletteId,
                                                           @RequestBody long oldPaletteId){
         try {
@@ -301,9 +301,9 @@ public class PaletteController {
             if(board == null) return ResponseEntity.badRequest().build();
             paletteService.changeOfPalette(paletteId, oldPaletteId);
 
-            Set<Card> cards = paletteService.getCardsOfPalette(paletteId);
+            Palette palette = paletteService.getPaletteById(oldPaletteId);
             // Return the board with an HTTP 200 OK status
-            return ResponseEntity.status(HttpStatus.OK).body(cards);
+            return ResponseEntity.status(HttpStatus.OK).body(palette);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

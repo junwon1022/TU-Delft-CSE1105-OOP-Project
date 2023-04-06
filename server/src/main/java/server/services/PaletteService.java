@@ -179,8 +179,11 @@ public class PaletteService {
         Palette oldPalette = getPaletteById(oldPaletteId);
 
         Set<Card> cards = oldPalette.cards;
-        palette.cards = cards;
         oldPalette.cards = new HashSet<>();
+        for(Card c: cards){
+            c.palette = palette;
+        }
+        palette.cards.addAll(cards);
         paletteRepository.save(palette);
         paletteRepository.save(oldPalette);
     }

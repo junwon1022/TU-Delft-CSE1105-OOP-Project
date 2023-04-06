@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -73,12 +75,14 @@ public class PresetCtrl extends ListCell<Palette> {
     }
 
     @FXML
-    public void choosePreset(ActionEvent event){
+    public void choosePreset(MouseEvent event){
+        if(event.getClickCount() == 2){
             card.palette = palette;
             server.addPaletteToCard(card, palette);
             palette = server.getPalette(palette.board.id, palette.id);
             boardCtrl.refresh();
             parent.refresh();
+        }
     }
 
 }

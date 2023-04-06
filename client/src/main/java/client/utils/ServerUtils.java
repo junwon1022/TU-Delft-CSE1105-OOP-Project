@@ -864,8 +864,8 @@ public class ServerUtils {
      * @param palette
      * @return the deleted palette
      */
-    public Palette deletePalette(long boardId, Palette palette){
-        return ClientBuilder.newClient(new ClientConfig())
+    public void deletePalette(long boardId, Palette palette){
+        ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes/"+ palette.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)

@@ -345,14 +345,14 @@ public class CardCtrl extends ListCell<Card> {
             if (c.id == dbCardId)
                 draggedCard = c;
 
-        draggedCard.palette.cards.remove(this);
-        draggedCard.palette = null;
-
+        Palette p = draggedCard.palette;
         server.removeCard(draggedCard);
-
+        p = server.getPalette(p.board.id, p.id);
+        draggedCard.palette = null;
         draggedCard.list = this.list.cardData;
         draggedCard.order = this.list.cardData.cards.size();
-        server.addCard2(draggedCard);
+        draggedCard = server.addCard2(draggedCard);
+        server.addPaletteToCard(draggedCard, p);
         return draggedCard;
     }
 

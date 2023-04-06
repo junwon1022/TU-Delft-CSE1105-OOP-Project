@@ -123,14 +123,14 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 if (c.id == dbCardId)
                     draggedCard = c;
 
-            draggedCard.palette.cards.remove(this);
-            draggedCard.palette = null;
+            Palette p = draggedCard.palette;
             server.removeCard(draggedCard);
-
+            p = server.getPalette(p.board.id, p.id);
+            draggedCard.palette = null;
             draggedCard.list = this.cardData;
             draggedCard.order = this.cardData.cards.size();
-            server.addCard2(draggedCard);
-
+            draggedCard = server.addCard2(draggedCard);
+            server.addPaletteToCard(draggedCard, p);
             board.refresh();
         }
         event.setDropCompleted(true);
@@ -182,13 +182,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         if(event.getCode().toString().equals("ENTER")
                 && !name.getText().equals("") && name.getText() != null){
             String title = name.getText();
-            Card card = getCard(title);
-            server.addCard(card);
 
+            Card card = getCard(title);
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
             Palette palette = cardData.board.getDefaultPalette();
             card = server.addPaletteToCard(card, palette);
+
             name.clear();
             name.setOpacity(0);
             addCardButton.setOpacity(0);
@@ -419,6 +419,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
 
             hideButtonKeyboard(event);
 

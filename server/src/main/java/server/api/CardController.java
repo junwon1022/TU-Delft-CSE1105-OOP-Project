@@ -433,7 +433,6 @@ public class CardController {
             Card card = cardService.getCardById(cardId);
             Palette palette1 = paletteService.getPaletteById(palette.id);
             cardService.addPaletteToCard(card, palette1);
-            System.out.println("reaches good part\n"+ card.palette.title);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the card with an HTTP 200 OK status
