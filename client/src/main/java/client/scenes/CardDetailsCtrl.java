@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CheckListItem;
+import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,12 +18,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 public class CardDetailsCtrl{
@@ -53,6 +57,20 @@ public class CardDetailsCtrl{
     @FXML
     private ListView<CheckListItem> checklistView;
 
+    @FXML
+    private Label paletteTitle;
+
+    @FXML
+    private Rectangle background;
+
+    @FXML
+    private Rectangle font;
+
+    @FXML
+    private ListView<Palette> palettes;
+
+    ObservableList<Palette> paletteData;
+
     private Card card;
 
     ObservableList<CheckListItem> data;
@@ -77,7 +95,22 @@ public class CardDetailsCtrl{
         data = FXCollections.observableArrayList();
         checklistView.setItems(data);
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
+
     }
+
+    private void selectPalettes(){
+        paletteData = FXCollections.observableArrayList();
+        Set<Palette> allPalettes = card.list.board.palettes;
+        for(Palette p: allPalettes){
+            if(!p.equals(card.palette))
+                paletteData.add(p);
+        }
+        palettes.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
+        palettes.setItems(paletteData);
+        palettes.setCellFactory(pal-> new PresetCtrl(server, this, board, card));
+    }
+
 
     /**
      * Sets the title of the descriptionTitle label to the title of the card
@@ -134,6 +167,7 @@ public class CardDetailsCtrl{
      */
     public void setCard(Card card) {
         this.card = card;
+        selectPalettes();
     }
 
     /**
@@ -286,4 +320,24 @@ public class CardDetailsCtrl{
 
         board.refresh();
     }
+
+    /**
+     * Method that sets the Preset for a card
+     */
+    public void setPreset(){
+        background.setFill(Color.web(card.palette.background));
+        font.setFill(Color.web(card.palette.font));
+        paletteTitle.setText(card.palette.title);
+    }
+
+
+    /**
+     * Method that refreshes the card details overview
+     */
+    public void refresh(){
+        selectPalettes();
+        setPreset();
+    }
+
+
 }

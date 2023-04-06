@@ -48,11 +48,7 @@ public class BoardService {
      * @return a board
      */
     public Board getBoardByKey(String key) throws Exception {
-
-        System.out.println("Board Repository " + boardRepository.findAll().toString());
-
         for(Board b : boardRepository.findAll()){
-            System.out.println("Board to string" + b.toString());
             if(b.key.equals(key)) return b;
         }
 
