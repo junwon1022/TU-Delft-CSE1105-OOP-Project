@@ -9,6 +9,7 @@ import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -52,6 +52,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private Button rename;
 
     @FXML
+    private Button deleteList;
+
+    @FXML
     private TextField name;
 
     @FXML
@@ -59,6 +62,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     @FXML
     private Button hideCard;
+
+    @FXML
+    private Label addCardDisabled;
+    @FXML
+    private Label renameListDisabled;
+    @FXML
+    private Label deleteListDisabled;
 
     private ObservableList<Card> cards;
 
@@ -85,8 +95,37 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setItems(cards);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
+        if (!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+    }
+
+    /**
+     * Makes the list read-only
+     */
+    private void readOnly() {
+        addButton.setDisable(true);
+        rename.setDisable(true);
+        deleteList.setDisable(true);
+        addCardDisabled.setVisible(true);
+        deleteListDisabled.setVisible(true);
+        renameListDisabled.setVisible(true);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        addButton.setDisable(false);
+        rename.setDisable(false);
+        deleteList.setDisable(false);
         setOnDragOver(this::handleDragOver);
         setOnDragDropped(this::handleDragDropped);
+        addCardDisabled.setVisible(false);
+        deleteListDisabled.setVisible(false);
+        renameListDisabled.setVisible(false);
     }
 
     /**
@@ -142,7 +181,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
      * @param item The new item for the cell.
-     * @param empty whether this cell represents data from the list. If it
+     * @param empty whether or not this cell represents data from the list. If it
      *        is empty, then it does not represent any domain data, but is a cell
      *        being used to render an "empty" row.
      */
@@ -156,6 +195,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             title.setText(item.title);
             cards.setAll(item.cards);
             cardData = item;
+            if (!board.isUnlocked()) {
+                this.readOnly();
+            } else {
+                this.writeAccess();
+            }
 
             changeColours();
             setGraphic(root);
@@ -166,38 +210,38 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Method that changes the lists according to the customizations of the user
      */
-    private void changeColours(){
+    private void changeColours() {
         root.setStyle("-fx-background-color: " + cardData.board.listColour);
         title.setStyle("-fx-text-fill: " + cardData.board.listFont);
         list.setStyle("-fx-background-color: derive(" + cardData.board.listColour +", +60%)" +
                       ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
-    /**
-     * Adds a new card to the List of Cards.
-     * Shows a text field that asks for the title.
-     * If pressed enter, adds the card via the server and forces a board refresh.
-     * @param event the KeyEvent
-     */
 
-    public void addCardEnter(KeyEvent event) {
-        if(event.getCode().toString().equals("ENTER")
-                && !name.getText().equals("") && name.getText() != null){
-            String title = name.getText();
-
-            Card card = getCard(title);
-            Card addedCard = server.addCard2(card);
-            card.id = addedCard.id;
-            Palette palette = cardData.board.getDefaultPalette();
-            card = server.addPaletteToCard(card, palette);
-
-            name.clear();
-            name.setOpacity(0);
-            addCardButton.setOpacity(0);
-
-            board.refresh();
-        }
-    }
+//    /**
+//     * Adds a new card to the List of Cards.
+//     * Shows a text field that asks for the title.
+//     * If pressed enter, adds the card via the server and forces a board refresh.
+//     * @param event the KeyEvent
+//     */
+//
+//    public void addCardEnter(KeyEvent event) {
+//        if(event.getCode().toString().equals("ENTER")
+//                && !name.getText().equals("") && name.getText() != null){
+//            String title = name.getText();
+//            Card card = getCard(title);
+//            server.addCard(card);
+//
+//            Card addedCard = server.addCard2(card);
+//            card.id = addedCard.id;
+//
+//            name.clear();
+//            name.setOpacity(0);
+//            addCardButton.setOpacity(0);
+//
+//            board.refresh();
+//        }
+//    }
 
     /**
      * Adds a new card to the List of cards.
@@ -233,7 +277,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(false);
         // Shorten the list
         Timeline timelineList = new Timeline(
-                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 300))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 288))
         );
         Timeline timelineName = new Timeline(
                 new KeyFrame(Duration.seconds(0.25), new KeyValue(name.visibleProperty(), true))
@@ -265,7 +309,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 350))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 338))
         );
         timeline.play();
     }
@@ -391,6 +435,21 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         return card;
     }
 
+    /**
+     * Getter for the list of cards displayed
+     * @return the list entity
+     */
+    public ListOfCards getListOfCards() {
+        return cardData;
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
 
     // From here are the keyboard cases
 
@@ -439,6 +498,4 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
         hideButtonKeyboard(event);
     }
-
-
 }

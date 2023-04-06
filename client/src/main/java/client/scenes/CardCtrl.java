@@ -53,7 +53,7 @@ public class CardCtrl extends ListCell<Card> {
     private Label progressText;
 
     @FXML
-    private Button delete;
+    private Button deleteButton;
     @FXML
     private Text text;
 
@@ -65,6 +65,11 @@ public class CardCtrl extends ListCell<Card> {
     @FXML
     private GridPane tagGrid;
     private List<Tag> tags;
+
+    @FXML
+    private Label renameCardDisabled;
+    @FXML
+    private Label deleteCardDisabled;
 
     @FXML
     private Button addDescription;
@@ -89,6 +94,40 @@ public class CardCtrl extends ListCell<Card> {
             throw new RuntimeException(e);
         }
         board.refresh();
+
+        if(!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+    }
+
+    /**
+     * Makes the card readOnly
+     */
+    private void readOnly() {
+        renameButton.setDisable(true);
+        deleteButton.setDisable(true);
+        renameCardDisabled.setVisible(true);
+        deleteCardDisabled.setVisible(true);
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        renameButton.setDisable(false);
+        deleteButton.setDisable(false);
+        renameCardDisabled.setVisible(false);
+        deleteCardDisabled.setVisible(false);
 
         setOnDragDetected(this::handleDragDetected);
 
@@ -129,6 +168,13 @@ public class CardCtrl extends ListCell<Card> {
             if(card.palette != null)
                 setColors(root, title);
             this.loadTags();
+
+            if(!board.isUnlocked()) {
+                this.readOnly();
+            } else {
+                this.writeAccess();
+            }
+
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
@@ -149,7 +195,6 @@ public class CardCtrl extends ListCell<Card> {
         }
         return false;
     }
-
 
     /**
      * loads the tags colors on the card
@@ -190,8 +235,6 @@ public class CardCtrl extends ListCell<Card> {
         }
         board.refresh();
     }
-
-
 
     /**
      * Retrieves the title of the card

@@ -167,8 +167,8 @@ public class CardService {
      * @param palette
      */
     public void removePaletteFromCard(Card card, Palette palette){
-
         palette.cards.remove(card);
+        card.palette = null;
         cardRepository.save(card);
     }
 

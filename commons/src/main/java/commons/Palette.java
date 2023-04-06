@@ -1,7 +1,6 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
@@ -113,14 +112,27 @@ public class Palette {
         this.isDefault = true;
     }
 
+    /**
+     * Setter for cards of palette
+     * @param cards
+     */
     public void setCards(Set<Card> cards){
         this.cards = cards;
     }
 
+    /**
+     * Setter for cards
+     * @return the set of cards
+     */
     public Set<Card> getCards(){
         return this.cards;
     }
 
+    /**
+     * Equals method for palette
+     * @param o
+     * @return boolean asserting the equality
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

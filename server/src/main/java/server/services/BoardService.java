@@ -96,6 +96,29 @@ public class BoardService {
     }
 
     /**
+     * Edit the password of a board and store the edited board in the database
+     * @param id
+     * @param password
+     * @return the edited board
+     */
+    public Board editBoardPassword(Long id, String password) throws Exception {
+        Board board = getBoardById(id);
+        board.password = password;
+        return boardRepository.save(board);
+    }
+
+    /**
+     * Remove the password of a board and store the edited board in the database
+     * @param id
+     * @return the edited board
+     */
+    public Board removeBoardPassword(Long id) throws Exception {
+        Board board = getBoardById(id);
+        board.password = null;
+        return boardRepository.save(board);
+    }
+
+    /**
      * Method that changes the board's background colour in the database
      * @param id
      * @param colour

@@ -321,6 +321,9 @@ public class CardDetailsCtrl{
         board.refresh();
     }
 
+    /**
+     * Method that sets the Preset for a card
+     */
     public void setPreset(){
         background.setFill(Color.web(card.palette.background));
         font.setFill(Color.web(card.palette.font));
@@ -328,6 +331,9 @@ public class CardDetailsCtrl{
     }
 
 
+    /**
+     * Method that refreshes the card details overview
+     */
     public void refresh(){
         selectPalettes();
         setPreset();

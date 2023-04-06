@@ -3,16 +3,11 @@
     -fx-faint-focus-color: transparent;
 }
 
-#lists .list-cell:filled:selected:hover {
-    -fx-background-color: derive(-fx-control-inner-background, 30%);
-    /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
-}
-
 #lists .list-cell:filled:selected {
-    -fx-selection-bar: #CAF0F8;
+    /*-fx-selection-bar: #CAF0F8;*/
     -fx-border-color: #04839f;
-    -fx-selection-bar-non-focused: #CAF0F8;
-    -fx-background-color: #CAF0F8;
+    /*-fx-selection-bar-non-focused: #CAF0F8;*/
+    -fx-background-color: derive(-fx-control-inner-background, 0%);
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
@@ -30,7 +25,6 @@
 
 #list-background:hover {
     -fx-background-radius: 10;
-    -fx-background-color: derive(-fx-control-inner-background, +30%);
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
 }
 
@@ -39,12 +33,11 @@
 }
 
 #list-background {
-     -fx-background-color: #CAF0F8;
      -fx-background-radius: 10;
  }
 
 #lists {
-    -fx-background-color: #A2E4F1;
+    /*-fx-background-color: #A2E4F1;*/
     -fx-control-inner-background: #CAF0F8;
     -fx-border-style: none;
     -fx-padding: 6;
@@ -107,7 +100,6 @@
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
 }
-
 
 .add-button {
     -fx-border-radius: 10px;
@@ -592,3 +584,48 @@
     -fx-background-color: #A2E4F1;
 }
 
+#lock {
+    -fx-background-image: url("lock-icon.png");
+}
+
+#lock:hover {
+    -fx-background-image: url("lock-custom.png");
+}
+
+#unlock {
+     -fx-background-image: url("unlock-icon.png");
+ }
+
+#unlock:hover {
+    -fx-background-image: url("unlock-custom.png");
+}
+
+#read-only {
+    -fx-background-color: #F8FDFE;
+    -fx-background-radius: 15px;
+}
+
+.alert {
+    -fx-background-color: #e5f8fc;
+    -fx-font-family: Corbel;
+}
+
+.alert .header-panel {
+    -fx-background-color: #CAF0F8;
+    -fx-font-family: Corbel;
+}
+
+.tag-list {
+    -fx-background-color: transparent;
+}
+
+
+.tag-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-pref-width: 90%;
+}
+
+#tags-disabled {
+    -fx-background-color: white;
+    -fx-opacity: 0.5;
+}

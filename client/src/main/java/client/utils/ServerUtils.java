@@ -18,8 +18,6 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -113,9 +111,9 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    List<ListOfCards> serverData = null;
-    List<Tag> serverDataTags = null;
-    List<Tag> serverDataTagsInCard = null;
+    private List<ListOfCards> serverData = null;
+    private List<Tag> serverDataTags = null;
+    private List<Tag> serverDataTagsInCard = null;
 
     private List<Card> cardData = null;
 
@@ -640,6 +638,36 @@ public class ServerUtils {
     }
 
     /**
+     * Change a board with a new password
+     * @param board - the board that needs to have its password changed
+     * @param password - the password of the new board
+     * @return the board with the new password
+     */
+    public Board changeBoardPassword(Board board, String password){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(password, APPLICATION_JSON), Board.class);
+    }
+
+    /**
+     * Removal of password of a board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removePassword(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password/")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
+    }
+
+    /**
      * Sends the request to update the description to the specific url,
      * @param card the card that the description is to be updated
      * @param description the new description
@@ -738,8 +766,11 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-        boardData.remove(board);
-        boardData.add(b);
+
+        if(boardData != null) {
+            boardData.remove(board);
+            boardData.add(b);
+        }
 
         return b;
     }
@@ -862,7 +893,6 @@ public class ServerUtils {
      * Method that deletes the given palette from the database, if possible
      * @param boardId
      * @param palette
-     * @return the deleted palette
      */
     public void deletePalette(long boardId, Palette palette){
         ClientBuilder.newClient(new ClientConfig())
@@ -905,7 +935,7 @@ public class ServerUtils {
     }
 
     /**
-     *  Method that renames the board in the database
+     * Method that renames the board in the database
      * @param board
      * @param newTitle
      * @return The renamed board
@@ -969,7 +999,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(checkListItem, APPLICATION_JSON), CheckListItem.class);
-
     }
 
     /**
@@ -990,7 +1019,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(description, APPLICATION_JSON), CheckListItem.class);
     }
-
 
     /**
      * Removes the checkListItem
@@ -1050,16 +1078,12 @@ public class ServerUtils {
                 .put(Entity.json(""));
     }
 
-    public Palette addCardToPalette(Card card, Palette palette){
-        return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}/palettes/{palette_id}/addCard")
-                .resolveTemplate("board_id", palette.board.id)
-                .resolveTemplate("palette_id", palette.id)
-                .request(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .put(Entity.entity(card, APPLICATION_JSON), Palette.class);
-    }
-
+    /**
+     * Method that gets the palette
+     * @param boardId
+     * @param paletteId
+     * @return the palette
+     */
     public Palette getPalette(long boardId, long paletteId){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes/" + paletteId)
@@ -1068,6 +1092,12 @@ public class ServerUtils {
                 .get(new GenericType<Palette>() {});
     }
 
+    /**
+     * Method that adds a palette to a card
+     * @param card
+     * @param palette
+     * @return the card with a palette
+     */
     public Card addPaletteToCard(Card card, Palette palette){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
@@ -1080,7 +1110,12 @@ public class ServerUtils {
                 .put(Entity.entity(palette, APPLICATION_JSON), Card.class);
     }
 
-
+    /**
+     * Method  that adds the cards of 2 palettes in one
+     * @param palette
+     * @param oldPaletteId
+     * @return the palette with the new cards
+     */
     public Palette changePaletteCards(Palette palette, long oldPaletteId){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/{board_id}/palettes/{palette_id}/cards/")
@@ -1092,4 +1127,3 @@ public class ServerUtils {
     }
 
 }
-

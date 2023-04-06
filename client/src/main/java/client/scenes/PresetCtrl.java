@@ -9,13 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import javafx.event.ActionEvent;
 import java.io.IOException;
 
 public class PresetCtrl extends ListCell<Palette> {
@@ -41,6 +38,13 @@ public class PresetCtrl extends ListCell<Palette> {
 
     private final BoardCtrl boardCtrl;
 
+    /**
+     * Constructor for preset
+     * @param server
+     * @param parent
+     * @param boardCtrl
+     * @param card
+     */
     @Inject
     public PresetCtrl(ServerUtils server, CardDetailsCtrl parent, BoardCtrl boardCtrl, Card card){
         this.server = server;
@@ -57,6 +61,14 @@ public class PresetCtrl extends ListCell<Palette> {
         }
     }
 
+    /**
+     * Update method for the preset
+     *
+     * @param item The new item for the cell.
+     * @param empty whether this cell represents data from the list. If it
+     *        is empty, then it does not represent any domain data, but is a cell
+     *        being used to render an "empty" row.
+     */
     @Override
     public void updateItem(Palette item, boolean empty){
         super.updateItem(item, empty);
@@ -74,6 +86,10 @@ public class PresetCtrl extends ListCell<Palette> {
         }
     }
 
+    /**
+     * Method that lets the user choose another preset for the task
+     * @param event
+     */
     @FXML
     public void choosePreset(MouseEvent event){
         if(event.getClickCount() == 2){

@@ -113,10 +113,18 @@ public class Card {
         }
     }
 
+    /**
+     * getter for palette
+     * @return the palette
+     */
     public Palette getPalette(){
         return this.palette;
     }
 
+    /**
+     * setter for palette
+     * @param palette
+     */
     public void setPalette(Palette palette){
         this.palette = palette;
     }
