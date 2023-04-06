@@ -521,9 +521,15 @@ public class BoardCtrl {
     public void handleKeyboardShortcuts(KeyEvent event) {
         if(event.getCode().toString().equals("C")) addColourByKey(event);
         if(event.getCode().toString().equals("T")) addTagByKey(event);
+        if(event.getCode().toString().equals("D")) moveHighlightByKey(event);
 
     }
 
+    public void moveHighlightByKey(KeyEvent event) {
+
+
+
+    }
 
 
     public void addTagByKey(KeyEvent event) {

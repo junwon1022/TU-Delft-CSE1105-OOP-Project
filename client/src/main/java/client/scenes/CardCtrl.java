@@ -32,7 +32,7 @@ public class CardCtrl extends ListCell<Card> {
     private final BoardCtrl board;
     private final ListOfCardsCtrl list;
 
-    private Card card;
+    public Card card;
     public String storedDescChar;
 
     @FXML
@@ -81,8 +81,6 @@ public class CardCtrl extends ListCell<Card> {
 
         root.requestFocus();
 
-
-
         setOnMouseEntered(this::handleHighlight);
 
         setOnMouseExited(this::handleLeaveHighlight);
@@ -122,11 +120,20 @@ public class CardCtrl extends ListCell<Card> {
     @Override
     protected void updateItem(Card item, boolean empty) {
         super.updateItem(item, empty);
-
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        } else {
+        }
+        else if(item.selected == true){
+            title.setText(item.title);
+            card = item;
+            root.setStyle("-fx-background-color: blue;");
+            title.setStyle("-fx-text-fill: black");
+            this.loadTags();
+            setGraphic(root);
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }
+        else {
             title.setText(item.title);
             card = item;
             setPalette();
@@ -141,7 +148,7 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
-    private void setPalette(){
+    void setPalette(){
         Palette p = card.list.board.getDefaultPalette();
         if(p != null)
             card.palette = p;
@@ -235,7 +242,7 @@ public class CardCtrl extends ListCell<Card> {
                 " -fx-border-radius: 20;" +
                 " -fx-background-radius: 20;");
 
-        getItem().selected = true;
+        server.selectCard(card,true);
     }
 
     /**
@@ -249,10 +256,8 @@ public class CardCtrl extends ListCell<Card> {
         root.setStyle("-fx-background-color: #00B4D8;" +
                 " -fx-border-radius: 20;" +
                 " -fx-background-radius: 20;");
-        getItem().selected = false;
+        server.selectCard(card,false);
     }
-
-
 
 
     /**
