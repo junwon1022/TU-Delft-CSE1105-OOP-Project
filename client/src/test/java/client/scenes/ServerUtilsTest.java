@@ -70,18 +70,63 @@ public class ServerUtilsTest {
         assertFalse(utils.serverData.get(0).cards.contains(card));
     }
 
+    @Test
+    void testAddList() {
+        UserPreferences prefs = Mockito.mock(UserPreferences.class);
+        ServerUtils utils = new ServerUtils(prefs);
+
+        ListOfCards list = new ListOfCards("test list", null, new LinkedList<>());
+        utils.addList(list);
+
+        assertTrue(utils.serverData.contains(list));
+    }
+
+    @Test
+    void testDeleteList() {
+        UserPreferences prefs = Mockito.mock(UserPreferences.class);
+        ServerUtils utils = new ServerUtils(prefs);
+
+        ListOfCards list = new ListOfCards("test list", null, new LinkedList<>());
+        utils.addList(list);
+
+        assertTrue(utils.serverData.contains(list));
+
+        utils.deleteList(list);
+
+        assertFalse(utils.serverData.contains(list));
+    }
+
+    @Test
+    void testRenameList() {
+        UserPreferences prefs = Mockito.mock(UserPreferences.class);
+        ServerUtils utils = new ServerUtils(prefs);
+
+        ListOfCards list = new ListOfCards("test list", null, new LinkedList<>());
+        utils.addList(list);
+
+        assertTrue(utils.serverData.contains(list));
+
+        utils.renameList1(list, "new name");
+
+        assertEquals("new name", list.title);
+    }
+
 //    @Test
-//    void addBoardTitleTest() {
+//    void testMoveCard() {
 //        UserPreferences prefs = Mockito.mock(UserPreferences.class);
 //        ServerUtils utils = new ServerUtils(prefs);
 //
-//        Board board = new Board("title", "boardColour" , "fontColour",
-//                "listColour", "listFont",
-//                "password", new LinkedList<ListOfCards>(), new HashSet<Tag>(), new HashSet<Palette>());
-//        utils.addBoard(board);
+//        Card card = new Card("title", "description", "colour", null, new LinkedList<>(), new HashSet<>(), null);
+//        ListOfCards list = new ListOfCards("test list", null, new LinkedList<>());
+//        Card card2 = new Card("title2", "description2", "colour2", null, new LinkedList<>(), new HashSet<>(), null);
+//        list.addCard(card);
+//        list.addCard(card2);
+//        utils.addList(list);
 //
-//        assertTrue(utils.serverData.contains(board));
+//        utils.moveCard(list, 0, 1);
+//
+//        assertEquals(card2, list.cards.get(0));
+//        assertEquals(card, list.cards.get(1));
 //    }
-
 
 }
