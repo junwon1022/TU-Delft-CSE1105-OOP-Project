@@ -230,17 +230,19 @@ public class BoardCtrl {
      * Style my boards for admin view
      */
     private void styleMyBoardsAdmin() {
-        myBoards.setText("All boards");
+        myBoards.setText("All Boards");
         myBoards.lookup(".title").setStyle("-fx-background-color: #1fa401;" +
                 "-fx-border-color: #1fa401");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf6da;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf6da");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf6da;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
-                "-fx-background-color: #E4F8FC;" +
-                "-fx-border-color: #1fa401;" +
-                "-fx-border-width: 1.5;" +
-                "-fx-background-radius: 10px;" +
-                "-fx-border-radius: 10px;"
+                    "-fx-background-color: #E4F8FC;" +
+                            "-fx-border-color: #1fa401;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-background-radius: 10px;" +
+                            "-fx-border-radius: 10px;"
             );
             accordion.lookup(".titled-pane").setStyle(
                     "-fx-text-fill: #1fa401"
@@ -251,11 +253,11 @@ public class BoardCtrl {
         });
         accordion.setOnMouseExited(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
-                "-fx-background-color: #1fa401;" +
-                "-fx-border-color: #1fa401;" +
-                "-fx-border-width: 1.5;" +
-                "-fx-background-radius: 10px;" +
-                "-fx-border-radius: 10px;"
+                    "-fx-background-color: #1fa401;" +
+                            "-fx-border-color: #1fa401;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-background-radius: 10px;" +
+                            "-fx-border-radius: 10px;"
             );
             accordion.lookup(".titled-pane").setStyle(
                     "-fx-text-fill: #E4F8FC"
@@ -270,17 +272,19 @@ public class BoardCtrl {
      * Style my boards for user view
      */
     private void styleMyBoards() {
-        myBoards.setText("My boards");
+        myBoards.setText("My Boards");
         myBoards.lookup(".title").setStyle("-fx-background-color: #00B4D8;" +
                 "-fx-border-color: #00B4D8");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf1f6;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf1f6");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf1f6;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
-                "-fx-background-color: #E4F8FC;" +
-                "-fx-border-color: #00B4D8;" +
-                "-fx-border-width: 1.5;" +
-                "-fx-background-radius: 10px;" +
-                "-fx-border-radius: 10px;"
+                    "-fx-background-color: #E4F8FC;" +
+                            "-fx-border-color: #00B4D8;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-background-radius: 10px;" +
+                            "-fx-border-radius: 10px;"
             );
             accordion.lookup(".titled-pane").setStyle(
                     "-fx-text-fill: #00B4D8"
@@ -291,11 +295,11 @@ public class BoardCtrl {
         });
         accordion.setOnMouseExited(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
-                "-fx-background-color: #00B4D8;" +
-                "-fx-border-color: #00B4D8;" +
-                "-fx-border-width: 1.5;" +
-                "-fx-background-radius: 10px;" +
-                "-fx-border-radius: 10px;"
+                    "-fx-background-color: #00B4D8;" +
+                            "-fx-border-color: #00B4D8;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-background-radius: 10px;" +
+                            "-fx-border-radius: 10px;"
             );
             accordion.lookup(".titled-pane").setStyle(
                     "-fx-text-fill: #E4F8FC"
