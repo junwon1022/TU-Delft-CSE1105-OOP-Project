@@ -7,9 +7,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import commons.Board;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.services.BoardService;
 
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
 
 @RestController
@@ -33,6 +35,26 @@ public class BoardController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
+    private Map<String, Map<Object, Consumer<Board>>> listeners = new HashMap<>();
+
+    /**
+     * @param boardKey the key of the board
+     * @return the updates
+     */
+    @GetMapping(path = {"/{board_key}/updates", "/{board_key}/updates/"})
+    public DeferredResult<ResponseEntity<Board>> getUpdates(@PathVariable("board_key")
+                                                                String boardKey) {
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var res = new DeferredResult<ResponseEntity<Board>>(500L, noContent);
+
+        var key = new Object();
+        if (!listeners.containsKey(boardKey))
+            listeners.put(boardKey, new HashMap<>());
+        listeners.get(boardKey).put(key, b -> res.setResult(ResponseEntity.ok(b)));
+        res.onCompletion(() -> listeners.get(boardKey).remove(key));
+
+        return res;
+    }
 
     /**
      * Get the boards
@@ -135,7 +157,10 @@ public class BoardController {
             // Edit the board and save it in the database
             Board newBoard = boardService.editBoardTitle(boardId, newTitle);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
+            // Send new data to all users who have board in preferences
+            listeners.getOrDefault(board.key,
+                    Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
         }
@@ -160,7 +185,11 @@ public class BoardController {
             // Edit the board and save it in the database
             Board newBoard = boardService.editBoardPassword(boardId, password);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
+            // Send new data to all users who have board in preferences
+            listeners.getOrDefault(board.key,
+                    Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
+            System.out.println("Sent out password update for board " + board.title);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
         }
@@ -183,7 +212,11 @@ public class BoardController {
             // Edit the board and save it in the database
             Board newBoard = boardService.removeBoardPassword(boardId);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
+            // Send new data to all users who have board in preferences
+            listeners.getOrDefault(board.key,
+                    Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
+            System.out.println("Sent out password removed updates for board " + board.title);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
         }
@@ -207,6 +240,11 @@ public class BoardController {
             boardService.deleteBoardById(boardId);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Send new data to all users who have board in preferences
+            board.title = "REMOVED";
+            listeners.getOrDefault(board.key,
+                    Collections.emptyMap()).forEach((k, l) -> l.accept(board));
+            System.out.println("Sent out board removal updates for board " + board.id);
             // Return the saved board with an HTTP 200 OK status
             return ResponseEntity.ok(board);
         }
@@ -233,10 +271,12 @@ public class BoardController {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
 
-            boardService.editBoardBackground(boardId, colour);
+            Board newBoard = boardService.editBoardBackground(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
+            // Send new data to all users who have board in preferences
+            listeners.getOrDefault(board.key,
+                    Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             return ResponseEntity.ok(board);
         }
         catch(Exception e){
@@ -258,10 +298,12 @@ public class BoardController {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
 
-            boardService.editBoardFont(boardId, colour);
+            Board newBoard = boardService.editBoardFont(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
-
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
+            // Send new data to all users who have board in preferences
+            listeners.getOrDefault(board.key,
+                    Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             return ResponseEntity.ok(board);
         }
         catch(Exception e){
@@ -282,9 +324,9 @@ public class BoardController {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
 
-            boardService.editListsBackground(boardId, colour);
+            Board newBoard = boardService.editListsBackground(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
 
             return ResponseEntity.ok(board);
         }
@@ -307,9 +349,9 @@ public class BoardController {
             // Get the initial board
             Board board = boardService.getBoardById(boardId);
 
-            boardService.editListsFont(boardId, colour);
+            Board newBoard = boardService.editListsFont(boardId, colour);
             // Send new data to all users in the board
-            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
 
             return ResponseEntity.ok(board);
         }

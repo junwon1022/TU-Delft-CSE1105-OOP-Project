@@ -188,29 +188,24 @@ public class BoardCtrl {
             key.setText(board.key);
             title.setText(board.title);
             title.setStyle("-fx-text-fill: " + board.font);
-
             if(adminFlag == 0)  {
-                var boardList = prefs.getBoards(server.getServerAddress());
-                recentBoardsData = FXCollections.observableList(boardList);
-                addBoardToPrefs(boardList);
+                recentBoardsData = mainCtrl.mainScreenCtrl.data;
                 styleMyBoards();
             } else {
                 recentBoardsData = FXCollections.observableList
                     (server.getBoards().stream()
-                        .map(x -> new PreferencesBoardInfo
-                        (x.title, x.key, x.password, x.font, x.colour))
+                        .map(x -> new PreferencesBoardInfo(x.title, x.key, x.password,
+                                x.font, x.colour))
                         .collect(Collectors.toList()));
                 styleMyBoardsAdmin();
             }
-            prefBoard = recentBoardsData
-                    .stream()
-                    .filter(x -> x.getKey().equals(boardKey))
-                    .collect(Collectors.toList())
-                    .get(0);
+            prefBoard = recentBoardsData.stream().filter(x -> x.getKey().equals(boardKey))
+                    .collect(Collectors.toList()).get(0);
             loadRecentBoards();
             loadTagList();
             refresh();
             handleSecurityLevel();
+            // listen for card updates
             server.registerForMessages("/topic/" + board.id, Board.class, s -> {
                 for (var list : s.lists) {
                     list.cards.sort(Comparator.comparingLong(Card::getOrder));
@@ -218,6 +213,11 @@ public class BoardCtrl {
                         card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
                     }
                 }
+                Platform.runLater(() -> {
+                    board = s;
+                    this.title.setText(s.title);
+                    changeColours();
+                    handleSecurityLevel();});
                 Platform.runLater(() -> listOfCards.setAll(s.lists));
                 Platform.runLater(() -> tags.setAll(s.tags));
             });
@@ -661,7 +661,7 @@ public class BoardCtrl {
             stage.setTitle("Customization of board");
             stage.setScene(new Scene(root, 686, 527));
             stage.showAndWait();
-            prefs.updateBoardColors(server.getServerAddress(), prefBoard,
+            prefBoard = prefs.updateBoardColors(server.getServerAddress(), prefBoard,
                     customizationCtrl.backgroundColor, customizationCtrl.fontColor);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -691,7 +691,14 @@ public class BoardCtrl {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
 
-            if (server.getBoardByKey(joinField.getText()) != null) {
+            Board newBoard = server.getBoardByKey(joinField.getText());
+            if (newBoard != null) {
+                var newPrefs = prefs.addBoard(server.getServerAddress(), newBoard);
+                newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
+                        newPrefs,
+                        newBoard.password);
+                mainCtrl.mainScreenCtrl.addToData(newPrefs);
+                mainCtrl.mainScreenCtrl.setPalette(newBoard);
                 mainCtrl.showBoard(joinField.getText(), adminFlag);
                 joinField.clear();
                 nullTitle.setText("");
@@ -756,9 +763,7 @@ public class BoardCtrl {
             if (controller.success) {
                 String newTitle = controller.storedText;
                 title.setText(newTitle);
-                //method that actually renames the list in the database
-                board = server.renameBoard(board, newTitle);
-                prefs.updateBoardTitle(server.getServerAddress(), prefBoard, newTitle);
+                server.renameBoard(board, newTitle);
                 System.out.println("New title after calling the command: "+ board.title);
                 refresh();
             }
@@ -830,7 +835,7 @@ public class BoardCtrl {
                 board = server.changeBoardPassword(board, password);
                 System.out.println(board);
 
-                prefs.updateBoardPassword(server.getServerAddress(),
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
                         prefBoard, password);
                 this.refresh();
                 writeAccess();
@@ -862,7 +867,7 @@ public class BoardCtrl {
 
             if (controller.success) {
 
-                prefs.updateBoardPassword(server.getServerAddress(),
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
                         prefBoard, controller.enteredPassword);
                 this.refresh();
                 writeAccess();
@@ -901,7 +906,7 @@ public class BoardCtrl {
                 }
                 System.out.println(board);
 
-                prefs.updateBoardPassword(server.getServerAddress(),
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
                         prefBoard, password);
                 this.refresh();
                 writeAccess();

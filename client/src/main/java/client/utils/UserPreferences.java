@@ -16,7 +16,7 @@ public class UserPreferences {
      */
     public UserPreferences() {
         objectMapper = new ObjectMapper();
-        prefs = Preferences.userRoot().node(this.getClass().getName());
+        prefs = Preferences.userRoot().node(this.getClass().getName() + System.getenv("OOPP_INST"));
     }
 
     /**
@@ -69,13 +69,13 @@ public class UserPreferences {
             throw new RuntimeException(e);
         }
     }
-
+    
     /**
      * Method for leave board
      * @param serverAddress
-     * @param board
+     * @param boardKey
      */
-    public void leaveBoard(String serverAddress, Board board) {
+    public void leaveBoard(String serverAddress, String boardKey) {
         String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
 
         try {
@@ -83,13 +83,13 @@ public class UserPreferences {
                     PreferencesBoardList.class);
 
             List<PreferencesBoardInfo> boards = boardList.getInfo();
+            
+            PreferencesBoardInfo currentBoard = null;
 
-            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title,
-                    board.key,
-                    board.password,
-                    board.font,
-                    board.colour);
-
+            for (PreferencesBoardInfo b: boards)
+                if (b.getKey().equals(boardKey))
+                    currentBoard = b;
+            
             boards.remove(currentBoard);
 
             PreferencesBoardList newBoardList = new PreferencesBoardList();
@@ -263,5 +263,44 @@ public class UserPreferences {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Method for updating board
+     * @param serverAddress the address of the server
+     * @param updatedBoard the new board
+     */
+    public void updateBoard(String serverAddress,
+                            Board updatedBoard) {
+        String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
+
+        try {
+            PreferencesBoardList boardList = objectMapper.readValue(boardListJson,
+                    PreferencesBoardList.class);
+
+            List<PreferencesBoardInfo> boards = boardList.getInfo();
+
+            PreferencesBoardInfo newBoard = new PreferencesBoardInfo(updatedBoard.title,
+                    updatedBoard.key,
+                    updatedBoard.password,
+                    updatedBoard.font,
+                    updatedBoard.colour);
+
+            for (int i = 0; i < boards.size(); i++) {
+                PreferencesBoardInfo b = boards.get(i);
+                if (newBoard.getKey().equals(b.getKey())) {
+                    boards.set(i, newBoard);
+                }
+            }
+
+            PreferencesBoardList newBoardList = new PreferencesBoardList();
+            newBoardList.setInfo(boards);
+
+            String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
+            prefs.put(serverAddress, newBoardListJson);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

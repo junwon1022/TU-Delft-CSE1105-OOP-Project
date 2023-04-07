@@ -56,8 +56,10 @@ public class Main extends Application {
                 "client", "scenes", "ConnectToServer.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage,connect);
 
+        primaryStage.setOnCloseRequest(e -> mainCtrl.stop());
+
+        mainCtrl.initialize(primaryStage,connect);
     }
 
 
@@ -83,6 +85,8 @@ public class Main extends Application {
                 "client", "scenes", "AdminScreen.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+
+        primaryStage.setOnCloseRequest(e -> mainCtrl.stop());
 
         mainCtrl.initialize(primaryStage, board, connect, mainScreen, adminScreen);
     }

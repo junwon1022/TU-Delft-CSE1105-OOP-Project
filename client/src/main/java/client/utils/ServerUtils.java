@@ -18,15 +18,20 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.lang.reflect.Type;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import com.google.inject.Inject;
 import commons.*;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -766,12 +771,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-
-        if(boardData != null) {
-            boardData.remove(board);
-            boardData.add(b);
-        }
-
         return b;
     }
 
@@ -1077,6 +1076,60 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.json(""));
     }
+
+    private final Map<String, ExecutorService> execs = new HashMap<>();
+
+    /**
+     * Method for register for board updates
+     * @param key the board key
+     * @param consumer the consumer
+     */
+    public void registerForUpdates(String key, Consumer<Board> consumer) {
+        if (!execs.containsKey(key))
+            execs.put(key, Executors.newSingleThreadExecutor());
+
+        execs.get(key).submit(() -> {
+            while (!Thread.interrupted()) {
+                var res = ClientBuilder.newClient(new ClientConfig())
+                        .target(SERVER).path("/api/boards/" + key + "/updates")
+                        .request(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .get(Response.class);
+
+                if (res.getStatus() == 204) {
+                    continue;
+                }
+                var b = res.readEntity(Board.class);
+                consumer.accept(b);
+            }
+        });
+    }
+
+    /**
+     * Method for unregister for board updates
+     * @param key the board key
+     */
+    public void unregisterForUpdates(String key) {
+        if (execs.containsKey(key)) {
+            execs.get(key).shutdownNow();
+            execs.remove(key);
+        }
+    }
+
+    /**
+     * Method to stop long polling
+     */
+    public void stop() {
+        execs.forEach((c, e) -> {
+            e.shutdownNow();
+            try {
+                e.awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
 
     /**
      * Method that gets the palette
