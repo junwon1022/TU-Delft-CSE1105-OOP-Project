@@ -7,6 +7,7 @@ import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -96,6 +97,8 @@ public class CardDetailsCtrl{
         checklistView.setItems(data);
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
 
+        scenePane.setOnKeyPressed(this::exitDetails);
+
     }
 
     private void selectPalettes(){
@@ -155,7 +158,7 @@ public class CardDetailsCtrl{
      * Exits the detailed view of the card
      * @param event Click of the exit label
      */
-    public void exitDetails(ActionEvent event){
+    public void exitDetails(Event event){
         Stage stage = (Stage) scenePane.getScene().getWindow();
         cardCtrl.setOpen(0);
         stage.close();
