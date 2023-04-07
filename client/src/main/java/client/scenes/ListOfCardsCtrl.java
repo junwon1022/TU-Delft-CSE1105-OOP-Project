@@ -568,12 +568,14 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param event the KeyEvent
      */
     private void editCardKeyboard(javafx.scene.input.KeyEvent event) {
+        if(event.isConsumed())
+            return;
+        event.consume();
         ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
         if (cards.size() == 1) {
             Card editedCard = cards.get(0);
             renameCard(editedCard);
         }
-        event.consume();
     }
 
     /**
