@@ -131,7 +131,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
         setOnDragDropped(this::handleDragDropped);
 
-        setOnKeyPressed(this::handleKeyPressed);
+        list.setOnKeyPressed(this::handleKeyPressed);
     }
 
     /**
@@ -465,10 +465,14 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
         if (keyEvent.getCode().toString().equals("ENTER")) {
-            addCardKeyboard(keyEvent);
+            if (!addButton.isVisible())
+                addCardKeyboard(keyEvent);
+            else
+                openCardDetails(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("ESCAPE")){
-            cancelKeyboard(keyEvent);
+            if (!addButton.isVisible())
+                cancelKeyboard(keyEvent);
         }
         else if (keyEvent.getCode() == KeyCode.E) {
             editCardKeyboard(keyEvent);
@@ -477,6 +481,18 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 keyEvent.getCode() == KeyCode.BACK_SPACE)  {
             deleteCardKeyboard(keyEvent);
         }
+    }
+
+    private void openCardDetails(KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card card = list.getItems().filtered(c -> c.id == cards.get(0).id).get(0);
+            if (card.isOpen == 0) {
+                card.isOpen = 1;
+                list.refresh();
+            }
+        }
+        event.consume();
     }
 
     /**

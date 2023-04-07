@@ -157,7 +157,7 @@ public class CardDetailsCtrl{
      */
     public void exitDetails(ActionEvent event){
         Stage stage = (Stage) scenePane.getScene().getWindow();
-        cardCtrl.setOpen(false);
+        cardCtrl.setOpen(0);
         stage.close();
     }
 
