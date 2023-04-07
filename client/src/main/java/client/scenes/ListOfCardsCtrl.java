@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -97,6 +98,10 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         cards = FXCollections.observableArrayList();
         initialize();
     }
+
+    /**
+     * Initializes List of Cards
+     */
 
     public void initialize() {
 
@@ -469,7 +474,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         int listcount = 0;
         int i2 = 0;
 
-        for(ListOfCards l : board.listOfCards) {
+        for (ListOfCards l : board.listOfCards) {
             for (int i = 0; i < l.cards.size(); i++) {
                 if (l.cards.get(i).selected) {
                     server.selectCard(l.cards.get(i), false);
@@ -480,8 +485,18 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             i2++;
         }
         count++;
+        frontSwitchHelper(keyEvent,count,listcount);
+    }
+    /**
+     * Helper method
+     * @param keyEvent the KeyEvent
+     * @param count
+     * @param listcount
+     */
+    public void frontSwitchHelper(javafx.scene.input.KeyEvent keyEvent, int count, int listcount){
 
-        while(count >= board.listOfCards.get(listcount).cards.size()) count -= board.listOfCards.get(listcount).cards.size();
+        while(count >= board.listOfCards.get(listcount).cards.size())
+            count -= board.listOfCards.get(listcount).cards.size();
 
         System.out.println("List count currently is : " + listcount);
 
@@ -508,21 +523,30 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         int listcount = 0;
         int i2 = 0;
 
-        for(ListOfCards l : board.listOfCards) {
-            for(int i = 0; i < l.cards.size(); i++) {
-                if(l.cards.get(i).selected){
-                  server.selectCard(l.cards.get(i), false);
-                  count = i;
-                  listcount = i2;
-                  break;
+        for (ListOfCards l : board.listOfCards) {
+            for (int i = 0; i < l.cards.size(); i++) {
+                if (l.cards.get(i).selected) {
+                    server.selectCard(l.cards.get(i), false);
+                    count = i;
+                    listcount = i2;
+                    break;
+                }
             }
+            i2++;
         }
-        i2++;
+        backSwitchHelper(keyEvent, count, listcount);
     }
+    /**
+     * Helper method for back switch
+     * @param keyEvent the KeyEvent
+     * @param count
+     * @param listcount
+     */
+    public void backSwitchHelper(KeyEvent keyEvent, int count, int listcount){
+
         while(count <= 0) count += board.listOfCards.get(listcount).cards.size();
 
         System.out.println("Count is : " + count);
-
 
         if(count <= board.listOfCards.get(listcount).cards.size() && count > 0){
             Card thisCard = board.listOfCards.get(listcount).cards.get(count-1);
@@ -536,6 +560,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             server.selectCard(thisCard,true);
             initialize();
         }
+        else listcount++;
     }
 
 
@@ -543,41 +568,47 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Handle the key pressed event.
      * @param keyEvent the KeyEvent
+     * @param cardcount
+     * @param listcount
      */
-    public void handleSwitchCardRight(javafx.scene.input.KeyEvent keyEvent,int cardcount, int listcount) {
+    public void handleSwitchCardRight(KeyEvent keyEvent,int cardcount, int listcount) {
 
         int i = 0;
         int i2 = 0;
 
-        for(ListOfCards m : board.listOfCards){
-            for(Card c : m.cards){
-                if(c.selected){
-                    server.selectCard(c,false);
+        for (ListOfCards m : board.listOfCards) {
+            for (Card c : m.cards) {
+                if (c.selected) {
+                    server.selectCard(c, false);
                     listcount = i;
                     cardcount = i2;
                 }
                 i2++;
             }
-         i2 = 0;
-         i++;
+            i2 = 0;
+            i++;
         }
-        listcount++;
+
+        rightSwitchHelper(keyEvent,cardcount,listcount);
+    }
+    /**
+     * Helper method for right switch
+     * @param keyEvent the KeyEvent
+     * @param cardcount
+     * @param listcount
+     */
+    public void rightSwitchHelper(KeyEvent keyEvent, int cardcount, int listcount){
 
         while (listcount >= board.listOfCards.size()) listcount -= board.listOfCards.size();
-
         ListOfCards k = board.listOfCards.get(listcount);
-
-
         System.out.println("The Card : " + cardcount);
-
         if (cardcount >= k.cards.size()) cardcount = k.cards.size()-1;
-
         Card thisCard = k.cards.get(cardcount);
-            for(ListOfCards l : board.listOfCards){
-                for(Card card: l.cards){
-                    if(card.selected) server.selectCard(card,false);
-                }
+        for(ListOfCards l : board.listOfCards){
+            for(Card card: l.cards){
+                if(card.selected) server.selectCard(card,false);
             }
+        }
         server.selectCard(thisCard,true);
         initialize();
 
@@ -586,17 +617,18 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Handle the key pressed event.
      * @param keyEvent the KeyEvent
+     * @param cardcount
+     * @param listcount
      */
-    public void handleSwitchCardLeft(javafx.scene.input.KeyEvent keyEvent,int cardcount, int listcount) {
+    public void handleSwitchCardLeft(KeyEvent keyEvent,int cardcount, int listcount) {
         int i = 0;
         int i2 = 0;
         int found = 0;
-
-        for(ListOfCards m : board.listOfCards){
-            for(Card c : m.cards){
+        for (ListOfCards m : board.listOfCards) {
+            for (Card c : m.cards) {
                 i2++;
-                if(c.selected){
-                    server.selectCard(c,false);
+                if (c.selected) {
+                    server.selectCard(c, false);
                     listcount = i;
                     cardcount = i2;
                     System.out.println("THE SELECT " + c.title);
@@ -604,38 +636,39 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                     break;
                 }
             }
-            if(found == 1) break;
+            if (found == 1) break;
             i2 = 0;
             i++;
         }
-
         listcount--;
-
-
-        while (listcount >= board.listOfCards.size()) listcount -= board.listOfCards.size();
-        while (listcount < 0) listcount += board.listOfCards.size();
-        ListOfCards k = board.listOfCards.get(listcount);
-        System.out.println("The Card : " + cardcount);
-
-
-        if (cardcount < 1) cardcount = 1;
-        if(cardcount > k.cards.size()) cardcount = k.cards.size();
-
-        if(cardcount <= k.cards.size()){
-            Card thisCard = k.cards.get(cardcount-1);
-            System.out.println(thisCard.title);
-            for(ListOfCards l : board.listOfCards){
-                for(Card card: l.cards){
-                    if(card.selected) server.selectCard(card,false);
-                }
-            }
-            System.out.println("This card is " + thisCard.title);
-            server.selectCard(thisCard,true);
-            initialize();
-        }
-
+        while(listcount >= board.listOfCards.size()) listcount -= board.listOfCards.size();
+        leftSwitchHelper(keyEvent,cardcount,listcount);
     }
 
+    /**
+     * Helper method for left switch
+     * @param keyEvent the KeyEvent
+     * @param cardcount
+     * @param listcount
+     */
+    public void leftSwitchHelper(KeyEvent keyEvent, int cardcount, int listcount){
+        while (listcount < 0) listcount += board.listOfCards.size();
+
+        ListOfCards k = board.listOfCards.get(listcount);
+        if(cardcount < 1) cardcount = 1;
+        else if(cardcount > k.cards.size()) cardcount = k.cards.size();
+        Card thisCard = k.cards.get(cardcount-1);
+
+
+        for(ListOfCards l : board.listOfCards){
+            l.cards.stream()
+                    .filter(card -> card.selected)
+                    .forEach(card -> server.selectCard(card,false));
+        }
+        server.selectCard(thisCard,true);
+        initialize();
+
+    }
 
 
     /**
@@ -646,11 +679,16 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         System.out.println(keyEvent.getCode().toString());
         if (keyEvent.getCode().toString().equals("ENTER")) {
             addCardKeyboard(keyEvent);
-        }
-        else if(keyEvent.getCode().toString().equals("ESCAPE")){
+        } else if (keyEvent.getCode().toString().equals("ESCAPE")) {
             cancelKeyboard(keyEvent);
-        }
-        else if(keyEvent.getCode().toString().equals("UP") ||
+        } else handleMoveEvents(keyEvent);
+    }
+    /**
+     * Handle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleMoveEvents(javafx.scene.input.KeyEvent keyEvent) {
+        if(keyEvent.getCode().toString().equals("UP") ||
                 keyEvent.getCode().toString().equals("W")){
             handleSwitchCardBack(keyEvent);
         }
@@ -666,7 +704,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         else if(keyEvent.getCode().toString().equals("LEFT")||
                 keyEvent.getCode().toString().equals("A")){
             handleSwitchCardLeft(keyEvent,mainCount, listCount);
-
 
         }
     }

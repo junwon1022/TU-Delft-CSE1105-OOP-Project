@@ -79,7 +79,7 @@ public class ConnectCtrl {
     public void connectToMainScreen(ActionEvent event) throws Exception {
         try {
             mainCtrl.showMainScreen(field.getText());
-             field.setText("");
+            field.setText("");
         }
         catch(Exception e) {
             mainCtrl.changeServer("http://localhost:8080");

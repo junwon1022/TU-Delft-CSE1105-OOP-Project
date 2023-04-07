@@ -613,12 +613,14 @@ public class ServerUtils {
     /**
      * Select/Unselect a card
      * @param card - the card that is selected
+     * @param b - boolean
      * @return the Card that was renamed
      */
     public Card selectCard(Card card, boolean b){
 
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}/select")
+                .target(SERVER)
+                .path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}/select")
                 .resolveTemplate("board_id", card.list.board.id)
                 .resolveTemplate("list_id", card.list.id)
                 .resolveTemplate("card_id", card.id)

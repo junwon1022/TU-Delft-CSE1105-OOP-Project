@@ -55,6 +55,7 @@ public class CardService {
     /**
      * Make a card selected/unselected
      * @param id
+     * @param b
      * @return a card
      */
     public Card editSelected(Long id, boolean b) throws Exception {

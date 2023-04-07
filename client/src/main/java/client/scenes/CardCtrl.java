@@ -201,7 +201,7 @@ public class CardCtrl extends ListCell<Card> {
                 } else {
                     this.writeAccess();
                 }
-                 root.setStyle("-fx-background-color: " + item.colour);
+                root.setStyle("-fx-background-color: " + item.colour);
 
                 setGraphic(root);
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

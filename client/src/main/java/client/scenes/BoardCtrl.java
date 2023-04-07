@@ -790,17 +790,16 @@ public class BoardCtrl {
     public void handleKeyboardShortcuts(KeyEvent event) {
         if(event.getCode().toString().equals("C")) addColourByKey(event);
         if(event.getCode().toString().equals("T")) addTagByKey(event);
-        if(event.getCode().toString().equals("D")) moveHighlightByKey(event);
-
-    }
-
-    public void moveHighlightByKey(KeyEvent event) {
-
-
 
     }
 
 
+    /**
+     * Shortcut for adding tags
+     *
+     * @param event the ActionEvent
+     * @return
+     */
     public void addTagByKey(KeyEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddTag.fxml"));
         try {
@@ -834,7 +833,12 @@ public class BoardCtrl {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Shortcut for adding colours
+     *
+     * @param event the ActionEvent
+     * @return
+     */
     public void addColourByKey(KeyEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Customization.fxml"));
         try {
