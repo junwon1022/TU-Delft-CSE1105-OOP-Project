@@ -23,6 +23,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainScreenCtrl {
 
@@ -73,7 +76,15 @@ public class MainScreenCtrl {
         data = FXCollections.observableArrayList();
         list = new ListView<>();
 
+        Runnable updatePrefs = new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> data.setAll(prefs.getBoards(server.getServerAddress())));
+            }
+        };
 
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
     }
 
 
@@ -89,13 +100,14 @@ public class MainScreenCtrl {
 
         for (PreferencesBoardInfo b: boardData)
             server.registerForUpdates(b.getKey(), c -> {
+                System.out.println("Received update for board with key " + b.getKey());
                 if (c.title.equals("REMOVED")) {
                     System.out.println("Removing board " + b.getTitle());
                     server.unregisterForUpdates(b.getKey());
-                    prefs.leaveBoard(server.getServerAddress(), b);
+                    prefs.leaveBoard(server.getServerAddress(), c.key);
                 }
                 else
-                    prefs.updateBoard(server.getServerAddress(), b, c);
+                    prefs.updateBoard(server.getServerAddress(), c);
                 Platform.runLater(this::refresh);
             });
     }
@@ -103,13 +115,14 @@ public class MainScreenCtrl {
     void addToData(PreferencesBoardInfo newPrefs) {
         data.add(newPrefs);
         server.registerForUpdates(newPrefs.getKey(), c -> {
+            System.out.println("Received update for board with key " + newPrefs.getKey());
             if (c.title.equals("REMOVED")) {
                 System.out.println("Removing board " + newPrefs.getTitle());
                 server.unregisterForUpdates(newPrefs.getKey());
-                prefs.leaveBoard(server.getServerAddress(), newPrefs);
+                prefs.leaveBoard(server.getServerAddress(), c.key);
             }
             else
-                prefs.updateBoard(server.getServerAddress(), newPrefs, c);
+                prefs.updateBoard(server.getServerAddress(), c);
             Platform.runLater(this::refresh);
         });
     }

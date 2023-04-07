@@ -69,13 +69,13 @@ public class UserPreferences {
             throw new RuntimeException(e);
         }
     }
-
+    
     /**
      * Method for leave board
      * @param serverAddress
-     * @param board
+     * @param boardKey
      */
-    public void leaveBoard(String serverAddress, Board board) {
+    public void leaveBoard(String serverAddress, String boardKey) {
         String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
 
         try {
@@ -83,13 +83,13 @@ public class UserPreferences {
                     PreferencesBoardList.class);
 
             List<PreferencesBoardInfo> boards = boardList.getInfo();
+            
+            PreferencesBoardInfo currentBoard = null;
 
-            PreferencesBoardInfo currentBoard = new PreferencesBoardInfo(board.title,
-                    board.key,
-                    board.password,
-                    board.font,
-                    board.colour);
-
+            for (PreferencesBoardInfo b: boards)
+                if (b.getKey().equals(boardKey))
+                    currentBoard = b;
+            
             boards.remove(currentBoard);
 
             PreferencesBoardList newBoardList = new PreferencesBoardList();
@@ -268,11 +268,9 @@ public class UserPreferences {
     /**
      * Method for updating board
      * @param serverAddress the address of the server
-     * @param oldBoard the old board
      * @param updatedBoard the new board
      */
     public void updateBoard(String serverAddress,
-                            PreferencesBoardInfo oldBoard,
                             Board updatedBoard) {
         String boardListJson = prefs.get(serverAddress, "{\"info\": []}");
 
