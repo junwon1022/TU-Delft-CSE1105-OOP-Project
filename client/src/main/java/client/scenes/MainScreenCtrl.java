@@ -97,7 +97,7 @@ public class MainScreenCtrl {
             });
     }
 
-    private void addToData(PreferencesBoardInfo newPrefs) {
+    void addToData(PreferencesBoardInfo newPrefs) {
         data.add(newPrefs);
         server.registerForUpdates(newPrefs.getKey(), c -> {
             if (c.key.equals("REMOVED")) {
@@ -133,7 +133,10 @@ public class MainScreenCtrl {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
             Board board = server.getBoardByKey(joinField.getText());
             if(board != null) {
-                prefs.addBoard(server.getServerAddress(), board);
+                var newPrefs = prefs.addBoard(server.getServerAddress(), board);
+                newPrefs = prefs.updateBoardPassword(server.getServerAddress(), newPrefs, board.password);
+                addToData(newPrefs);
+                setPalette(board);
                 mainCtrl.showBoard(joinField.getText(),0);
                 joinField.clear();
                 nullTitle.setText("");
@@ -161,7 +164,10 @@ public class MainScreenCtrl {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
                 Board board = server.getBoardByKey(joinField.getText());
                 if(board != null) {
-                    prefs.addBoard(server.getServerAddress(), board);
+                    var newPrefs = prefs.addBoard(server.getServerAddress(), board);
+                    newPrefs = prefs.updateBoardPassword(server.getServerAddress(), newPrefs, board.password);
+                    addToData(newPrefs);
+                    setPalette(board);
                     mainCtrl.showBoard(joinField.getText(),0);
                     joinField.clear();
                     nullTitle.setText("");
@@ -225,7 +231,7 @@ public class MainScreenCtrl {
      * Method that sets a palette
      * @param board
      */
-    private void setPalette(Board board){
+    void setPalette(Board board){
         Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
                 true, board, new HashSet<>());
         defaultPalette.id = server.addPalette(board.id, defaultPalette).id;

@@ -769,12 +769,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-
-        if(boardData != null) {
-            boardData.remove(board);
-            boardData.add(b);
-        }
-
         return b;
     }
 

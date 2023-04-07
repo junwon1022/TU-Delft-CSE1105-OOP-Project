@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import jakarta.ws.rs.WebApplicationException;
@@ -27,6 +28,8 @@ public class AdminTitleCtrl extends ListCell<Board> {
     private final MainCtrl mainCtrl;
     private Board data;
 
+    private final UserPreferences prefs;
+
     @FXML
     private VBox root;
     @FXML
@@ -45,12 +48,14 @@ public class AdminTitleCtrl extends ListCell<Board> {
      * @param server         The server to use
      * @param adminScreenCtrl The mainscreen the title is part of
      * @param mainCtrl
+     * @param prefs
      */
     @Inject
-    public AdminTitleCtrl(ServerUtils server, AdminScreenCtrl adminScreenCtrl, MainCtrl mainCtrl) {
+    public AdminTitleCtrl(ServerUtils server, AdminScreenCtrl adminScreenCtrl, MainCtrl mainCtrl, UserPreferences prefs) {
         this.server = server;
         this.adminScreenCtrl = adminScreenCtrl;
         this.mainCtrl = mainCtrl;
+        this.prefs = prefs;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdminBoardTitle.fxml"));
         fxmlLoader.setController(this);
@@ -102,6 +107,7 @@ public class AdminTitleCtrl extends ListCell<Board> {
     public void remove(ActionEvent event){
         try {
             server.removeBoard(data);
+            prefs.leaveBoard(server.getServerAddress(), data);
             Thread.sleep(100);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);

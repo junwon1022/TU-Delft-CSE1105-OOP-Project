@@ -290,7 +290,7 @@ public class UserPreferences {
 
             for (int i = 0; i < boards.size(); i++) {
                 PreferencesBoardInfo b = boards.get(i);
-                if (newBoard.getKey().equals(updatedBoard.key)) {
+                if (newBoard.getKey().equals(b.getKey())) {
                     boards.set(i, newBoard);
                 }
             }
