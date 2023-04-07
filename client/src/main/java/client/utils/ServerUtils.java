@@ -21,6 +21,10 @@ import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -283,9 +287,6 @@ public class ServerUtils {
      * @return a list containing all lists of cards
      */
     public String checkServer(String serverUrl){
-        System.out.println("The Url is " + URLEncoder.encode(SERVER,StandardCharsets.UTF_8));
-
-
         try {
             return ClientBuilder.newClient(new ClientConfig())
                     .target(SERVER).path("/api/checkServer/")
@@ -580,11 +581,14 @@ public class ServerUtils {
 
     /**
      * Get a card from the server
+     * @param card
      * @return the card we need
      */
-    public Card getCard(){
+    public Card getCard(Card card){
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}") //
+                .target(SERVER).path("/api/boards/"+ card.list.board.id
+                        + "/lists/"+ card.list.id
+                        + "/cards/" + card.id)
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Card>() {});
@@ -890,10 +894,9 @@ public class ServerUtils {
      * Method that deletes the given palette from the database, if possible
      * @param boardId
      * @param palette
-     * @return the deleted palette
      */
-    public Palette deletePalette(long boardId, Palette palette){
-        return ClientBuilder.newClient(new ClientConfig())
+    public void deletePalette(long boardId, Palette palette){
+        ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes/"+ palette.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
@@ -1127,6 +1130,55 @@ public class ServerUtils {
                 throw new RuntimeException(ex);
             }
         });
+    }
+
+
+    /**
+     * Method that gets the palette
+     * @param boardId
+     * @param paletteId
+     * @return the palette
+     */
+    public Palette getPalette(long boardId, long paletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes/" + paletteId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Palette>() {});
+    }
+
+    /**
+     * Method that adds a palette to a card
+     * @param card
+     * @param palette
+     * @return the card with a palette
+     */
+    public Card addPaletteToCard(Card card, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/palette")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(palette, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Method  that adds the cards of 2 palettes in one
+     * @param palette
+     * @param oldPaletteId
+     * @return the palette with the new cards
+     */
+    public Palette changePaletteCards(Palette palette, long oldPaletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/palettes/{palette_id}/cards/")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("palette_id", palette.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(oldPaletteId, APPLICATION_JSON), Palette.class);
     }
 
 }

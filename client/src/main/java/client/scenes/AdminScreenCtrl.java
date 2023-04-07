@@ -82,7 +82,6 @@ public class AdminScreenCtrl {
      */
     public void refresh() {
         var boardData = server.getMyServerBoardTitles();
-        System.out.println("All board data " + boardData.toString());
         data.setAll(boardData);
         list.setItems(data);
         list.setCellFactory(param -> new AdminTitleCtrl(server,this, mainCtrl, prefs));
@@ -111,7 +110,6 @@ public class AdminScreenCtrl {
                 String password = controller.password;
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
-                System.out.println("The title is "+ title);
                 Board board = new Board(title,backgroundColor,fontColor,"#CAF0F8",
                         "#000000", password, new ArrayList<>(), new HashSet<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")

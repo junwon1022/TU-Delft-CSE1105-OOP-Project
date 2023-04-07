@@ -103,7 +103,6 @@ public class BoardController {
         try {
             // Get the board
             Board board = boardService.getBoardByKey(key);
-            System.out.println("The board , as we get it would be " + board);
             if(board == null) return ResponseEntity.internalServerError().build();
             // Return the board with an HTTP 200 OK status
             return ResponseEntity.status(HttpStatus.OK).body(board);

@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
@@ -161,14 +162,16 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 if (c.id == dbCardId)
                     draggedCard = c;
 
-            draggedCard.palette.cards.remove(this);
-            draggedCard.palette = null;
+            Palette p = draggedCard.palette;
+
             server.removeCard(draggedCard);
 
+            p = server.getPalette(p.board.id, p.id);
+            draggedCard.palette = null;
             draggedCard.list = this.cardData;
             draggedCard.order = this.cardData.cards.size();
-            server.addCard2(draggedCard);
-
+            draggedCard = server.addCard2(draggedCard);
+            draggedCard = server.addPaletteToCard(draggedCard, p);
             board.refresh();
         }
         event.setDropCompleted(true);
@@ -214,6 +217,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                       ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
+
 //    /**
 //     * Adds a new card to the List of Cards.
 //     * Shows a text field that asks for the title.
@@ -253,9 +257,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
-
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
             hideButton(event);
-
             board.refresh();
         } else {
             errorStyle();
@@ -476,6 +480,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
 
             hideButtonKeyboard(event);
 

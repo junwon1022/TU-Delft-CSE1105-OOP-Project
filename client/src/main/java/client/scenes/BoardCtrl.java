@@ -435,6 +435,8 @@ public class BoardCtrl {
         //the method call of getTagsInBoard will be with the board parameter
         var serverDataTags = server.getTagsInBoard(board.id);
         tags.setAll(serverDataTags);
+        board = server.getBoard(board.id);
+        changeColours();
     }
 
     /**
@@ -512,7 +514,6 @@ public class BoardCtrl {
 
                 ListOfCards list = getList(title);
                 ListOfCards addedList = server.addListOfCards(list);
-                System.out.println(addedList);
 
                 //change the id of the board locally
                 list.id = addedList.id;

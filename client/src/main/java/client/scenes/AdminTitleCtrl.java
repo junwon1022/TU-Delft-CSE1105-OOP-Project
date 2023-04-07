@@ -124,7 +124,6 @@ public class AdminTitleCtrl extends ListCell<Board> {
      * @param event - the join button being clicked
      */
     public void join(ActionEvent event){
-        System.out.println("The key is " + data.key);
         mainCtrl.showBoard(data.key,1);
     }
 
@@ -151,7 +150,6 @@ public class AdminTitleCtrl extends ListCell<Board> {
 
                 //method that actually renames the list in the database
                 data = server.renameBoard(data, newTitle);
-                System.out.println("New title after calling the command: "+ data.title);
                 adminScreenCtrl.refresh();
             }
         } catch (IOException e) {
