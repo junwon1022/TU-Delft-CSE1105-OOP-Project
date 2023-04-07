@@ -105,6 +105,16 @@ public class MainScreenCtrl {
                     System.out.println("Removing board " + b.getTitle());
                     server.unregisterForUpdates(b.getKey());
                     prefs.leaveBoard(server.getServerAddress(), c.key);
+                    if (mainCtrl.primaryStage.getTitle().equals("My board")
+                            && mainCtrl.boardCtrl.getBoard().key.equals(c.key)) {
+                        Platform.runLater(() -> {
+                            try {
+                                mainCtrl.showMainScreen(server.getServerAddress());
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }
                 }
                 else
                     prefs.updateBoard(server.getServerAddress(), c);
@@ -120,6 +130,16 @@ public class MainScreenCtrl {
                 System.out.println("Removing board " + newPrefs.getTitle());
                 server.unregisterForUpdates(newPrefs.getKey());
                 prefs.leaveBoard(server.getServerAddress(), c.key);
+                if (mainCtrl.primaryStage.getTitle().equals("My board")
+                        && mainCtrl.boardCtrl.getBoard().key.equals(c.key)) {
+                    Platform.runLater(() -> {
+                        try {
+                            mainCtrl.showMainScreen(server.getServerAddress());
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
             }
             else
                 prefs.updateBoard(server.getServerAddress(), c);
