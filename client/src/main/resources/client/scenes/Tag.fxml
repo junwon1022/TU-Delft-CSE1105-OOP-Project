@@ -10,10 +10,10 @@
 
 <HBox fx:id="root" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="170.0" spacing="5.0" styleClass="tag-hbox" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane>
+      <AnchorPane prefHeight="35.0" prefWidth="13.0">
          <children>
-            <Label fx:id="renameTagDisabled" onMouseClicked="#showReadOnlyMessage" prefHeight="28.0" prefWidth="31.0" visible="false" />
-            <Button id="rename-tag" fx:id="renameTag" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" minHeight="1.0" minWidth="1.0" mnemonicParsing="false" onAction="#renameTag" prefHeight="12.0" prefWidth="13.0" styleClass="rename" stylesheets="@../../styles.css">
+            <Label fx:id="renameTagDisabled" layoutX="2.0" layoutY="4.0" onMouseClicked="#showReadOnlyMessage" prefHeight="28.0" prefWidth="21.0" visible="false" />
+            <Button id="rename-tag" fx:id="renameTag" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="4.0" layoutY="11.0" minHeight="1.0" minWidth="1.0" mnemonicParsing="false" onAction="#renameTag" prefHeight="12.0" prefWidth="13.0" styleClass="rename" stylesheets="@../../styles.css">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -24,10 +24,10 @@
          </children>
       </AnchorPane>
       <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" wrapText="true" HBox.hgrow="ALWAYS" />
-      <AnchorPane prefHeight="35.0" prefWidth="19.0">
+      <AnchorPane prefHeight="35.0" prefWidth="8.0">
          <children>
-            <Label fx:id="deleteTagDisabled" layoutX="9.0" onMouseClicked="#showReadOnlyMessage" prefHeight="35.0" prefWidth="21.0" visible="false" />
-            <Button id="delete-list" fx:id="deleteTag" mnemonicParsing="false" onAction="#remove" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+            <Label fx:id="deleteTagDisabled" layoutX="2.0" onMouseClicked="#showReadOnlyMessage" prefHeight="35.0" prefWidth="21.0" visible="false" />
+            <Button id="delete-list" fx:id="removeTag" layoutX="5.0" layoutY="9.0" mnemonicParsing="false" onAction="#remove" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
                <font>
                   <Font name="Corbel Bold" size="13.0" />
                </font>
