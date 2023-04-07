@@ -4,6 +4,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -76,7 +77,6 @@ public class AdminScreenCtrl {
      */
     public void refresh() {
         var boardData = server.getMyServerBoardTitles();
-        System.out.println("All board data " + boardData.toString());
         data.setAll(boardData);
         list.setItems(data);
         list.setCellFactory(param -> new AdminTitleCtrl(server,this, mainCtrl));
@@ -105,18 +105,28 @@ public class AdminScreenCtrl {
                 String password = controller.password;
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
-                System.out.println("The title is "+ title);
-                Board board = new Board(title,backgroundColor,fontColor,"" ,
-                        "" , password, new ArrayList<>(), new HashSet<>(),new HashSet<>());
+                Board board = new Board(title,backgroundColor,fontColor,"#CAF0F8",
+                        "#000000", password, new ArrayList<>(), new HashSet<>(), new HashSet<>());
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
-                server.addBoardTitle(board);
+                Board newBoard = server.addBoard(board);
 
                 refresh();
+                setPalette(newBoard);
             }
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
+    }
+
+    /**
+     * Method that sets a palette
+     * @param board
+     */
+    private void setPalette(Board board){
+        Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
+                true, board, new HashSet<>());
+        defaultPalette.id = server.addPalette(board.id, defaultPalette).id;
     }
 
     /**

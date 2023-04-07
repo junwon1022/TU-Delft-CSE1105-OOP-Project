@@ -80,6 +80,11 @@ public class PaletteCtrl extends ListCell<Palette> {
             background.setValue(Color.web(data.background));
             font.setValue(Color.web(data.font));
             setDefault.setVisible(!data.isDefault);
+            if(board.palettes.size() < 2) {
+                remove.setVisible(false);
+            } else {
+                remove.setVisible(true);
+            }
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
@@ -90,15 +95,11 @@ public class PaletteCtrl extends ListCell<Palette> {
      * @param event
      */
     public void removePalette(ActionEvent event){
-        if(board.palettes.size() > 2){
+        Palette newDefault = setNewDefault();
+        if(board.palettes.size() >= 2){
+            data = server.changePaletteCards(newDefault, data.id);
+            newDefault = server.getPalette(board.id, newDefault.id);
             server.deletePalette(board.id, data);
-            if(data.isDefault)
-                setFirstAsDefault();
-
-        }
-        else if(board.palettes.size() == 2){
-            server.deletePalette(board.id, data);
-            setFirstAsDefault();
         }
         parent.refresh();
     }
@@ -107,7 +108,22 @@ public class PaletteCtrl extends ListCell<Palette> {
         Iterator<Palette> it = server.getAllPalettes(board.id).iterator();
         Palette p = it.next();
         server.setDefault(board.id, p.id);
+
     }
+
+    private Palette setNewDefault(){
+        Iterator<Palette> it = server.getAllPalettes(board.id).iterator();
+        while(it.hasNext()){
+            Palette p = it.next();
+            if(p.id != data.id){
+                if(data.isDefault)
+                    server.setDefault(board.id, p.id);
+                return p;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Method that changes a color object into

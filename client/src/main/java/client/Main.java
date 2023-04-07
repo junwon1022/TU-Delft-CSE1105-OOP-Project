@@ -56,8 +56,10 @@ public class Main extends Application {
                 "client", "scenes", "ConnectToServer.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage,connect);
 
+        primaryStage.setOnCloseRequest(e -> mainCtrl.stop());
+
+        mainCtrl.initialize(primaryStage,connect);
     }
 
 
@@ -73,16 +75,18 @@ public class Main extends Application {
 
     public void startConnect(Stage primaryStage) throws IOException {
 
-        var board = FXML.load(BoardCtrl.class,
-               "client", "scenes", "Board.fxml");
         var connect = FXML.load(ConnectCtrl.class,
                 "client", "scenes", "ConnectToServer.fxml");
         var mainScreen = FXML.load(MainScreenCtrl.class,
-              "client", "scenes", "MainScreen.fxml");
+                "client", "scenes", "MainScreen.fxml");
+        var board = FXML.load(BoardCtrl.class,
+                "client", "scenes", "Board.fxml");
         var adminScreen = FXML.load(AdminScreenCtrl.class,
-             "client", "scenes", "AdminScreen.fxml");
+                "client", "scenes", "AdminScreen.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+
+        primaryStage.setOnCloseRequest(e -> mainCtrl.stop());
 
         mainCtrl.initialize(primaryStage, board, connect, mainScreen, adminScreen);
     }

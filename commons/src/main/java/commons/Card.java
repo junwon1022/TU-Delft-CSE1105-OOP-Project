@@ -1,5 +1,4 @@
 package commons;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -45,7 +44,9 @@ public class Card {
     @ManyToOne()
     @JoinColumn(name = "list_id")
     public ListOfCards list;
+
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("order asc")
     public List<CheckListItem> checklist = new ArrayList<>();
 
     @ManyToMany
@@ -56,7 +57,7 @@ public class Card {
     )
     public Set<Tag> tags = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "palette_id")
     public Palette palette;
 
@@ -143,6 +144,22 @@ public class Card {
             this.palette = palette;
             palette.cards.add(this);
         }
+    }
+
+    /**
+     * getter for palette
+     * @return the palette
+     */
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    /**
+     * setter for palette
+     * @param palette
+     */
+    public void setPalette(Palette palette){
+        this.palette = palette;
     }
 
     /**

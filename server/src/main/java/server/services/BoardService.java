@@ -48,11 +48,7 @@ public class BoardService {
      * @return a board
      */
     public Board getBoardByKey(String key) throws Exception {
-
-        System.out.println("Board Repository " + boardRepository.findAll().toString());
-
         for(Board b : boardRepository.findAll()){
-            System.out.println("Board to string" + b.toString());
             if(b.key.equals(key)) return b;
         }
 
@@ -97,6 +93,29 @@ public class BoardService {
 
         return boardRepository.save(board);
 
+    }
+
+    /**
+     * Edit the password of a board and store the edited board in the database
+     * @param id
+     * @param password
+     * @return the edited board
+     */
+    public Board editBoardPassword(Long id, String password) throws Exception {
+        Board board = getBoardById(id);
+        board.password = password;
+        return boardRepository.save(board);
+    }
+
+    /**
+     * Remove the password of a board and store the edited board in the database
+     * @param id
+     * @return the edited board
+     */
+    public Board removeBoardPassword(Long id) throws Exception {
+        Board board = getBoardById(id);
+        board.password = null;
+        return boardRepository.save(board);
     }
 
     /**

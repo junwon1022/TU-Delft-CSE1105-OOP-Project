@@ -132,7 +132,7 @@ public class Board {
      * @param length
      * @return the generated string
      */
-    private String getRandomString(int length) {
+    String getRandomString(int length) {
         String CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder(length);

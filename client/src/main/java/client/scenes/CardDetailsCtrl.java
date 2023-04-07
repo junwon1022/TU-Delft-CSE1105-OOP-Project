@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CheckListItem;
+import commons.Palette;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,12 +18,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 public class CardDetailsCtrl{
@@ -53,6 +57,20 @@ public class CardDetailsCtrl{
     @FXML
     private ListView<CheckListItem> checklistView;
 
+    @FXML
+    private Label paletteTitle;
+
+    @FXML
+    private Rectangle background;
+
+    @FXML
+    private Rectangle font;
+
+    @FXML
+    private ListView<Palette> palettes;
+
+    ObservableList<Palette> paletteData;
+
     private Card card;
 
     ObservableList<CheckListItem> data;
@@ -77,7 +95,22 @@ public class CardDetailsCtrl{
         data = FXCollections.observableArrayList();
         checklistView.setItems(data);
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
+
     }
+
+    private void selectPalettes(){
+        paletteData = FXCollections.observableArrayList();
+        Set<Palette> allPalettes = card.list.board.palettes;
+        for(Palette p: allPalettes){
+            if(!p.equals(card.palette))
+                paletteData.add(p);
+        }
+        palettes.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
+        palettes.setItems(paletteData);
+        palettes.setCellFactory(pal-> new PresetCtrl(server, this, board, card));
+    }
+
 
     /**
      * Sets the title of the descriptionTitle label to the title of the card
@@ -111,6 +144,7 @@ public class CardDetailsCtrl{
             if (text.isEmpty()) {
                 text = " ";
                 descriptionText.setText(text);
+                text = descriptionText.getText();
             }
             server.updateDescription(card, text);
             board.refresh();
@@ -123,6 +157,7 @@ public class CardDetailsCtrl{
      */
     public void exitDetails(ActionEvent event){
         Stage stage = (Stage) scenePane.getScene().getWindow();
+        cardCtrl.setOpen(false);
         stage.close();
     }
 
@@ -132,6 +167,7 @@ public class CardDetailsCtrl{
      */
     public void setCard(Card card) {
         this.card = card;
+        selectPalettes();
     }
 
     /**
@@ -145,9 +181,9 @@ public class CardDetailsCtrl{
         if (text.isEmpty()) {
             text = " ";
             descriptionText.setText(text);
+            text = descriptionText.getText();
         }
         server.updateDescription(card, text);
-        cardCtrl.getDescription().setVisible(!server.getDescription(card).trim().equals(""));
         board.refresh();
     }
 
@@ -178,6 +214,9 @@ public class CardDetailsCtrl{
             CheckListItem addedCheckListItem = server.addChecklist(checkListItem);
             checkListItem.id = addedCheckListItem.id;
             data.add(addedCheckListItem);
+            int completed = cardCtrl.getCompleted();
+            int total = cardCtrl.getTotal();
+            cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
 
@@ -189,6 +228,14 @@ public class CardDetailsCtrl{
      */
     public void removeChecklist(CheckListItem checkListItem) {
         data.remove(checkListItem);
+        int completed = cardCtrl.getCompleted();
+        int total = cardCtrl.getTotal();
+        if(checkListItem.completed){
+            cardCtrl.setProgressText(completed-1,total-1);
+        }
+        else{
+            cardCtrl.setProgressText(completed,total-1);
+        }
     }
 
     /**
@@ -201,6 +248,7 @@ public class CardDetailsCtrl{
                 description,
                 false,
                 card);
+        checkListItem.order = data.size();
         return checkListItem;
     }
 
@@ -217,9 +265,24 @@ public class CardDetailsCtrl{
      * @param checklist
      */
     public void setChecklists(List<CheckListItem> checklist) {
+        int total = 0;
+        int completed = 0;
         for(int i = 0; i<checklist.size(); i++){
             data.add(checklist.get(i));
+            if(checklist.get(i).completed){
+                completed++;
+            }
+            total++;
         }
+        cardCtrl.setProgressText(completed,total);
+    }
+
+    /**
+     * Gets the card controller for this card details
+     * @return the card controller
+     */
+    public CardCtrl getCardCtrl() {
+        return this.cardCtrl;
     }
 
     /**
@@ -234,4 +297,47 @@ public class CardDetailsCtrl{
             }
         }
     }
+
+    /**
+     * returns the reference to the list of checklists
+     * of this card
+     * @return the reference of the list
+     */
+    public ObservableList<CheckListItem> getCheckListArray() {
+        return this.data;
+    }
+
+    /**
+     * swaps the checklists on the two provided indexes
+     * @param oldIdx index of the dragged checklist
+     * @param newIdx index of the dragged onto checklist
+     */
+    public void swapChecklists(int oldIdx, int newIdx){
+        server.updateChecklists(card, oldIdx, newIdx);
+        CheckListItem temp = data.get(oldIdx);
+        data.set(oldIdx, data.get(newIdx));
+        data.set(newIdx, temp);
+
+        board.refresh();
+    }
+
+    /**
+     * Method that sets the Preset for a card
+     */
+    public void setPreset(){
+        background.setFill(Color.web(card.palette.background));
+        font.setFill(Color.web(card.palette.font));
+        paletteTitle.setText(card.palette.title);
+    }
+
+
+    /**
+     * Method that refreshes the card details overview
+     */
+    public void refresh(){
+        selectPalettes();
+        setPreset();
+    }
+
+
 }

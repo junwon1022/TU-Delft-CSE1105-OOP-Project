@@ -1,7 +1,6 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
@@ -39,7 +38,7 @@ public class Palette {
     @JoinColumn(name = "board_id")
     public Board board;
 
-    @OneToMany(mappedBy = "palette" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "palette" , cascade = CascadeType.PERSIST, orphanRemoval = false)
     public Set<Card> cards = new HashSet<>();
 
 
@@ -113,16 +112,38 @@ public class Palette {
         this.isDefault = true;
     }
 
-
+    /**
+     * Setter for cards of palette
+     * @param cards
+     */
+    public void setCards(Set<Card> cards){
+        this.cards = cards;
+    }
 
     /**
-     *
-     * @param obj
-     * @return
+     * Setter for cards
+     * @return the set of cards
+     */
+    public Set<Card> getCards(){
+        return this.cards;
+    }
+
+    /**
+     * Equals method for palette
+     * @param o
+     * @return boolean asserting the equality
      */
     @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Palette)) return false;
+        Palette palette = (Palette) o;
+        return id == palette.id && isDefault == palette.isDefault &&
+                Objects.equals(title, palette.title) &&
+                Objects.equals(background, palette.background) &&
+                Objects.equals(font, palette.font) &&
+                Objects.equals(board, palette.board)
+                && Objects.equals(cards, palette.cards);
     }
 
     /**

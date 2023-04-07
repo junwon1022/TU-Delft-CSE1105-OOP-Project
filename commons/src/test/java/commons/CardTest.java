@@ -216,4 +216,31 @@ public class CardTest {
         card.removeTag(null);
         assertEquals(tags, card.tags);
     }
+
+    /**
+     * Test addPalette method
+     */
+    @Test
+    public void testAddPalette() {
+        card.addPalette(palette1);
+        assertTrue(card.palette == palette1);
+    }
+
+    /**
+     * Test getOrder method
+     */
+    @Test
+    public void testGetOrder() {
+        assertEquals(0, card.getOrder());
+    }
+
+    /**
+     * Test removeCardfromTags method
+     */
+    @Test
+    public void testRemoveCardFromTags() {
+        card.removeCardsFromTags();
+        assertEquals(0, tag1.cards.size());
+        assertEquals(0, tag2.cards.size());
+    }
 }
