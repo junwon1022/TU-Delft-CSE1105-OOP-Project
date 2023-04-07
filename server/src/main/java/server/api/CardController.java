@@ -179,7 +179,7 @@ public class CardController {
     /**
      * Edit a card's selection
      *
-     * @param newTitle
+     * @param b
      * @param boardId
      * @param listId
      * @param cardId
