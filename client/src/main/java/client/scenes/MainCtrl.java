@@ -29,11 +29,11 @@ import javafx.util.Pair;
 
 public class MainCtrl {
 
-    private Stage primaryStage;
+    protected Stage primaryStage;
 
     private Main main;
     private ServerUtils serverUtils;
-    private BoardCtrl boardCtrl;
+    protected BoardCtrl boardCtrl;
     private Scene boardOverview;
     private ConnectCtrl connectCtrl;
     private Scene connect;
