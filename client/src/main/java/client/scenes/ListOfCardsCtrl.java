@@ -10,14 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -25,7 +23,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -476,17 +473,31 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             if (!addButton.isVisible())
                 cancelKeyboard(keyEvent);
         }
-        else if (keyEvent.getCode() == KeyCode.E) {
+        else if (keyEvent.getCode() == KeyCode.E ||
+                keyEvent.getCode() == KeyCode.DELETE ||
+                keyEvent.getCode() == KeyCode.BACK_SPACE ||
+                (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) ||
+                (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()))  {
+            handleKeyPressedHelper(keyEvent);
+        }
+    }
+
+    /**
+     * Helper to andle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleKeyPressedHelper(javafx.scene.input.KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.E) {
             editCardKeyboard(keyEvent);
         }
         else if (keyEvent.getCode() == KeyCode.DELETE ||
                 keyEvent.getCode() == KeyCode.BACK_SPACE)  {
             deleteCardKeyboard(keyEvent);
         }
-        else if (keyEvent.getCode() == KeyCode.PAGE_UP && keyEvent.isShiftDown()) {
+        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) {
             moveCardUp(keyEvent);
         }
-        else if (keyEvent.getCode() == KeyCode.PAGE_DOWN && keyEvent.isShiftDown()) {
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()) {
             moveCardDown(keyEvent);
         }
     }
