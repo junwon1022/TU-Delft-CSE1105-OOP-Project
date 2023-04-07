@@ -23,6 +23,11 @@ public class TagTest {
     Tag tag2;
     Tag tag3;
 
+    Palette palette1;
+    Palette palette2;
+
+    Set<Palette> palettes;
+
     Set<Card> cards;
 
     /**
@@ -31,24 +36,34 @@ public class TagTest {
     @BeforeEach
     public void setUp() {
         tags = new HashSet<>();
+
+        palettes = new HashSet<>();
+        palette1 = new Palette("Basic", "#ffffff",
+                "#ffffff", true, board, new HashSet<Card>());
+        palette2 = new Palette("Important", "#222222",
+                "#222222", false, board, new HashSet<Card>());
+
+        palettes.add(palette1);
+        palettes.add(palette2);
+
         board = new Board("Algebra", "#ffffff", "#ffffff",
                 "#ffffff", "#ffffff",
-                "pass", new ArrayList<ListOfCards>(), tags);
+                "pass", new ArrayList<ListOfCards>(), tags, palettes);
         list = new ListOfCards("Grasple", board, new ArrayList<Card>());
 
         card1 = new Card("Homework", "Somewhat long description",
-                "#ffffff", list, new ArrayList<CheckListItem>(), tags);
+                "#ffffff", list, new ArrayList<CheckListItem>(), tags, palette1);
         card2 = new Card("Pre-lecture", "Somewhat long description",
-                "#ffffff", list, new ArrayList<CheckListItem>(), tags);
+                "#ffffff", list, new ArrayList<CheckListItem>(), tags, palette1);
         card3 = new Card("Project", "Somewhat long description",
-                "#ffffff", list, new ArrayList<CheckListItem>(), tags);
+                "#ffffff", list, new ArrayList<CheckListItem>(), tags, palette2);
         cards = new HashSet<>();
         cards.add(card1);
         cards.add(card2);
 
-        tag = new Tag("urgent", "#ff00ff", board, cards);
-        tag2 = new Tag("urgent", "#ff00ff",board, cards);
-        tag3 = new Tag("oopp", "#00ff00",board, cards);
+        tag = new Tag("urgent", "#ff00ff",  "#ffff00", board, cards);
+        tag2 = new Tag("urgent", "#ff00ff", "#ffff00", board, cards);
+        tag3 = new Tag("oopp", "#00ff00", "#ffff00", board, cards);
     }
 
     /**
@@ -135,5 +150,33 @@ public class TagTest {
     public void testRemoveCardNull() {
         tag.removeCard(null);
         assertEquals(cards, tag.cards);
+    }
+
+
+    /**
+     * Test getColour method
+     */
+    @Test
+    public void testGetColour() {
+        assertEquals("#ff00ff", tag.getColour());
+    }
+
+    /**
+     * Test setColour method
+     */
+    @Test
+    public void testSetColour() {
+        tag.setColour("#00ff00");
+        assertEquals("#00ff00", tag.getColour());
+    }
+
+    /**
+     * Test removeTagsFromCards method
+     */
+    @Test
+    public void testRemoveTagsFromCards() {
+        tag.removeTagsFromCards();
+        assertEquals(0, card1.tags.size());
+        assertEquals(0, card2.tags.size());
     }
 }

@@ -20,7 +20,7 @@ public class AddListOfCardsCtrl {
     @FXML
     private Label nullTitle;
 
-    private String MESSAGE = "Please enter a title!";
+    private String MESSAGE;
 
 
     /**
@@ -31,6 +31,7 @@ public class AddListOfCardsCtrl {
     public AddListOfCardsCtrl() {
         success = false;
         nullTitle = new Label("");
+        MESSAGE = "Please enter a title!";
     }
 
     /**
@@ -61,12 +62,12 @@ public class AddListOfCardsCtrl {
      * @param event the ActionEvent
      */
     public void okB(ActionEvent event) {
-        success = true;
         storedText = listTitle.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
+            success = true;
             clearFields();
             closeWindowB(event);
         }
@@ -94,12 +95,12 @@ public class AddListOfCardsCtrl {
      * @param event the KeyEvent
      */
     public void ok(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = listTitle.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);
         }
-        else{
+        else {
+            success = true;
             clearFields();
             closeWindow(event);
         }

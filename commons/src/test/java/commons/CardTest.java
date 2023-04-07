@@ -33,6 +33,11 @@ public class CardTest {
     Tag tag2;
     Tag tag3;
 
+    Palette palette1;
+    Palette palette2;
+
+    Set<Palette> palettes;
+
     /**
      * Set up all objects needed for testing
      */
@@ -45,16 +50,25 @@ public class CardTest {
         checklist.add(checkListItem1);
         checklist.add(checkListItem2);
 
-        tag1 = new Tag("urgent", "#ff00ff", board, new HashSet<Card>());
-        tag2 = new Tag("math", "#ffff00", board, new HashSet<Card>());
-        tag3 = new Tag("oopp", "#00ff00",board, new HashSet<Card>());
+        tag1 = new Tag("urgent", "#ff00ff", "#ff00ff", board, new HashSet<Card>());
+        tag2 = new Tag("math", "#ffff00", "#ffff00", board, new HashSet<Card>());
+        tag3 = new Tag("oopp", "#00ff00", "#ffff00", board, new HashSet<Card>());
         tags = new HashSet<>();
         tags.add(tag1);
         tags.add(tag2);
 
+        palettes = new HashSet<>();
+        palette1 = new Palette("Basic", "#ffffff",
+                "#ffffff", true, board, new HashSet<Card>());
+        palette2 = new Palette("Important", "#222222",
+                "#222222", false, board, new HashSet<Card>());
+
+        palettes.add(palette1);
+        palettes.add(palette2);
+
         board = new Board("Algebra", "#ffffff", "#ffffff",
                 "#ffff22", "#ffff22",
-                "pass", listOfCards, tags);
+                "pass", listOfCards, tags, palettes);
         listOfCards = new ArrayList<>();
         list = new ListOfCards("Grasple",board, cards);
         list2 = new ListOfCards("Grasple", board, cards);
@@ -63,11 +77,11 @@ public class CardTest {
         listOfCards.add(list2);
 
         card = new Card("Homework", "Somewhat long description",
-                "#ffffff", list, checklist, tags);
+                "#ffffff", list, checklist, tags, palette1);
         card2 = new Card("Homework", "Somewhat long description",
-                "#ffffff", list, checklist, tags);
+                "#ffffff", list, checklist, tags, palette1);
         card3 = new Card("Project", "Somewhat long description",
-                "#ffffff", list, checklist, tags);
+                "#ffffff", list, checklist, tags, palette2);
         cards = new ArrayList<>();
         cards.add(card);
         cards.add(card2);
@@ -201,5 +215,32 @@ public class CardTest {
     public void testRemoveTagNull() {
         card.removeTag(null);
         assertEquals(tags, card.tags);
+    }
+
+    /**
+     * Test addPalette method
+     */
+    @Test
+    public void testAddPalette() {
+        card.addPalette(palette1);
+        assertTrue(card.palette == palette1);
+    }
+
+    /**
+     * Test getOrder method
+     */
+    @Test
+    public void testGetOrder() {
+        assertEquals(0, card.getOrder());
+    }
+
+    /**
+     * Test removeCardfromTags method
+     */
+    @Test
+    public void testRemoveCardFromTags() {
+        card.removeCardsFromTags();
+        assertEquals(0, tag1.cards.size());
+        assertEquals(0, tag2.cards.size());
     }
 }

@@ -3,8 +3,7 @@ import javax.persistence.*;
 import java.security.SecureRandom;
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,6 +47,9 @@ public class Board {
     public List<ListOfCards> lists;
 
     @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<Palette> palettes;
+
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<Tag> tags;
 
 
@@ -67,19 +69,22 @@ public class Board {
      * @param password
      * @param lists
      * @param tags
+     * @param palettes
      */
+
     public Board(String title, String boardColour, String fontColour,
                  String listColour, String listFont,
-                 String password, List<ListOfCards> lists, Set<Tag> tags) {
+                 String password, List<ListOfCards> lists, Set<Tag> tags, Set<Palette> palettes) {
         this.title = title;
         this.colour = boardColour;
         this.font = fontColour;
-
         this.listColour = listColour;
         this.listFont = listFont;
         this.password = password;
         this.lists = lists;
+        this.palettes = palettes;
         this.tags = tags;
+
     }
 
     /*
@@ -127,7 +132,7 @@ public class Board {
      * @param length
      * @return the generated string
      */
-    private String getRandomString(int length) {
+    String getRandomString(int length) {
         String CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder(length);
@@ -183,6 +188,23 @@ public class Board {
     }
 
     /**
+     * Add a palette to a board
+     * @param palette
+     */
+    public void addPalette(Palette palette){
+        if(palette != null)
+            palettes.add(palette);
+    }
+
+    /**
+     * Remove a palette from a board
+     * @param palette
+     */
+    public void removePalette(Palette palette) {
+        if (palette != null)
+            palettes.remove(palette);
+    }
+    /**
      * Add a tag to a board
      * @param tag
      */
@@ -218,7 +240,37 @@ public class Board {
             }
         }
         return null;
+
     }
+
+    /**
+     * Getter for palettes
+     * @return the set of all palettes of a board
+     */
+    public Set<Palette> getPalettes() {
+        return palettes;
+    }
+
+    /**
+     * Method that sets all palettes for a board
+     * @param palettes the palettes that need to be added
+     */
+    public void setPalettes(Set<Palette> palettes) {
+        this.palettes = palettes;
+    }
+
+    /**
+     * Method that gets the default palette of a board
+     * @return a palette
+     */
+    @JsonIgnore
+    public Palette getDefaultPalette(){
+        for(Palette p: palettes)
+            if(p.isDefault)
+                return p;
+        return null;
+    }
+
 
     /**
      * Check if two boards are equal

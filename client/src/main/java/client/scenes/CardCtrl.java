@@ -3,7 +3,10 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
+import commons.CheckListItem;
 import commons.ListOfCards;
+import commons.Palette;
+import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -12,9 +15,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.event.ActionEvent;
@@ -25,9 +31,17 @@ import java.util.List;
 public class CardCtrl extends ListCell<Card> {
     private final ServerUtils server;
     private final BoardCtrl board;
-    private final ListOfCardsCtrl parent;
+    private final ListOfCardsCtrl list;
 
-    private Card data;
+    private boolean isOpen = false;
+
+    private Stage storeDetailsStage;
+
+    private Card card;
+
+    private int completedTasks;
+
+    private int totalTasks;
 
     @FXML
     private AnchorPane root;
@@ -36,28 +50,41 @@ public class CardCtrl extends ListCell<Card> {
     private Label title;
 
     @FXML
-    private Button delete;
+    private Label progressText;
+
+    @FXML
+    private Button deleteButton;
     @FXML
     private Text text;
 
     @FXML
-    private Label description;
+    private ImageView description;
 
     @FXML
     private Button renameButton;
+    @FXML
+    private GridPane tagGrid;
+    private List<Tag> tags;
 
+    @FXML
+    private Label renameCardDisabled;
+    @FXML
+    private Label deleteCardDisabled;
+
+    @FXML
+    private Button addDescription;
 
     /**
      * Create a new CardCtrl
      * @param server The server to use
      * @param board The board this card belongs to
-     * @param parent The parent list of cards
+     * @param list The parent list of cards
      */
     @Inject
-    public CardCtrl(ServerUtils server, BoardCtrl board, ListOfCardsCtrl parent) {
+    public CardCtrl(ServerUtils server, BoardCtrl board, ListOfCardsCtrl list) {
         this.server = server;
         this.board = board;
-        this.parent = parent;
+        this.list = list;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Card.fxml"));
         fxmlLoader.setController(this);
@@ -66,10 +93,41 @@ public class CardCtrl extends ListCell<Card> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        board.refresh();
 
-        root.setStyle("-fx-background-color: #00B4D8;" +
-                " -fx-border-radius: 10;" +
-                " -fx-background-radius: 10;");
+        if(!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+    }
+
+    /**
+     * Makes the card readOnly
+     */
+    private void readOnly() {
+        renameButton.setDisable(true);
+        deleteButton.setDisable(true);
+        renameCardDisabled.setVisible(true);
+        deleteCardDisabled.setVisible(true);
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        renameButton.setDisable(false);
+        deleteButton.setDisable(false);
+        renameCardDisabled.setVisible(false);
+        deleteCardDisabled.setVisible(false);
 
         setOnDragDetected(this::handleDragDetected);
 
@@ -86,10 +144,11 @@ public class CardCtrl extends ListCell<Card> {
 
     /**
      * Is called whenever the parent CardList is changed. Sets the data in this controller.
-     * @param item The new item for the cell.
+     *
+     * @param item  The new item for the cell.
      * @param empty whether this cell represents data from the list or not. If it
-     *        is empty, then it does not represent any domain data, but is a cell
-     *        being used to render an "empty" row.
+     *              is empty, then it does not represent any domain data, but is a cell
+     *              being used to render an "empty" row.
      */
     @Override
     protected void updateItem(Card item, boolean empty) {
@@ -98,12 +157,22 @@ public class CardCtrl extends ListCell<Card> {
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
+            if(isOpen){
+                storeDetailsStage.close();
+            }
         } else {
             title.setText(item.title);
-            data = item;
+            description.setVisible(updateDescriptionIcon(item.description));
+            updateProgressText(item.checklist);
+            card = item;
+            if(card.palette != null)
+                setColors(root, title);
+            this.loadTags();
 
-            if(data.description == null || data.description.equals("")) {
-                description.setOpacity(0);
+            if(!board.isUnlocked()) {
+                this.readOnly();
+            } else {
+                this.writeAccess();
             }
 
             setGraphic(root);
@@ -111,13 +180,53 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
+    private void setColors(AnchorPane root, Label title){
+        root.setStyle("-fx-background-color: " + card.palette.background +
+                "; -fx-background-radius: 10");
+        title.setStyle("-fx-text-fill: " + card.palette.font);
+    }
+
+
+
+
+    private boolean updateDescriptionIcon(String description) {
+        if(!description.trim().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * loads the tags colors on the card
+     */
+    public void loadTags() {
+        tagGrid.getChildren().clear();
+        int numRows = 0;
+        int numCols = 5;
+        int i = 0;
+        for (Tag tag : card.tags) {
+            Circle circle = new Circle(6, Color.web(tag.colour));
+            circle.setSmooth(true);
+            circle.setStroke(Color.web("#186B90"));
+            circle.setStrokeWidth(0.5);
+            tagGrid.add(circle, i % numCols, numRows);
+
+            if (i % numCols == numCols - 1) {
+                numRows++;
+                double height = root.getPrefHeight() + 0.3;
+                root.setPrefHeight(height);
+            }
+            i++;
+        }
+    }
+
     /**
      * Method that removes the task from the list, visually
      * @param event - the remove button being clicked
      */
-    public void remove(ActionEvent event){
+    public void remove(ActionEvent event) {
         try {
-            server.removeCard(data);
+            server.removeCard(card);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
             alert.initModality(Modality.APPLICATION_MODAL);
@@ -128,12 +237,20 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
-     * Method that removes the task from the list, visually
+     * Retrieves the title of the card
+     * @return the title of the card
      */
-    private void setTextOpacity(){
-        text.setOpacity(0.0);
+    public String getTitle() {
+        return title.getText();
     }
 
+    /**
+     * gets the description image reference of this card
+     * @return the reference
+     */
+    public ImageView getDescription(){
+        return description;
+    }
 
     /**
      * Handles drag detected
@@ -197,8 +314,7 @@ public class CardCtrl extends ListCell<Card> {
     private void handleDragDropped(DragEvent event) {
         if (getItem() != null) {
             dragDroppedOnCell(event);
-        }
-        else {
+        } else {
             dragDroppedOnEmptyList(event);
         }
 
@@ -214,22 +330,21 @@ public class CardCtrl extends ListCell<Card> {
             String[] strings = db.getString().split("X");
             long dbCardId = Long.decode(strings[0]);
             long dbListId = Long.decode(strings[1]);
-            if (dbListId != this.parent.cardData.id) {
+            if (dbListId != this.list.cardData.id) {
                 Card draggedCard = moveCardToOtherList(dbCardId, dbListId);
-                List<Card> items = this.parent.cardData.cards;
+                List<Card> items = this.list.cardData.cards;
 
                 int draggedIdx = (int) draggedCard.order;
                 int thisIdx = items.indexOf(getItem());
-                server.moveCard(this.parent.cardData, draggedIdx, thisIdx);
-            }
-            else {
-                List<Card> items = this.parent.cardData.cards;
+                server.moveCard(this.list.cardData, draggedIdx, thisIdx);
+            } else {
+                List<Card> items = this.list.cardData.cards;
                 int draggedIdx = 0;
                 for (int i = 0; i < items.size(); i++)
                     if (items.get(i).id == dbCardId)
                         draggedIdx = i;
                 int thisIdx = items.indexOf(getItem());
-                server.moveCard(this.parent.cardData, draggedIdx, thisIdx);
+                server.moveCard(this.list.cardData, draggedIdx, thisIdx);
             }
             board.refresh();
         }
@@ -264,20 +379,23 @@ public class CardCtrl extends ListCell<Card> {
      */
     private Card moveCardToOtherList(long dbCardId, long dbListId) {
         List<Card> draggedList = null;
-        for (ListOfCards loc: this.board.data)
+        for (ListOfCards loc : this.board.listOfCards)
             if (loc.id == dbListId)
                 draggedList = loc.cards;
 
         Card draggedCard = null;
-        for (Card c: draggedList)
+        for (Card c : draggedList)
             if (c.id == dbCardId)
                 draggedCard = c;
 
+        Palette p = draggedCard.palette;
         server.removeCard(draggedCard);
-
-        draggedCard.list = this.parent.cardData;
-        draggedCard.order = this.parent.cardData.cards.size();
-        server.addCard2(draggedCard);
+        p = server.getPalette(p.board.id, p.id);
+        draggedCard.palette = null;
+        draggedCard.list = this.list.cardData;
+        draggedCard.order = this.list.cardData.cards.size();
+        draggedCard=  server.addCard2(draggedCard);
+        draggedCard = server.addPaletteToCard(draggedCard, p);
         return draggedCard;
     }
 
@@ -286,15 +404,15 @@ public class CardCtrl extends ListCell<Card> {
      * --right now only does the renaming of a card functionality--
      * @param event - the rename button being clicked
      */
-    public void renameCard(ActionEvent event){
+    public void renameCard(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
         try {
             Parent root = fxmlLoader.load();
             RenameCardCtrl controller = fxmlLoader.getController();
-            controller.initialize(data);
+            controller.initialize(card);
 
             Stage stage = new Stage();
-            stage.setTitle("Rename the card: " + data.title);
+            stage.setTitle("Rename the card: " + card.title);
             stage.setScene(new Scene(root, 300, 200));
             stage.showAndWait();
 
@@ -302,7 +420,7 @@ public class CardCtrl extends ListCell<Card> {
                 String newTitle = controller.storedText;
 
                 //method that actually renames the list in the database
-                server.renameCard(data, newTitle);
+                server.renameCard(card, newTitle);
                 board.refresh();
             }
         } catch (IOException e) {
@@ -310,4 +428,108 @@ public class CardCtrl extends ListCell<Card> {
         }
     }
 
+    /**
+     * Opens the detailed view of a card when the description button is double clicked
+     * @param event - the icon-button being clicked
+     */
+    public void openDetails(MouseEvent event) {
+        if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            if(isOpen){
+                return;
+            }
+            setOpen(true);
+            Stage detailsStage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
+            loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
+
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            CardDetailsCtrl cardDetailsCtrl = loader.getController();
+            cardDetailsCtrl.setCard(card);
+            cardDetailsCtrl.setTitle(getTitle());
+            cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
+                    ? "" : card.description);
+            if(!card.checklist.isEmpty()){
+                cardDetailsCtrl.setChecklists(card.checklist);
+            }
+            cardDetailsCtrl.setPreset();
+            storeDetailsStage = detailsStage;
+
+            Scene scene = new Scene(root);
+            detailsStage.setScene(scene);
+            //make it so that details can only be closed if exitDetails is called.
+            detailsStage.setOnCloseRequest(Event -> {
+                Event.consume();
+            });
+            detailsStage.show();
+        }
+    }
+
+    /**
+     * Sets the progress text to the checked checklist and total
+     * checklists. Also checks if total is 0 then it
+     * makes the progress text disappear
+     * @param completed the number of checked checklists
+     * @param total total number of checklists
+     */
+    public void setProgressText(int completed, int total) {
+        completedTasks = completed;
+        totalTasks = total;
+        if(total > 0){
+            progressText.setText(completed + "/" + total);
+        }
+        else{
+            progressText.setText("");
+        }
+    }
+
+    /**
+     * gets the number of checked checklists
+     * @return the number of checked checklits
+     */
+    public int getCompleted(){
+        return this.completedTasks;
+    }
+
+    /**
+     * gets the total number of checklists
+     * @return the number of cehcked checklists
+     */
+    public int getTotal() {
+        return this.totalTasks;
+    }
+
+    /**
+     * Updates the progress text when the checklists are changed
+     * and broadcasted to the rest of the clients
+     * @param checklist the list of checklists
+     */
+    public void updateProgressText(List<CheckListItem>  checklist){
+        int total = 0;
+        int completed = 0;
+        for(int i = 0; i<checklist.size(); i++){
+            if(checklist.get(i).completed){
+                completed++;
+            }
+            total++;
+        }
+        setProgressText(completed,total);
+    }
+
+    /**
+     * Sets the boolean variable isOpen in card to the inputted
+     * boolean so that it can be checked if the cardDetails window
+     * is opened or not
+     * @param b the value to set isOpen to
+     */
+    public void setOpen(boolean b) {
+        this.isOpen = b;
+    }
 }

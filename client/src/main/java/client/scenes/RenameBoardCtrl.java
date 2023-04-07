@@ -1,7 +1,7 @@
 package client.scenes;
 
+import client.utils.PreferencesBoardInfo;
 import com.google.inject.Inject;
-import commons.Board;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -40,8 +40,8 @@ public class RenameBoardCtrl {
      *
      * @param board - the card for which we open the detailed view
      */
-    public void initialize(Board board){
-        String oldTitle = board.title;
+    public void initialize(PreferencesBoardInfo board){
+        String oldTitle = board.getTitle();
         titleField.setText(oldTitle);
     }
 

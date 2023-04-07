@@ -13,7 +13,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 @Entity
 @Table(name = "tags")
 @JsonIdentityInfo(
-        scope = Card.class,
+        scope = Tag.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Tag {
@@ -28,6 +28,9 @@ public class Tag {
 
     @Column(name = "tag_colour", columnDefinition = "varchar(7) default '#ffffff'")
     public String colour;
+
+    @Column(name = "tag_font_colour", columnDefinition = "varchar(7) default '#ffffff'")
+    public String font;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id")
@@ -47,12 +50,14 @@ public class Tag {
      * Constructor with parameters
      * @param name
      * @param colour
+     * @param font
      * @param board
      * @param cards
      */
-    public Tag(String name, String colour, Board board, Set<Card> cards) {
+    public Tag(String name, String colour, String font, Board board, Set<Card> cards) {
         this.name = name;
         this.colour = colour;
+        this.font = font;
         this.board = board;
         this.cards = cards;
     }
@@ -60,6 +65,18 @@ public class Tag {
     /*
         BASIC FUNCTIONALITY
      */
+
+    /**
+     * Removes the tag to be removed from all cards
+     */
+    @PreRemove
+    public void removeTagsFromCards() {
+        if(cards != null || cards.size() != 0) {
+            for (Card c : cards) {
+                c.tags.remove(this);
+            }
+        }
+    }
 
     /**
      * Apply this tag to a given card

@@ -1,9 +1,6 @@
 package server.services;
 
-import commons.Board;
-import commons.ListOfCards;
-import commons.Card;
-import commons.Tag;
+import commons.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -78,7 +75,13 @@ public class CardService {
      * @param id
      */
     public void deleteCardById(Long id) {
-        cardRepository.deleteById(id);
+        Card card = cardRepository.getById(id);
+        if(card != null) {
+            cardRepository.getById(id).removeCardsFromTags();
+            if(card.palette != null)
+                removePaletteFromCard(card, card.palette);
+            cardRepository.deleteById(id);
+        }
     }
 
     /**
@@ -94,6 +97,29 @@ public class CardService {
         Card card = getCardById(id);
         card.title = newTitle;
         return cardRepository.save(card);
+    }
+
+   /**
+     * Updates the new description in the database
+     * @param id id of the card to update the description
+     * @param newDescription the new description
+     * @return the updated card
+     * @throws Exception the card with the required id is not found
+     */
+    public Card editCardDescription(Long id, String newDescription) throws Exception {
+        Card card = getCardById(id);
+        card.description = newDescription;
+        return cardRepository.save(card);
+    }
+    /**
+     * Gets the description of the card with the specified id
+     * @param id id of the card
+     * @return the description of the card
+     * @throws Exception if a card with the specified id is not found
+     */
+    public String getCardDescription(Long id) throws Exception {
+        Card card = getCardById(id);
+        return card.description;
     }
 
     /**
@@ -123,5 +149,52 @@ public class CardService {
     public void removeTagFromCard(Card card, Tag tag) {
         card.tags.remove(tag);
         cardRepository.save(card);
+    }
+
+    /**
+     * Method that adds a palette to the given card
+     * @param card
+     * @param palette
+     */
+    public void addPaletteToCard(Card card, Palette palette) throws Exception{
+        card.palette = palette;
+        cardRepository.save(card);
+    }
+
+    /**
+     * Method that removes the palette from the card
+     * @param card
+     * @param palette
+     */
+    public void removePaletteFromCard(Card card, Palette palette){
+        palette.cards.remove(card);
+        card.palette = null;
+        cardRepository.save(card);
+    }
+
+    /**
+     * Changes the order of the checklists in the database
+     * with respect to the oldIdx and newIdx that represent
+     * the checklist that was dragged and the checklist
+     * that was dragged onto respectively.
+     * @param cardId id of the card
+     * @param oldIdx old index
+     * @param newIdx new index
+     * @return the new card
+     * @throws Exception if getCardById returns null
+     */
+    public Card editCardChecklists(long cardId, int oldIdx, int newIdx) throws Exception {
+        Card card = getCardById(cardId);
+        if (oldIdx < newIdx) {
+            card.checklist.get(oldIdx).order = newIdx;
+            for (int i = oldIdx + 1; i <= newIdx; i++)
+                card.checklist.get(i).order = i - 1;
+        }
+        else {
+            card.checklist.get(oldIdx).order = newIdx;
+            for (int i = newIdx; i < oldIdx; i++)
+                card.checklist.get(i).order = i + 1;
+        }
+        return cardRepository.save(card);
     }
 }

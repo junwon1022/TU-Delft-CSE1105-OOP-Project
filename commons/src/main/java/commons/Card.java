@@ -1,5 +1,4 @@
 package commons;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -41,7 +40,9 @@ public class Card {
     @ManyToOne()
     @JoinColumn(name = "list_id")
     public ListOfCards list;
+
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("order asc")
     public List<CheckListItem> checklist = new ArrayList<>();
 
     @ManyToMany
@@ -51,6 +52,10 @@ public class Card {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     public Set<Tag> tags = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "palette_id")
+    public Palette palette;
 
     /**
      * Default constructor
@@ -66,22 +71,63 @@ public class Card {
      * @param colour
      * @param list
      * @param checklist
+     * @param palette
      * @param tags
      */
     public Card(String title, String description,
                 String colour, ListOfCards list,
-                List<CheckListItem> checklist, Set<Tag> tags) {
+                List<CheckListItem> checklist, Set<Tag> tags,
+                Palette palette) {
         this.title = title;
         this.description = description;
         this.colour = colour;
         this.list = list;
         this.checklist = checklist;
         this.tags = tags;
+        this.palette = palette;
     }
 
     /*
         BASIC FUNCTIONALITY
      */
+
+
+    /**
+     * Removes the tag to be removed from all cards
+     */
+    @PreRemove
+    public void removeCardsFromTags() {
+        for (Tag t : tags) {
+            t.cards.remove(this);
+        }
+    }
+
+    /**
+     * Method that adds a palette to a card
+     * @param palette
+     */
+    public void addPalette(Palette palette){
+        if (palette != null) {
+            this.palette = palette;
+            palette.cards.add(this);
+        }
+    }
+
+    /**
+     * getter for palette
+     * @return the palette
+     */
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    /**
+     * setter for palette
+     * @param palette
+     */
+    public void setPalette(Palette palette){
+        this.palette = palette;
+    }
 
     /**
      * Add a tag to a card
