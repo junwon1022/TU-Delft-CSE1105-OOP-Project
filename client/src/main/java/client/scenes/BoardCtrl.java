@@ -694,9 +694,6 @@ public class BoardCtrl {
             Board newBoard = server.getBoardByKey(joinField.getText());
             if (newBoard != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), newBoard);
-                newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
-                        newPrefs,
-                        newBoard.password);
                 mainCtrl.mainScreenCtrl.addToData(newPrefs);
                 mainCtrl.mainScreenCtrl.setPalette(newBoard);
                 mainCtrl.showBoard(joinField.getText(), adminFlag);
