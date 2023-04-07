@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import jakarta.ws.rs.WebApplicationException;
@@ -28,8 +27,6 @@ public class AdminTitleCtrl extends ListCell<Board> {
     private final MainCtrl mainCtrl;
     private Board data;
 
-    private final UserPreferences prefs;
-
     @FXML
     private VBox root;
     @FXML
@@ -48,14 +45,12 @@ public class AdminTitleCtrl extends ListCell<Board> {
      * @param server         The server to use
      * @param adminScreenCtrl The mainscreen the title is part of
      * @param mainCtrl
-     * @param prefs
      */
     @Inject
-    public AdminTitleCtrl(ServerUtils server, AdminScreenCtrl adminScreenCtrl, MainCtrl mainCtrl, UserPreferences prefs) {
+    public AdminTitleCtrl(ServerUtils server, AdminScreenCtrl adminScreenCtrl, MainCtrl mainCtrl) {
         this.server = server;
         this.adminScreenCtrl = adminScreenCtrl;
         this.mainCtrl = mainCtrl;
-        this.prefs = prefs;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdminBoardTitle.fxml"));
         fxmlLoader.setController(this);

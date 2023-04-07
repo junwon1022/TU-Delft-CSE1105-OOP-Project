@@ -2,7 +2,6 @@ package client.scenes;
 
 
 import client.utils.ServerUtils;
-import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.Palette;
@@ -49,8 +48,6 @@ public class AdminScreenCtrl {
 
     private ServerUtils server;
 
-    private UserPreferences prefs;
-
     @FXML
     private ListView<Board> list;
 
@@ -62,14 +59,12 @@ public class AdminScreenCtrl {
      * Create a new CardListCtrl
      * @param server
      * @param mainCtrl
-     * @param prefs
      */
     @Inject
-    public AdminScreenCtrl(ServerUtils server, MainCtrl mainCtrl, UserPreferences prefs) {
+    public AdminScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
 
         this.server = server;
         this.mainCtrl = mainCtrl;
-        this.prefs = prefs;
 
         data = FXCollections.observableArrayList();
         list = new ListView<>();
@@ -84,7 +79,7 @@ public class AdminScreenCtrl {
         var boardData = server.getMyServerBoardTitles();
         data.setAll(boardData);
         list.setItems(data);
-        list.setCellFactory(param -> new AdminTitleCtrl(server,this, mainCtrl, prefs));
+        list.setCellFactory(param -> new AdminTitleCtrl(server,this, mainCtrl));
         list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 

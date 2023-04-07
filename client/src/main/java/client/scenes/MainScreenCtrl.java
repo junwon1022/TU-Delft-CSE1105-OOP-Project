@@ -151,7 +151,9 @@ public class MainScreenCtrl {
             Board board = server.getBoardByKey(joinField.getText());
             if(board != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), board);
-                newPrefs = prefs.updateBoardPassword(server.getServerAddress(), newPrefs, board.password);
+                newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
+                        newPrefs,
+                        board.password);
                 addToData(newPrefs);
                 setPalette(board);
                 mainCtrl.showBoard(joinField.getText(),0);
@@ -182,7 +184,9 @@ public class MainScreenCtrl {
                 Board board = server.getBoardByKey(joinField.getText());
                 if(board != null) {
                     var newPrefs = prefs.addBoard(server.getServerAddress(), board);
-                    newPrefs = prefs.updateBoardPassword(server.getServerAddress(), newPrefs, board.password);
+                    newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
+                            newPrefs,
+                            board.password);
                     addToData(newPrefs);
                     setPalette(board);
                     mainCtrl.showBoard(joinField.getText(),0);
