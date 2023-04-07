@@ -562,7 +562,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
 
         if (cardcount < 1) cardcount = 1;
-        if(cardcount > k.cards.size()) cardcount -= k.cards.size();
+        if(cardcount > k.cards.size()) cardcount = k.cards.size();
 
         if(cardcount <= k.cards.size()){
             Card thisCard = k.cards.get(cardcount-1);
@@ -586,24 +586,30 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      * @param keyEvent the KeyEvent
      */
     public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
+        System.out.println(keyEvent.getCode().toString());
         if (keyEvent.getCode().toString().equals("ENTER")) {
             addCardKeyboard(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("ESCAPE")){
             cancelKeyboard(keyEvent);
         }
-        else if(keyEvent.getCode().toString().equals("W")){
+        else if(keyEvent.getCode().toString().equals("UP") ||
+                keyEvent.getCode().toString().equals("W")){
             handleSwitchCardBack(keyEvent);
         }
-        else if(keyEvent.getCode().toString().equals("S")){
+        else if(keyEvent.getCode().toString().equals("DOWN")||
+                keyEvent.getCode().toString().equals("S")){
             handleSwitchCardFront(keyEvent);
         }
-        else if(keyEvent.getCode().toString().equals("D")){
+        else if(keyEvent.getCode().toString().equals("RIGHT")||
+                keyEvent.getCode().toString().equals("D")){
             handleSwitchCardRight(keyEvent,mainCount, listCount);
-            mainCount++;
+
         }
-        else if(keyEvent.getCode().toString().equals("A")){
+        else if(keyEvent.getCode().toString().equals("LEFT")||
+                keyEvent.getCode().toString().equals("A")){
             handleSwitchCardLeft(keyEvent,mainCount, listCount);
+
 
         }
     }
