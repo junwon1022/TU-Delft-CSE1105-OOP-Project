@@ -1090,7 +1090,7 @@ public class ServerUtils {
         execs.get(key).submit(() -> {
             while (!Thread.interrupted()) {
                 var res = ClientBuilder.newClient(new ClientConfig())
-                        .target(SERVER).path("/api/boards/updates")
+                        .target(SERVER).path("/api/boards/" + key + "/updates")
                         .request(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .get(Response.class);

@@ -89,8 +89,11 @@ public class MainScreenCtrl {
 
         for (PreferencesBoardInfo b: boardData)
             server.registerForUpdates(b.getKey(), c -> {
-                if (c.key.equals("REMOVED"))
+                if (c.title.equals("REMOVED")) {
+                    System.out.println("Removing board " + b.getTitle());
+                    server.unregisterForUpdates(b.getKey());
                     prefs.leaveBoard(server.getServerAddress(), b);
+                }
                 else
                     prefs.updateBoard(server.getServerAddress(), b, c);
                 Platform.runLater(this::refresh);
@@ -100,7 +103,8 @@ public class MainScreenCtrl {
     void addToData(PreferencesBoardInfo newPrefs) {
         data.add(newPrefs);
         server.registerForUpdates(newPrefs.getKey(), c -> {
-            if (c.key.equals("REMOVED")) {
+            if (c.title.equals("REMOVED")) {
+                System.out.println("Removing board " + newPrefs.getTitle());
                 server.unregisterForUpdates(newPrefs.getKey());
                 prefs.leaveBoard(server.getServerAddress(), newPrefs);
             }

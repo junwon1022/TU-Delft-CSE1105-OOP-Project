@@ -10,9 +10,7 @@ import commons.Board;
 import org.springframework.web.context.request.async.DeferredResult;
 import server.services.BoardService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 
@@ -37,19 +35,21 @@ public class BoardController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    private Map<Object, Consumer<Board>> listeners = new HashMap<>();
+    private Map<String, Map<Object, Consumer<Board>>> listeners = new HashMap<>();
 
     /**
      * @return the updates
      */
-    @GetMapping(path = {"/updates", "/updates/"})
-    public DeferredResult<ResponseEntity<Board>> getUpdates() {
+    @GetMapping(path = {"/{board_key}/updates", "/{board_key}/updates/"})
+    public DeferredResult<ResponseEntity<Board>> getUpdates(@PathVariable("board_key") String boardKey) {
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         var res = new DeferredResult<ResponseEntity<Board>>(500L, noContent);
 
         var key = new Object();
-        listeners.put(key, b -> res.setResult(ResponseEntity.ok(b)));
-        res.onCompletion(() -> listeners.remove(key));
+        if (!listeners.containsKey(boardKey))
+            listeners.put(boardKey, new HashMap<>());
+        listeners.get(boardKey).put(key, b -> res.setResult(ResponseEntity.ok(b)));
+        res.onCompletion(() -> listeners.get(boardKey).remove(key));
 
         return res;
     }
@@ -158,7 +158,7 @@ public class BoardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
-            listeners.forEach((k, l) -> l.accept(newBoard));
+            listeners.getOrDefault(board.key, Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
         }
@@ -185,7 +185,7 @@ public class BoardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
-            listeners.forEach((k, l) -> l.accept(newBoard));
+            listeners.getOrDefault(board.key, Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out password update for board " + board.title);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
@@ -211,7 +211,7 @@ public class BoardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
-            listeners.forEach((k, l) -> l.accept(newBoard));
+            listeners.getOrDefault(board.key, Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             System.out.println("Sent out password removed updates for board " + board.title);
             // Return the edited board with an HTTP 200 OK status
             return ResponseEntity.ok().body(newBoard);
@@ -237,9 +237,9 @@ public class BoardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Send new data to all users who have board in preferences
-            board.key = "REMOVED";
-            listeners.forEach((k, l) -> l.accept(board));
-            System.out.println("Sent out board removal updates for board " + board.title);
+            board.title = "REMOVED";
+            listeners.getOrDefault(board.key, Collections.emptyMap()).forEach((k, l) -> l.accept(board));
+            System.out.println("Sent out board removal updates for board " + board.id);
             // Return the saved board with an HTTP 200 OK status
             return ResponseEntity.ok(board);
         }
@@ -270,7 +270,7 @@ public class BoardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
-            listeners.forEach((k, l) -> l.accept(newBoard));
+            listeners.getOrDefault(board.key, Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             return ResponseEntity.ok(board);
         }
         catch(Exception e){
@@ -296,7 +296,7 @@ public class BoardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, newBoard);
             // Send new data to all users who have board in preferences
-            listeners.forEach((k, l) -> l.accept(newBoard));
+            listeners.getOrDefault(board.key, Collections.emptyMap()).forEach((k, l) -> l.accept(newBoard));
             return ResponseEntity.ok(board);
         }
         catch(Exception e){

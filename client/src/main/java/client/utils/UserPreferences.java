@@ -16,7 +16,7 @@ public class UserPreferences {
      */
     public UserPreferences() {
         objectMapper = new ObjectMapper();
-        prefs = Preferences.userRoot().node(this.getClass().getName());
+        prefs = Preferences.userRoot().node(this.getClass().getName() + System.getenv("OOPP_INST"));
     }
 
     /**

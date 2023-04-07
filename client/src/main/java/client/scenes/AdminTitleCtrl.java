@@ -107,7 +107,6 @@ public class AdminTitleCtrl extends ListCell<Board> {
     public void remove(ActionEvent event){
         try {
             server.removeBoard(data);
-            prefs.leaveBoard(server.getServerAddress(), data);
             Thread.sleep(100);
         } catch (WebApplicationException e) {
             var alert = new Alert(Alert.AlertType.ERROR);
