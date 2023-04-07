@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -121,11 +122,15 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setDisable(false);
         rename.setDisable(false);
         deleteList.setDisable(false);
-        setOnDragOver(this::handleDragOver);
-        setOnDragDropped(this::handleDragDropped);
         addCardDisabled.setVisible(false);
         deleteListDisabled.setVisible(false);
         renameListDisabled.setVisible(false);
+
+        setOnDragOver(this::handleDragOver);
+
+        setOnDragDropped(this::handleDragDropped);
+
+        list.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
     }
 
     /**
@@ -459,10 +464,117 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
         if (keyEvent.getCode().toString().equals("ENTER")) {
-            addCardKeyboard(keyEvent);
+            if (!addButton.isVisible())
+                addCardKeyboard(keyEvent);
+            else
+                openCardDetails(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("ESCAPE")){
-            cancelKeyboard(keyEvent);
+            if (!addButton.isVisible())
+                cancelKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.E ||
+                keyEvent.getCode() == KeyCode.DELETE ||
+                keyEvent.getCode() == KeyCode.BACK_SPACE ||
+                (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) ||
+                (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()))  {
+            handleKeyPressedHelper(keyEvent);
+        }
+    }
+
+    /**
+     * Helper to andle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleKeyPressedHelper(javafx.scene.input.KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.E) {
+            editCardKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.DELETE ||
+                keyEvent.getCode() == KeyCode.BACK_SPACE)  {
+            deleteCardKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) {
+            moveCardUp(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()) {
+            moveCardDown(keyEvent);
+        }
+    }
+
+    private void moveCardUp(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            int selectedIndex = -1;
+            for (int i = 0; i < list.getItems().size(); i++)
+                if (list.getItems().get(i).id == cards.get(0).id)
+                    selectedIndex = i;
+
+            if (selectedIndex > 0) {
+                server.moveCard(getListOfCards(), selectedIndex, selectedIndex - 1);
+                list.getSelectionModel().select(selectedIndex - 1);
+            }
+        }
+    }
+
+    private void moveCardDown(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            int selectedIndex = -1;
+            for (int i = 0; i < list.getItems().size(); i++)
+                if (list.getItems().get(i).id == cards.get(0).id)
+                    selectedIndex = i;
+
+            if (selectedIndex < list.getItems().size() - 1) {
+                server.moveCard(getListOfCards(), selectedIndex, selectedIndex + 1);
+                list.getSelectionModel().select(selectedIndex + 1);
+            }
+        }
+    }
+
+    private void openCardDetails(KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card card = list.getItems().filtered(c -> c.id == cards.get(0).id).get(0);
+            if (card.isOpen == 0) {
+                card.isOpen = 1;
+                list.refresh();
+            }
+        }
+        event.consume();
+    }
+
+    /**
+     * Method for delete Card with shortcuts "Delete" and "Backspace"
+     * @param event the KeyEvent
+     */
+    private void deleteCardKeyboard(javafx.scene.input.KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card removedCard = cards.get(0);
+            removeCard(removedCard);
+        }
+        event.consume();
+    }
+
+    /**
+     * Method for edit Card with shortcut "E"
+     * @param event the KeyEvent
+     */
+    private void editCardKeyboard(javafx.scene.input.KeyEvent event) {
+        if(event.isConsumed())
+            return;
+        event.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card editedCard = cards.get(0);
+            renameCard(editedCard);
         }
     }
 
@@ -497,5 +609,49 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     private void cancelKeyboard(javafx.scene.input.KeyEvent event) {
         hideButtonKeyboard(event);
+    }
+
+    /**
+     * Method that renames the card
+     * @param card the card
+     */
+    public void renameCard(Card card){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            RenameCardCtrl controller = fxmlLoader.getController();
+            controller.initialize(card);
+
+            Stage stage = new Stage();
+            stage.setTitle("Rename the card: " + card.title);
+            stage.setScene(new Scene(root, 300, 200));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String newTitle = controller.storedText;
+
+                //method that actually renames the list in the database
+                server.renameCard(card, newTitle);
+                board.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Method that removes the card
+     * @param card the card
+     */
+    public void removeCard(Card card) {
+        try {
+            server.removeCard(card);
+        } catch (WebApplicationException e) {
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+        board.refresh();
     }
 }
