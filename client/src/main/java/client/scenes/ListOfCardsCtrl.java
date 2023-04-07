@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -131,7 +133,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
         setOnDragDropped(this::handleDragDropped);
 
-        list.setOnKeyPressed(this::handleKeyPressed);
+        list.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
     }
 
     /**
@@ -480,6 +482,48 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         else if (keyEvent.getCode() == KeyCode.DELETE ||
                 keyEvent.getCode() == KeyCode.BACK_SPACE)  {
             deleteCardKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.PAGE_UP && keyEvent.isShiftDown()) {
+            moveCardUp(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.PAGE_DOWN && keyEvent.isShiftDown()) {
+            moveCardDown(keyEvent);
+        }
+    }
+
+    private void moveCardUp(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            int selectedIndex = -1;
+            for (int i = 0; i < list.getItems().size(); i++)
+                if (list.getItems().get(i).id == cards.get(0).id)
+                    selectedIndex = i;
+
+            if (selectedIndex > 0) {
+                server.moveCard(getListOfCards(), selectedIndex, selectedIndex - 1);
+                list.getSelectionModel().select(selectedIndex - 1);
+            }
+        }
+    }
+
+    private void moveCardDown(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            int selectedIndex = -1;
+            for (int i = 0; i < list.getItems().size(); i++)
+                if (list.getItems().get(i).id == cards.get(0).id)
+                    selectedIndex = i;
+
+            if (selectedIndex < list.getItems().size() - 1) {
+                server.moveCard(getListOfCards(), selectedIndex, selectedIndex + 1);
+                list.getSelectionModel().select(selectedIndex + 1);
+            }
         }
     }
 
