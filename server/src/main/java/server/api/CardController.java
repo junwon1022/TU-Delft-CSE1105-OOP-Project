@@ -297,7 +297,7 @@ public class CardController {
      * @param tagId
      * @return the card
      */
-    @PutMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
+    @PostMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
     ResponseEntity<Card> addTagToCard(@PathVariable("board_id") long boardId,
                                       @PathVariable("list_id") long listId,
                                       @PathVariable("card_id") long cardId,
@@ -334,7 +334,7 @@ public class CardController {
      * @return the card
      */
     @DeleteMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
-    ResponseEntity<Card> removeTagFromCard(@PathVariable("board_id") long boardId,
+    ResponseEntity<Tag> removeTagFromCard(@PathVariable("board_id") long boardId,
                                            @PathVariable("list_id") long listId,
                                            @PathVariable("card_id") long cardId,
                                            @PathVariable("tag_id") long tagId) {
@@ -353,7 +353,7 @@ public class CardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the card with an HTTP 200 OK status
-            return ResponseEntity.status(HttpStatus.OK).body(card);
+            return ResponseEntity.status(HttpStatus.OK).body(tag);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();

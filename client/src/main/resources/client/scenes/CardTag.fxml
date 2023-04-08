@@ -13,7 +13,7 @@
         <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="113.0" text="Tag" wrapText="true" HBox.hgrow="ALWAYS" />
         <AnchorPane prefHeight="32.0" prefWidth="8.0">
          <children>
-                <Button id="delete-list" fx:id="removeTag" layoutX="-1.0" layoutY="5.0" mnemonicParsing="false" onAction="#removeTagFromCard" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
+                <Button id="delete-list" fx:id="removeTagFromCard" layoutX="-1.0" layoutY="5.0" mnemonicParsing="false" onAction="#removeTagFromCard" prefHeight="14.0" prefWidth="13.0" stylesheets="@../../styles.css" text="❌" textFill="#231f20">
                     <font>
                         <Font name="Corbel Bold" size="13.0" />
                     </font>

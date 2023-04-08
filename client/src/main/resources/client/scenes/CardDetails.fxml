@@ -117,12 +117,12 @@
           </TitledPane>
         </panes>
       </Accordion>
-      <Label layoutX="61.0" layoutY="434.0" prefHeight="32.0" prefWidth="408.0" style="-fx-background-color: #E0FFFF;">
+      <Label layoutX="61.0" layoutY="434.0" prefHeight="42.0" prefWidth="408.0" style="-fx-background-color: #E0FFFF;">
          <effect>
             <BoxBlur />
          </effect>
       </Label>
-      <ListView fx:id="tagsView" layoutX="61.0" layoutY="434.0" orientation="HORIZONTAL" prefHeight="32.0" prefWidth="408.0" style="-fx-background-color: transparent;" />
+      <ListView fx:id="tagsView" layoutX="61.0" layoutY="434.0" maxHeight="42.0" minHeight="32.0" orientation="HORIZONTAL" prefHeight="42.0" prefWidth="408.0" style="-fx-background-color: transparent;" />
    </children>
    <effect>
       <DropShadow>

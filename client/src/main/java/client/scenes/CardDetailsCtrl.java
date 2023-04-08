@@ -54,9 +54,6 @@ public class CardDetailsCtrl{
     private Button addChecklist;
 
     @FXML
-    private Button addTagButton;
-
-    @FXML
     private ListView<CheckListItem> checklistView;
 
     @FXML
@@ -80,6 +77,8 @@ public class CardDetailsCtrl{
     ObservableList<Palette> paletteData;
 
     ObservableList<Tag> tagsData;
+
+    ObservableList<Tag> showableTags;
 
     private Card card;
 
@@ -107,11 +106,12 @@ public class CardDetailsCtrl{
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
         tagsData = FXCollections.observableArrayList();
         tagsView.setItems(tagsData);
-        tagsView.setCellFactory(tlv -> new TagCtrl(server, board, this));
+        tagsView.setCellFactory(tlv -> new TagCtrl(server, board, this, true));
+        showableTags = FXCollections.observableArrayList();
         chooseTag.setStyle("-fx-background-color: #A2E4F1; " +
                 "-fx-background-radius: 10");
-        chooseTag.setItems(board.tags);
-        chooseTag.setCellFactory(ctv -> new TagCtrl(server, board, this));
+        chooseTag.setItems(showableTags);
+        chooseTag.setCellFactory(ctv -> new TagCtrl(server, board, this, false));
 
 
         scenePane.setOnKeyPressed(this::exitDetails);
@@ -281,7 +281,8 @@ public class CardDetailsCtrl{
         if(!tagsData.contains(tag)){
             tagsData.add(tag);
             card.addTag(tag);
-            server.addTagToCard(tag,card);
+            server.addTagToCard(tag, card);
+            showableTags.remove(tag);
         }
     }
 
@@ -369,8 +370,10 @@ public class CardDetailsCtrl{
      * Sets the CardTags ListView when the details are opened
      */
     public void setCardTags(){
+        showableTags.addAll(board.tags);
         for (Tag tag : card.tags) {
             tagsData.add(tag);
+            showableTags.remove(tag);
         }
     }
 
@@ -380,6 +383,8 @@ public class CardDetailsCtrl{
      */
     public void removeTagFromCard(Tag tag) {
         tagsData.remove(tag);
+        showableTags.add(tag);
+        card.removeTag(tag);
         server.removeTagFromCard(tag, card);
     }
 }

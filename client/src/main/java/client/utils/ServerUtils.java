@@ -1179,7 +1179,7 @@ public class ServerUtils {
                 .resolveTemplate("tag_id", tag.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(tag, APPLICATION_JSON), Card.class);
+                .post(Entity.entity(tag, APPLICATION_JSON), Card.class);
     }
 
     /**

@@ -44,6 +44,9 @@ public class TagCtrl extends ListCell<Tag> {
     @FXML
     private Label deleteTagDisabled;
 
+    @FXML
+    private Button removeTagFromCard;
+
     private TextField name;
 
 
@@ -76,8 +79,11 @@ public class TagCtrl extends ListCell<Tag> {
      * @param server The server to use
      * @param board The board this TagCtrl belongs to
      * @param details the card details it belongs to
+     * @param showRemove boolean to determine if the remove button should
+     *                   be displayed
      */
-    public TagCtrl(ServerUtils server, BoardCtrl board, CardDetailsCtrl details) {
+    public TagCtrl(ServerUtils server, BoardCtrl board, CardDetailsCtrl details,
+                   boolean showRemove) {
         this.server = server;
         this.board = board;
         this.details = details;
@@ -89,7 +95,10 @@ public class TagCtrl extends ListCell<Tag> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        setRemoveButton(showRemove);
     }
+
 
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
@@ -214,5 +223,14 @@ public class TagCtrl extends ListCell<Tag> {
         if(event.getClickCount() >= 2){
             details.addTag(this.tag);
         }
+    }
+
+    /**
+     * Sets the fxml file to be loaded depending on if the remove button should
+     * show or not
+     * @param showRemove the state of the remove button
+     */
+    private void setRemoveButton(boolean showRemove) {
+        removeTagFromCard.setVisible(showRemove);
     }
 }
