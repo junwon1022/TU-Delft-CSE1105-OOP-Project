@@ -234,8 +234,8 @@ public class BoardCtrl {
         myBoards.lookup(".title").setStyle("-fx-background-color: #1fa401;" +
                 "-fx-border-color: #1fa401");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf6da;");
-        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf6da");
-        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf6da;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #e9f3e9");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #e9f3e9;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
                     "-fx-background-color: #E4F8FC;" +
@@ -276,8 +276,8 @@ public class BoardCtrl {
         myBoards.lookup(".title").setStyle("-fx-background-color: #00B4D8;" +
                 "-fx-border-color: #00B4D8");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf1f6;");
-        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf1f6");
-        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf1f6;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #F8FDFE");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #F8FDFE;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
                     "-fx-background-color: #E4F8FC;" +

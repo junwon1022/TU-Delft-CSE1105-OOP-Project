@@ -33,6 +33,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
     private final BoardCtrl board;
 
+    public int selectedIndex;
+
     public ListOfCards cardData;
 
     public String storedText;
@@ -82,6 +84,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     public ListOfCardsCtrl(ServerUtils server, BoardCtrl board) {
         this.server = server;
         this.board = board;
+
+        selectedIndex = -1;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ListOfCards.fxml"));
         fxmlLoader.setController(this);
@@ -158,14 +162,20 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             long dbListId = Long.decode(strings[1]);
 
             List<Card> draggedList = null;
-            for (ListOfCards loc : this.board.listOfCards)
-                if (loc.id == dbListId)
+            for (ListOfCards loc : this.board.listOfCards) {
+                if (loc.id == dbListId) {
                     draggedList = loc.cards;
+                    break;
+                }
+            }
 
             Card draggedCard = null;
-            for (Card c: draggedList)
-                if (c.id == dbCardId)
+            for (Card c: draggedList) {
+                if (c.id == dbCardId) {
                     draggedCard = c;
+                    break;
+                }
+            }
 
             Palette p = draggedCard.palette;
 
@@ -222,32 +232,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                       ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
-
-//    /**
-//     * Adds a new card to the List of Cards.
-//     * Shows a text field that asks for the title.
-//     * If pressed enter, adds the card via the server and forces a board refresh.
-//     * @param event the KeyEvent
-//     */
-//
-//    public void addCardEnter(KeyEvent event) {
-//        if(event.getCode().toString().equals("ENTER")
-//                && !name.getText().equals("") && name.getText() != null){
-//            String title = name.getText();
-//            Card card = getCard(title);
-//            server.addCard(card);
-//
-//            Card addedCard = server.addCard2(card);
-//            card.id = addedCard.id;
-//
-//            name.clear();
-//            name.setOpacity(0);
-//            addCardButton.setOpacity(0);
-//
-//            board.refresh();
-//        }
-//    }
-
     /**
      * Adds a new card to the List of cards.
      * Shows a text field that asks for the title.
@@ -289,7 +273,6 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         );
         timelineList.play();
         timelineName.play();
-        name.requestFocus();
         // Requests focus for the text field
         name.visibleProperty().addListener((observable, oldValue, isVisible) -> {
 
@@ -431,7 +414,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     public Card getCard(String title){
         Card card =  new Card(title,
                 "",
-                "red",
+                "",
                 cardData,
                 new ArrayList<>(),
                 new HashSet<>(),
@@ -483,7 +466,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     }
 
     /**
-     * Helper to andle the key pressed event.
+     * Helper to handle the key pressed event.
      * @param keyEvent the KeyEvent
      */
     public void handleKeyPressedHelper(javafx.scene.input.KeyEvent keyEvent) {
@@ -506,16 +489,22 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         if (keyEvent.isConsumed())
             return;
         keyEvent.consume();
-        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
-        if (cards.size() == 1) {
+        ObservableList<Card> selectedItems = list.getSelectionModel().getSelectedItems();
+        if (selectedItems.size() == 1) {
             int selectedIndex = -1;
-            for (int i = 0; i < list.getItems().size(); i++)
-                if (list.getItems().get(i).id == cards.get(0).id)
+            Card item = null;
+            for (int i = 0; i < list.getItems().size(); i++) {
+                item = list.getItems().get(i);
+                if (item.id == selectedItems.get(0).id) {
                     selectedIndex = i;
+                    break;
+                }
+            }
 
             if (selectedIndex > 0) {
+                this.selectedIndex = selectedIndex - 1;
                 server.moveCard(getListOfCards(), selectedIndex, selectedIndex - 1);
-                list.getSelectionModel().select(selectedIndex - 1);
+                list.refresh();
             }
         }
     }
@@ -524,16 +513,17 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         if (keyEvent.isConsumed())
             return;
         keyEvent.consume();
-        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
-        if (cards.size() == 1) {
+        ObservableList<Card> selectedItems = list.getSelectionModel().getSelectedItems();
+        if (selectedItems.size() == 1) {
             int selectedIndex = -1;
             for (int i = 0; i < list.getItems().size(); i++)
-                if (list.getItems().get(i).id == cards.get(0).id)
+                if (list.getItems().get(i).id == selectedItems.get(0).id)
                     selectedIndex = i;
 
             if (selectedIndex < list.getItems().size() - 1) {
+                this.selectedIndex = selectedIndex + 1;
                 server.moveCard(getListOfCards(), selectedIndex, selectedIndex + 1);
-                list.getSelectionModel().select(selectedIndex + 1);
+                list.refresh();
             }
         }
     }
@@ -653,5 +643,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             alert.showAndWait();
         }
         board.refresh();
+    }
+
+    /** Gets the list view
+     *
+     * @return the list view
+     */
+    public ListView<Card> getList() {
+        return list;
     }
 }
