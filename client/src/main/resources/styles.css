@@ -629,3 +629,28 @@
     -fx-background-color: white;
     -fx-opacity: 0.5;
 }
+
+.text-area .content{
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-background-color: #A2E4F1;
+}
+
+.text-area{
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-background-color: transparent;
+    -fx-display-caret: true;
+}
+
+.checklist-item {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.subtask-list .list-cell {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: transparent;
+    /*-fx-padding: 0 7;*/
+}

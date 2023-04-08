@@ -165,7 +165,7 @@ public class CardCtrl extends ListCell<Card> {
             card = item;
             if(card.palette != null)
                 setColors(root, title);
-            this.loadTags();
+            loadTags();
 
             if(!board.isUnlocked()) {
                 this.readOnly();

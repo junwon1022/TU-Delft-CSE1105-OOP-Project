@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.Glow?>
-<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="scenePane" prefHeight="591.0" prefWidth="819.0" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
+<AnchorPane fx:id="scenePane" prefHeight="591.0" prefWidth="819.0" style="-fx-background-color: #CAF0F8;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.CardDetailsCtrl">
    <children>
       <Label id="cardDetailsTitle" fx:id="titleLabel" alignment="TOP_LEFT" layoutX="61.0" layoutY="19.0" prefHeight="32.0" prefWidth="390.0" stylesheets="@../../styles.css">
          <font>
             <Font name="Corbel Bold" size="38.0" />
          </font></Label>
-      <TextArea fx:id="descriptionText" layoutX="65.0" layoutY="75.0" onKeyPressed="#handleSaveShortcut" prefHeight="99.0" prefWidth="401.0" style="-fx-background-color: gray;" />
+      <TextArea fx:id="descriptionText" layoutX="65.0" layoutY="75.0" onKeyPressed="#handleSaveShortcut" prefHeight="99.0" prefWidth="401.0" style="-fx-background-color: #CAF0F8; -fx-background-radius: 15;" styleClass="text-area" stylesheets="@../../styles.css" wrapText="true">
+         <padding>
+            <Insets bottom="3.0" left="5.0" right="3.0" top="3.0" />
+         </padding>
+         <font>
+            <Font name="Corbel" size="16.0" />
+         </font>
+         <effect>
+            <Blend />
+         </effect></TextArea>
       <Button id="exitButton" layoutX="780.0" layoutY="8.0" mnemonicParsing="false" onAction="#exitDetails" prefHeight="27.0" prefWidth="29.0" stylesheets="@../../styles.css" text="✖">
          <font>
             <Font size="22.0" />
@@ -31,104 +43,120 @@
          <effect>
             <Glow level="0.27" />
          </effect></Button>
-      <Label layoutX="61.0" layoutY="233.0" prefHeight="25.0" prefWidth="75.0" text="Tasks" textFill="#00000069">
+      <Label layoutX="65.0" layoutY="233.0" prefHeight="25.0" prefWidth="71.0" text="Subtasks">
          <font>
             <Font size="16.0" />
          </font></Label>
-      <Label layoutX="61.0" layoutY="264.0" prefHeight="122.0" prefWidth="408.0" style="-fx-background-color: #E0FFFF;">
-         <effect>
-            <BoxBlur />
-         </effect></Label>
-      <Button id="save-description" fx:id="saveDescription" layoutX="353.0" layoutY="178.0" mnemonicParsing="false" onMouseClicked="#updateDescription" prefHeight="26.0" prefWidth="116.0" stylesheets="@../../styles.css" text="Save Description">
-         <effect>
-            <InnerShadow>
-               <color>
-                  <Color red="0.0659722238779068" green="0.5219907164573669" blue="0.75" />
-               </color>
-            </InnerShadow>
-         </effect></Button>
-      <Button id="add-checklist" fx:id="addChecklist" layoutX="105.0" layoutY="236.0" mnemonicParsing="false" onAction="#addChecklist" prefHeight="19.0" prefWidth="23.0" stylesheets="@../../styles.css">
+      <Button fx:id="saveDescription" layoutX="320.0" layoutY="178.0" mnemonicParsing="false" onMouseClicked="#updateDescription" prefHeight="32.0" prefWidth="142.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Save Description">
+         <font>
+            <Font name="Corbel" size="15.0" />
+         </font></Button>
+      <Button id="add-checklist" fx:id="addChecklist" layoutX="436.0" layoutY="395.0" mnemonicParsing="false" onAction="#showAddChecklist" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../styles.css">
          <font>
             <Font size="14.0" />
          </font>
+         <effect>
+            <ColorAdjust brightness="-0.05" hue="-0.08" saturation="0.06" />
+         </effect>
       </Button>
-      <ListView fx:id="checklistView" layoutX="62.0" layoutY="264.0" prefHeight="122.0" prefWidth="408.0" style="-fx-background-color: transparent;" />
-      <HBox alignment="CENTER" layoutX="520.0" layoutY="67.0" prefHeight="32.0" prefWidth="211.0" spacing="4.0" style="-fx-background-color: rgb(0, 180, 216,0.5); -fx-background-radius: 9;">
+      <ListView fx:id="checklistView" layoutX="62.0" layoutY="264.0" prefHeight="122.0" prefWidth="408.0" style="-fx-background-color: #A2E4F1; -fx-border-color: #A2E4F1;" stylesheets="@../../styles.css">
+         <styleClass>
+            <String fx:value="board-list" />
+            <String fx:value="subtask-list" />
+         </styleClass></ListView>
+      <VBox layoutX="520.0" layoutY="28.0" prefWidth="244.0" spacing="10.0">
          <children>
-            <Label fx:id="paletteTitle" prefHeight="18.0" prefWidth="81.0">
+            <Label text="Presets for tasks">
                <font>
-                  <Font name="Corbel Bold" size="15.0" />
+                  <Font name="Corbel Bold" size="22.0" />
                </font>
             </Label>
-            <Label layoutX="10.0" layoutY="10.0" text="B">
-               <padding>
-                  <Insets left="4.0" />
-               </padding>
-               <font>
-                  <Font name="Corbel Bold" size="17.0" />
-               </font>
-            </Label>
-            <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="23.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
-            <Label layoutX="38.0" layoutY="10.0" text="F">
-               <padding>
-                  <Insets left="4.0" />
-               </padding>
-               <font>
-                  <Font name="Corbel Bold" size="17.0" />
-               </font>
-            </Label>
-            <Rectangle fx:id="font" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="23.0" layoutX="66.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+            <HBox alignment="CENTER" prefHeight="32.0" prefWidth="211.0" spacing="4.0" style="-fx-background-color: rgb(0, 180, 216,0.5); -fx-background-radius: 9;">
+               <children>
+                  <Label fx:id="paletteTitle" prefHeight="18.0" prefWidth="81.0">
+                     <font>
+                        <Font name="Corbel Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="10.0" text="B">
+                     <padding>
+                        <Insets left="4.0" />
+                     </padding>
+                     <font>
+                        <Font name="Corbel Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="23.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                  <Label layoutX="38.0" layoutY="10.0" text="F">
+                     <padding>
+                        <Insets left="4.0" />
+                     </padding>
+                     <font>
+                        <Font name="Corbel Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Rectangle fx:id="font" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="23.0" layoutX="66.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+               </children>
+            </HBox>
+            <Accordion stylesheets="@../../styles.css">
+               <panes>
+                <TitledPane expanded="false" prefHeight="222.0" prefWidth="211.0" stylesheets="@../../styles.css" text="Choose Another Preset">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-padding: 0;">
+                           <children>
+                              <ListView id="list" fx:id="palettes" stylesheets="@../../styles.css" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                     <font>
+                        <Font name="Corbel" size="15.0" />
+                     </font>
+                </TitledPane>
+               </panes>
+            </Accordion>
+            <Accordion prefHeight="222.0" prefWidth="218.0">
+              <panes>
+                <TitledPane expanded="false" prefWidth="149.0" stylesheets="@../../styles.css" text="Add Tag">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="127.0" prefWidth="209.0" style="-fx-padding: 0;">
+                           <children>
+                              <ListView id="list" fx:id="chooseTag" layoutY="-3.0" stylesheets="@../../styles.css" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                </TitledPane>
+              </panes>
+            </Accordion>
          </children>
-      </HBox>
-      <Accordion layoutX="520.0" layoutY="114.0" stylesheets="@../../styles.css">
-         <panes>
-          <TitledPane animated="false" expanded="false" prefHeight="222.0" prefWidth="211.0" stylesheets="@../../styles.css" text="choose another preset">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <ListView id="list" fx:id="palettes" prefHeight="181.0" prefWidth="211.0" stylesheets="@../../styles.css" />
-                     </children>
-                  </AnchorPane>
-            </content>
+      </VBox>
+      <ListView fx:id="tagsView" layoutX="61.0" layoutY="433.0" maxHeight="115.0" minHeight="32.0" prefHeight="115.0" prefWidth="261.0" style="-fx-background-color: #A2E4F1; -fx-border-color: #A2E4F1;" styleClass="board-list" stylesheets="@../../styles.css" />
+      <Label fx:id="nullTitle" layoutX="304.0" layoutY="401.0" prefHeight="17.0" prefWidth="102.0" text="Enter a title!" textFill="#9d2323">
+         <font>
+            <Font name="Corbel" size="13.0" />
+         </font>
+      </Label>
+      <HBox fx:id="subtaskAddition" layoutX="62.0" layoutY="396.0" prefHeight="28.0" prefWidth="408.0" spacing="120.0">
+         <children>
+            <TextField fx:id="subtaskTitle" prefHeight="25.0" prefWidth="227.0" promptText="Enter a subtask . . ." styleClass="text-field" stylesheets="@../../styles.css" />
+            <Button fx:id="addSubtask" graphicTextGap="2.0" mnemonicParsing="false" onAction="#addChecklist" prefHeight="21.0" prefWidth="57.0" style="-fx-padding: 3;" styleClass="normal-button" stylesheets="@../../styles.css" text="Add">
                <font>
                   <Font name="Corbel" size="15.0" />
                </font>
-          </TitledPane>
-         </panes>
-      </Accordion>
-      <Label layoutX="520.0" layoutY="28.0" text="Presets for tasks">
-         <font>
-            <Font name="Corbel Bold" size="22.0" />
-         </font>
-      </Label>
-      <Accordion layoutX="520.0" layoutY="355.0" prefHeight="222.0" prefWidth="218.0">
-        <panes>
-          <TitledPane animated="false" expanded="false" prefWidth="149.0" stylesheets="@../../styles.css" text="add a tag">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="127.0" prefWidth="209.0">
-                     <children>
-                        <ListView id="list" fx:id="chooseTag" layoutY="-3.0" maxWidth="218.0" prefHeight="186.0" prefWidth="218.0" stylesheets="@../../styles.css" />
-                     </children>
-                  </AnchorPane>
-            </content>
-               <font>
-                  <Font size="15.0" />
-               </font>
-          </TitledPane>
-        </panes>
-      </Accordion>
-      <Label layoutX="61.0" layoutY="434.0" prefHeight="42.0" prefWidth="408.0" style="-fx-background-color: #E0FFFF;">
-         <effect>
-            <BoxBlur />
-         </effect>
-      </Label>
-      <ListView fx:id="tagsView" layoutX="61.0" layoutY="434.0" maxHeight="42.0" minHeight="32.0" orientation="HORIZONTAL" prefHeight="42.0" prefWidth="408.0" style="-fx-background-color: transparent;" />
+            </Button>
+         </children>
+      </HBox>
    </children>
    <effect>
       <DropShadow>
          <color>
-            <Color red="0.14692983031272888" green="0.636695921421051" blue="0.8815789222717285" />
+            <Color blue="0.8815789222717285" green="0.636695921421051" red="0.14692983031272888" />
          </color>
       </DropShadow>
    </effect>
+   <padding>
+      <Insets right="3.0" top="3.0" />
+   </padding>
 </AnchorPane>

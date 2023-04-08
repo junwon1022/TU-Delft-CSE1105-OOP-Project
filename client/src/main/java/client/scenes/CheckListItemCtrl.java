@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,7 +32,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
     private CheckListItem data;
 
     @FXML
-    private AnchorPane root;
+    private HBox root;
 
     @FXML
     private Label checklistDescription;
