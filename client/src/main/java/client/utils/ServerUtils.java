@@ -1164,6 +1164,44 @@ public class ServerUtils {
     }
 
     /**
+     * Method that adds a tag to a card
+     * @param card
+     * @param tag
+     * @return the card with a new tag
+     */
+    public Card addTagToCard(Tag tag, Card card){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/tags/{tag_id}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(tag, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Removes the tag from the given card
+     * @param tag - tag to be removed
+     * @param card - the card to remove the tag from
+     * @return the removed tag
+     */
+    public Tag removeTagFromCard(Tag tag, Card card){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/tags/{tag_id}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Tag.class);
+    }
+
+    /**
      * Method  that adds the cards of 2 palettes in one
      * @param palette
      * @param oldPaletteId

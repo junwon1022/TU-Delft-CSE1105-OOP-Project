@@ -297,7 +297,7 @@ public class CardController {
      * @param tagId
      * @return the card
      */
-    @PostMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
+    @PutMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
     ResponseEntity<Card> addTagToCard(@PathVariable("board_id") long boardId,
                                       @PathVariable("list_id") long listId,
                                       @PathVariable("card_id") long cardId,
