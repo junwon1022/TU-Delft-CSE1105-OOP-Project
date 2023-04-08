@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" onKeyPressed="#openHelpScreen" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="584.0" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
+<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="434.0" prefWidth="609.0" style="-fx-background-color: #CAF0F8;" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectCtrl">
    <children>
       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="78.0" prefWidth="431.0" text="Connect to a TimeWise Server" textAlignment="CENTER" textFill="#258cb5" wrapText="true">
          <font>
@@ -100,7 +100,7 @@
                         <Insets left="2.0" />
                      </VBox.margin>
                   </Label>
-                    <TextField id="default" fx:id="field" maxWidth="1.7976931348623157E308" prefHeight="29.0" promptText="http://server:port" stylesheets="@../../styles.css">
+                    <TextField id="default" fx:id="field" maxWidth="1.7976931348623157E308" promptText="http://server:port" stylesheets="@../../styles.css">
                         <font>
                             <Font name="Corbel Italic" size="13.0" />
                         </font>

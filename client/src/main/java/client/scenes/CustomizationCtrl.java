@@ -4,21 +4,30 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.Palette;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.HashSet;
 
 public class CustomizationCtrl {
 
     public boolean success;
+
+    public String backgroundColor;
+    public String fontColor;
 
     private final ServerUtils server;
 
@@ -71,6 +80,11 @@ public class CustomizationCtrl {
     @FXML
     private ListView<Palette> list;
 
+    @FXML
+    private AnchorPane disabled;
+    @FXML
+    private HBox readOnlyMessage;
+
     private ObservableList<Palette> data;
 
     private Board board;
@@ -82,23 +96,25 @@ public class CustomizationCtrl {
      * @param board
      */
     @Inject
-    public CustomizationCtrl(ServerUtils server, BoardCtrl boardCtrl, Board board){
+    public CustomizationCtrl(ServerUtils server,
+                             BoardCtrl boardCtrl, Board board) {
         this.server = server;
         this.boardCtrl = boardCtrl;
         this.board = board;
+        backgroundColor = board.colour;
+        fontColor = board.font;
     }
 
     /**
      * Method that initializes the controller
      */
-    public void initialize(){
+    public void initialize() {
         data = FXCollections.observableArrayList();
 
         list.setItems(data);
         list.setStyle("-fx-background-color: #A2E4F1; " +
                 "-fx-background-radius: 10");
         list.setCellFactory(param -> new PaletteCtrl(server, this));
-        list.setFixedCellSize(38);
         addition.setVisible(false);
         nullTitle.setVisible(false);
         boardName.setText(board.title);
@@ -109,6 +125,11 @@ public class CustomizationCtrl {
         clearFields();
         var palettes = server.getAllPalettes(board.id);
         data.setAll(palettes);
+        if(!boardCtrl.isUnlocked()) {
+            disabled.setVisible(true);
+        } else {
+            disabled.setVisible(false);
+        }
     }
 
     /**
@@ -138,7 +159,8 @@ public class CustomizationCtrl {
      */
     private void changeBoardBackground(){
         Color color = boardBackground.getValue();
-        server.changeBoardBackground(board, hexCode(color));
+        backgroundColor = hexCode(color);
+        server.changeBoardBackground(board, backgroundColor);
     }
 
     /**
@@ -146,7 +168,8 @@ public class CustomizationCtrl {
      */
     private void changeBoardFont(){
         Color color = boardFont.getValue();
-        server.changeBoardFont(board, hexCode(color));
+        fontColor = hexCode(color);
+        server.changeBoardFont(board, fontColor);
     }
 
     /**
@@ -223,12 +246,13 @@ public class CustomizationCtrl {
      * @param event
      */
     public void resetBoardColors(ActionEvent event){
+        backgroundColor = "#A2E4F1";
+        fontColor = "#000000";
         server.changeBoardBackground(board,  "#A2E4F1");
         server.changeBoardFont(board, "#000000");
 
         boardBackground.setValue(Color.web("#A2E4F1"));
         boardFont.setValue(Color.web("#000000"));
-
         boardCtrl.refresh();
     }
 
@@ -280,5 +304,46 @@ public class CustomizationCtrl {
     public void changeListFOnAction(ActionEvent event){
         changeListsFont();
         boardCtrl.refresh();
+    }
+
+    /**
+     * Closes the read only message
+     * @param event
+     */
+    public void closeReadOnlyView(ActionEvent event) {
+        FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.5), readOnlyMessage);
+        fadeOutMessage.setFromValue(0.9);
+        fadeOutMessage.setToValue(0.0);
+
+        fadeOutMessage.setOnFinished(e -> {
+            // Hide the message when the transition is finished
+            readOnlyMessage.setVisible(false);
+        });
+        fadeOutMessage.play();
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        readOnlyMessage.setVisible(true);
+        FadeTransition fadeInTransition = new FadeTransition(
+                Duration.seconds(0.3), readOnlyMessage);
+        fadeInTransition.setFromValue(0.0);
+        fadeInTransition.setToValue(0.9);
+        fadeInTransition.play();
+        Alert alert = new Alert(Alert.AlertType.WARNING,
+                "Cannot edit in read-only mode. \n" +
+                        "To gain write access, click on the lock icon and enter the password.",
+                ButtonType.OK);// Load your custom icon image
+
+        // Set the graphic of the alert dialog to custom image
+        alert.setGraphic(new ImageView(new Image("warning-icon.png")));
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("styles.css");
+        dialogPane.getStyleClass().add("alert");
+        dialogPane.lookupButton(ButtonType.OK).getStyleClass().add("normal-button");
+        alert.showAndWait();
     }
 }

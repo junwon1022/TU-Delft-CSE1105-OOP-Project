@@ -78,6 +78,8 @@ public class CardService {
         Card card = cardRepository.getById(id);
         if(card != null) {
             cardRepository.getById(id).removeCardsFromTags();
+            if(card.palette != null)
+                removePaletteFromCard(card, card.palette);
             cardRepository.deleteById(id);
         }
     }
@@ -135,7 +137,7 @@ public class CardService {
      * @param tag
      */
     public void addTagToCard(Card card, Tag tag) {
-        card.tags.add(tag);
+        card.addTag(tag);
         cardRepository.save(card);
     }
 
@@ -145,7 +147,7 @@ public class CardService {
      * @param tag
      */
     public void removeTagFromCard(Card card, Tag tag) {
-        card.tags.remove(tag);
+        card.removeTag(tag);
         cardRepository.save(card);
     }
 
@@ -154,7 +156,7 @@ public class CardService {
      * @param card
      * @param palette
      */
-    public void addPaletteToCard(Card card, Palette palette){
+    public void addPaletteToCard(Card card, Palette palette) throws Exception{
         card.palette = palette;
         cardRepository.save(card);
     }
@@ -165,10 +167,34 @@ public class CardService {
      * @param palette
      */
     public void removePaletteFromCard(Card card, Palette palette){
-
         palette.cards.remove(card);
         card.palette = null;
         cardRepository.save(card);
     }
 
+    /**
+     * Changes the order of the checklists in the database
+     * with respect to the oldIdx and newIdx that represent
+     * the checklist that was dragged and the checklist
+     * that was dragged onto respectively.
+     * @param cardId id of the card
+     * @param oldIdx old index
+     * @param newIdx new index
+     * @return the new card
+     * @throws Exception if getCardById returns null
+     */
+    public Card editCardChecklists(long cardId, int oldIdx, int newIdx) throws Exception {
+        Card card = getCardById(cardId);
+        if (oldIdx < newIdx) {
+            card.checklist.get(oldIdx).order = newIdx;
+            for (int i = oldIdx + 1; i <= newIdx; i++)
+                card.checklist.get(i).order = i - 1;
+        }
+        else {
+            card.checklist.get(oldIdx).order = newIdx;
+            for (int i = newIdx; i < oldIdx; i++)
+                card.checklist.get(i).order = i + 1;
+        }
+        return cardRepository.save(card);
+    }
 }

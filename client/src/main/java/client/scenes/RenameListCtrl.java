@@ -108,7 +108,6 @@ public class RenameListCtrl {
      * @param event the KeyEvent
      */
     public void renameKeyboard(javafx.scene.input.KeyEvent event) {
-        success = true;
         storedText = textField.getText();
         if(storedText == null || storedText.length() == 0){
             nullTitle.setText(MESSAGE);

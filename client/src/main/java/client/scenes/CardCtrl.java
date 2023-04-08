@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Card;
+import commons.CheckListItem;
 import commons.ListOfCards;
 import commons.Palette;
 import commons.Tag;
@@ -32,8 +33,13 @@ public class CardCtrl extends ListCell<Card> {
     private final BoardCtrl board;
     private final ListOfCardsCtrl list;
 
+    private Stage storeDetailsStage;
+
     private Card card;
-    public String storedDescChar;
+
+    private int completedTasks;
+
+    private int totalTasks;
 
     @FXML
     private AnchorPane root;
@@ -42,7 +48,10 @@ public class CardCtrl extends ListCell<Card> {
     private Label title;
 
     @FXML
-    private Button delete;
+    private Label progressText;
+
+    @FXML
+    private Button deleteButton;
     @FXML
     private Text text;
 
@@ -54,6 +63,11 @@ public class CardCtrl extends ListCell<Card> {
     @FXML
     private GridPane tagGrid;
     private List<Tag> tags;
+
+    @FXML
+    private Label renameCardDisabled;
+    @FXML
+    private Label deleteCardDisabled;
 
     @FXML
     private Button addDescription;
@@ -78,6 +92,40 @@ public class CardCtrl extends ListCell<Card> {
             throw new RuntimeException(e);
         }
         board.refresh();
+
+        if(!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+    }
+
+    /**
+     * Makes the card readOnly
+     */
+    private void readOnly() {
+        renameButton.setDisable(true);
+        deleteButton.setDisable(true);
+        renameCardDisabled.setVisible(true);
+        deleteCardDisabled.setVisible(true);
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        renameButton.setDisable(false);
+        deleteButton.setDisable(false);
+        renameCardDisabled.setVisible(false);
+        deleteCardDisabled.setVisible(false);
 
         setOnDragDetected(this::handleDragDetected);
 
@@ -107,27 +155,30 @@ public class CardCtrl extends ListCell<Card> {
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
+            if(storeDetailsStage!=null){
+                storeDetailsStage.close();
+            }
         } else {
             title.setText(item.title);
+            description.setVisible(updateDescriptionIcon(item.description));
+            updateProgressText(item.checklist);
             card = item;
-            setPalette();
             if(card.palette != null)
                 setColors(root, title);
             this.loadTags();
 
-//            if(card.description == null || card.description.equals("")) {
-//                description.setVisible(false);
-//            }
+            if(!board.isUnlocked()) {
+                this.readOnly();
+            } else {
+                this.writeAccess();
+            }
+
+            if (card.isOpen == 1)
+                openDetailsWindow();
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
-    }
-
-    private void setPalette(){
-        Palette p = card.list.board.getDefaultPalette();
-        if(p != null)
-            card.palette = p;
     }
 
     private void setColors(AnchorPane root, Label title){
@@ -138,15 +189,12 @@ public class CardCtrl extends ListCell<Card> {
 
 
 
-    /**
-     * Initializes the card for the description icon
-     */
-    public void initialize() {
-        description.setVisible(false);
 
-        if(!(storedDescChar == null|| !storedDescChar.isEmpty())){
-            description.setVisible(true);
+    private boolean updateDescriptionIcon(String description) {
+        if(!description.trim().equals("")) {
+            return true;
         }
+        return false;
     }
 
     /**
@@ -186,15 +234,7 @@ public class CardCtrl extends ListCell<Card> {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
-
         board.refresh();
-    }
-
-    /**
-     * Method that removes the task from the list, visually
-     */
-    private void setTextOpacity() {
-        text.setOpacity(0.0);
     }
 
     /**
@@ -349,14 +389,14 @@ public class CardCtrl extends ListCell<Card> {
             if (c.id == dbCardId)
                 draggedCard = c;
 
-        draggedCard.palette.cards.remove(this);
-        draggedCard.palette = null;
-
+        Palette p = draggedCard.palette;
         server.removeCard(draggedCard);
-
+        p = server.getPalette(p.board.id, p.id);
+        draggedCard.palette = null;
         draggedCard.list = this.list.cardData;
         draggedCard.order = this.list.cardData.cards.size();
-        server.addCard2(draggedCard);
+        draggedCard=  server.addCard2(draggedCard);
+        draggedCard = server.addPaletteToCard(draggedCard, p);
         return draggedCard;
     }
 
@@ -395,53 +435,107 @@ public class CardCtrl extends ListCell<Card> {
      */
     public void openDetails(MouseEvent event) {
         if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-            Stage detailsStage = new Stage();
+            openDetailsWindow();
+        }
+    }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
-            loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
+    private void openDetailsWindow() {
+        if (card.isOpen == 2)
+            return;
+        setOpen(2);
+        Stage detailsStage = new Stage();
 
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
+        loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
 
-            CardDetailsCtrl cardDetailsCtrl = loader.getController();
-            cardDetailsCtrl.setCard(card);
-            cardDetailsCtrl.setTitle(getTitle());
-            cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
-                    ? "" : card.description);
-            if(!card.checklist.isEmpty()){
-                cardDetailsCtrl.setChecklists(card.checklist);
-            }
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
-            Scene scene = new Scene(root);
-            detailsStage.setScene(scene);
-            detailsStage.show();
+        CardDetailsCtrl cardDetailsCtrl = loader.getController();
+        cardDetailsCtrl.setCard(card);
+        cardDetailsCtrl.setTitle(getTitle());
+        cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
+                ? "" : card.description);
+        if(!card.checklist.isEmpty()){
+            cardDetailsCtrl.setChecklists(card.checklist);
+        }
+        cardDetailsCtrl.setPreset();
+        cardDetailsCtrl.setCardTags();
+        storeDetailsStage = detailsStage;
+
+        Scene scene = new Scene(root);
+        detailsStage.setScene(scene);
+        //make it so that details can only be closed if exitDetails is called.
+        detailsStage.setOnCloseRequest((e) -> {
+            card.isOpen = 0;
+            e.consume();
+        });
+        detailsStage.show();
+    }
+
+    /**
+     * Sets the progress text to the checked checklist and total
+     * checklists. Also checks if total is 0 then it
+     * makes the progress text disappear
+     * @param completed the number of checked checklists
+     * @param total total number of checklists
+     */
+    public void setProgressText(int completed, int total) {
+        completedTasks = completed;
+        totalTasks = total;
+        if(total > 0){
+            progressText.setText(completed + "/" + total);
+        }
+        else{
+            progressText.setText("");
         }
     }
 
     /**
-     * Prompts the user with an alert stating if they want to add a description or not,
-     * if they agree the images for description will change and you
-     * will be able to add a description
-     * @param event - the add description button being clicked
+     * gets the number of checked checklists
+     * @return the number of checked checklits
      */
-    public void addDescription(MouseEvent event) {
-        changeDescriptionVisibility(true);
+    public int getCompleted(){
+        return this.completedTasks;
     }
 
     /**
-     * Changes the visibility of description images
-     * @param t - the boolean that changes the visibility of the images
+     * gets the total number of checklists
+     * @return the number of cehcked checklists
      */
-    public void changeDescriptionVisibility(Boolean t) {
-        description.setVisible(t);
-        description.setDisable(!t);
-        addDescription.setVisible(!t);
-        addDescription.setDisable(t);
-        board.refresh();
+    public int getTotal() {
+        return this.totalTasks;
+    }
+
+    /**
+     * Updates the progress text when the checklists are changed
+     * and broadcasted to the rest of the clients
+     * @param checklist the list of checklists
+     */
+    public void updateProgressText(List<CheckListItem>  checklist){
+        int total = 0;
+        int completed = 0;
+        for(int i = 0; i<checklist.size(); i++){
+            if(checklist.get(i).completed){
+                completed++;
+            }
+            total++;
+        }
+        setProgressText(completed,total);
+    }
+
+    /**
+     * Sets the boolean variable isOpen in card to the inputted
+     * integer so that it can be checked if the cardDetails window
+     * is opened or not
+     * @param v the value to set isOpen to
+     */
+    public void setOpen(int v) {
+        card.isOpen = v;
     }
 }

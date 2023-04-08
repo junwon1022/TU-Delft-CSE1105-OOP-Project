@@ -130,7 +130,7 @@ public class CardController {
                 return ResponseEntity.badRequest().build();
             }
             // Save the new card to the database
-            cardService.createCard(card, list, board);
+            card = cardService.createCard(card, list, board);
 
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
@@ -334,7 +334,7 @@ public class CardController {
      * @return the card
      */
     @DeleteMapping(path = {"/{card_id}/tags/{tag_id}/","/{card_id}/tags/{tag_id}"})
-    ResponseEntity<Card> removeTagFromCard(@PathVariable("board_id") long boardId,
+    ResponseEntity<Tag> removeTagFromCard(@PathVariable("board_id") long boardId,
                                            @PathVariable("list_id") long listId,
                                            @PathVariable("card_id") long cardId,
                                            @PathVariable("tag_id") long tagId) {
@@ -353,7 +353,30 @@ public class CardController {
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the card with an HTTP 200 OK status
-            return ResponseEntity.status(HttpStatus.OK).body(card);
+            return ResponseEntity.status(HttpStatus.OK).body(tag);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping(path = {"{card_id}/swap_checklist/old/{old_idx}/new/{new_idx}"})
+    private ResponseEntity<Card> updateChecklist(@PathVariable("board_id") long boardId,
+                                              @PathVariable("list_id") long listId,
+                                              @PathVariable("card_id") long cardId,
+                                                @PathVariable("old_idx") int oldIdx,
+                                                @PathVariable("new_idx") int newIdx){
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Card card = cardService.editCardChecklists(cardId, oldIdx, newIdx);
+            Board board = boardService.getBoardById(boardId);
+
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+
+            return ResponseEntity.ok().body(card);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -397,20 +420,17 @@ public class CardController {
      * @param palette
      * @return the card with the palette
      */
-    @PostMapping(path = {"/{card_id}/palette/", "/{card_id}/palette"})
+    @PutMapping(path = {"/{card_id}/palette/", "/{card_id}/palette"})
     ResponseEntity<Card> addPaletteToCard(@PathVariable("board_id") long boardId,
                                           @PathVariable("list_id") long listId,
                                           @PathVariable("card_id") long cardId,
-                                          @RequestBody() Palette palette) {
-        try {
-            if(!validPath(boardId, listId, cardId)) {
-                return ResponseEntity.badRequest().build();
-            }
+                                          @RequestBody Palette palette) {
 
+        try {
             Board board = boardService.getBoardById(boardId);
             Card card = cardService.getCardById(cardId);
-
-            cardService.addPaletteToCard(card, palette);
+            Palette palette1 = paletteService.getPaletteById(palette.id);
+            cardService.addPaletteToCard(card, palette1);
             // Send new data to all users in the board
             simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
             // Return the card with an HTTP 200 OK status
@@ -454,5 +474,7 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
 
 }

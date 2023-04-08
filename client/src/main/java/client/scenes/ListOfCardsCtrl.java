@@ -3,19 +3,21 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.ListOfCards;
+import commons.Palette;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -51,6 +53,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private Button rename;
 
     @FXML
+    private Button deleteList;
+
+    @FXML
     private TextField name;
 
     @FXML
@@ -58,6 +63,13 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
     @FXML
     private Button hideCard;
+
+    @FXML
+    private Label addCardDisabled;
+    @FXML
+    private Label renameListDisabled;
+    @FXML
+    private Label deleteListDisabled;
 
     private ObservableList<Card> cards;
 
@@ -84,8 +96,41 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         list.setItems(cards);
         list.setCellFactory(param -> new CardCtrl(server, board, this));
 
+        if (!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+    }
+
+    /**
+     * Makes the list read-only
+     */
+    private void readOnly() {
+        addButton.setDisable(true);
+        rename.setDisable(true);
+        deleteList.setDisable(true);
+        addCardDisabled.setVisible(true);
+        deleteListDisabled.setVisible(true);
+        renameListDisabled.setVisible(true);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        addButton.setDisable(false);
+        rename.setDisable(false);
+        deleteList.setDisable(false);
+        addCardDisabled.setVisible(false);
+        deleteListDisabled.setVisible(false);
+        renameListDisabled.setVisible(false);
+
         setOnDragOver(this::handleDragOver);
+
         setOnDragDropped(this::handleDragDropped);
+
+        list.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
     }
 
     /**
@@ -122,14 +167,16 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 if (c.id == dbCardId)
                     draggedCard = c;
 
-            draggedCard.palette.cards.remove(this);
-            draggedCard.palette = null;
+            Palette p = draggedCard.palette;
+
             server.removeCard(draggedCard);
 
+            p = server.getPalette(p.board.id, p.id);
+            draggedCard.palette = null;
             draggedCard.list = this.cardData;
             draggedCard.order = this.cardData.cards.size();
-            server.addCard2(draggedCard);
-
+            draggedCard = server.addCard2(draggedCard);
+            draggedCard = server.addPaletteToCard(draggedCard, p);
             board.refresh();
         }
         event.setDropCompleted(true);
@@ -139,7 +186,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
      * @param item The new item for the cell.
-     * @param empty whether this cell represents data from the list. If it
+     * @param empty whether or not this cell represents data from the list. If it
      *        is empty, then it does not represent any domain data, but is a cell
      *        being used to render an "empty" row.
      */
@@ -153,6 +200,11 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
             title.setText(item.title);
             cards.setAll(item.cards);
             cardData = item;
+            if (!board.isUnlocked()) {
+                this.readOnly();
+            } else {
+                this.writeAccess();
+            }
 
             changeColours();
             setGraphic(root);
@@ -163,37 +215,38 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     /**
      * Method that changes the lists according to the customizations of the user
      */
-    private void changeColours(){
+    private void changeColours() {
         root.setStyle("-fx-background-color: " + cardData.board.listColour);
         title.setStyle("-fx-text-fill: " + cardData.board.listFont);
         list.setStyle("-fx-background-color: derive(" + cardData.board.listColour +", +60%)" +
                       ";-fx-control-inner-background:" + cardData.board.listColour);
     }
 
-    /**
-     * Adds a new card to the List of Cards.
-     * Shows a text field that asks for the title.
-     * If pressed enter, adds the card via the server and forces a board refresh.
-     * @param event the KeyEvent
-     */
 
-    public void addCardEnter(KeyEvent event) {
-        if(event.getCode().toString().equals("ENTER")
-                && !name.getText().equals("") && name.getText() != null){
-            String title = name.getText();
-            Card card = getCard(title);
-            server.addCard(card);
-
-            Card addedCard = server.addCard2(card);
-            card.id = addedCard.id;
-
-            name.clear();
-            name.setOpacity(0);
-            addCardButton.setOpacity(0);
-
-            board.refresh();
-        }
-    }
+//    /**
+//     * Adds a new card to the List of Cards.
+//     * Shows a text field that asks for the title.
+//     * If pressed enter, adds the card via the server and forces a board refresh.
+//     * @param event the KeyEvent
+//     */
+//
+//    public void addCardEnter(KeyEvent event) {
+//        if(event.getCode().toString().equals("ENTER")
+//                && !name.getText().equals("") && name.getText() != null){
+//            String title = name.getText();
+//            Card card = getCard(title);
+//            server.addCard(card);
+//
+//            Card addedCard = server.addCard2(card);
+//            card.id = addedCard.id;
+//
+//            name.clear();
+//            name.setOpacity(0);
+//            addCardButton.setOpacity(0);
+//
+//            board.refresh();
+//        }
+//    }
 
     /**
      * Adds a new card to the List of cards.
@@ -209,9 +262,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
-
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
             hideButton(event);
-
             board.refresh();
         } else {
             errorStyle();
@@ -229,7 +282,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(false);
         // Shorten the list
         Timeline timelineList = new Timeline(
-                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 300))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 288))
         );
         Timeline timelineName = new Timeline(
                 new KeyFrame(Duration.seconds(0.25), new KeyValue(name.visibleProperty(), true))
@@ -261,7 +314,7 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         addButton.setVisible(true);
         // Elongate the list
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 350))
+                new KeyFrame(Duration.seconds(0.25), new KeyValue(list.prefHeightProperty(), 338))
         );
         timeline.play();
     }
@@ -387,6 +440,21 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         return card;
     }
 
+    /**
+     * Getter for the list of cards displayed
+     * @return the list entity
+     */
+    public ListOfCards getListOfCards() {
+        return cardData;
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
 
     // From here are the keyboard cases
 
@@ -396,10 +464,117 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
      */
     public void handleKeyPressed(javafx.scene.input.KeyEvent keyEvent) {
         if (keyEvent.getCode().toString().equals("ENTER")) {
-            addCardKeyboard(keyEvent);
+            if (!addButton.isVisible())
+                addCardKeyboard(keyEvent);
+            else
+                openCardDetails(keyEvent);
         }
         else if(keyEvent.getCode().toString().equals("ESCAPE")){
-            cancelKeyboard(keyEvent);
+            if (!addButton.isVisible())
+                cancelKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.E ||
+                keyEvent.getCode() == KeyCode.DELETE ||
+                keyEvent.getCode() == KeyCode.BACK_SPACE ||
+                (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) ||
+                (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()))  {
+            handleKeyPressedHelper(keyEvent);
+        }
+    }
+
+    /**
+     * Helper to andle the key pressed event.
+     * @param keyEvent the KeyEvent
+     */
+    public void handleKeyPressedHelper(javafx.scene.input.KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.E) {
+            editCardKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.DELETE ||
+                keyEvent.getCode() == KeyCode.BACK_SPACE)  {
+            deleteCardKeyboard(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) {
+            moveCardUp(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()) {
+            moveCardDown(keyEvent);
+        }
+    }
+
+    private void moveCardUp(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            int selectedIndex = -1;
+            for (int i = 0; i < list.getItems().size(); i++)
+                if (list.getItems().get(i).id == cards.get(0).id)
+                    selectedIndex = i;
+
+            if (selectedIndex > 0) {
+                server.moveCard(getListOfCards(), selectedIndex, selectedIndex - 1);
+                list.getSelectionModel().select(selectedIndex - 1);
+            }
+        }
+    }
+
+    private void moveCardDown(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            int selectedIndex = -1;
+            for (int i = 0; i < list.getItems().size(); i++)
+                if (list.getItems().get(i).id == cards.get(0).id)
+                    selectedIndex = i;
+
+            if (selectedIndex < list.getItems().size() - 1) {
+                server.moveCard(getListOfCards(), selectedIndex, selectedIndex + 1);
+                list.getSelectionModel().select(selectedIndex + 1);
+            }
+        }
+    }
+
+    private void openCardDetails(KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card card = list.getItems().filtered(c -> c.id == cards.get(0).id).get(0);
+            if (card.isOpen == 0) {
+                card.isOpen = 1;
+                list.refresh();
+            }
+        }
+        event.consume();
+    }
+
+    /**
+     * Method for delete Card with shortcuts "Delete" and "Backspace"
+     * @param event the KeyEvent
+     */
+    private void deleteCardKeyboard(javafx.scene.input.KeyEvent event) {
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card removedCard = cards.get(0);
+            removeCard(removedCard);
+        }
+        event.consume();
+    }
+
+    /**
+     * Method for edit Card with shortcut "E"
+     * @param event the KeyEvent
+     */
+    private void editCardKeyboard(javafx.scene.input.KeyEvent event) {
+        if(event.isConsumed())
+            return;
+        event.consume();
+        ObservableList<Card> cards = list.getSelectionModel().getSelectedItems();
+        if (cards.size() == 1) {
+            Card editedCard = cards.get(0);
+            renameCard(editedCard);
         }
     }
 
@@ -417,6 +592,8 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
 
             Card addedCard = server.addCard2(card);
             card.id = addedCard.id;
+            Palette palette = cardData.board.getDefaultPalette();
+            card = server.addPaletteToCard(card, palette);
 
             hideButtonKeyboard(event);
 
@@ -434,5 +611,47 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         hideButtonKeyboard(event);
     }
 
+    /**
+     * Method that renames the card
+     * @param card the card
+     */
+    public void renameCard(Card card){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RenameCard.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            RenameCardCtrl controller = fxmlLoader.getController();
+            controller.initialize(card);
 
+            Stage stage = new Stage();
+            stage.setTitle("Rename the card: " + card.title);
+            stage.setScene(new Scene(root, 300, 200));
+            stage.showAndWait();
+
+            if (controller.success) {
+                String newTitle = controller.storedText;
+
+                //method that actually renames the list in the database
+                server.renameCard(card, newTitle);
+                board.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Method that removes the card
+     * @param card the card
+     */
+    public void removeCard(Card card) {
+        try {
+            server.removeCard(card);
+        } catch (WebApplicationException e) {
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+        board.refresh();
+    }
 }

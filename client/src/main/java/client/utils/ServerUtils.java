@@ -18,17 +18,20 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import com.google.inject.Inject;
 import commons.*;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -113,9 +116,11 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    List<ListOfCards> serverData = null;
-    List<Tag> serverDataTags = null;
-    List<Tag> serverDataTagsInCard = null;
+    private List<ListOfCards> serverData = null;
+    private List<Tag> serverDataTags = null;
+    private List<Tag> serverDataTagsInCard = null;
+
+    private List<Card> cardData = null;
 
     //Data related to board titles (How the boards are displayed on the main screen)
     private List<Board> boardData = null;
@@ -280,9 +285,6 @@ public class ServerUtils {
      * @return a list containing all lists of cards
      */
     public String checkServer(String serverUrl){
-        System.out.println("The Url is " + URLEncoder.encode(SERVER,StandardCharsets.UTF_8));
-
-
         try {
             return ClientBuilder.newClient(new ClientConfig())
                     .target(SERVER).path("/api/checkServer/")
@@ -304,8 +306,13 @@ public class ServerUtils {
      */
     public List<ListOfCards> getServerData(long boardId) {
         serverData = getLists(boardId);
-        for (var list: serverData)
+        for (var list: serverData) {
             list.cards.sort(Comparator.comparingLong(Card::getOrder));
+            cardData = getCards(list.id, boardId);
+            for(var card: cardData){
+                card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+            }
+        }
         return serverData;
     }
 
@@ -477,11 +484,15 @@ public class ServerUtils {
 
     /**
      * Method that gets the cards from the server from a certain list
+     * @param listId the id of the list
+     * @param boardId id of the board the list belongs to
      * @return a list of the cards
      */
-    public List<Card> getCards(){
+    public List<Card> getCards(long listId, long boardId){
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards") //
+                .resolveTemplate("list_id", listId) //
+                .resolveTemplate("board_id", boardId) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<List<Card>>() {});
@@ -568,11 +579,14 @@ public class ServerUtils {
 
     /**
      * Get a card from the server
+     * @param card
      * @return the card we need
      */
-    public Card getCard(){
+    public Card getCard(Card card){
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/{card_id}") //
+                .target(SERVER).path("/api/boards/"+ card.list.board.id
+                        + "/lists/"+ card.list.id
+                        + "/cards/" + card.id)
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<Card>() {});
@@ -626,6 +640,36 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(title, APPLICATION_JSON), ListOfCards.class);
+    }
+
+    /**
+     * Change a board with a new password
+     * @param board - the board that needs to have its password changed
+     * @param password - the password of the new board
+     * @return the board with the new password
+     */
+    public Board changeBoardPassword(Board board, String password){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(password, APPLICATION_JSON), Board.class);
+    }
+
+    /**
+     * Removal of password of a board from server
+     *
+     * @param board
+     * @return - return the removed List
+     */
+    public Board removePassword(Board board){
+        long boardId = board.id;
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + boardId + "/password/")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Board.class);
     }
 
     /**
@@ -727,9 +771,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(newTitle, APPLICATION_JSON), Board.class);
-        boardData.remove(board);
-        boardData.add(b);
-
         return b;
     }
 
@@ -851,10 +892,9 @@ public class ServerUtils {
      * Method that deletes the given palette from the database, if possible
      * @param boardId
      * @param palette
-     * @return the deleted palette
      */
-    public Palette deletePalette(long boardId, Palette palette){
-        return ClientBuilder.newClient(new ClientConfig())
+    public void deletePalette(long boardId, Palette palette){
+        ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boards/" + boardId +"/palettes/"+ palette.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
@@ -894,7 +934,7 @@ public class ServerUtils {
     }
 
     /**
-     *  Method that renames the board in the database
+     * Method that renames the board in the database
      * @param board
      * @param newTitle
      * @return The renamed board
@@ -958,7 +998,6 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(checkListItem, APPLICATION_JSON), CheckListItem.class);
-
     }
 
     /**
@@ -979,7 +1018,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(description, APPLICATION_JSON), CheckListItem.class);
     }
-
 
     /**
      * Removes the checkListItem
@@ -1017,5 +1055,166 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(completed, APPLICATION_JSON), CheckListItem.class);
     }
-}
 
+    /**
+     * Updates the checklist for a specific card and changes order
+     * values
+     * @param card the card to change the checklist on
+     * @param oldIdx index of the dragged checkListItem
+     * @param newIdx index of the dragged onto checkListItem
+     */
+    public void updateChecklists(Card card, int oldIdx, int newIdx) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/swap_checklist/old/{old_idx}/new/{new_idx}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .resolveTemplate("old_idx", oldIdx)
+                .resolveTemplate("new_idx", newIdx)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.json(""));
+    }
+
+    private final Map<String, ExecutorService> execs = new HashMap<>();
+
+    /**
+     * Method for register for board updates
+     * @param key the board key
+     * @param consumer the consumer
+     */
+    public void registerForUpdates(String key, Consumer<Board> consumer) {
+        if (!execs.containsKey(key))
+            execs.put(key, Executors.newSingleThreadExecutor());
+
+        execs.get(key).submit(() -> {
+            while (!Thread.interrupted()) {
+                var res = ClientBuilder.newClient(new ClientConfig())
+                        .target(SERVER).path("/api/boards/" + key + "/updates")
+                        .request(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .get(Response.class);
+
+                if (res.getStatus() == 204) {
+                    continue;
+                }
+                var b = res.readEntity(Board.class);
+                consumer.accept(b);
+            }
+        });
+    }
+
+    /**
+     * Method for unregister for board updates
+     * @param key the board key
+     */
+    public void unregisterForUpdates(String key) {
+        if (execs.containsKey(key)) {
+            execs.get(key).shutdownNow();
+            execs.remove(key);
+        }
+    }
+
+    /**
+     * Method to stop long polling
+     */
+    public void stop() {
+        execs.forEach((c, e) -> {
+            e.shutdownNow();
+            try {
+                e.awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
+
+    /**
+     * Method that gets the palette
+     * @param boardId
+     * @param paletteId
+     * @return the palette
+     */
+    public Palette getPalette(long boardId, long paletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/" + boardId +"/palettes/" + paletteId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Palette>() {});
+    }
+
+    /**
+     * Method that adds a palette to a card
+     * @param card
+     * @param palette
+     * @return the card with a palette
+     */
+    public Card addPaletteToCard(Card card, Palette palette){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/palette")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(palette, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Method that adds a tag to a card
+     * @param card
+     * @param tag
+     * @return the card with a new tag
+     */
+    public Card addTagToCard(Tag tag, Card card){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards/" +
+                        "{card_id}/tags/{tag_id}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(tag, APPLICATION_JSON), Card.class);
+    }
+
+    /**
+     * Removes the tag from the given card
+     * @param tag - tag to be removed
+     * @param card - the card to remove the tag from
+     * @return the removed tag
+     */
+    public Tag removeTagFromCard(Tag tag, Card card){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/lists/{list_id}/cards" +
+                        "/{card_id}/tags/{tag_id}")
+                .resolveTemplate("board_id", card.list.board.id)
+                .resolveTemplate("list_id", card.list.id)
+                .resolveTemplate("card_id", card.id)
+                .resolveTemplate("tag_id", tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(Tag.class);
+    }
+
+    /**
+     * Method  that adds the cards of 2 palettes in one
+     * @param palette
+     * @param oldPaletteId
+     * @return the palette with the new cards
+     */
+    public Palette changePaletteCards(Palette palette, long oldPaletteId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boards/{board_id}/palettes/{palette_id}/cards/")
+                .resolveTemplate("board_id", palette.board.id)
+                .resolveTemplate("palette_id", palette.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(oldPaletteId, APPLICATION_JSON), Palette.class);
+    }
+
+}

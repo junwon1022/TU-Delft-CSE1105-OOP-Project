@@ -11,7 +11,7 @@ import javax.persistence.*;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-@Table(name = "checklist_items")
+@Table(name = "checklist_item")
 @JsonIdentityInfo(
         scope = CheckListItem.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -21,6 +21,9 @@ public class CheckListItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     public long id;
+
+    @Column(name = "check_order")
+    public long order;
 
     @Column(name = "item_text")
     public String text;
@@ -64,6 +67,13 @@ public class CheckListItem {
         } else {
             completed = true;
         }
+    }
+
+    /**
+     * @return the order of the card
+     */
+    public long getOrder() {
+        return order;
     }
 
     /**
