@@ -465,6 +465,7 @@ public class CardCtrl extends ListCell<Card> {
             cardDetailsCtrl.setChecklists(card.checklist);
         }
         cardDetailsCtrl.setPreset();
+        cardDetailsCtrl.setCardTags();
         storeDetailsStage = detailsStage;
 
         Scene scene = new Scene(root);

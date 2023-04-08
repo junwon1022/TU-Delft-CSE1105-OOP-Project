@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.CheckListItem;
 import commons.Palette;
+import commons.Tag;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,9 +54,6 @@ public class CardDetailsCtrl{
     private Button addChecklist;
 
     @FXML
-    private Button addTagButton;
-
-    @FXML
     private ListView<CheckListItem> checklistView;
 
     @FXML
@@ -70,7 +68,17 @@ public class CardDetailsCtrl{
     @FXML
     private ListView<Palette> palettes;
 
+    @FXML
+    private ListView<Tag> chooseTag;
+
+    @FXML
+    private ListView<Tag> tagsView;
+
     ObservableList<Palette> paletteData;
+
+    ObservableList<Tag> tagsData;
+
+    ObservableList<Tag> showableTags;
 
     private Card card;
 
@@ -96,10 +104,20 @@ public class CardDetailsCtrl{
         data = FXCollections.observableArrayList();
         checklistView.setItems(data);
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
+        tagsData = FXCollections.observableArrayList();
+        tagsView.setItems(tagsData);
+        tagsView.setCellFactory(tlv -> new TagCtrl(server, board, this, true));
+        showableTags = FXCollections.observableArrayList();
+        chooseTag.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
+        chooseTag.setItems(showableTags);
+        chooseTag.setCellFactory(ctv -> new TagCtrl(server, board, this, false));
+
 
         scenePane.setOnKeyPressed(this::exitDetails);
 
     }
+
 
     private void selectPalettes(){
         paletteData = FXCollections.observableArrayList();
@@ -256,10 +274,16 @@ public class CardDetailsCtrl{
     }
 
     /**
-     * adds a tag to the detailed view of the card
+     * adds a tag to the detailed view of the card if it isnt added yet
+     * @param tag the tag to add
      */
-    public void addTag() {
-
+    public void addTag(Tag tag) {
+        if(!tagsData.contains(tag)){
+            tagsData.add(tag);
+            card.addTag(tag);
+            server.addTagToCard(tag, card);
+            showableTags.remove(tag);
+        }
     }
 
     /**
@@ -342,5 +366,25 @@ public class CardDetailsCtrl{
         setPreset();
     }
 
+    /**
+     * Sets the CardTags ListView when the details are opened
+     */
+    public void setCardTags(){
+        showableTags.addAll(board.tags);
+        for (Tag tag : card.tags) {
+            tagsData.add(tag);
+            showableTags.remove(tag);
+        }
+    }
 
+    /**
+     * removes the tag from the card
+     * @param tag the tag to remove
+     */
+    public void removeTagFromCard(Tag tag) {
+        tagsData.remove(tag);
+        showableTags.add(tag);
+        card.removeTag(tag);
+        server.removeTagFromCard(tag, card);
+    }
 }

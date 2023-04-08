@@ -137,7 +137,7 @@ public class CardService {
      * @param tag
      */
     public void addTagToCard(Card card, Tag tag) {
-        card.tags.add(tag);
+        card.addTag(tag);
         cardRepository.save(card);
     }
 
@@ -147,7 +147,7 @@ public class CardService {
      * @param tag
      */
     public void removeTagFromCard(Card card, Tag tag) {
-        card.tags.remove(tag);
+        card.removeTag(tag);
         cardRepository.save(card);
     }
 

@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +21,8 @@ import java.io.IOException;
 public class TagCtrl extends ListCell<Tag> {
     private ServerUtils server;
     private BoardCtrl board;
+
+    private CardDetailsCtrl details;
 
     @FXML
     private Button renameTag;
@@ -40,6 +43,9 @@ public class TagCtrl extends ListCell<Tag> {
 
     @FXML
     private Label deleteTagDisabled;
+
+    @FXML
+    private Button removeTagFromCard;
 
     private TextField name;
 
@@ -67,6 +73,32 @@ public class TagCtrl extends ListCell<Tag> {
             this.writeAccess();
         }
     }
+
+    /**
+     * Create a new TagCtrl
+     * @param server The server to use
+     * @param board The board this TagCtrl belongs to
+     * @param details the card details it belongs to
+     * @param showRemove boolean to determine if the remove button should
+     *                   be displayed
+     */
+    public TagCtrl(ServerUtils server, BoardCtrl board, CardDetailsCtrl details,
+                   boolean showRemove) {
+        this.server = server;
+        this.board = board;
+        this.details = details;
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CardTag.fxml"));
+        fxmlLoader.setController(this);
+        try {
+            fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        setRemoveButton(showRemove);
+    }
+
 
     /**
      * Called whenever the parent ListView is changed. Sets the data in this controller.
@@ -173,5 +205,32 @@ public class TagCtrl extends ListCell<Tag> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * when the "x" is pressed, removes the tag from the card
+     * @param event the pressing event of the button
+     */
+    public void removeTagFromCard(ActionEvent event){
+        details.removeTagFromCard(this.tag);
+    }
+
+    /**
+     * adds the tag to the card when it is double-clicked
+     * @param event the event of double-clicking
+     */
+    public void addToCard(MouseEvent event){
+        if(event.getClickCount() >= 2){
+            details.addTag(this.tag);
+        }
+    }
+
+    /**
+     * Sets the fxml file to be loaded depending on if the remove button should
+     * show or not
+     * @param showRemove the state of the remove button
+     */
+    private void setRemoveButton(boolean showRemove) {
+        removeTagFromCard.setVisible(showRemove);
     }
 }
