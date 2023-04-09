@@ -11,7 +11,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -120,25 +119,13 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </VBox>
-      <VBox spacing="10.0" style="-fx-background-color: #007e98;" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS">
+      <VBox spacing="10.0" style="-fx-background-color: #008CA8;" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS">
          <children>
-            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="75.0" prefWidth="237.0">
-               <children>
-                  <Button id="exitButton" layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onAction="#exitDetails" prefHeight="27.0" prefWidth="29.0" stylesheets="@../../styles.css" text="✖">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                     <effect>
-                        <Glow level="0.27" />
-                     </effect>
-                  </Button>
-                  <Label layoutX="3.0" layoutY="17.0" text="Tags" textFill="#fffafa">
-                     <font>
-                        <Font name="Corbel Light" size="25.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
+            <Label text="Tags" textFill="#fffafa">
+               <font>
+                  <Font name="Corbel Light" size="25.0" />
+               </font>
+            </Label>
             <ListView id="palette-list" fx:id="tagsView" minHeight="32.0" prefHeight="115.0" prefWidth="198.0" style="-fx-background-color: #A2E4F1; -fx-border-color: #A2E4F1;" styleClass="board-list" VBox.vgrow="ALWAYS">
                <stylesheets>
                   <URL value="@../../palettes.css" />
@@ -214,7 +201,7 @@
             </Accordion>
          </children>
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="40.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="75.0" />
          </padding>
       </VBox>
       <AnchorPane fx:id="disabled" onMouseClicked="#showReadOnlyMessage" prefHeight="597.0" prefWidth="296.0" style="-fx-background-color: rgb(255, 255, 255, 0.25);" GridPane.columnSpan="2">

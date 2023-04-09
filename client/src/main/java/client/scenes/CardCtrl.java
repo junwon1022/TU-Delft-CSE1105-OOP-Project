@@ -443,7 +443,7 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
-     * Opens the detailed view of a card when the description button is double clicked
+     * Opens the detailed view of a card when the description button is double-clicked
      * @param event - the icon-button being clicked
      */
     public void openDetails(MouseEvent event) {
