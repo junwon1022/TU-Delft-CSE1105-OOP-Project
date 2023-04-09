@@ -54,6 +54,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class BoardCtrl {
@@ -207,24 +210,45 @@ public class BoardCtrl {
             refresh();
             handleSecurityLevel();
             // listen for card updates
-            server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-                for (var list : s.lists) {
-                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
-                    for(var card : list.cards) {
-                        card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
-                    }
-                }
-                Platform.runLater(() -> {
-                    board = s;
-                    this.title.setText(s.title);
-                    changeColours();
-                    handleSecurityLevel();});
-                Platform.runLater(() -> listOfCards.setAll(s.lists));
-                Platform.runLater(() -> tags.setAll(s.tags));
+            server.registerForMessages("/topic/" + board.id, Board.class, this::handleBoardUpdate);
+
+            Runnable updatePrefs = () -> Platform.runLater(() -> {
+                prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                        .filter(x -> x.getKey().equals(boardKey))
+                        .collect(Collectors.toList()).get(0);
+                handleSecurityLevel();
             });
+
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
+
         } catch(Exception e) {
             board = getNewBoard();
         }
+    }
+
+    /**
+     * Method for handling board update
+     * @param s the board
+     */
+    private void handleBoardUpdate(Board s) {
+        for (var list : s.lists) {
+            list.cards.sort(Comparator.comparingLong(Card::getOrder));
+            for(var card : list.cards) {
+                card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+            }
+        }
+        Platform.runLater(() -> {
+            prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                    .filter(x -> x.getKey().equals(boardKey))
+                    .collect(Collectors.toList()).get(0);
+
+            board = s;
+            this.title.setText(s.title);
+            changeColours();
+            handleSecurityLevel();});
+        Platform.runLater(() -> listOfCards.setAll(s.lists));
+        Platform.runLater(() -> tags.setAll(s.tags));
     }
 
     /**
@@ -341,6 +365,7 @@ public class BoardCtrl {
      * Handles whether read only view or write access should be given to user
      */
     private void handleSecurityLevel() {
+
         if (board.password == null || board.password.equals("") || adminFlag == 1) {
             this.writeAccess();
         } else {
@@ -699,9 +724,6 @@ public class BoardCtrl {
             Board newBoard = server.getBoardByKey(joinField.getText());
             if (newBoard != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), newBoard);
-                newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
-                        newPrefs,
-                        newBoard.password);
                 mainCtrl.mainScreenCtrl.addToData(newPrefs);
                 mainCtrl.mainScreenCtrl.setPalette(newBoard);
                 mainCtrl.showBoard(joinField.getText(), adminFlag);
@@ -838,11 +860,12 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
+
                 board = server.changeBoardPassword(board, password);
                 System.out.println(board);
 
-                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
-                        prefBoard, password);
                 this.refresh();
                 writeAccess();
             }
@@ -905,6 +928,9 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
+
                 if(password != null) {
                     board = server.changeBoardPassword(board, password);
                 } else {
@@ -912,8 +938,6 @@ public class BoardCtrl {
                 }
                 System.out.println(board);
 
-                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
-                        prefBoard, password);
                 this.refresh();
                 writeAccess();
             }
