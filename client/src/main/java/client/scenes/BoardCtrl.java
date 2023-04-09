@@ -48,6 +48,7 @@ import javafx.scene.shape.Line;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -433,6 +434,7 @@ public class BoardCtrl {
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
+
         //the method call of getListsInBoard will be with the board parameter
         var serverData = server.getLists(board.id);
         listOfCards.setAll(serverData);
@@ -447,6 +449,7 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
         recentBoards.setItems(recentBoardsData);
         recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
         recentBoards.setFixedCellSize(0);
@@ -637,6 +640,7 @@ public class BoardCtrl {
         return board;
     }
 
+
     /**
      * Method that returns a list
      * @param title
@@ -647,6 +651,7 @@ public class BoardCtrl {
     }
 
     /**
+<<<<<<< HEAD
      * Method that opens the customization window
      * @param event
      */
@@ -771,6 +776,87 @@ public class BoardCtrl {
             throw new RuntimeException(e);
         }
     }
+
+
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void handleKeyboardShortcuts(KeyEvent event) {
+        if(event.getCode().toString().equals("C")) addColourByKey(event);
+        if(event.getCode().toString().equals("T")) addTagByKey(event);
+
+    }
+
+
+    /**
+     * Shortcut for adding tags
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void addTagByKey(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddTag.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            AddTagCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a new tag");
+            Scene addTagScene = new Scene(root);
+            addTagScene.getStylesheets().add("styles.css");
+            stage.setHeight(320);
+            stage.setWidth(510);
+            stage.setScene(addTagScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String name = controller.storedText;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
+
+                Tag tag = getTag(name, backgroundColor, fontColor);
+                Tag addedTag = server.addTag(tag);
+                System.out.println(addedTag);
+
+                //change the id of the tag locally
+                tag.id = addedTag.id;
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Shortcut for adding colours
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void addColourByKey(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Customization.fxml"));
+        try {
+
+            CustomizationCtrl customizationCtrl = new CustomizationCtrl(server,this, board);
+            fxmlLoader.setController(customizationCtrl);
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Customization of board");
+            stage.setScene(new Scene(root, 686, 527));
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        board = server.getBoard(board.id);
+        changeColours();
+    }
+
 
     /**
      * Redirects to connect to server screen

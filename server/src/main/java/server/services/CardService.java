@@ -53,6 +53,21 @@ public class CardService {
     }
 
     /**
+     * Make a card selected/unselected
+     * @param id
+     * @param b
+     * @return a card
+     */
+    public Card editSelected(Long id, boolean b) throws Exception {
+        Card card = cardRepository.getById(id);
+        if(b == true) card.selected = true;
+        else card.selected = false;
+        return cardRepository.save(card);
+    }
+
+
+
+    /**
      * Create a new card
      * @param card
      * @param list

@@ -177,6 +177,39 @@ public class CardController {
     }
 
     /**
+     * Edit a card's selection
+     *
+     * @param b
+     * @param boardId
+     * @param listId
+     * @param cardId
+     * @return the edited card
+     */
+    @PutMapping(path = {"/{card_id}/select","/{card_id}/select"})
+    public ResponseEntity<Card> editCardSelectionById(@RequestBody boolean b,
+                                                  @PathVariable("board_id") long boardId,
+                                                  @PathVariable("list_id") long listId,
+                                                  @PathVariable("card_id") long cardId) {
+
+        try {
+            if(!validPath(boardId, listId, cardId)) {
+                return ResponseEntity.badRequest().build();
+            }
+            // Get the board in which the card will be updated
+            Board board = boardService.getBoardById(boardId);
+            // Edit the list and save it in the database
+            Card card = cardService.editSelected(cardId,b);
+            // Send new data to all users in the board
+            simpMessagingTemplate.convertAndSend("/topic/" + board.id, board);
+            // Return the edited board with an HTTP 200 OK status
+            return ResponseEntity.ok().body(card);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Delete a card given its id
      *
      * @param boardId
