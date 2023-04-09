@@ -5,18 +5,19 @@ import commons.Card;
 import commons.CheckListItem;
 import commons.Palette;
 import commons.Tag;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -43,7 +44,7 @@ public class CardDetailsCtrl{
     private TextArea descriptionText;
 
     @FXML
-    private AnchorPane scenePane;
+    private GridPane scenePane;
 
     @FXML
     private Button saveDescription;
@@ -74,6 +75,11 @@ public class CardDetailsCtrl{
 
     @FXML
     private Button addSubtask;
+
+    @FXML
+    private AnchorPane disabled;
+    @FXML
+    private HBox readOnlyMessage;
 
     @FXML
     private HBox subtaskAddition;
@@ -136,6 +142,11 @@ public class CardDetailsCtrl{
         scenePane.setOnKeyPressed(this::exitDetails);
         loadPalettes();
         loadTags();
+        if(!board.isUnlocked()) {
+            disabled.setVisible(true);
+        } else {
+            disabled.setVisible(false);
+        }
     }
 
 
@@ -405,6 +416,7 @@ public class CardDetailsCtrl{
         showableTags.add(tag);
         card.removeTag(tag);
         server.removeTagFromCard(tag, card);
+        card = server.getCard(card);
     }
 
     /**
@@ -450,5 +462,46 @@ public class CardDetailsCtrl{
         addChecklist.setVisible(true);
         hide.setVisible(false);
         nullTitle.setVisible(false);
+    }
+
+    /**
+     * Closes the read only message
+     * @param event
+     */
+    public void closeReadOnlyView(ActionEvent event) {
+        FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.5), readOnlyMessage);
+        fadeOutMessage.setFromValue(0.9);
+        fadeOutMessage.setToValue(0.0);
+
+        fadeOutMessage.setOnFinished(e -> {
+            // Hide the message when the transition is finished
+            readOnlyMessage.setVisible(false);
+        });
+        fadeOutMessage.play();
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        readOnlyMessage.setVisible(true);
+        FadeTransition fadeInTransition = new FadeTransition(
+                Duration.seconds(0.3), readOnlyMessage);
+        fadeInTransition.setFromValue(0.0);
+        fadeInTransition.setToValue(0.9);
+        fadeInTransition.play();
+        Alert alert = new Alert(Alert.AlertType.WARNING,
+                "Cannot edit in read-only mode. \n" +
+                        "To gain write access, click on the lock icon and enter the password.",
+                ButtonType.OK);// Load your custom icon image
+
+        // Set the graphic of the alert dialog to custom image
+        alert.setGraphic(new ImageView(new Image("warning-icon.png")));
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("styles.css");
+        dialogPane.getStyleClass().add("alert");
+        dialogPane.lookupButton(ButtonType.OK).getStyleClass().add("normal-button");
+        alert.showAndWait();
     }
 }

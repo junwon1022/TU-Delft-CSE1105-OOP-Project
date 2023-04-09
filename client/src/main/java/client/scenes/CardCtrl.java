@@ -167,17 +167,30 @@ public class CardCtrl extends ListCell<Card> {
                 setColors(root, title);
             loadTags();
 
-            if(!board.isUnlocked()) {
-                this.readOnly();
-            } else {
-                this.writeAccess();
+            handleSecurity();
+
+            if (card.isOpen == 1) {
+                openDetailsWindow();
             }
 
-            if (card.isOpen == 1)
-                openDetailsWindow();
+            if (list.selectedIndex != -1) {
+                list.getList().getSelectionModel().select(list.selectedIndex);
+                list.selectedIndex = -1;
+            }
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        }
+    }
+
+    /**
+     * Load access level
+     */
+    private void handleSecurity() {
+        if(!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
         }
     }
 
@@ -473,6 +486,7 @@ public class CardCtrl extends ListCell<Card> {
         //make it so that details can only be closed if exitDetails is called.
         detailsStage.setOnCloseRequest((e) -> {
             card.isOpen = 0;
+            detailsStage.close();
             e.consume();
         });
         detailsStage.show();

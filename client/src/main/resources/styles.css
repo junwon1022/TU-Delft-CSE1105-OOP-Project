@@ -6,9 +6,15 @@
 #lists .list-cell:filled:selected {
     /*-fx-selection-bar: #CAF0F8;*/
     -fx-border-color: #04839f;
+    -fx-border-radius: 12px;
+    -fx-padding: 0;
     /*-fx-selection-bar-non-focused: #CAF0F8;*/
     -fx-background-color: derive(-fx-control-inner-background, 0%);
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
+}
+
+#list .list-cell:filled:selected {
+    -fx-padding: 3px;
 }
 
 #lists .list-cell, #lists .list-cell:focused {
@@ -222,15 +228,6 @@
     -fx-background-image: url("edit-custom.png");
 }
 
-#renameChecklist {
-    -fx-background-color: #004792;
-}
-
-#renameChecklist:hover {
-    -fx-background-color: #7CB9E8;
-    -fx-cursor: hand;
-}
-
 #addChecklist:hover {
      -fx-color: #7CB9E8;
      -fx-cursor: hand;
@@ -238,24 +235,6 @@
 
 #addChecklist {
     -fx-color: #004792;
-}
-
-#cancelChecklist {
-    -fx-background-color: crimson;
-}
-
-#cancelChecklist2 {
-    -fx-color: crimson;
-}
-
-#cancelChecklist2:hover {
-    -fx-color: #f8baba;
-    -fx-cursor: hand;
-}
-
-#cancelChecklist:hover {
-    -fx-background-color: #f8baba;
-    -fx-cursor: hand;
 }
 
 #description {
@@ -385,10 +364,12 @@
 .accordion {
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
+    -fx-border-style: none;
 }
 
 .titled-pane {
-    -fx-background-color: #daf1f6;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
     -fx-text-fill: white;
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
