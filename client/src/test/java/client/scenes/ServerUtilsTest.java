@@ -3,27 +3,20 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.UserPreferences;
 import commons.Card;
-import commons.Board;
 import commons.ListOfCards;
-import commons.Tag;
-import commons.Palette;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerUtilsTest {
 
-    //Board b = new Board("test board", "test key", "test password", "test font",
-    // "test colour", "password", new LinkedList<>(), new HashSet<>(), null);
     @Test
-    void testChangeServer_validAddress() throws Exception {
+    void testChangeServerValidAddress() throws Exception {
         UserPreferences prefs = Mockito.mock(UserPreferences.class);
         ServerUtils utils = new ServerUtils(prefs);
 
@@ -34,7 +27,7 @@ public class ServerUtilsTest {
     }
 
     @Test
-    void testChangeServer_invalidAddress() throws Exception {
+    void testChangeServerInvalidAddress() throws Exception {
         UserPreferences prefs = Mockito.mock(UserPreferences.class);
         ServerUtils utils = new ServerUtils(prefs);
 
@@ -43,7 +36,7 @@ public class ServerUtilsTest {
     }
 
     @Test
-    void testChangeServer_nullAddress() throws Exception {
+    void testChangeServerNullAddress() throws Exception {
         UserPreferences prefs = Mockito.mock(UserPreferences.class);
         ServerUtils utils = new ServerUtils(prefs);
 
@@ -56,7 +49,8 @@ public class ServerUtilsTest {
         UserPreferences prefs = Mockito.mock(UserPreferences.class);
         ServerUtils utils = new ServerUtils(prefs);
 
-        Card card = new Card("title", "description", "colour", null, new LinkedList<>(), new HashSet<>(), null);
+        Card card = new Card("title", "description", "colour", null,
+                new LinkedList<>(), new HashSet<>(), null);
         ListOfCards list = new ListOfCards("test list", null, new LinkedList<>());
         list.addCard(card);
         utils.addList(list);
@@ -69,7 +63,8 @@ public class ServerUtilsTest {
         UserPreferences prefs = Mockito.mock(UserPreferences.class);
         ServerUtils utils = new ServerUtils(prefs);
 
-        Card card = new Card("title", "description", "colour", null, new LinkedList<>(), new HashSet<>(), null);
+        Card card = new Card("title", "description", "colour",
+                null, new LinkedList<>(), new HashSet<>(), null);
         ListOfCards list = new ListOfCards("test list", null, new LinkedList<>());
         list.addCard(card);
         utils.addList(list);
