@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -139,13 +140,29 @@ public class CardDetailsCtrl{
 
         nullTitle.setVisible(false);
         hide.setVisible(false);
-        scenePane.setOnKeyPressed(this::exitDetails);
+        scenePane.setOnKeyPressed(this::escapeFromWindow);
+        palettes.setOnKeyPressed(this::escapeFromWindow);
+        chooseTag.setOnKeyPressed(this::escapeFromWindow);
+        checklistView.setOnKeyPressed(this::escapeFromWindow);
+        tagsView.setOnKeyPressed(this::escapeFromWindow);
+
         loadPalettes();
         loadTags();
         if(!board.isUnlocked()) {
             disabled.setVisible(true);
         } else {
             disabled.setVisible(false);
+        }
+    }
+
+    /**
+     * Checks if the key is ESCAPE, then close the details window
+     * @param keyEvent event
+     */
+    protected void escapeFromWindow(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            exitDetails(keyEvent);
+            keyEvent.consume();
         }
     }
 
@@ -171,7 +188,6 @@ public class CardDetailsCtrl{
      */
     public void setTitle(String title){
         titleLabel.setText(title);
-        titleLabel.setStyle("-fx-font-weight: bold;");
     }
 
     /**
