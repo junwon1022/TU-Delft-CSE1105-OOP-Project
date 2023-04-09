@@ -151,7 +151,6 @@ public class CardDetailsCtrl{
      */
     public void setTitle(String title){
         titleLabel.setText(title);
-        titleLabel.setStyle("-fx-font-weight: bold;");
     }
 
     /**
