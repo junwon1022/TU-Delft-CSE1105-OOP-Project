@@ -69,7 +69,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
         setOnDragDropped(this::handleDragDropped);
 
         setOnDragDone(Event::consume);
-    
+
     }
 
     @Override
