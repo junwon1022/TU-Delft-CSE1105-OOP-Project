@@ -196,8 +196,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
      * @param event
      * also updates the view of cardDetails
      */
-    public void renameChecklist(MouseEvent event) {
-        if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+    public void renameChecklist(ActionEvent event) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("RenameCheckListItem.fxml"));
             Stage renameStage = new Stage();
 
@@ -210,7 +209,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
             }
             RenameCheckListItemCtrl renameCheckListItemCtrl = loader.getController();
 
-            renameStage.setTitle("Change the sub-task description");
+            renameStage.setTitle("Rename Subtask");
             Scene scene = new Scene(root);
             renameStage.setScene(scene);
             renameStage.showAndWait();
@@ -222,7 +221,6 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
                 data.text = newDescription;
                 board.refresh();
             }
-        }
     }
 
     /**

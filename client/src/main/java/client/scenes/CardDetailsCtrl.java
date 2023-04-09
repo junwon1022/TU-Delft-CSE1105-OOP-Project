@@ -157,7 +157,6 @@ public class CardDetailsCtrl{
      */
     public void setTitle(String title){
         titleLabel.setText(title);
-        titleLabel.setFont(Font.font("System",17));
         titleLabel.setStyle("-fx-font-weight: bold;");
     }
 
@@ -249,6 +248,7 @@ public class CardDetailsCtrl{
             int total = cardCtrl.getTotal();
             subtaskAddition.setVisible(false);
             addChecklist.setVisible(true);
+            subtaskTitle.clear();
             cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
