@@ -48,6 +48,7 @@ import javafx.scene.shape.Line;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -215,6 +216,10 @@ public class BoardCtrl {
                     }
                 }
                 Platform.runLater(() -> {
+                    prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                            .filter(x -> x.getKey().equals(boardKey))
+                            .collect(Collectors.toList()).get(0);
+
                     board = s;
                     this.title.setText(s.title);
                     changeColours();
@@ -836,11 +841,12 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
+
                 board = server.changeBoardPassword(board, password);
                 System.out.println(board);
 
-                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
-                        prefBoard, password);
                 this.refresh();
                 writeAccess();
             }
@@ -903,6 +909,9 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
+
                 if(password != null) {
                     board = server.changeBoardPassword(board, password);
                 } else {
@@ -910,8 +919,6 @@ public class BoardCtrl {
                 }
                 System.out.println(board);
 
-                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
-                        prefBoard, password);
                 this.refresh();
                 writeAccess();
             }
