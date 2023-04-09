@@ -48,6 +48,7 @@ import javafx.scene.shape.Line;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -169,7 +170,7 @@ public class BoardCtrl {
 
         listOfCards = FXCollections.observableArrayList();
         tags = FXCollections.observableArrayList();
-        initialize();
+//        initialize();
     }
 
     /**
@@ -234,8 +235,8 @@ public class BoardCtrl {
         myBoards.lookup(".title").setStyle("-fx-background-color: #1fa401;" +
                 "-fx-border-color: #1fa401");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf6da;");
-        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf6da");
-        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf6da;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #e9f3e9");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #e9f3e9;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
                     "-fx-background-color: #E4F8FC;" +
@@ -276,8 +277,8 @@ public class BoardCtrl {
         myBoards.lookup(".title").setStyle("-fx-background-color: #00B4D8;" +
                 "-fx-border-color: #00B4D8");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf1f6;");
-        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf1f6");
-        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf1f6;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #F8FDFE");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #F8FDFE;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
                     "-fx-background-color: #E4F8FC;" +
@@ -433,6 +434,7 @@ public class BoardCtrl {
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
+
         //the method call of getListsInBoard will be with the board parameter
         var serverData = server.getLists(board.id);
         listOfCards.setAll(serverData);
@@ -447,6 +449,7 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
         recentBoards.setItems(recentBoardsData);
         recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
         recentBoards.setFixedCellSize(0);
@@ -637,6 +640,7 @@ public class BoardCtrl {
         return board;
     }
 
+
     /**
      * Method that returns a list
      * @param title
@@ -647,6 +651,7 @@ public class BoardCtrl {
     }
 
     /**
+<<<<<<< HEAD
      * Method that opens the customization window
      * @param event
      */
@@ -768,6 +773,7 @@ public class BoardCtrl {
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * Redirects to connect to server screen

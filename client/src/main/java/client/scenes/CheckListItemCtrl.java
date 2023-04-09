@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,7 +32,7 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
     private CheckListItem data;
 
     @FXML
-    private AnchorPane root;
+    private HBox root;
 
     @FXML
     private Label checklistDescription;
@@ -196,32 +196,30 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
      * @param event
      * also updates the view of cardDetails
      */
-    public void renameChecklist(MouseEvent event) {
-        if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("RenameCheckListItem.fxml"));
-            Stage renameStage = new Stage();
+    public void renameChecklist(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RenameCheckListItem.fxml"));
+        Stage renameStage = new Stage();
 
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            RenameCheckListItemCtrl renameCheckListItemCtrl = loader.getController();
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        RenameCheckListItemCtrl renameCheckListItemCtrl = loader.getController();
 
-            renameStage.setTitle("Change the sub-task description");
-            Scene scene = new Scene(root);
-            renameStage.setScene(scene);
-            renameStage.showAndWait();
+        renameStage.setTitle("Rename Subtask");
+        Scene scene = new Scene(root);
+        renameStage.setScene(scene);
+        renameStage.showAndWait();
 
-            if (renameCheckListItemCtrl.success) {
-                String newDescription = renameCheckListItemCtrl.storedText;
-                server.renameChecklist(data, newDescription);
-                checklistDescription.setText(newDescription);
-                data.text = newDescription;
-                board.refresh();
-            }
+        if (renameCheckListItemCtrl.success) {
+            String newDescription = renameCheckListItemCtrl.storedText;
+            server.renameChecklist(data, newDescription);
+            checklistDescription.setText(newDescription);
+            data.text = newDescription;
+            board.refresh();
         }
     }
 

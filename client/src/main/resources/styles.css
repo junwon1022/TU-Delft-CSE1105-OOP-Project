@@ -6,9 +6,15 @@
 #lists .list-cell:filled:selected {
     /*-fx-selection-bar: #CAF0F8;*/
     -fx-border-color: #04839f;
+    -fx-border-radius: 12px;
+    -fx-padding: 0;
     /*-fx-selection-bar-non-focused: #CAF0F8;*/
     -fx-background-color: derive(-fx-control-inner-background, 0%);
     /*-fx-effect: innershadow(gaussian, #79c9e9, 15, 0.02, 0, 0);*/
+}
+
+#list .list-cell:filled:selected {
+    -fx-padding: 3px;
 }
 
 #lists .list-cell, #lists .list-cell:focused {
@@ -628,4 +634,26 @@
 #tags-disabled {
     -fx-background-color: white;
     -fx-opacity: 0.5;
+}
+
+.text-area .content{
+    -fx-background-color: #A2E4F1;
+}
+
+.text-area{
+
+    -fx-background-color: transparent;
+    -fx-display-caret: true;
+}
+
+.checklist-item {
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.subtask-list .list-cell {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: transparent;
+    /*-fx-padding: 0 7;*/
 }
