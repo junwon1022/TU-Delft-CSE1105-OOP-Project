@@ -197,30 +197,30 @@ public class CheckListItemCtrl extends ListCell<CheckListItem> {
      * also updates the view of cardDetails
      */
     public void renameChecklist(ActionEvent event) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("RenameCheckListItem.fxml"));
-            Stage renameStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RenameCheckListItem.fxml"));
+        Stage renameStage = new Stage();
 
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            RenameCheckListItemCtrl renameCheckListItemCtrl = loader.getController();
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        RenameCheckListItemCtrl renameCheckListItemCtrl = loader.getController();
 
-            renameStage.setTitle("Rename Subtask");
-            Scene scene = new Scene(root);
-            renameStage.setScene(scene);
-            renameStage.showAndWait();
+        renameStage.setTitle("Rename Subtask");
+        Scene scene = new Scene(root);
+        renameStage.setScene(scene);
+        renameStage.showAndWait();
 
-            if (renameCheckListItemCtrl.success) {
-                String newDescription = renameCheckListItemCtrl.storedText;
-                server.renameChecklist(data, newDescription);
-                checklistDescription.setText(newDescription);
-                data.text = newDescription;
-                board.refresh();
-            }
+        if (renameCheckListItemCtrl.success) {
+            String newDescription = renameCheckListItemCtrl.storedText;
+            server.renameChecklist(data, newDescription);
+            checklistDescription.setText(newDescription);
+            data.text = newDescription;
+            board.refresh();
+        }
     }
 
     /**

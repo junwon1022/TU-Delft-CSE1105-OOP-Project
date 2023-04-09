@@ -10,9 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -21,11 +18,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -229,10 +223,14 @@ public class CardDetailsCtrl{
      * @param event adding the checklist event
      */
     public void showAddChecklist(ActionEvent event) {
-            subtaskAddition.setVisible(true);
-            addChecklist.setVisible(false);
+        subtaskAddition.setVisible(true);
+        addChecklist.setVisible(false);
     }
 
+    /**
+     * Method that adds the checklist
+     * @param event
+     */
     public void addChecklist(ActionEvent event){
         String title = subtaskTitle.getText();
         if(title.length() == 0){
