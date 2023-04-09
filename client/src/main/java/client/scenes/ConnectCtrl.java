@@ -118,7 +118,6 @@ public class ConnectCtrl {
                 catch(Exception e) {
                     nullTitle.setText(e.getMessage());
                 }
-
             }
         }
         else nullTitle.setText("You have entered incorrect password. Please try again!");
