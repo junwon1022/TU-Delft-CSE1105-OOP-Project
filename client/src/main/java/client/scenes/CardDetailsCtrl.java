@@ -22,7 +22,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
@@ -140,8 +139,6 @@ public class CardDetailsCtrl{
      */
     public void setTitle(String title){
         titleLabel.setText(title);
-        titleLabel.setFont(Font.font("System",17));
-        titleLabel.setStyle("-fx-font-weight: bold;");
     }
 
     /**
@@ -240,7 +237,6 @@ public class CardDetailsCtrl{
             cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
-
     }
 
     /**
