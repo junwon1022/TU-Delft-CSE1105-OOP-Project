@@ -33,8 +33,6 @@ public class CardCtrl extends ListCell<Card> {
     private final BoardCtrl board;
     private final ListOfCardsCtrl list;
 
-    private boolean isOpen = false;
-
     private Stage storeDetailsStage;
 
     private Card card;
@@ -129,12 +127,6 @@ public class CardCtrl extends ListCell<Card> {
         renameCardDisabled.setVisible(false);
         deleteCardDisabled.setVisible(false);
 
-        root.requestFocus();
-
-        setOnMouseEntered(this::handleHighlight);
-
-        setOnMouseExited(this::handleLeaveHighlight);
-
         setOnDragDetected(this::handleDragDetected);
 
         setOnDragOver(this::handleDragOver);
@@ -147,17 +139,6 @@ public class CardCtrl extends ListCell<Card> {
 
         setOnDragDone(Event::consume);
     }
-
-    /**
-     * GetRoot
-     * @return the root of a scene
-     */
-
-    public AnchorPane getRoot() {
-        return root;
-    }
-
-
 
     /**
      * Is called whenever the parent CardList is changed. Sets the data in this controller.
@@ -174,45 +155,30 @@ public class CardCtrl extends ListCell<Card> {
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }
-        else if(item.selected == true){
+            if(storeDetailsStage!=null){
+                storeDetailsStage.close();
+            }
+        } else {
             title.setText(item.title);
+            description.setVisible(updateDescriptionIcon(item.description));
+            updateProgressText(item.checklist);
             card = item;
-            root.setStyle("-fx-background-color: blue;");
-            title.setStyle("-fx-text-fill: black");
+            if(card.palette != null)
+                setColors(root, title);
             this.loadTags();
+
+            if(!board.isUnlocked()) {
+                this.readOnly();
+            } else {
+                this.writeAccess();
+            }
+
+            if (card.isOpen == 1)
+                openDetailsWindow();
+
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
-        else {
-            if (isOpen) {
-                storeDetailsStage.close();
-            } else {
-                title.setText(item.title);
-                description.setVisible(updateDescriptionIcon(item.description));
-                updateProgressText(item.checklist);
-                card = item;
-                if (card.palette != null)
-                    setColors(root, title);
-                this.loadTags();
-
-                if (!board.isUnlocked()) {
-                    this.readOnly();
-                } else {
-                    this.writeAccess();
-                }
-                root.setStyle("-fx-background-color: " + item.colour);
-
-                setGraphic(root);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        }
-    }
-
-    void setPalette(){
-        Palette p = card.list.board.getDefaultPalette();
-        if(p != null)
-            card.palette = p;
     }
 
     private void setColors(AnchorPane root, Label title){
@@ -278,37 +244,6 @@ public class CardCtrl extends ListCell<Card> {
     public String getTitle() {
         return title.getText();
     }
-
-
-    /**
-     * Handles highlight
-     * @param event colours the selected card blue
-     */
-    public void handleHighlight(MouseEvent event){
-        if (getItem() == null) {
-            return;
-        }
-        root.setStyle("-fx-background-color: blue;" +
-                " -fx-border-radius: 20;" +
-                " -fx-background-radius: 20;");
-
-        server.selectCard(card,true);
-    }
-
-    /**
-     * Handles highlight
-     * @param event colours it back when the mouse is no longer over the key
-     */
-    public void handleLeaveHighlight(MouseEvent event){
-        if (getItem() == null) {
-            return;
-        }
-        root.setStyle("-fx-background-color: #00B4D8;" +
-                " -fx-border-radius: 20;" +
-                " -fx-background-radius: 20;");
-        server.selectCard(card,false);
-    }
-
 
     /**
      * gets the description image reference of this card
@@ -500,42 +435,47 @@ public class CardCtrl extends ListCell<Card> {
      */
     public void openDetails(MouseEvent event) {
         if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-            if(isOpen){
-                return;
-            }
-            setOpen(true);
-            Stage detailsStage = new Stage();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
-            loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
-
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            CardDetailsCtrl cardDetailsCtrl = loader.getController();
-            cardDetailsCtrl.setCard(card);
-            cardDetailsCtrl.setTitle(getTitle());
-            cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
-                    ? "" : card.description);
-            if(!card.checklist.isEmpty()){
-                cardDetailsCtrl.setChecklists(card.checklist);
-            }
-            cardDetailsCtrl.setPreset();
-            storeDetailsStage = detailsStage;
-
-            Scene scene = new Scene(root);
-            detailsStage.setScene(scene);
-            //make it so that details can only be closed if exitDetails is called.
-            detailsStage.setOnCloseRequest(Event -> {
-                Event.consume();
-            });
-            detailsStage.show();
+            openDetailsWindow();
         }
+    }
+
+    private void openDetailsWindow() {
+        if (card.isOpen == 2)
+            return;
+        setOpen(2);
+        Stage detailsStage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
+        loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
+
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        CardDetailsCtrl cardDetailsCtrl = loader.getController();
+        cardDetailsCtrl.setCard(card);
+        cardDetailsCtrl.setTitle(getTitle());
+        cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
+                ? "" : card.description);
+        if(!card.checklist.isEmpty()){
+            cardDetailsCtrl.setChecklists(card.checklist);
+        }
+        cardDetailsCtrl.setPreset();
+        cardDetailsCtrl.setCardTags();
+        storeDetailsStage = detailsStage;
+
+        Scene scene = new Scene(root);
+        detailsStage.setScene(scene);
+        //make it so that details can only be closed if exitDetails is called.
+        detailsStage.setOnCloseRequest((e) -> {
+            card.isOpen = 0;
+            e.consume();
+        });
+        detailsStage.show();
     }
 
     /**
@@ -591,12 +531,11 @@ public class CardCtrl extends ListCell<Card> {
 
     /**
      * Sets the boolean variable isOpen in card to the inputted
-     * boolean so that it can be checked if the cardDetails window
+     * integer so that it can be checked if the cardDetails window
      * is opened or not
-     * @param b the value to set isOpen to
+     * @param v the value to set isOpen to
      */
-    public void setOpen(boolean b) {
-        this.isOpen = b;
+    public void setOpen(int v) {
+        card.isOpen = v;
     }
-
 }
