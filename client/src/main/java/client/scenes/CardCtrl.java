@@ -483,7 +483,7 @@ public class CardCtrl extends ListCell<Card> {
 
         Scene scene = new Scene(root);
         detailsStage.setScene(scene);
-        //make it so that details can only be closed if exitDetails is called.
+        //Set is open to 0 when closing.
         detailsStage.setOnCloseRequest((e) -> {
             card.isOpen = 0;
             detailsStage.close();
