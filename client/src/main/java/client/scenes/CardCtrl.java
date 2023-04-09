@@ -105,7 +105,6 @@ public class CardCtrl extends ListCell<Card> {
             this.writeAccess();
         }
         setOnMouseEntered(this::selectCardOnHover);
-//        setOnKeyPressed(this::changeHighlight);
     }
 
     /**
@@ -125,36 +124,6 @@ public class CardCtrl extends ListCell<Card> {
         }
         event.consume();
     }
-
-//    public void changeHighlight(KeyEvent keyEvent) {
-//        if (keyEvent.getCode() == KeyCode.D) {
-//            moveLeft(keyEvent);
-//        } else if (keyEvent.getCode() == KeyCode.A) {
-//            moveRight(keyEvent);
-//        }
-//    }
-
-//    private void moveLeft(KeyEvent keyEvent) {
-//        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
-//        for (int i = 0; i < listViews.size() - 1; i++) {
-//            ListView l = listViews.get(i).getList();
-//            if (l.equals(list.getList())) {
-//                l = listViews.get(i + 1).getList();
-//                l.getSelectionModel().select(selectedIndex);
-//            }
-//        }
-//    }
-//
-//    private void moveRight(KeyEvent keyEvent) {
-//        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
-//        for (int i = 1; i < listViews.size(); i++) {
-//            ListView l = listViews.get(i).getList();
-//            if (l.equals(list.getList())) {
-//                l = listViews.get(i - 1).getList();
-//                l.getSelectionModel().select(selectedIndex);
-//            }
-//        }
-//    }
 
     /**
      * Gets all ListOfCardsCtrls within a board
