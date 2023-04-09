@@ -48,7 +48,6 @@ import javafx.scene.shape.Line;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.tomcat.jni.Time;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -208,28 +207,34 @@ public class BoardCtrl {
             refresh();
             handleSecurityLevel();
             // listen for card updates
-            server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-                for (var list : s.lists) {
-                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
-                    for(var card : list.cards) {
-                        card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
-                    }
-                }
-                Platform.runLater(() -> {
-                    prefBoard = prefs.getBoards(server.getServerAddress()).stream()
-                            .filter(x -> x.getKey().equals(boardKey))
-                            .collect(Collectors.toList()).get(0);
-
-                    board = s;
-                    this.title.setText(s.title);
-                    changeColours();
-                    handleSecurityLevel();});
-                Platform.runLater(() -> listOfCards.setAll(s.lists));
-                Platform.runLater(() -> tags.setAll(s.tags));
-            });
+            server.registerForMessages("/topic/" + board.id, Board.class, this::handleBoardUpdate);
         } catch(Exception e) {
             board = getNewBoard();
         }
+    }
+
+    /**
+     * Method for handling board update
+     * @param s the board
+     */
+    private void handleBoardUpdate(Board s) {
+        for (var list : s.lists) {
+            list.cards.sort(Comparator.comparingLong(Card::getOrder));
+            for(var card : list.cards) {
+                card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+            }
+        }
+        Platform.runLater(() -> {
+            prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                    .filter(x -> x.getKey().equals(boardKey))
+                    .collect(Collectors.toList()).get(0);
+
+            board = s;
+            this.title.setText(s.title);
+            changeColours();
+            handleSecurityLevel();});
+        Platform.runLater(() -> listOfCards.setAll(s.lists));
+        Platform.runLater(() -> tags.setAll(s.tags));
     }
 
     /**

@@ -76,7 +76,8 @@ public class MainScreenCtrl {
         data = FXCollections.observableArrayList();
         list = new ListView<>();
 
-        Runnable updatePrefs = () -> Platform.runLater(() -> data.setAll(prefs.getBoards(server.getServerAddress())));
+        Runnable updatePrefs = () -> Platform.runLater(() -> data.setAll
+                (prefs.getBoards(server.getServerAddress())));
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
