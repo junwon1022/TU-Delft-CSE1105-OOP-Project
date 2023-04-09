@@ -21,7 +21,7 @@
             <Font name="Corbel Bold" size="17.0" />
          </font>
       </Label>
-      <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="19.0" stroke="TRANSPARENT" strokeType="INSIDE" width="19.0" />
+      <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="19.0" stroke="#00000034" strokeType="INSIDE" width="19.0" />
       <Label layoutX="38.0" layoutY="10.0" text="F" textFill="WHITE">
          <padding>
             <Insets left="4.0" />
@@ -30,7 +30,7 @@
             <Font name="Corbel Bold" size="17.0" />
          </font>
       </Label>
-      <Rectangle fx:id="font" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="19.0" layoutX="66.0" layoutY="10.0" stroke="TRANSPARENT" strokeType="INSIDE" width="19.0">
+      <Rectangle fx:id="font" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="19.0" layoutX="66.0" layoutY="10.0" stroke="#00000056" strokeType="INSIDE" width="19.0">
          <HBox.margin>
             <Insets right="6.0" />
          </HBox.margin></Rectangle>

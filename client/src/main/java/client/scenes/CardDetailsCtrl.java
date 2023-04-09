@@ -248,7 +248,7 @@ public class CardDetailsCtrl{
             int total = cardCtrl.getTotal();
             subtaskAddition.setVisible(false);
             addChecklist.setVisible(true);
-            subtaskTitle.clear();
+            subtaskTitle.setText("");
             cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
