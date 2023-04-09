@@ -630,14 +630,16 @@
     -fx-opacity: 0.5;
 }
 
-.text-area .content{
+.text-area .content {
     -fx-background-color: #A2E4F1;
+    -fx-padding: 0;
 }
 
-.text-area{
-
-    -fx-background-color: transparent;
-    -fx-display-caret: true;
+.text-area {
+    -fx-background-color: #A2E4F1;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-control-inner-background: transparent;
 }
 
 .checklist-item {

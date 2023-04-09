@@ -5,6 +5,9 @@ import commons.Card;
 import commons.CheckListItem;
 import commons.Palette;
 import commons.Tag;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +22,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +84,9 @@ public class CardDetailsCtrl{
     @FXML
     private Label nullTitle;
 
+    @FXML
+    private Button hide;
+
 
     ObservableList<Palette> paletteData;
 
@@ -124,6 +132,7 @@ public class CardDetailsCtrl{
         subtaskAddition.setVisible(false);
 
         nullTitle.setVisible(false);
+        hide.setVisible(false);
         scenePane.setOnKeyPressed(this::exitDetails);
         loadPalettes();
         loadTags();
@@ -163,7 +172,7 @@ public class CardDetailsCtrl{
     }
 
     /**
-     * Shortcut to save the dscription of the card
+     * Shortcut to save the description of the card
      * @param event the keys that are pressed
      */
 
@@ -225,6 +234,7 @@ public class CardDetailsCtrl{
     public void showAddChecklist(ActionEvent event) {
         subtaskAddition.setVisible(true);
         addChecklist.setVisible(false);
+        hide.setVisible(true);
     }
 
     /**
@@ -429,5 +439,16 @@ public class CardDetailsCtrl{
         AnchorPane.setBottomAnchor(chooseTag, 0.0);
         AnchorPane.setLeftAnchor(chooseTag, 0.0);
         AnchorPane.setRightAnchor(chooseTag, 0.0);
+    }
+
+    /**
+     * Cancel the renaming of a new card.
+     * @param event the KeyEvent
+     */
+    public void hideButton(ActionEvent event) {
+        subtaskAddition.setVisible(false);
+        addChecklist.setVisible(true);
+        hide.setVisible(false);
+        nullTitle.setVisible(false);
     }
 }
