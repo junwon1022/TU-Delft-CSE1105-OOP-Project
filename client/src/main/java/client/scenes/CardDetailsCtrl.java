@@ -10,22 +10,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -73,6 +67,19 @@ public class CardDetailsCtrl{
     @FXML
     private ListView<Tag> tagsView;
 
+    @FXML
+    private Button addSubtask;
+
+    @FXML
+    private HBox subtaskAddition;
+
+    @FXML
+    private TextField subtaskTitle;
+
+    @FXML
+    private Label nullTitle;
+
+
     ObservableList<Palette> paletteData;
 
     ObservableList<Tag> tagsData;
@@ -101,6 +108,8 @@ public class CardDetailsCtrl{
      */
     public void initialize() {
         data = FXCollections.observableArrayList();
+        chooseTag.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
         checklistView.setItems(data);
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
         tagsData = FXCollections.observableArrayList();
@@ -112,9 +121,12 @@ public class CardDetailsCtrl{
         chooseTag.setItems(showableTags);
         chooseTag.setCellFactory(ctv -> new TagCtrl(server, board, this, false));
 
+        subtaskAddition.setVisible(false);
 
+        nullTitle.setVisible(false);
         scenePane.setOnKeyPressed(this::exitDetails);
-
+        loadPalettes();
+        loadTags();
     }
 
 
@@ -209,31 +221,31 @@ public class CardDetailsCtrl{
      * Adds a checklist "to be implemented"
      * @param event adding the checklist event
      */
-    public void addChecklist(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCheckListItem.fxml"));
-        Stage addCheckListStage = new Stage();
-        Parent root;
-        try {
-            root = fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void showAddChecklist(ActionEvent event) {
+        subtaskAddition.setVisible(true);
+        addChecklist.setVisible(false);
+    }
+
+    /**
+     * Method that adds the checklist
+     * @param event
+     */
+    public void addChecklist(ActionEvent event){
+        String title = subtaskTitle.getText();
+        if(title.length() == 0){
+            nullTitle.setVisible(true);
         }
-        AddCheckListItemCtrl controller = fxmlLoader.getController();
-
-        addCheckListStage.setTitle("Add a new sub-task");
-        Scene addListScene = new Scene(root);
-        addCheckListStage.setScene(addListScene);
-        addCheckListStage.showAndWait();
-
-        if (controller.success) {
-            String title = controller.storedText;
-
+        else{
+            nullTitle.setVisible(false);
             CheckListItem checkListItem = createCheckList(title);
             CheckListItem addedCheckListItem = server.addChecklist(checkListItem);
             checkListItem.id = addedCheckListItem.id;
             data.add(addedCheckListItem);
             int completed = cardCtrl.getCompleted();
             int total = cardCtrl.getTotal();
+            subtaskAddition.setVisible(false);
+            addChecklist.setVisible(true);
+            subtaskTitle.setText("");
             cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
@@ -382,5 +394,39 @@ public class CardDetailsCtrl{
         showableTags.add(tag);
         card.removeTag(tag);
         server.removeTagFromCard(tag, card);
+    }
+
+    /**
+     * Loads the list to auto-fit its parent
+     */
+    private void loadPalettes() {
+        // set the palettes to always grow to fill the AnchorPane
+        palettes.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        palettes.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        palettes.setMaxHeight(Double.MAX_VALUE);
+        palettes.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the palettes to fill the AnchorPane
+        AnchorPane.setTopAnchor(palettes, 0.0);
+        AnchorPane.setBottomAnchor(palettes, 0.0);
+        AnchorPane.setLeftAnchor(palettes, 0.0);
+        AnchorPane.setRightAnchor(palettes, 0.0);
+    }
+
+    /**
+     * Loads the list to auto-fit its parent
+     */
+    private void loadTags() {
+        // set the tagList to always grow to fill the AnchorPane
+        chooseTag.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        chooseTag.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        chooseTag.setMaxHeight(Double.MAX_VALUE);
+        chooseTag.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the tagList to fill the AnchorPane
+        AnchorPane.setTopAnchor(chooseTag, 0.0);
+        AnchorPane.setBottomAnchor(chooseTag, 0.0);
+        AnchorPane.setLeftAnchor(chooseTag, 0.0);
+        AnchorPane.setRightAnchor(chooseTag, 0.0);
     }
 }
