@@ -289,6 +289,8 @@ public class UserPreferences {
             for (int i = 0; i < boards.size(); i++) {
                 PreferencesBoardInfo b = boards.get(i);
                 if (newBoard.getKey().equals(b.getKey())) {
+                    // make sure password doesnt get updated
+                    newBoard.setPassword(b.getPassword());
                     boards.set(i, newBoard);
                 }
             }

@@ -341,6 +341,7 @@ public class BoardCtrl {
      * Handles whether read only view or write access should be given to user
      */
     private void handleSecurityLevel() {
+
         if (board.password == null || board.password.equals("") || adminFlag == 1) {
             this.writeAccess();
         } else {
