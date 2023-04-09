@@ -54,6 +54,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class BoardCtrl {
@@ -208,6 +211,17 @@ public class BoardCtrl {
             handleSecurityLevel();
             // listen for card updates
             server.registerForMessages("/topic/" + board.id, Board.class, this::handleBoardUpdate);
+
+            Runnable updatePrefs = () -> Platform.runLater(() -> {
+                prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                        .filter(x -> x.getKey().equals(boardKey))
+                        .collect(Collectors.toList()).get(0);
+                handleSecurityLevel();
+            });
+
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
+
         } catch(Exception e) {
             board = getNewBoard();
         }
