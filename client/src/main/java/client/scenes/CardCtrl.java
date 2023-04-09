@@ -76,6 +76,8 @@ public class CardCtrl extends ListCell<Card> {
     @FXML
     private Button addDescription;
 
+    private int selectedIndex;
+
     /**
      * Create a new CardCtrl
      * @param server The server to use
@@ -102,36 +104,77 @@ public class CardCtrl extends ListCell<Card> {
         } else {
             this.writeAccess();
         }
-
-        selectCardOnHover();
+        setOnMouseEntered(this::selectCardOnHover);
+//        setOnKeyPressed(this::changeHighlight);
     }
 
     /**
      * Selects a card on hover and deselects the rest of the cards in the board
      */
-    private void selectCardOnHover() {
-        setOnMouseEntered(event -> {
-            CardCtrl card = (CardCtrl) event.getSource();
-            list.getList().getSelectionModel().select(card.getIndex());
-            card.requestFocus();
-            ObservableList<ListOfCards> listsOfCards = board.getList().getItems();
-            List<ListOfCardsCtrl> listViews = new ArrayList<>();
-            for (int i = 0; i < listsOfCards.size(); i++) {
-                Optional<VirtualFlow> virtualFlowOptional = board.getList()
-                        .getChildrenUnmodifiable()
-                        .stream()
-                        .filter(node -> node instanceof VirtualFlow)
-                        .map(n -> (VirtualFlow) n)
-                        .findFirst();
-                VirtualFlow<ListCell<?>> virtualFlow = virtualFlowOptional.get();
-                listViews.add((ListOfCardsCtrl) virtualFlow.getCell(i));
-                for (ListOfCardsCtrl l : listViews) {
-                    if (!l.getList().equals(list.getList())) {
-                        l.getList().getSelectionModel().clearSelection();
-                    }
-                }
+    private void selectCardOnHover(MouseEvent event) {
+        CardCtrl card = (CardCtrl) event.getSource();
+        selectedIndex = card.getIndex();
+        list.getList().getSelectionModel().select(selectedIndex);
+        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+        for (ListOfCardsCtrl l : listViews) {
+            if (!l.getList().equals(list.getList())) {
+                l.getList().getSelectionModel().clearSelection();
+            } else {
+                l.getList().requestFocus();
             }
-        });
+        }
+        event.consume();
+    }
+
+//    public void changeHighlight(KeyEvent keyEvent) {
+//        if (keyEvent.getCode() == KeyCode.D) {
+//            moveLeft(keyEvent);
+//        } else if (keyEvent.getCode() == KeyCode.A) {
+//            moveRight(keyEvent);
+//        }
+//    }
+
+//    private void moveLeft(KeyEvent keyEvent) {
+//        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+//        for (int i = 0; i < listViews.size() - 1; i++) {
+//            ListView l = listViews.get(i).getList();
+//            if (l.equals(list.getList())) {
+//                l = listViews.get(i + 1).getList();
+//                l.getSelectionModel().select(selectedIndex);
+//            }
+//        }
+//    }
+//
+//    private void moveRight(KeyEvent keyEvent) {
+//        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+//        for (int i = 1; i < listViews.size(); i++) {
+//            ListView l = listViews.get(i).getList();
+//            if (l.equals(list.getList())) {
+//                l = listViews.get(i - 1).getList();
+//                l.getSelectionModel().select(selectedIndex);
+//            }
+//        }
+//    }
+
+    /**
+     * Gets all ListOfCardsCtrls within a board
+     * @param board the current board displayed
+     * @return all ListOfCardsCtrls within a board
+     */
+    private List<ListOfCardsCtrl> getAllListOfCardsCtrls(BoardCtrl board) {
+        ObservableList<ListOfCards> listsOfCards = board.getList().getItems();
+        List<ListOfCardsCtrl> listViews = new ArrayList<>();
+        for (int i = 0; i < listsOfCards.size(); i++) {
+            Optional<VirtualFlow> virtualFlowOptional = board.getList()
+                    .getChildrenUnmodifiable()
+                    .stream()
+                    .filter(node -> node instanceof VirtualFlow)
+                    .map(n -> (VirtualFlow) n)
+                    .findFirst();
+            VirtualFlow<ListCell<?>> virtualFlow = virtualFlowOptional.get();
+            listViews.add((ListOfCardsCtrl) virtualFlow.getCell(i));
+        }
+        return listViews;
     }
 
     /**

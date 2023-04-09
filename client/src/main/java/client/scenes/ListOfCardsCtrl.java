@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.input.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ListOfCardsCtrl extends ListCell<ListOfCards> {
     private final ServerUtils server;
@@ -460,7 +462,9 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 keyEvent.getCode() == KeyCode.DELETE ||
                 keyEvent.getCode() == KeyCode.BACK_SPACE ||
                 (keyEvent.getCode() == KeyCode.UP && keyEvent.isShiftDown()) ||
-                (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()))  {
+                (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()) ||
+                keyEvent.getCode() == KeyCode.RIGHT ||
+                keyEvent.getCode() == KeyCode.LEFT)  {
             handleKeyPressedHelper(keyEvent);
         }
     }
@@ -482,6 +486,18 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
         }
         else if (keyEvent.getCode() == KeyCode.DOWN && keyEvent.isShiftDown()) {
             moveCardDown(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.LEFT) {
+            changeHighlight(keyEvent);
+        }
+    }
+
+    private void changeHighlight(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.RIGHT) {
+            moveCardRight(keyEvent);
+        }
+        else if (keyEvent.getCode() == KeyCode.LEFT) {
+            moveCardLeft(keyEvent);
         }
     }
 
@@ -526,6 +542,83 @@ public class ListOfCardsCtrl extends ListCell<ListOfCards> {
                 list.refresh();
             }
         }
+    }
+
+    private void moveCardRight(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> selectedItems = list.getSelectionModel().getSelectedItems();
+        int selectedIndex = -1;
+        for (int i = 0; i < list.getItems().size(); i++) {
+            if (list.getItems().get(i).id == selectedItems.get(0).id) {
+                selectedIndex = i;
+            }
+        }
+
+        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+        for (int i = 0; i < listViews.size() - 1; i++) {
+            ListView l = listViews.get(i).getList();
+            if (l.equals(list)) {
+                l.getSelectionModel().clearSelection();
+                l = listViews.get(i + 1).getList();
+                l.requestFocus();
+                selectAdjacent(l, selectedIndex);
+            }
+        }
+    }
+
+    private void moveCardLeft(KeyEvent keyEvent) {
+        if (keyEvent.isConsumed())
+            return;
+        keyEvent.consume();
+        ObservableList<Card> selectedItems = list.getSelectionModel().getSelectedItems();
+        int selectedIndex = -1;
+        for (int i = 0; i < list.getItems().size(); i++) {
+            if (list.getItems().get(i).id == selectedItems.get(0).id) {
+                selectedIndex = i;
+            }
+        }
+
+        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+        for (int i = 1; i < listViews.size(); i++) {
+            ListView l = listViews.get(i).getList();
+            if (l.equals(list)) {
+                l.getSelectionModel().clearSelection();
+                l = listViews.get(i - 1).getList();
+                l.requestFocus();
+                selectAdjacent(l, selectedIndex);
+            }
+        }
+    }
+
+    private void selectAdjacent(ListView l, int selectedIndex) {
+        if(l.getItems().size() <= selectedIndex) {
+            l.getSelectionModel().selectLast();
+        } else {
+            l.getSelectionModel().select(selectedIndex);
+        }
+    }
+
+    /**
+     * Gets all ListOfCardsCtrls within a board
+     * @param board the current board displayed
+     * @return all ListOfCardsCtrls within a board
+     */
+    private List<ListOfCardsCtrl> getAllListOfCardsCtrls(BoardCtrl board) {
+        ObservableList<ListOfCards> listsOfCards = board.getList().getItems();
+        List<ListOfCardsCtrl> listViews = new ArrayList<>();
+        for (int i = 0; i < listsOfCards.size(); i++) {
+            Optional<VirtualFlow> virtualFlowOptional = board.getList()
+                    .getChildrenUnmodifiable()
+                    .stream()
+                    .filter(node -> node instanceof VirtualFlow)
+                    .map(n -> (VirtualFlow) n)
+                    .findFirst();
+            VirtualFlow<ListCell<?>> virtualFlow = virtualFlowOptional.get();
+            listViews.add((ListOfCardsCtrl) virtualFlow.getCell(i));
+        }
+        return listViews;
     }
 
     private void openCardDetails(KeyEvent event) {
