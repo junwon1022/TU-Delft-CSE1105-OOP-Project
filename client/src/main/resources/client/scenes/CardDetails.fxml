@@ -126,7 +126,7 @@
                   <Font name="Corbel Light" size="25.0" />
                </font>
             </Label>
-            <ListView id="palette-list" fx:id="tagsView" minHeight="32.0" prefHeight="115.0" prefWidth="198.0" style="-fx-background-color: #A2E4F1; -fx-border-color: #A2E4F1;" styleClass="board-list" VBox.vgrow="ALWAYS">
+            <ListView id="tag-list-details" fx:id="tagsView" minHeight="32.0" prefHeight="115.0" prefWidth="198.0" style="-fx-background-color: #A2E4F1; -fx-border-color: #A2E4F1;" styleClass="board-list" VBox.vgrow="ALWAYS">
                <stylesheets>
                   <URL value="@../../palettes.css" />
                   <URL value="@../../styles.css" />

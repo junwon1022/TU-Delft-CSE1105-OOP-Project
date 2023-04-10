@@ -67,7 +67,7 @@ public class TagCtrl extends ListCell<Tag> {
             throw new RuntimeException(e);
         }
 
-        if(!board.isUnlocked()) { //TODO and user doesn't have it stored
+        if(!board.isUnlocked()) {
             this.readOnly();
         } else {
             this.writeAccess();

@@ -11,7 +11,6 @@
      -fx-background-radius: 10px;
  }
 
-
 #palette-list .list-cell:filled:selected:hover {
     -fx-background-color: #CAF0F8;
 }
@@ -24,6 +23,35 @@
 }
 
 #palette-list .list-cell:filled:hover {
+    -fx-border-color: #04839f;
+    -fx-border-radius: 10px;
+}
+
+#tag-list-details .list-cell, #list .list-cell:focused {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-pref-height: 33px;
+    -fx-padding: 3;
+}
+
+#tag-list-details {
+    -fx-background-color: #A2E4F1;
+    -fx-background-radius: 10px;
+}
+
+#tag-list-details .list-cell:filled:selected:hover {
+    -fx-background-color: #CAF0F8;
+}
+
+#tag-list-details .list-cell:filled:selected {
+    -fx-selection-bar: #CAF0F8;
+    -fx-border-color: #04839f;
+    -fx-selection-bar-non-focused: #CAF0F8;
+    -fx-background-color: #A2E4F1;
+}
+
+#tag-list-details .list-cell:filled:hover {
     -fx-border-color: #04839f;
     -fx-border-radius: 10px;
 }
