@@ -42,16 +42,24 @@
                   <Font name="Corbel" size="25.0" />
                </font>
             </Label>
-            <TextArea fx:id="descriptionText" onKeyPressed="#handleSaveShortcut" prefHeight="109.0" prefWidth="408.0" stylesheets="@../../styles.css" wrapText="true">
+            <TextArea fx:id="descriptionText" onKeyPressed="#handleSaveShortcut" prefHeight="109.0" prefWidth="408.0" promptText="Enter a description . . ." style="-fx-text-fill: #00303A;" stylesheets="@../../styles.css" wrapText="true">
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets bottom="10.0" left="12.0" right="12.0" top="10.0" />
                </padding>
                <font>
                   <Font name="Corbel" size="16.0" />
                </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </TextArea>
-            <HBox alignment="TOP_RIGHT">
+            <HBox alignment="TOP_RIGHT" spacing="7.0">
                <children>
+                  <Label fx:id="copied" prefHeight="35.0" prefWidth="23.0" styleClass="copied" stylesheets="@../../styles.css" text="✔" textFill="#1dbc20" visible="false">
+                     <font>
+                        <Font name="Corbel" size="20.0" />
+                     </font>
+                  </Label>
                   <Button fx:id="saveDescription" mnemonicParsing="false" onMouseClicked="#updateDescription" prefHeight="32.0" prefWidth="142.0" styleClass="normal-button" stylesheets="@../../styles.css" text="Save Description">
                      <font>
                         <Font name="Corbel" size="15.0" />
