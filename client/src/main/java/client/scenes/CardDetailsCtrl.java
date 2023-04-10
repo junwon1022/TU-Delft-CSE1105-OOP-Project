@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -124,9 +125,26 @@ public class CardDetailsCtrl{
         subtaskAddition.setVisible(false);
 
         nullTitle.setVisible(false);
-        scenePane.setOnKeyPressed(this::exitDetails);
+
+        scenePane.setOnKeyPressed(this::escapeFromWindow);
+        palettes.setOnKeyPressed(this::escapeFromWindow);
+        chooseTag.setOnKeyPressed(this::escapeFromWindow);
+        checklistView.setOnKeyPressed(this::escapeFromWindow);
+        tagsView.setOnKeyPressed(this::escapeFromWindow);
+
         loadPalettes();
         loadTags();
+    }
+
+    /**
+     * Checks if the key is ESCAPE, then close the details window
+     * @param keyEvent event
+     */
+    protected void escapeFromWindow(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            exitDetails(keyEvent);
+            keyEvent.consume();
+        }
     }
 
 

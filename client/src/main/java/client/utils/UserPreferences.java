@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Board;
 
 import java.util.List;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class UserPreferences {
@@ -258,9 +259,10 @@ public class UserPreferences {
 
             String newBoardListJson = objectMapper.writeValueAsString(newBoardList);
             prefs.put(serverAddress, newBoardListJson);
+            prefs.flush();
 
             return newBoard;
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | BackingStoreException e) {
             throw new RuntimeException(e);
         }
     }
@@ -289,6 +291,8 @@ public class UserPreferences {
             for (int i = 0; i < boards.size(); i++) {
                 PreferencesBoardInfo b = boards.get(i);
                 if (newBoard.getKey().equals(b.getKey())) {
+                    // make sure password doesnt get updated
+                    newBoard.setPassword(b.getPassword());
                     boards.set(i, newBoard);
                 }
             }
