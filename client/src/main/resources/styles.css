@@ -228,15 +228,6 @@
     -fx-background-image: url("edit-custom.png");
 }
 
-#renameChecklist {
-    -fx-background-color: #004792;
-}
-
-#renameChecklist:hover {
-    -fx-background-color: #7CB9E8;
-    -fx-cursor: hand;
-}
-
 #addChecklist:hover {
      -fx-color: #7CB9E8;
      -fx-cursor: hand;
@@ -244,24 +235,6 @@
 
 #addChecklist {
     -fx-color: #004792;
-}
-
-#cancelChecklist {
-    -fx-background-color: crimson;
-}
-
-#cancelChecklist2 {
-    -fx-color: crimson;
-}
-
-#cancelChecklist2:hover {
-    -fx-color: #f8baba;
-    -fx-cursor: hand;
-}
-
-#cancelChecklist:hover {
-    -fx-background-color: #f8baba;
-    -fx-cursor: hand;
 }
 
 #description {
@@ -391,10 +364,12 @@
 .accordion {
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
+    -fx-border-style: none;
 }
 
 .titled-pane {
-    -fx-background-color: #daf1f6;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
     -fx-text-fill: white;
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
@@ -636,14 +611,16 @@
     -fx-opacity: 0.5;
 }
 
-.text-area .content{
+.text-area .content {
     -fx-background-color: #A2E4F1;
+    -fx-padding: 0;
 }
 
-.text-area{
-
-    -fx-background-color: transparent;
-    -fx-display-caret: true;
+.text-area {
+    -fx-background-color: #A2E4F1;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-control-inner-background: transparent;
 }
 
 .checklist-item {
