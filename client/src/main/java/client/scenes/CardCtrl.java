@@ -443,7 +443,7 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
-     * Opens the detailed view of a card when the description button is double clicked
+     * Opens the detailed view of a card when the description button is double-clicked
      * @param event - the icon-button being clicked
      */
     public void openDetails(MouseEvent event) {
@@ -483,9 +483,10 @@ public class CardCtrl extends ListCell<Card> {
 
         Scene scene = new Scene(root);
         detailsStage.setScene(scene);
-        //make it so that details can only be closed if exitDetails is called.
+        //Set is open to 0 when closing.
         detailsStage.setOnCloseRequest((e) -> {
             card.isOpen = 0;
+            detailsStage.close();
             e.consume();
         });
         detailsStage.show();
