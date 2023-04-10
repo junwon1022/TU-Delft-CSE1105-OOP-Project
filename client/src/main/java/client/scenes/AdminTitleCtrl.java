@@ -36,6 +36,9 @@ public class AdminTitleCtrl extends ListCell<Board> {
     @FXML
     private Label copied;
 
+    @FXML
+    private Button lock;
+
     /**
      * Create a new Board title control
      *
@@ -81,7 +84,11 @@ public class AdminTitleCtrl extends ListCell<Board> {
             root.setStyle("-fx-background-color: " + data.colour);
             title.setStyle("-fx-text-fill: " + data.font);
             key.setStyle("-fx-text-fill: " + data.font);
-
+            if(item.password == null || item.password.length() == 0) {
+                lock.setVisible(false);
+            } else {
+                lock.setVisible(true);
+            }
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
@@ -112,7 +119,6 @@ public class AdminTitleCtrl extends ListCell<Board> {
      * @param event - the join button being clicked
      */
     public void join(ActionEvent event){
-        System.out.println("The key is " + data.key);
         mainCtrl.showBoard(data.key,1);
     }
 
@@ -139,7 +145,6 @@ public class AdminTitleCtrl extends ListCell<Board> {
 
                 //method that actually renames the list in the database
                 data = server.renameBoard(data, newTitle);
-                System.out.println("New title after calling the command: "+ data.title);
                 adminScreenCtrl.refresh();
             }
         } catch (IOException e) {
@@ -168,5 +173,40 @@ public class AdminTitleCtrl extends ListCell<Board> {
         ClipboardContent content = new ClipboardContent();
         content.putString(key);
         clipboard.setContent(content);
+    }
+
+    /**
+     * Opens a new window to manage password.
+     * @param event the ActionEvent
+     */
+    public void changePassword(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            ChangePasswordCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Manage passwords of your board");
+            Scene changePasswordScene = new Scene(root);
+            changePasswordScene.getStylesheets().add("styles.css");
+            stage.setHeight(363);
+            stage.setWidth(527);
+            stage.setScene(changePasswordScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String password = controller.storedText;
+
+                if(password != null) {
+                    data = server.changeBoardPassword(data, password);
+                } else {
+                    data = server.removePassword(data);
+                    lock.setVisible(false);
+                }
+                System.out.println(data);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

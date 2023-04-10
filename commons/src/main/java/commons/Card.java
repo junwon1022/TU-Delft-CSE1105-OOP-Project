@@ -1,6 +1,6 @@
 package commons;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,6 +20,10 @@ import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Card {
+
+    @JsonIgnore
+    @Transient
+    public int isOpen = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +58,7 @@ public class Card {
     )
     public Set<Tag> tags = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "palette_id")
     public Palette palette;
 
@@ -112,6 +116,22 @@ public class Card {
             this.palette = palette;
             palette.cards.add(this);
         }
+    }
+
+    /**
+     * getter for palette
+     * @return the palette
+     */
+    public Palette getPalette(){
+        return this.palette;
+    }
+
+    /**
+     * setter for palette
+     * @param palette
+     */
+    public void setPalette(Palette palette){
+        this.palette = palette;
     }
 
     /**

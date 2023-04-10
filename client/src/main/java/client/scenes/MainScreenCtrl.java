@@ -7,6 +7,7 @@ import client.utils.UserPreferences;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.Palette;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +23,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainScreenCtrl {
 
@@ -72,7 +76,74 @@ public class MainScreenCtrl {
         data = FXCollections.observableArrayList();
         list = new ListView<>();
 
+        Runnable updatePrefs = () -> Platform.runLater(() -> data.setAll
+                (prefs.getBoards(server.getServerAddress())));
 
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
+    }
+
+
+    /**
+     * Initialize mainScreenCtrl
+     */
+    public void initialize() {
+
+        var boardData = prefs.getBoards(server.getServerAddress());
+        data.setAll(boardData);
+        list.setItems(data);
+        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl, prefs));
+        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
+
+        for (PreferencesBoardInfo b: boardData)
+            server.registerForUpdates(b.getKey(), c -> {
+                System.out.println("Received update for board with key " + b.getKey());
+                if (c.title.equals("REMOVED")) {
+                    System.out.println("Removing board " + b.getTitle());
+                    server.unregisterForUpdates(b.getKey());
+                    prefs.leaveBoard(server.getServerAddress(), c.key);
+                    if (mainCtrl.primaryStage.getTitle().equals("My board")
+                            && mainCtrl.boardCtrl.getBoard().key.equals(c.key)) {
+                        Platform.runLater(() -> {
+                            try {
+                                mainCtrl.showMainScreen(server.getServerAddress());
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }
+                }
+                else
+                    prefs.updateBoard(server.getServerAddress(), c);
+                Platform.runLater(this::refresh);
+            });
+
+        System.out.println(boardData);
+    }
+
+    void addToData(PreferencesBoardInfo newPrefs) {
+        data.add(newPrefs);
+        server.registerForUpdates(newPrefs.getKey(), c -> {
+            System.out.println("Received update for board with key " + newPrefs.getKey());
+            if (c.title.equals("REMOVED")) {
+                System.out.println("Removing board " + newPrefs.getTitle());
+                server.unregisterForUpdates(newPrefs.getKey());
+                prefs.leaveBoard(server.getServerAddress(), c.key);
+                if (mainCtrl.primaryStage.getTitle().equals("My board")
+                        && mainCtrl.boardCtrl.getBoard().key.equals(c.key)) {
+                    Platform.runLater(() -> {
+                        try {
+                            mainCtrl.showMainScreen(server.getServerAddress());
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            }
+            else
+                prefs.updateBoard(server.getServerAddress(), c);
+            Platform.runLater(this::refresh);
+        });
     }
 
     /**
@@ -81,9 +152,6 @@ public class MainScreenCtrl {
     public void refresh() {
         var boardData = prefs.getBoards(server.getServerAddress());
         data.setAll(boardData);
-        list.setItems(data);
-        list.setCellFactory(param -> new BoardTitleCtrl(server,this, mainCtrl, prefs));
-        list.setStyle("-fx-control-inner-background: " +  "#00B4D8" + ";");
     }
 
 
@@ -99,8 +167,11 @@ public class MainScreenCtrl {
     public void connectToBoard(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
-
-            if(server.getBoardByKey(joinField.getText()) != null) {
+            Board board = server.getBoardByKey(joinField.getText());
+            if(board != null) {
+                var newPrefs = prefs.addBoard(server.getServerAddress(), board);
+                addToData(newPrefs);
+                setPalette(board);
                 mainCtrl.showBoard(joinField.getText(),0);
                 joinField.clear();
                 nullTitle.setText("");
@@ -126,8 +197,11 @@ public class MainScreenCtrl {
         if(event.getCode().toString().equals("ENTER")) {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Board.fxml"));
-
-                if(server.getBoardByKey(joinField.getText()) != null) {
+                Board board = server.getBoardByKey(joinField.getText());
+                if(board != null) {
+                    var newPrefs = prefs.addBoard(server.getServerAddress(), board);
+                    addToData(newPrefs);
+                    setPalette(board);
                     mainCtrl.showBoard(joinField.getText(),0);
                     joinField.clear();
                     nullTitle.setText("");
@@ -165,7 +239,6 @@ public class MainScreenCtrl {
                 String password = controller.password;
                 String backgroundColor = controller.backgroundColor;
                 String fontColor = controller.fontColor;
-                System.out.println("The title is " + title);
 
                 Board board = new Board(title,backgroundColor,fontColor,"#CAF0F8",
                         "#000000", password, new ArrayList<>(), new HashSet<>(), new HashSet<>());
@@ -173,8 +246,12 @@ public class MainScreenCtrl {
                 //Generates a random invite key (the preset password is "read")
                 board.generateInviteKey();
                 Board newBoard = server.addBoard(board);
-                prefs.addBoard(server.getServerAddress(), newBoard);
-                refresh();
+                PreferencesBoardInfo prefBoard = prefs.addBoard
+                        (server.getServerAddress(), newBoard);
+                var newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard,
+                        newBoard.password);
+                addToData(newPrefs);
                 setPalette(newBoard);
             }
         } catch (IOException e) {
@@ -182,11 +259,12 @@ public class MainScreenCtrl {
         }
     }
 
+
     /**
      * Method that sets a palette
      * @param board
      */
-    private void setPalette(Board board){
+    void setPalette(Board board){
         Palette defaultPalette = new Palette("default", "#00B4D8", "#000000",
                 true, board, new HashSet<>());
         defaultPalette.id = server.addPalette(board.id, defaultPalette).id;

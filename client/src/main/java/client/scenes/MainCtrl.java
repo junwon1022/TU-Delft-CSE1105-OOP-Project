@@ -18,6 +18,7 @@ package client.scenes;
 import client.Main;
 import client.utils.ServerUtils;
 import client.utils.UserPreferences;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,27 +29,18 @@ import javafx.util.Pair;
 
 public class MainCtrl {
 
-    private Stage primaryStage;
+    protected Stage primaryStage;
 
     private Main main;
     private ServerUtils serverUtils;
-//
-//    private QuoteOverviewCtrl overviewCtrl;
-//    private Scene overview;
-//
-//    private AddQuoteCtrl addCtrl;
-//    private Scene add;
-    private BoardCtrl boardCtrl;
+    protected BoardCtrl boardCtrl;
     private Scene boardOverview;
     private ConnectCtrl connectCtrl;
     private Scene connect;
-    private MainScreenCtrl mainScreenCtrl;
+    protected MainScreenCtrl mainScreenCtrl;
     private Scene mainScreen;
     private AdminScreenCtrl adminScreenCtrl;
     private Scene adminScreen;
-
-
-
 
     /**
      * Create a new MainCtrl.
@@ -69,8 +61,6 @@ public class MainCtrl {
         primaryStage.show();
 
     }
-
-
 
     /**
      * Create a new MainCtrl.
@@ -119,6 +109,8 @@ public class MainCtrl {
         primaryStage.setTitle("My board");
         primaryStage.setScene(boardOverview);
         primaryStage.setMaximized(true);
+        updateLineEnd(boardCtrl.getLine(), 520);
+        updateLineEnd(boardCtrl.getLine2(), 150);
 
         // Add a listener to detect when the stage is no longer maximized and center it
         // Also sets the size of the resized stage
@@ -190,7 +182,7 @@ public class MainCtrl {
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
         centerStage();
-        mainScreenCtrl.refresh();
+        mainScreenCtrl.initialize();
     }
 
     /**
@@ -231,5 +223,15 @@ public class MainCtrl {
         // Set the position of the stage to the center of the screen
         primaryStage.setX(centerX - primaryStage.getWidth() / 2);
         primaryStage.setY(centerY - primaryStage.getHeight() / 2);
+    }
+
+    /**
+     * Method for stopping long polling
+     */
+    public void stop() {
+        if (serverUtils != null)
+            serverUtils.stop();
+        Platform.exit();
+        System.exit(0);
     }
 }

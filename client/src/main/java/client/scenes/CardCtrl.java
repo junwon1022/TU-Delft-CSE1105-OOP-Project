@@ -8,6 +8,7 @@ import commons.ListOfCards;
 import commons.Palette;
 import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -26,14 +28,14 @@ import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CardCtrl extends ListCell<Card> {
     private final ServerUtils server;
     private final BoardCtrl board;
     private final ListOfCardsCtrl list;
-
-    private boolean isOpen = false;
 
     private Stage storeDetailsStage;
 
@@ -53,7 +55,7 @@ public class CardCtrl extends ListCell<Card> {
     private Label progressText;
 
     @FXML
-    private Button delete;
+    private Button deleteButton;
     @FXML
     private Text text;
 
@@ -67,7 +69,14 @@ public class CardCtrl extends ListCell<Card> {
     private List<Tag> tags;
 
     @FXML
+    private Label renameCardDisabled;
+    @FXML
+    private Label deleteCardDisabled;
+
+    @FXML
     private Button addDescription;
+
+    private int selectedIndex;
 
     /**
      * Create a new CardCtrl
@@ -89,6 +98,80 @@ public class CardCtrl extends ListCell<Card> {
             throw new RuntimeException(e);
         }
         board.refresh();
+
+        if(!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
+        setOnMouseEntered(this::selectCardOnHover);
+    }
+
+    /**
+     * Selects a card on hover and deselects the rest of the cards in the board
+     */
+    private void selectCardOnHover(MouseEvent event) {
+        CardCtrl card = (CardCtrl) event.getSource();
+        selectedIndex = card.getIndex();
+        list.getList().getSelectionModel().select(selectedIndex);
+        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+        for (ListOfCardsCtrl l : listViews) {
+            if (!l.getList().equals(list.getList())) {
+                l.getList().getSelectionModel().clearSelection();
+            } else {
+                l.getList().requestFocus();
+            }
+        }
+        event.consume();
+    }
+
+    /**
+     * Gets all ListOfCardsCtrls within a board
+     * @param board the current board displayed
+     * @return all ListOfCardsCtrls within a board
+     */
+    private List<ListOfCardsCtrl> getAllListOfCardsCtrls(BoardCtrl board) {
+        ObservableList<ListOfCards> listsOfCards = board.getList().getItems();
+        List<ListOfCardsCtrl> listViews = new ArrayList<>();
+        for (int i = 0; i < listsOfCards.size(); i++) {
+            Optional<VirtualFlow> virtualFlowOptional = board.getList()
+                    .getChildrenUnmodifiable()
+                    .stream()
+                    .filter(node -> node instanceof VirtualFlow)
+                    .map(n -> (VirtualFlow) n)
+                    .findFirst();
+            VirtualFlow<ListCell<?>> virtualFlow = virtualFlowOptional.get();
+            listViews.add((ListOfCardsCtrl) virtualFlow.getCell(i));
+        }
+        return listViews;
+    }
+
+    /**
+     * Makes the card readOnly
+     */
+    private void readOnly() {
+        renameButton.setDisable(true);
+        deleteButton.setDisable(true);
+        renameCardDisabled.setVisible(true);
+        deleteCardDisabled.setVisible(true);
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        board.showReadOnlyMessage(event);
+    }
+
+    /**
+     * Gives write access
+     */
+    private void writeAccess() {
+        renameButton.setDisable(false);
+        deleteButton.setDisable(false);
+        renameCardDisabled.setVisible(false);
+        deleteCardDisabled.setVisible(false);
 
         setOnDragDetected(this::handleDragDetected);
 
@@ -118,7 +201,7 @@ public class CardCtrl extends ListCell<Card> {
         if (empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-            if(isOpen){
+            if(storeDetailsStage!=null){
                 storeDetailsStage.close();
             }
         } else {
@@ -126,24 +209,40 @@ public class CardCtrl extends ListCell<Card> {
             description.setVisible(updateDescriptionIcon(item.description));
             updateProgressText(item.checklist);
             card = item;
-            setPalette();
             if(card.palette != null)
                 setColors(root, title);
-            this.loadTags();
+            loadTags();
 
-//            if(card.description == null || card.description.equals("")) {
-//                description.setVisible(false);
-//            }
+            handleSecurity();
+
+            if (card.isOpen == 1) {
+                openDetailsWindow();
+            }
+
+            if (list.selectedIndex != -1) {
+                list.getList().getSelectionModel().select(list.selectedIndex);
+                list.selectedIndex = -1;
+            }
+
+//            list.getList().setOnMouseEntered(event -> {
+//                int index = (int) card.order;
+//                list.getList().getSelectionModel().select(index);
+//            });
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
 
-    private void setPalette(){
-        Palette p = card.list.board.getDefaultPalette();
-        if(p != null)
-            card.palette = p;
+    /**
+     * Load access level
+     */
+    private void handleSecurity() {
+        if(!board.isUnlocked()) {
+            this.readOnly();
+        } else {
+            this.writeAccess();
+        }
     }
 
     private void setColors(AnchorPane root, Label title){
@@ -161,7 +260,6 @@ public class CardCtrl extends ListCell<Card> {
         }
         return false;
     }
-
 
     /**
      * loads the tags colors on the card
@@ -202,8 +300,6 @@ public class CardCtrl extends ListCell<Card> {
         }
         board.refresh();
     }
-
-
 
     /**
      * Retrieves the title of the card
@@ -357,14 +453,14 @@ public class CardCtrl extends ListCell<Card> {
             if (c.id == dbCardId)
                 draggedCard = c;
 
-        draggedCard.palette.cards.remove(this);
-        draggedCard.palette = null;
-
+        Palette p = draggedCard.palette;
         server.removeCard(draggedCard);
-
+        p = server.getPalette(p.board.id, p.id);
+        draggedCard.palette = null;
         draggedCard.list = this.list.cardData;
         draggedCard.order = this.list.cardData.cards.size();
-        server.addCard2(draggedCard);
+        draggedCard=  server.addCard2(draggedCard);
+        draggedCard = server.addPaletteToCard(draggedCard, p);
         return draggedCard;
     }
 
@@ -398,46 +494,53 @@ public class CardCtrl extends ListCell<Card> {
     }
 
     /**
-     * Opens the detailed view of a card when the description button is double clicked
+     * Opens the detailed view of a card when the description button is double-clicked
      * @param event - the icon-button being clicked
      */
     public void openDetails(MouseEvent event) {
         if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-            if(isOpen){
-                return;
-            }
-            setOpen(true);
-            Stage detailsStage = new Stage();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
-            loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
-
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            CardDetailsCtrl cardDetailsCtrl = loader.getController();
-            cardDetailsCtrl.setCard(card);
-            cardDetailsCtrl.setTitle(getTitle());
-            cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
-                    ? "" : card.description);
-            if(!card.checklist.isEmpty()){
-                cardDetailsCtrl.setChecklists(card.checklist);
-            }
-            storeDetailsStage = detailsStage;
-
-            Scene scene = new Scene(root);
-            detailsStage.setScene(scene);
-            //make it so that details can only be closed if exitDetails is called.
-            detailsStage.setOnCloseRequest(Event -> {
-                Event.consume();
-            });
-            detailsStage.show();
+            openDetailsWindow();
         }
+    }
+
+    private void openDetailsWindow() {
+        if (card.isOpen == 2)
+            return;
+        setOpen(2);
+        Stage detailsStage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetails.fxml"));
+        loader.setControllerFactory(c -> new CardDetailsCtrl(server, board, this));
+
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        CardDetailsCtrl cardDetailsCtrl = loader.getController();
+        cardDetailsCtrl.setCard(card);
+        cardDetailsCtrl.setTitle(getTitle());
+        cardDetailsCtrl.setDescriptionText(card.description.equals(" ")
+                ? "" : card.description);
+        if(!card.checklist.isEmpty()){
+            cardDetailsCtrl.setChecklists(card.checklist);
+        }
+        cardDetailsCtrl.setPreset();
+        cardDetailsCtrl.setCardTags();
+        storeDetailsStage = detailsStage;
+
+        Scene scene = new Scene(root);
+        detailsStage.setScene(scene);
+        //Set is open to 0 when closing.
+        detailsStage.setOnCloseRequest((e) -> {
+            card.isOpen = 0;
+            detailsStage.close();
+            e.consume();
+        });
+        detailsStage.show();
     }
 
     /**
@@ -493,11 +596,11 @@ public class CardCtrl extends ListCell<Card> {
 
     /**
      * Sets the boolean variable isOpen in card to the inputted
-     * boolean so that it can be checked if the cardDetails window
+     * integer so that it can be checked if the cardDetails window
      * is opened or not
-     * @param b the value to set isOpen to
+     * @param v the value to set isOpen to
      */
-    public void setOpen(boolean b) {
-        this.isOpen = b;
+    public void setOpen(int v) {
+        card.isOpen = v;
     }
 }

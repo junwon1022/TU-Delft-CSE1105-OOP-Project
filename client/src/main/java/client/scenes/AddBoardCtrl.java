@@ -88,7 +88,6 @@ public class AddBoardCtrl {
                 (int)(fontColorPicker.getValue().getRed() * 255),
                 (int)(fontColorPicker.getValue().getGreen() * 255),
                 (int)(fontColorPicker.getValue().getBlue() * 255));
-        password = passwordField.getText();
         if (storedText == null || storedText.length() == 0) {
             nullTitle.setText("Please enter a title!");
         }

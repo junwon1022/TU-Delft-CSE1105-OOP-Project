@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import server.database.PaletteRepository;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -167,7 +168,23 @@ public class PaletteService {
         return palette.cards;
     }
 
+    /**
+     * Method that gets the cards of a palette
+     * @param paletteId
+     * @param oldPaletteId
+     * @throws Exception
+     */
+    public void changeOfPalette(long paletteId, long oldPaletteId) throws Exception{
+        Palette palette = getPaletteById(paletteId);
+        Palette oldPalette = getPaletteById(oldPaletteId);
 
-
-
+        Set<Card> cards = oldPalette.cards;
+        oldPalette.cards = new HashSet<>();
+        for(Card c: cards){
+            c.palette = palette;
+        }
+        palette.cards.addAll(cards);
+        paletteRepository.save(palette);
+        paletteRepository.save(oldPalette);
+    }
 }

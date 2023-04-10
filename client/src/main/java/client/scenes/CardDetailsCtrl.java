@@ -3,26 +3,32 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CheckListItem;
+import commons.Palette;
+import commons.Tag;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Font;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 public class CardDetailsCtrl{
@@ -39,7 +45,7 @@ public class CardDetailsCtrl{
     private TextArea descriptionText;
 
     @FXML
-    private AnchorPane scenePane;
+    private GridPane scenePane;
 
     @FXML
     private Button saveDescription;
@@ -48,10 +54,52 @@ public class CardDetailsCtrl{
     private Button addChecklist;
 
     @FXML
-    private Button addTagButton;
+    private ListView<CheckListItem> checklistView;
 
     @FXML
-    private ListView<CheckListItem> checklistView;
+    private Label paletteTitle;
+
+    @FXML
+    private Rectangle background;
+
+    @FXML
+    private Rectangle font;
+
+    @FXML
+    private ListView<Palette> palettes;
+
+    @FXML
+    private ListView<Tag> chooseTag;
+
+    @FXML
+    private ListView<Tag> tagsView;
+
+    @FXML
+    private Button addSubtask;
+
+    @FXML
+    private AnchorPane disabled;
+    @FXML
+    private HBox readOnlyMessage;
+
+    @FXML
+    private HBox subtaskAddition;
+
+    @FXML
+    private TextField subtaskTitle;
+
+    @FXML
+    private Label nullTitle;
+
+    @FXML
+    private Button hide;
+
+
+    ObservableList<Palette> paletteData;
+
+    ObservableList<Tag> tagsData;
+
+    ObservableList<Tag> showableTags;
 
     private Card card;
 
@@ -75,9 +123,63 @@ public class CardDetailsCtrl{
      */
     public void initialize() {
         data = FXCollections.observableArrayList();
+        chooseTag.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
         checklistView.setItems(data);
         checklistView.setCellFactory(clv -> new CheckListItemCtrl(server, this, board));
+        tagsData = FXCollections.observableArrayList();
+        tagsView.setItems(tagsData);
+        tagsView.setCellFactory(tlv -> new TagCtrl(server, board, this, true));
+        showableTags = FXCollections.observableArrayList();
+        chooseTag.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
+        chooseTag.setItems(showableTags);
+        chooseTag.setCellFactory(ctv -> new TagCtrl(server, board, this, false));
+
+        subtaskAddition.setVisible(false);
+
+        nullTitle.setVisible(false);
+        hide.setVisible(false);
+        scenePane.setOnKeyPressed(this::escapeFromWindow);
+        palettes.setOnKeyPressed(this::escapeFromWindow);
+        chooseTag.setOnKeyPressed(this::escapeFromWindow);
+        checklistView.setOnKeyPressed(this::escapeFromWindow);
+        tagsView.setOnKeyPressed(this::escapeFromWindow);
+
+        loadPalettes();
+        loadTags();
+        if(!board.isUnlocked()) {
+            disabled.setVisible(true);
+        } else {
+            disabled.setVisible(false);
+        }
     }
+
+    /**
+     * Checks if the key is ESCAPE, then close the details window
+     * @param keyEvent event
+     */
+    protected void escapeFromWindow(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            exitDetails(keyEvent);
+            keyEvent.consume();
+        }
+    }
+
+
+    private void selectPalettes(){
+        paletteData = FXCollections.observableArrayList();
+        Set<Palette> allPalettes = card.list.board.palettes;
+        for(Palette p: allPalettes){
+            if(!p.equals(card.palette))
+                paletteData.add(p);
+        }
+        palettes.setStyle("-fx-background-color: #A2E4F1; " +
+                "-fx-background-radius: 10");
+        palettes.setItems(paletteData);
+        palettes.setCellFactory(pal-> new PresetCtrl(server, this, board, card));
+    }
+
 
     /**
      * Sets the title of the descriptionTitle label to the title of the card
@@ -86,8 +188,6 @@ public class CardDetailsCtrl{
      */
     public void setTitle(String title){
         titleLabel.setText(title);
-        titleLabel.setFont(Font.font("System",17));
-        titleLabel.setStyle("-fx-font-weight: bold;");
     }
 
     /**
@@ -99,7 +199,7 @@ public class CardDetailsCtrl{
     }
 
     /**
-     * Shortcut to save the dscription of the card
+     * Shortcut to save the description of the card
      * @param event the keys that are pressed
      */
 
@@ -122,9 +222,9 @@ public class CardDetailsCtrl{
      * Exits the detailed view of the card
      * @param event Click of the exit label
      */
-    public void exitDetails(ActionEvent event){
+    public void exitDetails(Event event){
         Stage stage = (Stage) scenePane.getScene().getWindow();
-        cardCtrl.setOpen(false);
+        cardCtrl.setOpen(0);
         stage.close();
     }
 
@@ -134,6 +234,7 @@ public class CardDetailsCtrl{
      */
     public void setCard(Card card) {
         this.card = card;
+        selectPalettes();
     }
 
     /**
@@ -157,35 +258,35 @@ public class CardDetailsCtrl{
      * Adds a checklist "to be implemented"
      * @param event adding the checklist event
      */
-    public void addChecklist(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCheckListItem.fxml"));
-        Stage addCheckListStage = new Stage();
-        Parent root;
-        try {
-            root = fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void showAddChecklist(ActionEvent event) {
+        subtaskAddition.setVisible(true);
+        addChecklist.setVisible(false);
+        hide.setVisible(true);
+    }
+
+    /**
+     * Method that adds the checklist
+     * @param event
+     */
+    public void addChecklist(ActionEvent event){
+        String title = subtaskTitle.getText();
+        if(title.length() == 0){
+            nullTitle.setVisible(true);
         }
-        AddCheckListItemCtrl controller = fxmlLoader.getController();
-
-        addCheckListStage.setTitle("Add a new sub-task");
-        Scene addListScene = new Scene(root);
-        addCheckListStage.setScene(addListScene);
-        addCheckListStage.showAndWait();
-
-        if (controller.success) {
-            String title = controller.storedText;
-
+        else{
+            nullTitle.setVisible(false);
             CheckListItem checkListItem = createCheckList(title);
             CheckListItem addedCheckListItem = server.addChecklist(checkListItem);
             checkListItem.id = addedCheckListItem.id;
             data.add(addedCheckListItem);
             int completed = cardCtrl.getCompleted();
             int total = cardCtrl.getTotal();
+            subtaskAddition.setVisible(false);
+            addChecklist.setVisible(true);
+            subtaskTitle.setText("");
             cardCtrl.setProgressText(completed,total+1);
             board.refresh();
         }
-
     }
 
     /**
@@ -219,10 +320,16 @@ public class CardDetailsCtrl{
     }
 
     /**
-     * adds a tag to the detailed view of the card
+     * adds a tag to the detailed view of the card if it isnt added yet
+     * @param tag the tag to add
      */
-    public void addTag() {
-
+    public void addTag(Tag tag) {
+        if(!tagsData.contains(tag)){
+            tagsData.add(tag);
+            card.addTag(tag);
+            server.addTagToCard(tag, card);
+            showableTags.remove(tag);
+        }
     }
 
     /**
@@ -285,5 +392,132 @@ public class CardDetailsCtrl{
         data.set(newIdx, temp);
 
         board.refresh();
+    }
+
+    /**
+     * Method that sets the Preset for a card
+     */
+    public void setPreset(){
+        background.setFill(Color.web(card.palette.background));
+        font.setFill(Color.web(card.palette.font));
+        paletteTitle.setText(card.palette.title);
+    }
+
+
+    /**
+     * Method that refreshes the card details overview
+     */
+    public void refresh(){
+        selectPalettes();
+        setPreset();
+    }
+
+    /**
+     * Sets the CardTags ListView when the details are opened
+     */
+    public void setCardTags(){
+        showableTags.addAll(board.tags);
+        for (Tag tag : card.tags) {
+            tagsData.add(tag);
+            showableTags.remove(tag);
+        }
+    }
+
+    /**
+     * removes the tag from the card
+     * @param tag the tag to remove
+     */
+    public void removeTagFromCard(Tag tag) {
+        tagsData.remove(tag);
+        showableTags.add(tag);
+        card.removeTag(tag);
+        server.removeTagFromCard(tag, card);
+        card = server.getCard(card);
+    }
+
+    /**
+     * Loads the list to auto-fit its parent
+     */
+    private void loadPalettes() {
+        // set the palettes to always grow to fill the AnchorPane
+        palettes.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        palettes.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        palettes.setMaxHeight(Double.MAX_VALUE);
+        palettes.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the palettes to fill the AnchorPane
+        AnchorPane.setTopAnchor(palettes, 0.0);
+        AnchorPane.setBottomAnchor(palettes, 0.0);
+        AnchorPane.setLeftAnchor(palettes, 0.0);
+        AnchorPane.setRightAnchor(palettes, 0.0);
+    }
+
+    /**
+     * Loads the list to auto-fit its parent
+     */
+    private void loadTags() {
+        // set the tagList to always grow to fill the AnchorPane
+        chooseTag.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        chooseTag.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        chooseTag.setMaxHeight(Double.MAX_VALUE);
+        chooseTag.setMaxWidth(Double.MAX_VALUE);
+
+        // set the constraints for the tagList to fill the AnchorPane
+        AnchorPane.setTopAnchor(chooseTag, 0.0);
+        AnchorPane.setBottomAnchor(chooseTag, 0.0);
+        AnchorPane.setLeftAnchor(chooseTag, 0.0);
+        AnchorPane.setRightAnchor(chooseTag, 0.0);
+    }
+
+    /**
+     * Cancel the renaming of a new card.
+     * @param event the KeyEvent
+     */
+    public void hideButton(ActionEvent event) {
+        subtaskAddition.setVisible(false);
+        addChecklist.setVisible(true);
+        hide.setVisible(false);
+        nullTitle.setVisible(false);
+    }
+
+    /**
+     * Closes the read only message
+     * @param event
+     */
+    public void closeReadOnlyView(ActionEvent event) {
+        FadeTransition fadeOutMessage = new FadeTransition(Duration.seconds(0.5), readOnlyMessage);
+        fadeOutMessage.setFromValue(0.9);
+        fadeOutMessage.setToValue(0.0);
+
+        fadeOutMessage.setOnFinished(e -> {
+            // Hide the message when the transition is finished
+            readOnlyMessage.setVisible(false);
+        });
+        fadeOutMessage.play();
+    }
+
+    /**
+     * Shows read-only message if button is disabled
+     * @param event
+     */
+    public void showReadOnlyMessage(Event event) {
+        readOnlyMessage.setVisible(true);
+        FadeTransition fadeInTransition = new FadeTransition(
+                Duration.seconds(0.3), readOnlyMessage);
+        fadeInTransition.setFromValue(0.0);
+        fadeInTransition.setToValue(0.9);
+        fadeInTransition.play();
+        Alert alert = new Alert(Alert.AlertType.WARNING,
+                "Cannot edit in read-only mode. \n" +
+                        "To gain write access, click on the lock icon and enter the password.",
+                ButtonType.OK);// Load your custom icon image
+
+        // Set the graphic of the alert dialog to custom image
+        alert.setGraphic(new ImageView(new Image("warning-icon.png")));
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("styles.css");
+        dialogPane.getStyleClass().add("alert");
+        dialogPane.lookupButton(ButtonType.OK).getStyleClass().add("normal-button");
+        alert.showAndWait();
     }
 }

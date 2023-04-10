@@ -78,6 +78,8 @@ public class CardService {
         Card card = cardRepository.getById(id);
         if(card != null) {
             cardRepository.getById(id).removeCardsFromTags();
+            if(card.palette != null)
+                removePaletteFromCard(card, card.palette);
             cardRepository.deleteById(id);
         }
     }
@@ -135,7 +137,7 @@ public class CardService {
      * @param tag
      */
     public void addTagToCard(Card card, Tag tag) {
-        card.tags.add(tag);
+        card.addTag(tag);
         cardRepository.save(card);
     }
 
@@ -145,7 +147,7 @@ public class CardService {
      * @param tag
      */
     public void removeTagFromCard(Card card, Tag tag) {
-        card.tags.remove(tag);
+        card.removeTag(tag);
         cardRepository.save(card);
     }
 
@@ -154,7 +156,7 @@ public class CardService {
      * @param card
      * @param palette
      */
-    public void addPaletteToCard(Card card, Palette palette){
+    public void addPaletteToCard(Card card, Palette palette) throws Exception{
         card.palette = palette;
         cardRepository.save(card);
     }
@@ -165,7 +167,6 @@ public class CardService {
      * @param palette
      */
     public void removePaletteFromCard(Card card, Palette palette){
-
         palette.cards.remove(card);
         card.palette = null;
         cardRepository.save(card);
