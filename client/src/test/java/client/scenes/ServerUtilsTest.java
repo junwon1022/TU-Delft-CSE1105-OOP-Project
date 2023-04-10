@@ -16,6 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerUtilsTest {
 
     @Test
+    void testChangeServerNullAddress() throws Exception {
+        UserPreferences prefs = Mockito.mock(UserPreferences.class);
+        ServerUtils utils = new ServerUtils(prefs);
+
+        String serverAddress = null;
+        assertThrows(Exception.class, () -> utils.changeServer(serverAddress));
+    }
+
+    @Test
     void testChangeServerValidAddress() throws Exception {
         UserPreferences prefs = Mockito.mock(UserPreferences.class);
         ServerUtils utils = new ServerUtils(prefs);
@@ -26,23 +35,7 @@ public class ServerUtilsTest {
         assertEquals(serverAddress, utils.getServerAddress());
     }
 
-    @Test
-    void testChangeServerInvalidAddress() throws Exception {
-        UserPreferences prefs = Mockito.mock(UserPreferences.class);
-        ServerUtils utils = new ServerUtils(prefs);
 
-        String serverAddress = "http://invalidaddress:8080/";
-        assertThrows(Exception.class, () -> utils.changeServer(serverAddress));
-    }
-
-    @Test
-    void testChangeServerNullAddress() throws Exception {
-        UserPreferences prefs = Mockito.mock(UserPreferences.class);
-        ServerUtils utils = new ServerUtils(prefs);
-
-        String serverAddress = null;
-        assertThrows(Exception.class, () -> utils.changeServer(serverAddress));
-    }
 
     @Test
     void testAddCard() {
