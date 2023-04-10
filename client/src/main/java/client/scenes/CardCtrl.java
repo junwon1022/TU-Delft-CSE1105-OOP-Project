@@ -8,6 +8,7 @@ import commons.ListOfCards;
 import commons.Palette;
 import commons.Tag;
 import jakarta.ws.rs.WebApplicationException;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +28,9 @@ import javafx.stage.Modality;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CardCtrl extends ListCell<Card> {
     private final ServerUtils server;
@@ -72,6 +76,8 @@ public class CardCtrl extends ListCell<Card> {
     @FXML
     private Button addDescription;
 
+    private int selectedIndex;
+
     /**
      * Create a new CardCtrl
      * @param server The server to use
@@ -98,6 +104,46 @@ public class CardCtrl extends ListCell<Card> {
         } else {
             this.writeAccess();
         }
+        setOnMouseEntered(this::selectCardOnHover);
+    }
+
+    /**
+     * Selects a card on hover and deselects the rest of the cards in the board
+     */
+    private void selectCardOnHover(MouseEvent event) {
+        CardCtrl card = (CardCtrl) event.getSource();
+        selectedIndex = card.getIndex();
+        list.getList().getSelectionModel().select(selectedIndex);
+        List<ListOfCardsCtrl> listViews = getAllListOfCardsCtrls(board);
+        for (ListOfCardsCtrl l : listViews) {
+            if (!l.getList().equals(list.getList())) {
+                l.getList().getSelectionModel().clearSelection();
+            } else {
+                l.getList().requestFocus();
+            }
+        }
+        event.consume();
+    }
+
+    /**
+     * Gets all ListOfCardsCtrls within a board
+     * @param board the current board displayed
+     * @return all ListOfCardsCtrls within a board
+     */
+    private List<ListOfCardsCtrl> getAllListOfCardsCtrls(BoardCtrl board) {
+        ObservableList<ListOfCards> listsOfCards = board.getList().getItems();
+        List<ListOfCardsCtrl> listViews = new ArrayList<>();
+        for (int i = 0; i < listsOfCards.size(); i++) {
+            Optional<VirtualFlow> virtualFlowOptional = board.getList()
+                    .getChildrenUnmodifiable()
+                    .stream()
+                    .filter(node -> node instanceof VirtualFlow)
+                    .map(n -> (VirtualFlow) n)
+                    .findFirst();
+            VirtualFlow<ListCell<?>> virtualFlow = virtualFlowOptional.get();
+            listViews.add((ListOfCardsCtrl) virtualFlow.getCell(i));
+        }
+        return listViews;
     }
 
     /**
@@ -177,6 +223,11 @@ public class CardCtrl extends ListCell<Card> {
                 list.getList().getSelectionModel().select(list.selectedIndex);
                 list.selectedIndex = -1;
             }
+
+//            list.getList().setOnMouseEntered(event -> {
+//                int index = (int) card.order;
+//                list.getList().getSelectionModel().select(index);
+//            });
 
             setGraphic(root);
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

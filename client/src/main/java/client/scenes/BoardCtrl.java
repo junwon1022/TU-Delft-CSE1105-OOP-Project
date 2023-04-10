@@ -79,6 +79,14 @@ public class BoardCtrl {
     @FXML
     private Label copied;
 
+    /**
+     * Gets the list view of list of cards in the board
+     * @return the visual component list view
+     */
+    public ListView<ListOfCards> getList() {
+        return list;
+    }
+
     @FXML
     private ListView<ListOfCards> list;
 
