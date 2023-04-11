@@ -171,7 +171,6 @@ public class MainScreenCtrl {
             if(board != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), board);
                 addToData(newPrefs);
-                setPalette(board);
                 mainCtrl.showBoard(joinField.getText(),0);
                 joinField.clear();
                 nullTitle.setText("");
@@ -201,7 +200,6 @@ public class MainScreenCtrl {
                 if(board != null) {
                     var newPrefs = prefs.addBoard(server.getServerAddress(), board);
                     addToData(newPrefs);
-                    setPalette(board);
                     mainCtrl.showBoard(joinField.getText(),0);
                     joinField.clear();
                     nullTitle.setText("");
@@ -259,7 +257,6 @@ public class MainScreenCtrl {
         }
     }
 
-
     /**
      * Method that sets a palette
      * @param board
@@ -276,6 +273,27 @@ public class MainScreenCtrl {
      */
     public void disconnect(ActionEvent event) {
         mainCtrl.showConnect();
+    }
+
+    /**
+     * Opens the help screen
+     * @param event - Key event when the user presses shift + /
+     */
+    public void openHelpScreen(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
+
+        if(event.getCode().toString().equals("SLASH") && event.isShiftDown()) {
+            try {
+                Parent root = fxmlLoader.load();
+
+                Stage stage = new Stage();
+                stage.setTitle("Help");
+                stage.setScene(new Scene(root, 600, 400));
+                stage.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
 

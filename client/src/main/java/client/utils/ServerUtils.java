@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 import com.google.inject.Inject;
@@ -116,7 +113,7 @@ public class ServerUtils {
     /**
      * Placeholder serverData until connection is made.
      */
-    private List<ListOfCards> serverData = null;
+    public List<ListOfCards> serverData = null;
     private List<Tag> serverDataTags = null;
     private List<Tag> serverDataTagsInCard = null;
 
@@ -705,11 +702,14 @@ public class ServerUtils {
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());
         try {
-            return stomp.connect(url, new StompSessionHandlerAdapter() {}).get();
+            return stomp.connect(url, new StompSessionHandlerAdapter() {})
+                    .get(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
         throw new IllegalStateException();
