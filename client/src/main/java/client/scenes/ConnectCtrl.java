@@ -6,8 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ConnectCtrl {
 
@@ -121,6 +128,27 @@ public class ConnectCtrl {
             }
         }
         else nullTitle.setText("You have entered incorrect password. Please try again!");
+    }
+
+    /**
+     * Opens the help screen
+     * @param event - Key event when the user presses shift + /
+     */
+    public void openHelpScreen(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
+
+        if(event.getCode().toString().equals("SLASH") && event.isShiftDown()) {
+            try {
+                Parent root = fxmlLoader.load();
+
+                Stage stage = new Stage();
+                stage.setTitle("Help");
+                stage.setScene(new Scene(root, 600, 400));
+                stage.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
 
