@@ -24,7 +24,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="root" alignment="CENTER" onKeyPressed="#openHelpScreen" onKeyTyped="#openHelpScreen" prefHeight="650.0" prefWidth="1280.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+<GridPane fx:id="root" alignment="CENTER" onKeyPressed="#handleKeyboardShortcuts" prefHeight="650.0" prefWidth="1280.0" style="-fx-background-color: #F8FDFE;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" prefWidth="270.0" />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="828.6666666666665" />

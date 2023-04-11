@@ -42,7 +42,7 @@
             <ColorAdjust brightness="-0.15" hue="0.02" />
          </effect>
         </ImageView>
-        <Label fx:id="progressText" alignment="CENTER" layoutX="40.0" layoutY="44.0" prefHeight="22.0" prefWidth="27.0" style="-fx-focus-color: #000000;">
+        <Label fx:id="progressText" alignment="CENTER" layoutX="40.0" layoutY="44.0" prefHeight="22.0" prefWidth="27.0" style="-fx-focus-color: #000000; -fx-text-fill: black;">
          <font>
             <Font name="Corbel" size="15.0" />
          </font></Label>
