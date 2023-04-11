@@ -76,12 +76,8 @@ public class MainScreenCtrl {
         data = FXCollections.observableArrayList();
         list = new ListView<>();
 
-        Runnable updatePrefs = new Runnable() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> data.setAll(prefs.getBoards(server.getServerAddress())));
-            }
-        };
+        Runnable updatePrefs = () -> Platform.runLater(() -> data.setAll
+                (prefs.getBoards(server.getServerAddress())));
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
@@ -92,6 +88,7 @@ public class MainScreenCtrl {
      * Initialize mainScreenCtrl
      */
     public void initialize() {
+
         var boardData = prefs.getBoards(server.getServerAddress());
         data.setAll(boardData);
         list.setItems(data);
@@ -120,6 +117,8 @@ public class MainScreenCtrl {
                     prefs.updateBoard(server.getServerAddress(), c);
                 Platform.runLater(this::refresh);
             });
+
+        System.out.println(boardData);
     }
 
     void addToData(PreferencesBoardInfo newPrefs) {
@@ -171,9 +170,6 @@ public class MainScreenCtrl {
             Board board = server.getBoardByKey(joinField.getText());
             if(board != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), board);
-                newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
-                        newPrefs,
-                        board.password);
                 addToData(newPrefs);
                 setPalette(board);
                 mainCtrl.showBoard(joinField.getText(),0);
@@ -204,9 +200,6 @@ public class MainScreenCtrl {
                 Board board = server.getBoardByKey(joinField.getText());
                 if(board != null) {
                     var newPrefs = prefs.addBoard(server.getServerAddress(), board);
-                    newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
-                            newPrefs,
-                            board.password);
                     addToData(newPrefs);
                     setPalette(board);
                     mainCtrl.showBoard(joinField.getText(),0);

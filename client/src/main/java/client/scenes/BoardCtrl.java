@@ -48,11 +48,15 @@ import javafx.scene.shape.Line;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class BoardCtrl {
@@ -74,6 +78,14 @@ public class BoardCtrl {
 
     @FXML
     private Label copied;
+
+    /**
+     * Gets the list view of list of cards in the board
+     * @return the visual component list view
+     */
+    public ListView<ListOfCards> getList() {
+        return list;
+    }
 
     @FXML
     private ListView<ListOfCards> list;
@@ -169,7 +181,7 @@ public class BoardCtrl {
 
         listOfCards = FXCollections.observableArrayList();
         tags = FXCollections.observableArrayList();
-        initialize();
+//        initialize();
     }
 
     /**
@@ -206,24 +218,45 @@ public class BoardCtrl {
             refresh();
             handleSecurityLevel();
             // listen for card updates
-            server.registerForMessages("/topic/" + board.id, Board.class, s -> {
-                for (var list : s.lists) {
-                    list.cards.sort(Comparator.comparingLong(Card::getOrder));
-                    for(var card : list.cards) {
-                        card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
-                    }
-                }
-                Platform.runLater(() -> {
-                    board = s;
-                    this.title.setText(s.title);
-                    changeColours();
-                    handleSecurityLevel();});
-                Platform.runLater(() -> listOfCards.setAll(s.lists));
-                Platform.runLater(() -> tags.setAll(s.tags));
+            server.registerForMessages("/topic/" + board.id, Board.class, this::handleBoardUpdate);
+
+            Runnable updatePrefs = () -> Platform.runLater(() -> {
+                prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                        .filter(x -> x.getKey().equals(boardKey))
+                        .collect(Collectors.toList()).get(0);
+                handleSecurityLevel();
             });
+
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(updatePrefs, 0, 500, TimeUnit.MILLISECONDS);
+
         } catch(Exception e) {
             board = getNewBoard();
         }
+    }
+
+    /**
+     * Method for handling board update
+     * @param s the board
+     */
+    private void handleBoardUpdate(Board s) {
+        for (var list : s.lists) {
+            list.cards.sort(Comparator.comparingLong(Card::getOrder));
+            for(var card : list.cards) {
+                card.checklist.sort(Comparator.comparingLong(CheckListItem::getOrder));
+            }
+        }
+        Platform.runLater(() -> {
+            prefBoard = prefs.getBoards(server.getServerAddress()).stream()
+                    .filter(x -> x.getKey().equals(boardKey))
+                    .collect(Collectors.toList()).get(0);
+
+            board = s;
+            this.title.setText(s.title);
+            changeColours();
+            handleSecurityLevel();});
+        Platform.runLater(() -> listOfCards.setAll(s.lists));
+        Platform.runLater(() -> tags.setAll(s.tags));
     }
 
     /**
@@ -234,8 +267,8 @@ public class BoardCtrl {
         myBoards.lookup(".title").setStyle("-fx-background-color: #1fa401;" +
                 "-fx-border-color: #1fa401");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf6da;");
-        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf6da");
-        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf6da;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #e9f3e9");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #e9f3e9;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
                     "-fx-background-color: #E4F8FC;" +
@@ -276,8 +309,8 @@ public class BoardCtrl {
         myBoards.lookup(".title").setStyle("-fx-background-color: #00B4D8;" +
                 "-fx-border-color: #00B4D8");
         myBoards.lookup(" > .content").setStyle("-fx-background-color: #daf1f6;");
-        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #daf1f6");
-        accordion.lookup(".arrow").setStyle("-fx-background-color: #daf1f6;");
+        accordion.lookup(".titled-pane").setStyle("-fx-text-fill: #F8FDFE");
+        accordion.lookup(".arrow").setStyle("-fx-background-color: #F8FDFE;");
         accordion.setOnMouseEntered(event -> {
             accordion.lookup(" .titled-pane .title").setStyle(
                     "-fx-background-color: #E4F8FC;" +
@@ -340,6 +373,7 @@ public class BoardCtrl {
      * Handles whether read only view or write access should be given to user
      */
     private void handleSecurityLevel() {
+
         if (board.password == null || board.password.equals("") || adminFlag == 1) {
             this.writeAccess();
         } else {
@@ -433,6 +467,7 @@ public class BoardCtrl {
      * Uses the server util class to fetch board data from the server.
      */
     public void refresh() {
+
         //the method call of getListsInBoard will be with the board parameter
         var serverData = server.getLists(board.id);
         listOfCards.setAll(serverData);
@@ -447,6 +482,7 @@ public class BoardCtrl {
      * Loads the listview to auto-fit its parent
      */
     public void loadRecentBoards() {
+        recentBoardsData = FXCollections.observableList(prefs.getBoards(server.getServerAddress()));
         recentBoards.setItems(recentBoardsData);
         recentBoards.setCellFactory(lv -> new RecentBoardsCtrl(this, mainCtrl));
         recentBoards.setFixedCellSize(0);
@@ -637,6 +673,7 @@ public class BoardCtrl {
         return board;
     }
 
+
     /**
      * Method that returns a list
      * @param title
@@ -647,6 +684,7 @@ public class BoardCtrl {
     }
 
     /**
+<<<<<<< HEAD
      * Method that opens the customization window
      * @param event
      */
@@ -694,9 +732,6 @@ public class BoardCtrl {
             Board newBoard = server.getBoardByKey(joinField.getText());
             if (newBoard != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), newBoard);
-                newPrefs = prefs.updateBoardPassword(server.getServerAddress(),
-                        newPrefs,
-                        newBoard.password);
                 mainCtrl.mainScreenCtrl.addToData(newPrefs);
                 mainCtrl.mainScreenCtrl.setPalette(newBoard);
                 mainCtrl.showBoard(joinField.getText(), adminFlag);
@@ -712,6 +747,91 @@ public class BoardCtrl {
             joinField.clear();
         }
     }
+
+
+
+    /**
+     * Enters a specific board based on a key
+     * Creates a new window (Board)
+     * If successful, joins the board through the server
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void handleKeyboardShortcuts(KeyEvent event) {
+        System.out.println(event.getCode());
+        if(event.getCode().toString().equals("C")) addColourByKey(event);
+        if(event.getCode().toString().equals("T")) addTagByKey(event);
+        if(event.getCode().toString().equals("SLASH") && event.isShiftDown()) openHelpScreen(event);
+
+    }
+
+
+    /**
+     * Shortcut for adding tags
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void addTagByKey(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddTag.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+            AddTagCtrl controller = fxmlLoader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Add a new tag");
+            Scene addTagScene = new Scene(root);
+            addTagScene.getStylesheets().add("styles.css");
+            stage.setHeight(320);
+            stage.setWidth(510);
+            stage.setScene(addTagScene);
+            stage.showAndWait();
+
+            if (controller.success) {
+                String name = controller.storedText;
+                String backgroundColor = controller.backgroundColor;
+                String fontColor = controller.fontColor;
+
+                Tag tag = getTag(name, backgroundColor, fontColor);
+                Tag addedTag = server.addTag(tag);
+                System.out.println(addedTag);
+
+                //change the id of the tag locally
+                tag.id = addedTag.id;
+
+                this.refresh();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Shortcut for adding colours
+     *
+     * @param event the ActionEvent
+     * @return
+     */
+    public void addColourByKey(KeyEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Customization.fxml"));
+        try {
+
+            CustomizationCtrl customizationCtrl = new CustomizationCtrl(server,this, board);
+            fxmlLoader.setController(customizationCtrl);
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Customization of board");
+            stage.setScene(new Scene(root, 686, 527));
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        board = server.getBoard(board.id);
+        changeColours();
+    }
+
+
+
 
     /**
      * Enters a specific board based on a key
@@ -771,6 +891,7 @@ public class BoardCtrl {
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * Redirects to connect to server screen
@@ -832,11 +953,12 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
+
                 board = server.changeBoardPassword(board, password);
                 System.out.println(board);
 
-                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
-                        prefBoard, password);
                 this.refresh();
                 writeAccess();
             }
@@ -899,6 +1021,9 @@ public class BoardCtrl {
             if (controller.success) {
                 String password = controller.storedText;
 
+                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
+                        prefBoard, password);
+
                 if(password != null) {
                     board = server.changeBoardPassword(board, password);
                 } else {
@@ -906,8 +1031,6 @@ public class BoardCtrl {
                 }
                 System.out.println(board);
 
-                prefBoard = prefs.updateBoardPassword(server.getServerAddress(),
-                        prefBoard, password);
                 this.refresh();
                 writeAccess();
             }

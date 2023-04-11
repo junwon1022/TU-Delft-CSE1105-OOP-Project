@@ -11,11 +11,11 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="list-background" fx:id="root" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="218.0" spacing="10.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="list-background" fx:id="root" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#handleKeyPressed" onKeyTyped="#handleKeyPressed" spacing="10.0" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane>
          <children>
-            <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="187.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
+            <Label fx:id="title" alignment="BOTTOM_CENTER" contentDisplay="CENTER" onKeyPressed="#handleKeyPressed" prefHeight="47.0" prefWidth="187.0" styleClass="title" stylesheets="@../../styles.css" text="Label" textAlignment="CENTER" textFill="#231f20" wrapText="true">
                <font>
                   <Font name="Corbel Bold" size="17.0" />
                </font>
@@ -36,7 +36,7 @@
       <AnchorPane>
          <children>
             <ListView fx:id="list" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="350.0" prefWidth="187.0" style="-fx-background-color: #A2E4F1; -fx-border-radius: 10; -fx-background-radius: 10;">
-               <effect>
+                <effect>
                   <InnerShadow blurType="GAUSSIAN" choke="0.05" height="46.27" radius="22.645000000000003" width="46.31">
                      <color>
                         <Color red="0.2160000056028366" green="0.6345333456993103" blue="0.800000011920929" opacity="0.6136549115180969" />
@@ -45,7 +45,7 @@
                </effect>
             </ListView>
             <AnchorPane layoutY="310.0" prefHeight="79.0" prefWidth="187.0">
-               <children>
+                <children>
                   <TextField fx:id="name" layoutX="10.0" onKeyPressed="#handleKeyPressed" prefHeight="32.0" prefWidth="168.0" promptText="Enter a title . . ." styleClass="text-field" stylesheets="@../../styles.css" visible="false">
                      <font>
                         <Font name="Corbel" size="12.0" />
