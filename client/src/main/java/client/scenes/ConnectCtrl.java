@@ -62,6 +62,8 @@ public class ConnectCtrl {
         ObservableList<String> items = FXCollections.observableArrayList();
         items.add("http://localhost:8080");
         items.add("http://145.94.196.182:8080");
+        items.add("http://144.178.92.138:8080");
+        items.add("http://145.94.241.152:8080");
         serverList.setCellFactory(param -> new ServerCellsCtrl(this));
         serverList.setItems(items);
     }

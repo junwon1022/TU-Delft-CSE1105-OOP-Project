@@ -181,7 +181,6 @@ public class BoardCtrl {
 
         listOfCards = FXCollections.observableArrayList();
         tags = FXCollections.observableArrayList();
-//        initialize();
     }
 
     /**

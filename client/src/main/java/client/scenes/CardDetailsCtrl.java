@@ -6,6 +6,7 @@ import commons.CheckListItem;
 import commons.Palette;
 import commons.Tag;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,6 +44,9 @@ public class CardDetailsCtrl{
 
     @FXML
     private TextArea descriptionText;
+
+    @FXML
+    private Label copied;
 
     @FXML
     private GridPane scenePane;
@@ -250,6 +254,10 @@ public class CardDetailsCtrl{
             descriptionText.setText(text);
             text = descriptionText.getText();
         }
+        copied.setVisible(true);
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        delay.setOnFinished(e -> copied.setVisible(false));
+        delay.play();
         server.updateDescription(card, text);
         board.refresh();
     }

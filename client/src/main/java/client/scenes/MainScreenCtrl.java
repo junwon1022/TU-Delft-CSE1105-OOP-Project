@@ -171,7 +171,6 @@ public class MainScreenCtrl {
             if(board != null) {
                 var newPrefs = prefs.addBoard(server.getServerAddress(), board);
                 addToData(newPrefs);
-                setPalette(board);
                 mainCtrl.showBoard(joinField.getText(),0);
                 joinField.clear();
                 nullTitle.setText("");
@@ -201,7 +200,6 @@ public class MainScreenCtrl {
                 if(board != null) {
                     var newPrefs = prefs.addBoard(server.getServerAddress(), board);
                     addToData(newPrefs);
-                    setPalette(board);
                     mainCtrl.showBoard(joinField.getText(),0);
                     joinField.clear();
                     nullTitle.setText("");
@@ -258,7 +256,6 @@ public class MainScreenCtrl {
             System.out.println(e.getStackTrace());
         }
     }
-
 
     /**
      * Method that sets a palette
