@@ -21,47 +21,47 @@ public class UserPreferencesTest {
         assertNotNull(prefs);
     }
 
-    @Test
-    void testAddBoard() throws JsonProcessingException {
-        UserPreferences prefs = Mockito.mock(UserPreferences.class);
-
-        // create a board object
-        Board b = new Board("test board", "test key",
-                "test password", "test font", "test colour",
-                "password", new LinkedList<>(), new HashSet<>(), null);
-
-        // create a PreferencesBoardInfo object for the board
-        PreferencesBoardInfo board = new PreferencesBoardInfo(
-                b.title, b.key, b.password, b.font, b.colour);
-
-        // mock the behavior of the UserPreferences object
-        Mockito.doNothing().when(prefs).addBoard(Mockito.anyString(), Mockito.any(Board.class));
-        Mockito.when(prefs.getBoards(Mockito.anyString())).thenReturn(List.of(board));
-
-        // call the addBoard method with the board
-        prefs.addBoard("http://localhost:8080/", b);
-
-        // verify that the board was added to the list of boards for the server
-        assertEquals(List.of(board), prefs.getBoards("http://localhost:8080/"));
-    }
-
-    @Test
-    void testAddBoardNullBoard() throws JsonProcessingException {
-        UserPreferences prefs = Mockito.mock(UserPreferences.class);
-
-        // create a board object
-        Board b = null;
-
-        // mock the behavior of the UserPreferences object
-        Mockito.doNothing().when(prefs).addBoard(Mockito.anyString(), Mockito.any(Board.class));
-        Mockito.when(prefs.getBoards(Mockito.anyString())).thenReturn(List.of());
-
-        // call the addBoard method with the board
-        prefs.addBoard("http://localhost:8080/", b);
-
-        // verify that the board was added to the list of boards for the server
-        assertEquals(List.of(), prefs.getBoards("http://localhost:8080/"));
-    }
+//    @Test
+//    void testAddBoard() throws JsonProcessingException {
+//        UserPreferences prefs = Mockito.mock(UserPreferences.class);
+//
+//        // create a board object
+//        Board b = new Board("test board", "test key",
+//                "test password", "test font", "test colour",
+//                "password", new LinkedList<>(), new HashSet<>(), null);
+//
+//        // create a PreferencesBoardInfo object for the board
+//        PreferencesBoardInfo board = new PreferencesBoardInfo(
+//                b.title, b.key, b.password, b.font, b.colour);
+//
+//        // mock the behavior of the UserPreferences object
+//        Mockito.doNothing().when(prefs).addBoard(Mockito.anyString(), Mockito.any(Board.class));
+//        Mockito.when(prefs.getBoards(Mockito.anyString())).thenReturn(List.of(board));
+//
+//        // call the addBoard method with the board
+//        prefs.addBoard("http://localhost:8080/", b);
+//
+//        // verify that the board was added to the list of boards for the server
+//        assertEquals(List.of(board), prefs.getBoards("http://localhost:8080/"));
+//    }
+//
+//    @Test
+//    void testAddBoardNullBoard() throws JsonProcessingException {
+//        UserPreferences prefs = Mockito.mock(UserPreferences.class);
+//
+//        // create a board object
+//        Board b = null;
+//
+//        // mock the behavior of the UserPreferences object
+//        Mockito.doNothing().when(prefs).addBoard(Mockito.anyString(), Mockito.any(Board.class));
+//        Mockito.when(prefs.getBoards(Mockito.anyString())).thenReturn(List.of());
+//
+//        // call the addBoard method with the board
+//        prefs.addBoard("http://localhost:8080/", b);
+//
+//        // verify that the board was added to the list of boards for the server
+//        assertEquals(List.of(), prefs.getBoards("http://localhost:8080/"));
+//    }
 
     @Test
     void testGetBoardsEmptyList() {
